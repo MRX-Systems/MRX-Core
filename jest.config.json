@@ -1,0 +1,14 @@
+{
+  "displayName": "Andesite - Core",
+  "preset": "ts-jest",
+  "coverageDirectory": "./coverage",
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/Source/$1"
+  },
+  "testMatch": [
+    "**/?(*.)+(spec).ts"
+  ],
+  "resetMocks": true,
+  "clearMocks": true,
+  "verbose": true
+}
