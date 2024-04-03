@@ -6,19 +6,10 @@ import { ErrorEntity } from './ErrorEntity';
 export enum ErrorCommonCode {
     I18N_INIT_FAILED = 'I18N_INIT_FAILED',
     I18N_NOT_INITIALIZED = 'I18N_NOT_INITIALIZED',
+    I18N_IS_ALREADY_INITIALIZED = 'I18N_IS_ALREADY_INITIALIZED',
 }
 
 /**
  * ErrorCommon is a class that extends ErrorEntity and is used to throw errors in the Common layer
  */
-export class ErrorCommon extends ErrorEntity {
-
-    /**
-     * 
-     * @param code - The code of the error to throw
-     * @param detail - The detail of the error to throw (optional)
-     */
-    public constructor(code: string, detail?: unknown) {
-        super(code, detail);
-    }
-}
+export class ErrorCommon extends ErrorEntity {}
