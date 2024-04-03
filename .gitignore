@@ -1,7 +1,7 @@
-.vscode/
-.idea/
-Build/
-coverage/
-node_modules/
+.vscode
+.idea
+Build
+coverage
+node_modules
 docs/
-*.tsbuildinfo
+tsconfig.tsbuildinfo
