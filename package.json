@@ -1,6 +1,6 @@
 {
   "name": "@andesite-lab/andesite-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Andesite - Core allows you to create a new microservice with ease. It provides a set of tools to help you build a new microservice.",
   "main": "Build/lib.js",
   "types": "Build/lib.d.ts",
