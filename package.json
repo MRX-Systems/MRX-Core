@@ -8,7 +8,7 @@
     "andesite": "Build/cli.js"
   },
   "scripts": {
-    "clear": "rm tsconfig.tsbuildinfo && rm -rf Build",
+    "clear": "if [ -f tsconfig.tsbuildinfo ]; then rm tsconfig.tsbuildinfo; fi && if [ -d Build ]; then rm -rf Build; fi",
     "create-types": "tsc --emitDeclarationOnly && tsc-alias",
     "prod::build": "npm run clear && tsc --noEmit && npm run create-types && ts-node esbuild.config.ts prod-build",
     "dev::pkg::build": "ts-node esbuild.config.ts dev::pkg::build",
