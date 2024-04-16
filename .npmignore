@@ -1,0 +1,14 @@
+.eslintrc
+.github
+.idea
+.nvmrc
+.vscode
+coverage/
+docs/
+esbuild.config.ts
+Source/
+Tests/
+tsconfig.json
+tsconfig.tsbuildinfo
+jest.config.json
+CHANGELOG.md
