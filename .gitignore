@@ -1,0 +1,7 @@
+.vscode
+.idea
+Build
+coverage
+node_modules
+docs/
+tsconfig.tsbuildinfo
