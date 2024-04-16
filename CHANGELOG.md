@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Andesite-Lab/Core/compare/v1.0.0...v1.0.1) (2024-04-16)
+
+
+### Documentation
+
+* improvement of comments ([fc7e126](https://github.com/Andesite-Lab/Core/commit/fc7e1268192e66fd5713128089d6f3d5bd1a2160))
+
 ## 1.0.0 (2024-04-16)
 
 
