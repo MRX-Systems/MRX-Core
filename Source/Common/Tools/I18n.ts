@@ -1,6 +1,9 @@
 import i18next, { type Resource, type i18n } from 'i18next';
 import { ErrorCommon, ErrorCommonCode } from '@/Common/Errors';
 
+/**
+ * An object containing the values to interpolate into the translated string.
+ */
 export type Interpolation = Record<string, unknown>;
 
 let _i18n: i18n | undefined = undefined;
@@ -52,6 +55,9 @@ function resetI18n(): void {
  * @param key - The key to translate.
  * @param language - The language to translate to. Defaults to 'en'.
  * @param interpolation - The interpolation values to use. Defaults to an empty object.
+ * 
+ * @throws {@link ErrorCommon} - If i18n is not initialized. {@link ErrorCommonCode.I18N_NOT_INITIALIZED}
+ * 
  * @returns The translated string.
  */
 function translate(key: string, language: string = 'en', interpolation: Interpolation = {}): string {
