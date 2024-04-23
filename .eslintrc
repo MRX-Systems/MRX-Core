@@ -170,6 +170,7 @@
         "@typescript-eslint/unified-signatures": "error", // https://typescript-eslint.io/rules/unified-signatures
         "require-unicode-regexp": "off",
         "no-undef-init": "off",
+        "no-negated-condition": "off",
         "max-statements": "off",
         "no-ternary": "off",
         "no-plusplus": "off",

@@ -63,7 +63,10 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
+    "commander": "^12.0.0",
     "i18next": "^23.10.1",
+    "kysely": "^0.27.3",
+    "source-map-support": "^0.5.21",
     "tsyringe": "^4.8.0"
   }
 }
