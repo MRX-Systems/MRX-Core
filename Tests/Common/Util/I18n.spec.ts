@@ -1,7 +1,4 @@
-// import i18next from 'i18next';
-
-import { I18n } from '../../../Source/Common/Tools';
-// import { ErrorCommon, ErrorCommonCode } from '../../../Source//Common/Errors';
+import { I18n } from '../../../Source/Common/Util';
 
 describe('I18n', () => {
     describe('initI18n', () => {
@@ -50,17 +47,17 @@ describe('I18n', () => {
                     },
                 },
             };
-            await expect(I18n.initI18n(resources)).rejects.toThrow('I18N_IS_ALREADY_INITIALIZED');
+            await expect(I18n.initI18n(resources)).rejects.toThrow('UTIL_I18N_IS_ALREADY_INITIALIZED');
         });
 
         it ('should throw an error if i18n is not initialized when we try to reset it', async () => {
             I18n.resetI18n();
-            expect(() => I18n.resetI18n()).toThrow('I18N_NOT_INITIALIZED');
+            expect(() => I18n.resetI18n()).toThrow('UTIL_I18N_NOT_INITIALIZED');
         });
 
         it ('should throw an error if i18n is not initialized when we try to translate', () => {
             I18n.resetI18n();
-            expect(() => I18n.translate('test')).toThrow('I18N_NOT_INITIALIZED');
+            expect(() => I18n.translate('test')).toThrow('UTIL_I18N_NOT_INITIALIZED');
         });
     });
 });
