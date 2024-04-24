@@ -1,3 +1,4 @@
-export * from './FolderStructure';
-export * from './Hash';
-export * from './PackageJsonGenerator';
+export { createFolderStructure } from './FolderStructure';
+export { Hash } from './Hash';
+export { createPackageJson } from './PackageJsonGenerator';
+

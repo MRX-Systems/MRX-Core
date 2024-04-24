@@ -52,17 +52,17 @@ const apiStructure = {
  * 
  * @throws {@link AndesiteError} - If failed to create folder structure. {@link ServiceErrorKeys.CREATE_FOLDER_STRUCTURE_ERROR}
  */
-function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: string = '.'): void {
+function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: string = './example'): void {
     for (const key in obj)
         if (obj[key] === undefined) {
             const path = `${parentPath}/${key}`;
             try {
                 if (!existsSync(path))
                     mkdirSync(path, { recursive: true });
-            } catch {
+            } catch (e) {
                 throw new AndesiteError({
                     messageKey: ServiceErrorKeys.CREATE_FOLDER_STRUCTURE_ERROR,
-                    detail: `Failed to create folder structure at ${path}`
+                    detail: e
                 });
             }
         } else {
@@ -74,13 +74,14 @@ function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: 
  * Creates the folder structure based on the project information.
  * 
  * @param projectInformation - The project information.
+ * @param parentPath - The parent path of the folder structure.
  * 
- * @throws {@link AndesiteError} - If failed to create folder structure. {@link ServiceErrorKeys.CREATE_FOLDER_STRUCTURE_ERROR}
+ * @throws {@link AndesiteError} - If failed to create folder structure. {@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE}
  */
-function createFolderStructure(projectInformation: IProjectInformation): void {
+function createFolderStructure(projectInformation: IProjectInformation, parentPath: string = './example'): void {
     switch (projectInformation.type) {
     case 'API':
-        buildFolderStructureByObject(apiStructure);
+        buildFolderStructureByObject(apiStructure, parentPath);
         break;
     case 'Worker Manager':
         break;
@@ -89,9 +90,14 @@ function createFolderStructure(projectInformation: IProjectInformation): void {
     case 'Sample Script':
         break;
     default:
-        buildFolderStructureByObject(apiStructure);
+        buildFolderStructureByObject(apiStructure, parentPath);
     }
 }
+
+export const __test__ = {
+    buildFolderStructureByObject,
+    createFolderStructure
+};
 
 export {
     createFolderStructure

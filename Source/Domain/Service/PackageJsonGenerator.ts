@@ -1,11 +1,11 @@
 import {
-    writeFileSync,
-    existsSync
+    existsSync,
+    writeFileSync
 } from 'fs';
 
 import { AndesiteError } from '@/Common/Error';
-import { type IProjectInformation } from '@/Domain/Interface';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
+import { type IProjectInformation } from '@/Domain/Interface';
 
 /**
  * An object representing the package.json file.
@@ -105,16 +105,21 @@ function buildPackageJsonObject(projectInformation: IProjectInformation): IPacka
  * Creates the package.json file.
  * @param projectInformation - The project information.
  * 
- * @throws {@link AndesiteError} - If the package.json file already exists. {@link ServiceErrorKeys.PACKAGE_JSON_EXISTS}
+ * @throws {@link AndesiteError} - If the package.json file already exists. {@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS}
  */
-function createPackageJson(projectInformation: IProjectInformation): void {
-    const packageJson = buildPackageJsonObject(projectInformation);
-    if (existsSync('package.json'))
+function createPackageJson(projectInformation: IProjectInformation, path: string = './example'): void {
+    if (existsSync(`${path}/package.json`))
         throw new AndesiteError({
-            messageKey: ServiceErrorKeys.PACKAGE_JSON_EXISTS
+            messageKey: ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS
         });
-    writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+    const packageJson = buildPackageJsonObject(projectInformation);
+    writeFileSync(`${path}/package.json`, JSON.stringify(packageJson, null, 2));
 }
+
+export const __test__ = {
+    buildPackageJsonObject,
+    createPackageJson
+};
 
 export {
     createPackageJson
