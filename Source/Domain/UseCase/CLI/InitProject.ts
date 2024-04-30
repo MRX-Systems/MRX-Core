@@ -10,7 +10,11 @@ import {
 } from '@clack/prompts';
 
 
-import { createPackageJson, createFolderStructure } from '@/Domain/Service';
+import {
+    createPackageJson,
+    createFolderStructure,
+    createTsConfig
+} from '@/Domain/Service';
 import { AndesiteError } from '@/Common/Error';
 
 /**
@@ -88,7 +92,6 @@ async function requestProjectDescription(): Promise<string> {
  */
 async function InitProject(): Promise<void> {
     intro('Initializing a new project');
-
     const projectType = await requestProjectTypeSelected();
     const projectName = await requestProjectName();
     const projectDescription = await requestProjectDescription();
@@ -100,6 +103,7 @@ async function InitProject(): Promise<void> {
         };
         createPackageJson(projectInformation, './');
         createFolderStructure(projectInformation.type, './');
+        createTsConfig('./');
     } catch (error) {
         if (error instanceof AndesiteError)
             cancel(`An error occurred while initializing the project 😢 ${error.message}`);
