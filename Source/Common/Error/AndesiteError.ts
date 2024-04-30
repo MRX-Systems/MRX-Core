@@ -4,25 +4,30 @@ import { type IAndesiteErrorOptions } from '@/Common/Interface';
 
 /**
  * AndesiteError is a class that represents an error entity with a unique identifier.
+ * @see [Kysely Documentation - Types](https://kysely.dev/docs/getting-started#types)
  */
 export class AndesiteError extends Error {
     /**
      * The unique identifier of the error.
      * This identifier is used to track the error in the logs.
+     * @readonly
      */
     private readonly _uuidError: string = randomUUID();
 
     /**
      * The date when the error was created.
+     * @readonly
      */
     private readonly _date: Date = new Date();
 
     /**
      * The error code.
+     * @readonly
      */
     private readonly _code: number;
     /**
      * The error detail.
+     * @readonly
      */
     private readonly _detail: unknown;
 
@@ -42,6 +47,7 @@ export class AndesiteError extends Error {
 
     /**
      * Gets the unique identifier of the error.
+     * @readonly
      * @returns The unique identifier of the error.
      */
     public get uuidError(): string {
@@ -50,6 +56,7 @@ export class AndesiteError extends Error {
 
     /**
      * Gets the date when the error was created.
+     * @readonly
      * @returns The date when the error was created.
      */
     public get date(): Date {
@@ -58,6 +65,7 @@ export class AndesiteError extends Error {
 
     /**
      * Gets the error code.
+     * @readonly
      * @returns The error code.
      */
     public get code(): number {
@@ -66,6 +74,7 @@ export class AndesiteError extends Error {
 
     /**
      * Gets the error detail.
+     * @readonly
      * @returns The error detail.
      */
     public get detail(): unknown {
