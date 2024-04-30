@@ -62,11 +62,18 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "@basalt-lab/basalt-logger": "^1.6.2",
     "@clack/prompts": "^0.7.0",
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/pg": "^8.11.5",
+    "better-sqlite3": "^9.5.0",
     "commander": "^12.0.0",
     "i18next": "^23.10.1",
     "kysely": "^0.27.3",
+    "pg": "^8.11.5",
     "source-map-support": "^0.5.21",
+    "tarn": "^3.0.2",
+    "tedious": "^18.1.0",
     "tsyringe": "^4.8.0"
   }
 }
