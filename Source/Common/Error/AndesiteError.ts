@@ -4,7 +4,6 @@ import { type IAndesiteErrorOptions } from '@/Common/Interface';
 
 /**
  * AndesiteError is a class that represents an error entity with a unique identifier.
- * @see [Kysely Documentation - Types](https://kysely.dev/docs/getting-started#types)
  */
 export class AndesiteError extends Error {
     /**
@@ -34,9 +33,9 @@ export class AndesiteError extends Error {
     /**
      * Creates a new instance of the ErrorEntity class.
      *
-     * @param andesiteErrorOptions - The options to create the error entity.
+     * @param andesiteErrorOptions - The options to create the error entity. ({@link IAndesiteErrorOptions})
      */
-    public constructor(andesiteErrorOptions: IAndesiteErrorOptions) {
+    public constructor(andesiteErrorOptions: Readonly<IAndesiteErrorOptions>) {
         super();
         this._code = andesiteErrorOptions.code ?? 500;
         this.message = andesiteErrorOptions.messageKey;

@@ -97,7 +97,7 @@ async function InitProject(): Promise<void> {
             type: projectType
         };
         createPackageJson(projectInformation, './');
-        createFolderStructure(projectInformation, './');
+        createFolderStructure(projectInformation.type, './');
     } catch (error) {
         if (error instanceof AndesiteError)
             cancel(`An error occurred while initializing the project 😢 ${error.message}`);

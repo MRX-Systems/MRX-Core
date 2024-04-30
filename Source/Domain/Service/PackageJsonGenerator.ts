@@ -68,10 +68,11 @@ const apiDependencies = {
 
 /**
  * Builds the package.json object based on the project information.
- * @param projectInformation - The project information.
- * @returns The package.json object.
+ * @param projectInformation - The project information. ({@link IProjectInformation})
+ * 
+ * @returns The package.json object. ({@link IPackageJson})
  */
-function buildPackageJsonObject(projectInformation: IProjectInformation): IPackageJson {
+function buildPackageJsonObject(projectInformation: Readonly<IProjectInformation>): IPackageJson {
     const packageJson: IPackageJson = {
         name: projectInformation.name,
         version: '1.0.0',
@@ -103,11 +104,11 @@ function buildPackageJsonObject(projectInformation: IProjectInformation): IPacka
 
 /**
  * Creates the package.json file.
- * @param projectInformation - The project information.
+ * @param projectInformation - The project information. ({@link IProjectInformation})
  * 
  * @throws {@link AndesiteError} - If the package.json file already exists. {@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS}
  */
-function createPackageJson(projectInformation: IProjectInformation, path: string = './example'): void {
+function createPackageJson(projectInformation: Readonly<IProjectInformation>, path: string = './example'): void {
     if (existsSync(`${path}/package.json`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS

@@ -5,7 +5,6 @@ import {
 
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-import { type IProjectInformation } from '@/Domain/Interface';
 
 const apiStructure = {
     Source: {
@@ -73,13 +72,13 @@ function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: 
 /**
  * Creates the folder structure based on the project information.
  * 
- * @param projectInformation - The project information.
+ * @param type - The project type.
  * @param parentPath - The parent path of the folder structure.
  * 
  * @throws {@link AndesiteError} - If failed to create folder structure. {@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE}
  */
-function createFolderStructure(projectInformation: IProjectInformation, parentPath: string = './example'): void {
-    switch (projectInformation.type) {
+function createFolderStructure(type: string, parentPath: string = './example'): void {
+    switch (type) {
     case 'API':
         buildFolderStructureByObject(apiStructure, parentPath);
         break;

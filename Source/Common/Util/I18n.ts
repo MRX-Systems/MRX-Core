@@ -12,7 +12,7 @@ let _i18n: i18n | undefined = undefined;
 /**
  * Initialize i18n with the given resources and fallback language.
  * 
- * @param resources - The resources to use for i18n.
+ * @param resources - The resources to use for i18n. ({@link Resource})
  * @param fallbackLng - The fallback language to use if the requested language is not available.
  * 
  * @throws {@link AndesiteError} - If i18n is already initialized. {@link CommonErrorKeys.I18N_IS_ALREADY_INITIALIZED}
