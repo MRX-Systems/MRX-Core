@@ -51,22 +51,14 @@ describe('FolderStructure', (): void => {
         for (const key of ['API', 'Worker Manager', 'Library', 'Sample Script', 'default']) {
 
             it(`should create folder structure for ${key}`, (): void => {
-                __test__.createFolderStructure({
-                    name: 'Test',
-                    description: 'Test',
-                    type: key
-                }, './folderTest');
+                __test__.createFolderStructure(key, './folderTest');
                 expect(true).toBe(true);
                 if (existsSync('./folderTest'))
                     rmdirSync('folderTest', { recursive: true });
             });
 
             it('should create folder structure with default path', (): void => {
-                __test__.createFolderStructure({
-                    name: 'Test',
-                    description: 'Test',
-                    type: key
-                });
+                __test__.createFolderStructure(key);
                 expect(true).toBe(true);
                 if (existsSync('./example'))
                     rmdirSync('./example', { recursive: true });
