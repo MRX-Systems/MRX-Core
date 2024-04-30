@@ -6,7 +6,9 @@ import {
     cancel,
     select,
     text
+// @ts-ignore
 } from '@clack/prompts';
+
 
 import { createPackageJson, createFolderStructure } from '@/Domain/Service';
 import { AndesiteError } from '@/Common/Error';
