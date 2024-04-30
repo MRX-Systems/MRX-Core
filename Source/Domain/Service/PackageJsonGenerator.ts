@@ -45,24 +45,32 @@ interface IPackageJson {
 }
 
 const apiDevDependencies = {
+    '@microsoft/tsdoc': '^0.14.2',
     '@tsconfig/node21': '^21.0.3',
     '@types/jest': '^29.5.12',
     '@types/node': '^20.12.4',
     '@typescript-eslint/eslint-plugin': '^7.5.0',
     '@typescript-eslint/parser': '^7.5.0',
     'concurrently': '^8.2.2',
+    'cross-env': '^7.0.3',
     'esbuild': '^0.20.2',
-    'esbuild-plugin-alias': '^0.2.1',
     'eslint': '^8.57.0',
+    'eslint-plugin-tsdoc': '^0.2.17',
     'jest': '^29.7.0',
     'ts-jest': '^29.1.2',
     'ts-node': '^10.9.2',
+    'tsc-alias': '^1.8.8',
     'tslib': '^2.6.2',
+    'typedoc': '^0.25.12',
     'typescript': '^5.4.3'
 };
 
 const apiDependencies = {
-    'source-map-support': '^0.5.21'
+    '@andesite-lab/andesite-core': 'latest',
+    '@basalt-lab/basalt-logger': '^1.6.2',
+    '@basalt-lab/basalt-helper': '^1.2.5',
+    '@basalt-lab/basalt-auth': '^1.1.7',
+    'source-map-support': '^0.5.21',
 };
 
 /**
