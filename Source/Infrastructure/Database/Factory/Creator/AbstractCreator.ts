@@ -13,7 +13,7 @@ import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum';
 /**
  * Abstract class for Database Creator
  * 
- * @typeparam T - The database types
+ * @typeparam T - The database schema types
  */
 export abstract class AbstractCreator<T> {
     /**
@@ -40,6 +40,14 @@ export abstract class AbstractCreator<T> {
     }
 
     /**
+     * Check if the database is connected
+     * @returns If the database is connected
+     */
+    public isConnected(): boolean {
+        return Boolean(this._database);
+    }
+
+    /**
      * Connect to the database
      */
     public connection(): void {
@@ -62,6 +70,7 @@ export abstract class AbstractCreator<T> {
      */
     public async disconnection(): Promise<void> {
         await this._database?.destroy();
+        this._database = undefined;
     }
 
     /**
