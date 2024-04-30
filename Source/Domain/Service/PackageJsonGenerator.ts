@@ -62,7 +62,6 @@ const apiDevDependencies = {
 };
 
 const apiDependencies = {
-    'kysely': '^0.27.3',
     'source-map-support': '^0.5.21'
 };
 
