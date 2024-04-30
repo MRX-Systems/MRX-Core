@@ -13,13 +13,13 @@ export interface ISQLiteDatabaseOptions {
     /**
      * Activate the log
      */
-    log: boolean;
+    log?: boolean;
 }
 
 /**
  * SQLite Creator is a concrete creator for SQLite Database (Factory Pattern)
  * 
- * @typeparam T - The database types
+ * @typeparam T - The database schema types
  */
 export class SQLiteCreator<T> extends AbstractCreator<T> {
     /**
@@ -29,6 +29,6 @@ export class SQLiteCreator<T> extends AbstractCreator<T> {
     public constructor(options: Readonly<ISQLiteDatabaseOptions>) {
         super(new SqliteDialect({
             database: new SQLite(options.filename)
-        }), options.log);
+        }), options.log ?? false);
     }
 }
