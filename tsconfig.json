@@ -1,20 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@tsconfig/node21/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "exclude": [
     "node_modules",
     "Build",
     "**/*.spec.ts",
     "esbuild.config.ts"
   ],
+  "include": [
+    "Source/**/*.ts"
+  ],
   "typedocOptions": {
     "entryPoints": [
       "Source/**/*.ts"
     ],
     "exclude": [
-      "cli.ts",
+      "cli.ts"
     ],
-    "out": "docs",
+    "out": "docs"
   },
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
