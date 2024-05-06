@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Andesite-Lab/Core/compare/v1.1.0...v1.2.0) (2024-05-06)
+
+
+### Features
+
+* add scripts ([c6ec0de](https://github.com/Andesite-Lab/Core/commit/c6ec0de02e6bb16306f85b696c5a28d0665f8a39))
+
 ## [1.1.0](https://github.com/Andesite-Lab/Core/compare/v1.0.1...v1.1.0) (2024-05-06)
 
 
