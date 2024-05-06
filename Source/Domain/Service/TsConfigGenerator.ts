@@ -5,7 +5,7 @@ import {
 
 const tsConfig = `{
     "$schema": "http://json.schemastore.org/tsconfig",
-    "extends": "@tsconfig/node21/tsconfig.json",
+    "extends": "@tsconfig/node22/tsconfig.json",
     "exclude": [
         "node_modules",
         "Build",
