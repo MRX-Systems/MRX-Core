@@ -44,9 +44,9 @@ interface IPackageJson {
     devDependencies?: Record<string, string>;
 }
 
-const apiDevDependencies = {
+const baseDevDependencies = {
     '@microsoft/tsdoc': '^0.14.2',
-    '@tsconfig/node21': '^21.0.3',
+    '@tsconfig/node22': '^22.0.0',
     '@types/jest': '^29.5.12',
     '@types/node': '^20.12.4',
     '@typescript-eslint/eslint-plugin': '^7.5.0',
@@ -65,6 +65,10 @@ const apiDevDependencies = {
     'typescript': '^5.4.3'
 };
 
+const apiDevDependencies = {
+    ...baseDevDependencies
+};
+
 const apiDependencies = {
     '@andesite-lab/andesite-core': 'latest',
     '@basalt-lab/basalt-logger': '^1.6.2',
@@ -72,6 +76,29 @@ const apiDependencies = {
     '@basalt-lab/basalt-auth': '^1.1.7',
     'source-map-support': '^0.5.21',
 };
+
+const workerManagerDevDependencies = {
+    ...baseDevDependencies
+};
+
+const workerManagerDependencies = {
+    '@andesite-lab/andesite-core': 'latest',
+    '@basalt-lab/basalt-logger': '^1.6.2',
+    '@basalt-lab/basalt-helper': '^1.2.5',
+    'source-map-support': '^0.5.21',
+};
+
+const libraryDevDependencies = {
+    ...baseDevDependencies
+};
+
+const libraryDependencies = {};
+
+const sampleScriptDevDependencies = {
+    ...baseDevDependencies
+};
+
+const sampleScriptDependencies = {};
 
 /**
  * Builds the package.json object based on the project information.
