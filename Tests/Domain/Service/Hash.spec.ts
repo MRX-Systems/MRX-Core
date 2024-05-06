@@ -1,4 +1,4 @@
-import { Hash } from '../../../Source/Common/Tools';
+import { Hash } from '../../../Source/Domain/Service';
 
 describe('Hash', () => {
     it('should hash data', () => {

@@ -1,7 +1,4 @@
-// import i18next from 'i18next';
-
-import { I18n } from '../../../Source/Common/Tools';
-// import { ErrorCommon, ErrorCommonCode } from '../../../Source//Common/Errors';
+import { I18n } from '../../../Source/Common/Util';
 
 describe('I18n', () => {
     describe('initI18n', () => {
