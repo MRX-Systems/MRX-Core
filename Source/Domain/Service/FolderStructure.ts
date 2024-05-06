@@ -43,6 +43,55 @@ const apiStructure = {
     }
 };
 
+const workerManagerStructure = {
+    Source: {
+        Common: {
+            Error: {
+                Enum: undefined
+            },
+            Util: undefined
+        },
+        Config: undefined,
+        Domain: {
+            Entity: undefined,
+            Interface: undefined,
+            Service: undefined,
+            UseCase: undefined
+        },
+        DTO: undefined,
+        Infrastructure: {
+            Database: undefined,
+            Repository: undefined
+        },
+        Presentation: {
+            Worker: {
+                Strategy: undefined
+            }
+        }
+    }
+};
+
+const libraryStructure = {
+    Source: {
+        Common: {
+            Error: {
+                Enum: undefined
+            },
+            Util: undefined
+        },
+        Config: undefined,
+        Domain: {
+            Interface: undefined,
+            Service: undefined,
+            UseCase: undefined
+        },
+    }
+};
+
+const sampleScriptStructure = {
+    Source: undefined
+};
+
 /**
  * Builds the folder structure by the object.
  * 
@@ -83,10 +132,13 @@ function createFolderStructure(type: string, parentPath: string = './example'): 
         buildFolderStructureByObject(apiStructure, parentPath);
         break;
     case 'Worker Manager':
+        buildFolderStructureByObject(workerManagerStructure, parentPath);
         break;
     case 'Library':
+        buildFolderStructureByObject(libraryStructure, parentPath);
         break;
     case 'Sample Script':
+        buildFolderStructureByObject(sampleScriptStructure, parentPath);
         break;
     default:
         buildFolderStructureByObject(apiStructure, parentPath);
