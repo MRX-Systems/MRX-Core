@@ -26,9 +26,7 @@ interface IPackageJson {
     /**
      * The scripts of the project. (ex: 'start', 'test', ...)
      */
-    scripts: {
-        start: string;
-    };
+    scripts: Record<string, string>;
     /**
      * The keywords of the project.
      * Used for searching the project in npm.
@@ -112,7 +110,15 @@ function buildPackageJsonObject(projectInformation: Readonly<IProjectInformation
         version: '1.0.0',
         description: projectInformation.description,
         scripts: {
-            start: 'node index.js'
+            'fix-lint': 'eslint --fix . --ext .ts',
+            'lint': 'eslint . --ext .ts',
+            'dev': 'npm run dev::build && concurrently -c \'bgYellow.bold,bgBlue.bold\' \'npm:dev::watch*\'',
+            'dev::build': 'ts-node esbuild.config.ts',
+            'dev::start': 'cross-env NODE_ENV=development node Build/App.js',
+            'dev::watch::build': 'ts-node esbuild.config.ts watch',
+            'dev::watch::start': 'cross-env NODE_ENV=development node --watch Build/App.js',
+            'prod::build': 'tsc --noEmit && ts-node esbuild.config.ts prod-build',
+            'prod::start': 'node Build/App.js'
         },
         keywords: [],
     };
