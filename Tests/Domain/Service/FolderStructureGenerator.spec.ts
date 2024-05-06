@@ -1,6 +1,6 @@
 import { existsSync, rmdirSync } from 'fs';
 
-import { __test__ } from '../../../Source/Domain/Service/FolderStructure';
+import { __test__ } from '../../../Source/Domain/Service/FolderStructureGenerator';
 
 describe('FolderStructure', (): void => {
     describe('buildFolderStructureByObject', (): void => {
