@@ -124,12 +124,18 @@ function buildPackageJsonObject(projectInformation: Readonly<IProjectInformation
         return packageJson;
 
     case 'Worker Manager':
+        packageJson.dependencies = workerManagerDependencies;
+        packageJson.devDependencies = workerManagerDevDependencies;
         return packageJson;
 
     case 'Library':
+        packageJson.dependencies = libraryDependencies;
+        packageJson.devDependencies = libraryDevDependencies;
         return packageJson;
         
     case 'Sample Script':
+        packageJson.dependencies = sampleScriptDependencies;
+        packageJson.devDependencies = sampleScriptDevDependencies;
         return packageJson;
     default:
         return packageJson;
