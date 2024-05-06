@@ -1,21 +1,23 @@
-import { exit } from 'process';
 import {
-    intro,
-    outro,
-    isCancel,
     cancel,
+    intro,
+    isCancel,
+    outro,
     select,
     text
-// @ts-ignore
+    // @ts-ignore
 } from '@clack/prompts';
+import { exit } from 'process';
 
 
-import {
-    createPackageJson,
-    createFolderStructure,
-    createTsConfig
-} from '@/Domain/Service';
 import { AndesiteError } from '@/Common/Error';
+import {
+    createEslint,
+    createFolderStructure,
+    createPackageJson,
+    createTsConfig,
+    createJestConfig
+} from '@/Domain/Service';
 
 /**
  * Cancel the project initialization and stop the process.
@@ -104,6 +106,11 @@ async function InitProject(): Promise<void> {
         createPackageJson(projectInformation, './');
         createFolderStructure(projectInformation.type, './');
         createTsConfig('./');
+        createEslint('./');
+        createJestConfig(projectInformation.name, './');
+        // Creation of esbuild.config.ts
+        
+        // if projectType is library then create .npmignore
     } catch (error) {
         if (error instanceof AndesiteError)
             cancel(`An error occurred while initializing the project 😢 ${error.message}`);
