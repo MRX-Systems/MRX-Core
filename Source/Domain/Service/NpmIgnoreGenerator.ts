@@ -1,0 +1,42 @@
+import { AndesiteError } from '@/Common/Error';
+import { ServiceErrorKeys } from '@/Common/Error/Enum';
+import {
+    existsSync,
+    writeFileSync
+} from 'fs';
+
+const npmIgnore = `
+.eslintrc
+.github
+.idea
+.nvmrc
+.vscode
+CHANGELOG.md
+coverage/
+docs/
+esbuild.config.ts
+jest.config.json
+Source/
+Tests/
+tsconfig.json
+tsconfig.tsbuildinfo
+`;
+
+/**
+ * Create the .npmignore file
+ * 
+ * @param path - The path to create the .npmignore file
+ * 
+ * @throws {@link AndesiteError} - If the .npmignore file already exists. {@link ServiceErrorKeys.ERROR_NPM_IGNORE_EXISTS}
+ */
+function createNpmIgnoreFile(path: string): void {
+    if (existsSync(`${path}/.npmignore`))
+        throw new AndesiteError({
+            messageKey: ServiceErrorKeys.ERROR_NPM_IGNORE_EXISTS
+        });
+    writeFileSync(`${path}/.npmignore`, npmIgnore);
+}
+
+export {
+    createNpmIgnoreFile
+};

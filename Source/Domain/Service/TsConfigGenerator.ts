@@ -76,16 +76,16 @@ const tsConfig = `{
 /**
  * Creates the tsconfig.json file.
  *
- * @param parentPath - The parent path of the tsconfig.json.
+ * @param path - The parent path of the tsconfig.json.
  * 
  * @throws {@link AndesiteError} - If the tsconfig.json file already exists. {@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS}
  */
-function createTsConfig(parentPath: string = './example'): void {
-    if (existsSync(`${parentPath}/tsconfig.json`))
+function createTsConfig(path: string = './example'): void {
+    if (existsSync(`${path}/tsconfig.json`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS
         });
-    writeFileSync(`${parentPath}/tsconfig.json`, tsConfig);
+    writeFileSync(`${path}/tsconfig.json`, tsConfig);
 }
 
 export {

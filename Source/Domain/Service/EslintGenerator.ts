@@ -277,16 +277,16 @@ const eslint = `
 /**
  * Create the .eslintrc file.
  *
- * @param parentPath - The parent path of the .eslintrc.
+ * @param path - The parent path of the .eslintrc.
  * 
  * @throws {@link AndesiteError} - If the .eslintrc file already exists. {@link ServiceErrorKeys.ERROR_ESLINT_EXISTS}
  */
-function createEslint(parentPath: string = './example'): void {
-    if (existsSync(`${parentPath}/.eslintrc`))
+function createEslint(path: string = './example'): void {
+    if (existsSync(`${path}/.eslintrc`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_ESLINT_EXISTS
         });
-    writeFileSync(`${parentPath}/.eslintrc`, eslint);
+    writeFileSync(`${path}/.eslintrc`, eslint);
 }
 
 export {

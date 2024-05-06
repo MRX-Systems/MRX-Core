@@ -12,11 +12,13 @@ import { exit } from 'process';
 
 import { AndesiteError } from '@/Common/Error';
 import {
+    createEsbuildConfigFile,
     createEslint,
     createFolderStructure,
+    createJestConfig,
+    createNpmIgnoreFile,
     createPackageJson,
-    createTsConfig,
-    createJestConfig
+    createTsConfig
 } from '@/Domain/Service';
 
 /**
@@ -108,9 +110,11 @@ async function InitProject(): Promise<void> {
         createTsConfig('./');
         createEslint('./');
         createJestConfig(projectInformation.name, './');
-        // Creation of esbuild.config.ts
-        
-        // if projectType is library then create .npmignore
+        createEsbuildConfigFile('./');
+
+        if (projectType === 'Library') 
+            createNpmIgnoreFile('./');
+
     } catch (error) {
         if (error instanceof AndesiteError)
             cancel(`An error occurred while initializing the project 😢 ${error.message}`);

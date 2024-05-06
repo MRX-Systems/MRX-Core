@@ -17,14 +17,20 @@ const apiStructure = {
         },
         Config: undefined,
         Domain: {
-            Entity: undefined,
+            Entity: {
+                __Static__: undefined,
+                __Dynamic__: undefined
+            },
             Interface: undefined,
             Service: undefined,
             UseCase: undefined
         },
         DTO: undefined,
         Infrastructure: {
-            Database: undefined,
+            Database: {
+                __Static__: undefined,
+                __Dynamic__: undefined
+            },
             Repository: undefined
         },
         Presentation: {
