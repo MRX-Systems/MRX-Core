@@ -48,7 +48,7 @@ const eslint = `
         "@typescript-eslint/array-type": [
             "error",
             {
-              "default": "array"
+              "default": "array-simple"
             }
         ], // https://typescript-eslint.io/rules/array-type
         "@typescript-eslint/await-thenable": "error", // https://typescript-eslint.io/rules/await-thenable
