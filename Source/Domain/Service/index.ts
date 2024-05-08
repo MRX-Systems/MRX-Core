@@ -1,3 +1,4 @@
+export { createAndesiteFolderStructure } from './AndesiteFolder';
 export { createEsbuildConfigFile } from './EsbuildGenerator';
 export { createEslint } from './EslintGenerator';
 export { createFolderStructure } from './FolderStructureGenerator';
