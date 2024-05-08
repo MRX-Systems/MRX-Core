@@ -49,9 +49,9 @@
   "devDependencies": {
     "@microsoft/tsdoc": "^0.14.2",
     "@tsconfig/node22": "^22.0.0",
-    "@types/tedious": "4.0.9",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
+    "@types/tedious": "4.0.9",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
     "concurrently": "^8.2.2",
@@ -80,6 +80,7 @@
     "pg": "^8.11.5",
     "source-map-support": "^0.5.21",
     "tarn": "^3.0.2",
-    "tedious": "16.4.0"
+    "tedious": "16.4.0",
+    "yaml": "^2.4.2"
   }
 }
