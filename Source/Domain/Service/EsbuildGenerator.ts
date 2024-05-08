@@ -1,16 +1,21 @@
-import { AndesiteError } from '@/Common/Error';
-import { ServiceErrorKeys } from '@/Common/Error/Enum';
-
 import {
-    readFileSync,
     existsSync,
+    readFileSync,
     writeFileSync
 } from 'fs';
 import { compile } from 'handlebars';
 
+import { AndesiteError } from '@/Common/Error';
+import { ServiceErrorKeys } from '@/Common/Error/Enum';
+
+/**
+ * Get the esbuild.config.ts template
+ *
+ * @returns The esbuild.config.ts template
+ */
 function getEsbuidConfigTemplate(): string {  
     const compiledResult = compile(readFileSync(`${__dirname}/../Templates/esbuild.hbs`, 'utf-8'));
-    return compiledResult({}) as string;
+    return compiledResult({});
 }
 
 /**

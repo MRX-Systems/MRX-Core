@@ -112,13 +112,10 @@ function buildPackageJsonObject(projectInformation: Readonly<IProjectInformation
         scripts: {
             'fix-lint': 'eslint --fix . --ext .ts',
             'lint': 'eslint . --ext .ts',
-            'dev': 'npm run dev::build && concurrently -c \'bgYellow.bold,bgBlue.bold\' \'npm:dev::watch*\'',
-            'dev::build': 'ts-node esbuild.config.ts',
-            'dev::start': 'cross-env NODE_ENV=development node Build/App.js',
-            'dev::watch::build': 'ts-node esbuild.config.ts watch',
-            'dev::watch::start': 'cross-env NODE_ENV=development node --watch Build/App.js',
-            'prod::build': 'tsc --noEmit && ts-node esbuild.config.ts prod-build',
-            'prod::start': 'node Build/App.js'
+            'dev': 'andesite dev',
+            'build': 'andesite build',
+            'start': 'andesite start',
+            'postinstall': 'andesite prepare',
         },
         keywords: [],
     };

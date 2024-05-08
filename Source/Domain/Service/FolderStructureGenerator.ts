@@ -40,7 +40,7 @@ const apiStructure = {
                 Router: undefined
             },
             Schema: undefined,
-            Websocket: {
+            WebSocket: {
                 Handler: undefined,
                 Middleware: undefined,
                 Router: undefined
