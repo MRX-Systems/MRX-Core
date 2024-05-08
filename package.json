@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@andesite-lab/andesite-core",
   "version": "1.2.0",
   "description": "Andesite - Core allows you to create a new microservice with ease. It provides a set of tools to help you build a new microservice.",
@@ -10,15 +11,19 @@
   "scripts": {
     "clear": "if [ -f tsconfig.tsbuildinfo ]; then rm tsconfig.tsbuildinfo; fi && if [ -d Build ]; then rm -rf Build; fi",
     "create-types": "tsc --emitDeclarationOnly && tsc-alias",
-    "prod::build": "npm run clear && tsc --noEmit && npm run create-types && ts-node esbuild.config.ts prod-build",
-    "dev::pkg::build": "ts-node esbuild.config.ts dev::pkg::build",
-    "dev::pkg::watch::build": "ts-node esbuild.config.ts dev::pkg::watch",
+
+    "build": "npm run clear && tsc --noEmit && npm run create-types && ts-node ./Configs/esbuild.config.package build",
+
+    "dev::pkg::build": "ts-node ./Configs/esbuild.config.package dev::pkg::build",
+    "dev::pkg::watch::build": "ts-node ./Configs/esbuild.config.package dev::pkg::watch",
     "dev::pkg::watch::start": "cross-env NODE_ENV=development node --watch Build/lib.js",
     "dev::pkg": "npm run dev::pkg::build && concurrently -c \"bgYellow.bold,bgBlue.bold\" \"npm:dev::pkg::watch*\"",
-    "dev::cli::build": "ts-node esbuild.config.ts dev::cli::build",
-    "dev::cli::watch::build": "ts-node esbuild.config.ts dev::cli::watch",
+
+    "dev::cli::build": "ts-node ./Configs/esbuild.config.package dev::cli::build",
+    "dev::cli::watch::build": "ts-node ./Configs/esbuild.config.package dev::cli::watch",
     "dev::cli::watch::start": "cross-env NODE_ENV=development node --watch Build/cli.js",
     "dev::cli": "npm run dev::cli::build && concurrently -c \"bgYellow.bold,bgBlue.bold\" \"npm:dev::cli::watch*\"",
+    
     "docs": "typedoc",
     "fix-lint": "eslint --fix . --ext .ts",
     "lint": "eslint . --ext .ts",

@@ -17,7 +17,12 @@
         "sourceType": "module",
         "project": "./tsconfig.json"
     },
-    "ignorePatterns": ["node_modules/*", "esbuild.config.ts", "**/*.spec.ts", "Build/*"],
+    "ignorePatterns": [
+        "node_modules/*",
+        "Configs/*",
+        "**/*.spec.ts",
+        "Build/*"
+    ],
     "rules": {
         "tsdoc/syntax": "error",
         "indent": [

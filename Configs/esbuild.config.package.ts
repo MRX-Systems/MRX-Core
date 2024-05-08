@@ -1,6 +1,6 @@
 import esbuild, { BuildOptions } from 'esbuild';
 
-import pkg from './package.json';
+import pkg from '../package.json';
 
 export interface IPackageJson {
     version?: string;
@@ -75,7 +75,7 @@ const args = process.argv.slice(2);
         break;
 
 
-    case 'prod-build':
+    case 'build':
         optionsLib.minify = true;
         optionsLib.keepNames = true;
         optionsLib.treeShaking = true;
