@@ -1,4 +1,4 @@
-import andesiteFolderStructure from '@/../Templates/FolderStructure/Andesite.json';
+import andesiteFolderStructure from '@/../Templates/FolderStructure/andesite.json';
 import { buildFolderStructureByObject } from '@/Common/Util';
 
 /**
@@ -6,10 +6,10 @@ import { buildFolderStructureByObject } from '@/Common/Util';
  * 
  * @param path - The parent path of the folder structure.
  */
-function createAndesiteFolderStructure(path: string = './example'): void {
+function initAndesiteFolderStructure(path: string = './'): void {
     buildFolderStructureByObject(andesiteFolderStructure, path);
 }
 
 export {
-    createAndesiteFolderStructure
+    initAndesiteFolderStructure
 };

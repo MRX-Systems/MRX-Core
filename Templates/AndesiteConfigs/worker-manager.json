@@ -1,0 +1,8 @@
+{
+  "WorkerManager": {
+    "Config": {
+      "EntryPoint": "Source/App.ts",
+      "PathAlias": "@/"
+    }
+  }
+}

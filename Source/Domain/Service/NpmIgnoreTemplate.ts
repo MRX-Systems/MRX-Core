@@ -30,7 +30,7 @@ tsconfig.tsbuildinfo
  * 
  * @throws {@link AndesiteError} - If the .npmignore file already exists. {@link ServiceErrorKeys.ERROR_NPM_IGNORE_EXISTS}
  */
-function createNpmIgnoreFile(path: string): void {
+function initNpmIgnoreFile(path: string = './'): void {
     if (existsSync(`${path}/.npmignore`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_NPM_IGNORE_EXISTS
@@ -39,5 +39,5 @@ function createNpmIgnoreFile(path: string): void {
 }
 
 export {
-    createNpmIgnoreFile
+    initNpmIgnoreFile
 };

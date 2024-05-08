@@ -3,7 +3,7 @@ import {
     writeFileSync
 } from 'fs';
 
-import eslint from '@/../Templates/Eslint.json';
+import eslint from '@/../Templates/eslint.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
 
@@ -14,14 +14,14 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
  * 
  * @throws {@link AndesiteError} - If the .eslintrc file already exists. {@link ServiceErrorKeys.ERROR_ESLINT_EXISTS}
  */
-function createEslint(path: string = './example'): void {
+function initEslint(path: string = './'): void {
     if (existsSync(`${path}/.eslintrc`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_ESLINT_EXISTS
         });
-    writeFileSync(`${path}/.eslintrc`, JSON.stringify(eslint, null, 4));
+    writeFileSync(`${path}/.eslintrc`, JSON.stringify(eslint, null, 2));
 }
 
 export {
-    createEslint
+    initEslint
 };

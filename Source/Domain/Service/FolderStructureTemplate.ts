@@ -1,8 +1,8 @@
+import apiStructure from '@/../Templates/FolderStructure/api.json';
+import libraryStructure from '@/../Templates/FolderStructure/library.json';
+import sampleScriptStructure from '@/../Templates/FolderStructure/sample-script.json';
+import workerManagerStructure from '@/../Templates/FolderStructure/worker-manager.json';
 import { buildFolderStructureByObject } from '@/Common/Util';
-import apiStructure from '@/../Templates/FolderStructure/Api.json';
-import workerManagerStructure from '@/../Templates/FolderStructure/WorkerManager.json';
-import libraryStructure from '@/../Templates/FolderStructure/Library.json';
-import sampleScriptStructure from '@/../Templates/FolderStructure/SampleScript.json';
 
 /**
  * Creates the folder structure based on the project information.
@@ -12,7 +12,7 @@ import sampleScriptStructure from '@/../Templates/FolderStructure/SampleScript.j
  * 
  * @throws {@link AndesiteError} - If failed to create folder structure. {@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE}
  */
-function createFolderStructure(type: string, path: string = './example'): void {
+function initFolderStructure(type: string, path: string = './'): void {
     switch (type) {
     case 'API':
         buildFolderStructureByObject(apiStructure as Record<string, unknown>, path);
@@ -31,10 +31,6 @@ function createFolderStructure(type: string, path: string = './example'): void {
     }
 }
 
-export const __test__ = {
-    createFolderStructure
-};
-
 export {
-    createFolderStructure
+    initFolderStructure
 };

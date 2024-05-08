@@ -3,22 +3,9 @@ import {
     writeFileSync
 } from 'fs';
 
+import jest from '@/../Templates/jest.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-
-const jestConfig = {
-    preset: 'ts-jest',
-    coverageDirectory: 'coverage',
-    moduleNameMapper: {
-        '^@/(.*)$': '<rootDir>/Source/$1'
-    },
-    testMatch: [
-        '**/?(*.)+(spec).ts'
-    ],
-    resetMocks: true,
-    clearMocks: true,
-    verbose: true
-};
 
 /**
  * Create a jest.config.json file.
@@ -28,17 +15,18 @@ const jestConfig = {
  * 
  * @throws {@link AndesiteError} - If jest.config.json already exists. {@link ServiceErrorKeys.ERROR_JEST_EXISTS}
  */
-function createJestConfig(projectName: string, path: string = './example'): void {
+function initJestConfig(
+    projectName: string,
+    path: string = './'
+): void {
     if (existsSync(`${path}/jest.config.json`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_JEST_EXISTS
         });
-    writeFileSync(`${path}/jest.config.json`, JSON.stringify({
-        displayName: projectName,
-        ...jestConfig
-    }, null, 4));
+    jest.displayName = projectName;
+    writeFileSync(`${path}/.andesite/jest.config.json`, JSON.stringify(jest, null, 2));
 }
 
 export {
-    createJestConfig
+    initJestConfig
 };

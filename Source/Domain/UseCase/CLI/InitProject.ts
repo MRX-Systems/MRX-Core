@@ -12,19 +12,22 @@ import { exit } from 'process';
 
 import { AndesiteError } from '@/Common/Error';
 import {
-    createEsbuildConfigFile,
-    createEslint,
-    createFolderStructure,
-    createJestConfig,
-    createNpmIgnoreFile,
-    createPackageJson,
-    createTsConfig
+    initAndesiteFolderStructure,
+    initAndesiteYmlConfig,
+    initFolderStructure,
+    initPackageJson,
+    initEslint,
+    initJestConfig,
+    initTsConfig,
+    initTsConfigUser,
+    initNpmIgnoreFile,
+    initEntryPoint
 } from '@/Domain/Service';
 
 /**
  * Cancel the project initialization and stop the process.
  */
-function cancelAndStop(): void {
+function _cancelAndStop(): void {
     cancel('Project initialization canceled');
     exit(0);
 }
@@ -34,7 +37,7 @@ function cancelAndStop(): void {
  * 
  * @returns The project type selected by the user.
  */
-async function requestProjectTypeSelected(): Promise<string> {
+async function _requestProjectTypeSelected(): Promise<string> {
     const projectType = await select({
         message: 'Select the project type',
         initialValue: 'API',
@@ -57,7 +60,7 @@ async function requestProjectTypeSelected(): Promise<string> {
             },
         ]
     });
-    if (isCancel(projectType)) cancelAndStop();
+    if (isCancel(projectType)) _cancelAndStop();
     return projectType as string;
 }
 
@@ -66,13 +69,13 @@ async function requestProjectTypeSelected(): Promise<string> {
  * 
  * @returns The project name.
  */
-async function requestProjectName(): Promise<string> {
+async function _requestProjectName(): Promise<string> {
     const projectName = await text({
         message: 'Enter the project name',
         defaultValue: 'my-project',
         placeholder: 'my-project'
     });
-    if (isCancel(projectName)) cancelAndStop();
+    if (isCancel(projectName)) _cancelAndStop();
     return projectName as string;
 }
 
@@ -81,13 +84,13 @@ async function requestProjectName(): Promise<string> {
  * 
  * @returns The project description.
  */
-async function requestProjectDescription(): Promise<string> {
+async function _requestProjectDescription(): Promise<string> {
     const projectDescription = await text({
         message: 'Enter the project description',
         defaultValue: '',
         placeholder: ''
     });
-    if (isCancel(projectDescription)) cancelAndStop();
+    if (isCancel(projectDescription)) _cancelAndStop();
     return projectDescription as string;
 }
 
@@ -96,24 +99,27 @@ async function requestProjectDescription(): Promise<string> {
  */
 async function InitProject(): Promise<void> {
     intro('Initializing a new project');
-    const projectType = await requestProjectTypeSelected();
-    const projectName = await requestProjectName();
-    const projectDescription = await requestProjectDescription();
+    const projectType = await _requestProjectTypeSelected();
+    const projectName = await _requestProjectName();
+    const projectDescription = await _requestProjectDescription();
     try {
         const projectInformation = {
             name: projectName,
             description: projectDescription,
             type: projectType
         };
-        createPackageJson(projectInformation, './');
-        createFolderStructure(projectInformation.type, './');
-        createTsConfig('./');
-        createEslint('./');
-        createJestConfig(projectInformation.name, './');
-        createEsbuildConfigFile('./');
+        initAndesiteFolderStructure();
+        initAndesiteYmlConfig(projectInformation.type);
+        initFolderStructure(projectInformation.type);
+        initPackageJson(projectInformation);
+        initEslint();
+        initJestConfig(projectInformation.name);
+        initTsConfig();
+        initTsConfigUser();
+        initEntryPoint();
 
         if (projectType === 'Library') 
-            createNpmIgnoreFile('./');
+            initNpmIgnoreFile();
 
     } catch (error) {
         if (error instanceof AndesiteError)
