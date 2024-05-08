@@ -16,7 +16,7 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
  */
 function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: string = './example'): void {
     for (const key in obj)
-        if (obj[key] === undefined) {
+        if (obj[key] === undefined || obj[key] === null) {
             const path = `${parentPath}/${key}`;
             try {
                 if (!existsSync(path))

@@ -1,96 +1,8 @@
 import { buildFolderStructureByObject } from '@/Common/Util';
-
-const apiStructure = {
-    Source: {
-        Common: {
-            Error: {
-                Enum: undefined
-            },
-            Lang: undefined,
-            Util: undefined
-        },
-        Config: undefined,
-        Domain: {
-            Entity: {
-                __Static__: undefined,
-                __Dynamic__: undefined
-            },
-            Interface: undefined,
-            Service: undefined,
-            UseCase: undefined
-        },
-        DTO: undefined,
-        Infrastructure: {
-            Database: {
-                __Static__: undefined,
-                __Dynamic__: undefined
-            },
-            Repository: undefined
-        },
-        Presentation: {
-            Http: {
-                Handler: undefined,
-                Middleware: undefined,
-                Router: undefined
-            },
-            Schema: undefined,
-            WebSocket: {
-                Handler: undefined,
-                Middleware: undefined,
-                Router: undefined
-            }
-        }
-    }
-};
-
-const workerManagerStructure = {
-    Source: {
-        Common: {
-            Error: {
-                Enum: undefined
-            },
-            Util: undefined
-        },
-        Config: undefined,
-        Domain: {
-            Entity: undefined,
-            Interface: undefined,
-            Service: undefined,
-            UseCase: undefined
-        },
-        DTO: undefined,
-        Infrastructure: {
-            Database: undefined,
-            Repository: undefined
-        },
-        Presentation: {
-            Worker: {
-                Strategy: undefined
-            }
-        }
-    }
-};
-
-const libraryStructure = {
-    Source: {
-        Common: {
-            Error: {
-                Enum: undefined
-            },
-            Util: undefined
-        },
-        Config: undefined,
-        Domain: {
-            Interface: undefined,
-            Service: undefined,
-            UseCase: undefined
-        },
-    }
-};
-
-const sampleScriptStructure = {
-    Source: undefined
-};
+import apiStructure from '@/../Templates/FolderStructure/Api.json';
+import workerManagerStructure from '@/../Templates/FolderStructure/WorkerManager.json';
+import libraryStructure from '@/../Templates/FolderStructure/Library.json';
+import sampleScriptStructure from '@/../Templates/FolderStructure/SampleScript.json';
 
 /**
  * Creates the folder structure based on the project information.
@@ -103,19 +15,19 @@ const sampleScriptStructure = {
 function createFolderStructure(type: string, path: string = './example'): void {
     switch (type) {
     case 'API':
-        buildFolderStructureByObject(apiStructure, path);
+        buildFolderStructureByObject(apiStructure as Record<string, unknown>, path);
         break;
     case 'Worker Manager':
-        buildFolderStructureByObject(workerManagerStructure, path);
+        buildFolderStructureByObject(workerManagerStructure as Record<string, unknown>, path);
         break;
     case 'Library':
-        buildFolderStructureByObject(libraryStructure, path);
+        buildFolderStructureByObject(libraryStructure as Record<string, unknown>, path);
         break;
     case 'Sample Script':
-        buildFolderStructureByObject(sampleScriptStructure, path);
+        buildFolderStructureByObject(sampleScriptStructure as Record<string, unknown>, path);
         break;
     default:
-        buildFolderStructureByObject(apiStructure, path);
+        buildFolderStructureByObject(apiStructure as Record<string, unknown>, path);
     }
 }
 

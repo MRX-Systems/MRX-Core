@@ -1,0 +1,42 @@
+{
+  "Source": {
+    "Common": {
+      "Error": {
+        "Enum": null
+      },
+      "Lang": null,
+      "Util": null
+    },
+    "Config": null,
+    "Domain": {
+      "Entity": {
+        "__Static__": null,
+        "__Dynamic__": null
+      },
+      "Interface": null,
+      "Service": null,
+      "UseCase": null
+    },
+    "DTO": null,
+    "Infrastructure": {
+      "Database": {
+        "__Static__": null,
+        "__Dynamic__": null
+      },
+      "Repository": null
+    },
+    "Presentation": {
+      "Http": {
+        "Handler": null,
+        "Middleware": null,
+        "Router": null
+      },
+      "Schema": null,
+      "WebSocket": {
+        "Handler": null,
+        "Middleware": null,
+        "Router": null
+      }
+    }
+  }
+}

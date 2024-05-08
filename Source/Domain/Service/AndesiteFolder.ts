@@ -1,8 +1,5 @@
+import andesiteFolderStructure from '@/../Templates/FolderStructure/Andesite.json';
 import { buildFolderStructureByObject } from '@/Common/Util';
-
-const andesiteFolderStructure = {
-    Infrastructure: undefined,
-};
 
 /**
  * Create the Andesite folder structure.
