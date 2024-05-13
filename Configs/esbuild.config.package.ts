@@ -1,4 +1,6 @@
 import esbuild, { BuildOptions } from 'esbuild';
+import { Command } from 'commander';
+import { argv } from 'process';
 
 import pkg from '../package.json';
 
@@ -26,68 +28,71 @@ const dependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : 
  
 const external = dependencies || [];
 
-const optionsLib: BuildOptions = {
-    entryPoints: ['./Source/lib.ts'],
-    outfile: './Build/lib.js',
-    bundle: true,
-    platform: 'node',
-    external,
-    loader: { '.ts': 'ts' },
-    tsconfig: './tsconfig.json',
-    color: true,
-};
+const commander = new Command();
 
-const optionsCli: BuildOptions = {
-    entryPoints: ['./Source/cli.ts'],
-    outfile: './Build/cli.js',
-    bundle: true,
-    platform: 'node',
-    external,
-    loader: { '.ts': 'ts' },
-    tsconfig: './tsconfig.json',
-    color: true,
-};
+commander.version(safePkg.version ?? '1.0.0', '-v, --version', 'output the current version');
 
-const args = process.argv.slice(2);
-(async () => {
-    switch (args[0]) {
+commander
+    .command('build')
+    .description('Build the project')
+    .option('-w, --watch', 'Watch the project')
+    .option('-d, --dev', 'Development mode')
+    .option('-o, --output <output>', 'Output directory')
+    .action(async (options) => {
+        const output = options.output ?? './Build';
 
-    case 'dev::pkg::build':
-        optionsLib.sourcemap = 'linked';
-        await esbuild.build(optionsLib);
-        break;
-    case 'dev::cli::build':
-        optionsCli.sourcemap = 'linked';
-        await esbuild.build(optionsCli);
-        break;
+        const optionsLib: BuildOptions = {
+            entryPoints: ['./Source/lib.ts'],
+            outfile: `${output}/lib.js`,
+            bundle: true,
+            platform: 'node',
+            external,
+            loader: { '.ts': 'ts' },
+            tsconfig: './tsconfig.json',
+            color: true,
+        };
+        
+        const optionsCli: BuildOptions = {
+            entryPoints: ['./Source/cli.ts'],
+            outfile: `${output}/cli.js`,
+            bundle: true,
+            platform: 'node',
+            external,
+            loader: { '.ts': 'ts' },
+            tsconfig: './tsconfig.json',
+            color: true,
+        };
 
-    case 'dev::pkg::watch':
-        optionsLib.sourcemap = 'linked';
-        await esbuild.build(optionsLib);
-        const ctx = await esbuild.context(optionsLib);
-        await ctx.watch();
-        break;
-    case 'dev::cli::watch':
-        optionsCli.sourcemap = 'linked';
-        await esbuild.build(optionsCli);
-        const ctx2 = await esbuild.context(optionsCli);
-        await ctx2.watch();
-        break;
+        if (options.dev) {
+            optionsLib.sourcemap = 'linked';
+            optionsCli.sourcemap = 'linked';
+        } else {
+            optionsLib.minify = true;
+            optionsLib.keepNames = true;
+            optionsLib.treeShaking = true;
 
+            optionsCli.minify = true;
+            optionsCli.keepNames = true;
+            optionsCli.treeShaking = true;
+        }
 
-    case 'build':
-        optionsLib.minify = true;
-        optionsLib.keepNames = true;
-        optionsLib.treeShaking = true;
-        await esbuild.build(optionsLib);
+        if (options.watch) {
+            await Promise.all([
+                esbuild.build(optionsLib),
+                esbuild.build(optionsCli),
+            ]);
+            const ctx = await esbuild.context(optionsLib);
+            const ctx2 = await esbuild.context(optionsCli);
+            await Promise.all([
+                ctx.watch(),
+                ctx2.watch(),
+            ]);
+        } else {
+            await Promise.all([
+                esbuild.build(optionsLib),
+                esbuild.build(optionsCli),
+            ]);
+        }
+    });
 
-        optionsCli.minify = true;
-        optionsCli.keepNames = true;
-        optionsCli.treeShaking = true;
-        await esbuild.build(optionsCli);
-        break;
-    default:
-
-        break;
-    };
-})();
+commander.parse(argv)
