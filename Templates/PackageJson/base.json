@@ -4,8 +4,7 @@
     "lint": "eslint . --ext .ts",
     "dev": "andesite dev",
     "build": "andesite build",
-    "start": "andesite start",
-    "postinstall": "andesite prepare"
+    "start": "andesite start"
   },
   "devDependencies": {
     "@microsoft/tsdoc": "^0.14.2",
