@@ -1,5 +1,8 @@
 import {
-    spinner
+    intro,
+    outro,
+    spinner,
+    cancel,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
 } from '@clack/prompts';
@@ -11,14 +14,21 @@ import {
     updateTsConfig
 } from '@/Domain/Service';
 import { type IAndesiteApiConfigDTO, type IBuildProjectOptionsDTO } from '@/DTO';
+import { sleep } from '@/lib';
 
-function buildProject(): void {
+async function buildProject(): Promise<void> {
     const s = spinner();
-    s.start('Build the project 🛠️');
-
+    intro('Hey there! 👋');
+    s.start('Running build process 🚀');
+    await sleep(70);
     try {
+        s.message('Reading configuration 📖');
+        await sleep(100);
+        
         const config: IAndesiteApiConfigDTO = readAndesiteYmlConfig() as IAndesiteApiConfigDTO;
-
+        
+        s.message('Reconfiguring project 🛠️');
+        await sleep(100);
         initAndesiteFolderStructure();
         updateTsConfig(config);
         
@@ -30,12 +40,20 @@ function buildProject(): void {
             watch: false,
             ...config
         };
+
+        s.message('Building project 🏗️');
+        await sleep(60);
         execBuildCommand(buildOptions);
     } catch (error) {
-        s.stop('Build failed ❌');
+        cancel('Build failed ❌');
         throw error;
     }
-    s.stop('Build completed 🎉');
+    s.stop('Build successful! ✅');
+    const date = new Date();
+    if (date.getHours() >= 8 && date.getHours() <= 18)
+        outro('Have a great day! 🌞');
+    else
+        outro('Have a great night! 🌚');
 }
 
 export {

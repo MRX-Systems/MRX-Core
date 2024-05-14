@@ -34,7 +34,7 @@ function execBuildCommand(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteA
     const command: string = _buildCommandEsbuild(config);
     execSync(command, {
         cwd: process.cwd(),
-        stdio: 'inherit'
+        stdio: ['ignore', 'ignore', 'ignore']
     });
 }
 

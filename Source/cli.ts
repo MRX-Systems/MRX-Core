@@ -5,7 +5,7 @@ import { argv } from 'process';
 import 'source-map-support/register';
 
 import { PackageJsonCore } from '@/Config';
-import { InitProject } from '@/Domain/UseCase/CLI';
+import { buildProject, initProject } from '@/Domain/UseCase/CLI';
 
 const commander = new Command();
 
@@ -15,6 +15,12 @@ commander.version(PackageJsonCore.version, '-v, --version', 'output the current 
 commander
     .command('init')
     .description('Initialize a new project')
-    .action(InitProject);
+    .action(initProject);
+
+commander
+    .command('build')
+    .description('Build the project')
+    .action(buildProject);
+
 
 commander.parse(argv);
