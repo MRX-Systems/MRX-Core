@@ -1,5 +1,5 @@
-import esbuild, { BuildOptions } from 'esbuild';
 import { Command } from 'commander';
+import esbuild, { BuildOptions } from 'esbuild';
 import { argv } from 'process';
 
 import pkg from '../package.json';
@@ -12,21 +12,15 @@ export interface IPackageJson {
     main?: string;
     keywords?: string[];
     license?: string;
-    scripts?: {
-        [key: string]: string;
-    }
-    dependencies?: {
-        [key: string]: string;
-    },
-    devDependencies?: {
-        [key: string]: string;
-    },
+    scripts?: Record<string, string>
+    dependencies?: Record<string, string>,
+    devDependencies?: Record<string, string>,
 }
 
 const safePkg: IPackageJson = pkg as IPackageJson;
 const dependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
  
-const external = dependencies || [];
+const external = dependencies ?? [];
 
 const commander = new Command();
 

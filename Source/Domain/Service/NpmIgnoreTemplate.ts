@@ -15,7 +15,6 @@ const npmIgnore = `
 CHANGELOG.md
 coverage/
 docs/
-esbuild.config.ts
 jest.config.json
 Source/
 Tests/

@@ -5,7 +5,7 @@
 .vscode
 coverage/
 docs/
-esbuild.config.ts
+Configs/esbuild.config.package.ts
 Source/
 Tests/
 tsconfig.json

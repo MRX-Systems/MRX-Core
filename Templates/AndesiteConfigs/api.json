@@ -4,7 +4,7 @@
     "Logger": true,
     "BaseSourceDir": "Source",
     "EntryPoint": "Source/App.ts",
-    "OutputDir": "dist",
+    "OutputDir": "Build",
     "PathAlias": "@/"
   },
   "Infrastructure": {

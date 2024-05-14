@@ -10,7 +10,7 @@ import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.jso
 import workerManagerConfig from '@/../Templates/AndesiteConfigs/worker-manager.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-import { stringify, parse } from '@/Common/Util';
+import { parse, stringify } from '@/Common/Util';
 
 /**
  * Writes the Andesite yml config.
@@ -45,7 +45,7 @@ function checkAndesiteYmlConfigExistsAndThrow(path: string = './'): void {
  * 
  * @returns The Andesite yml config.
  */
-function readAndesiteYmlConfig(path: string = './'): Record<string, unknown> {
+function readAndesiteYmlConfig(path: string = './'): unknown {
     checkAndesiteYmlConfigExistsAndThrow(path);
     return parse(readFileSync(`${path}/andesite-config.yml`, 'utf8'));
 }
@@ -82,8 +82,6 @@ function initAndesiteYmlConfig(type: string, path: string = './'): void {
 
 export {
     checkAndesiteYmlConfigExistsAndThrow,
-    initAndesiteYmlConfig,
-    writeAndesiteYmlConfig,
-    readAndesiteYmlConfig
+    initAndesiteYmlConfig, readAndesiteYmlConfig, writeAndesiteYmlConfig
 };
 

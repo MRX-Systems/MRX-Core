@@ -14,6 +14,8 @@
     "build": "npm run clear && tsc --noEmit && npm run create-types && ts-node ./Configs/esbuild.config.package build",
     "dev::build": "npm run clear && ts-node ./Configs/esbuild.config.package build -d",
     "dev::build::watch": "ts-node ./Configs/esbuild.config.package build -d -w",
+
+    "user::build": "ts-node ./Configs/esbuild.config.user build",
     "docs": "typedoc",
     "fix-lint": "eslint --fix . --ext .ts",
     "lint": "eslint . --ext .ts",

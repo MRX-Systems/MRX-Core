@@ -6,6 +6,7 @@ import {
 import tsConfig from '@/../Templates/tsconfig.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
+import { type IAndesiteApiConfigDTO } from '@/DTO';
 
 /**
  * Interface for the tsconfig.json file.
@@ -23,15 +24,23 @@ interface ITsConfig {
 }
 
 /**
+ * Writes the tsconfig.json file.
+ * 
+ * @param conf - The tsconfig.json object to write.
+ * @param path - The path to write the tsconfig.json.
+ */
+function writeTsConfig(conf: Readonly<ITsConfig>, path: string = './'): void {
+    writeFileSync(path, JSON.stringify(conf, null, 2));
+}
+
+/**
  * Creates the tsconfig.json file for the project.
  *
  * @param path - The parent path of the tsconfig.json.
  * 
  * @throws {@link AndesiteError} - If the tsconfig.json file already exists. {@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS}
  */
-function initTsConfig(
-    path: string = './'
-): void {
+function initTsConfig(path: string = './'): void {
     if (existsSync(`${path}/.andesite/tsconfig.json`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS,
@@ -47,7 +56,7 @@ function initTsConfig(
     conf.compilerOptions.paths = {
         '@/*': ['./*']
     };
-    writeFileSync(`${path}/.andesite/tsconfig.json`, JSON.stringify(conf, null, 2));
+    writeTsConfig(conf, `${path}/.andesite/tsconfig.json`);
 }
 
 /**
@@ -68,7 +77,29 @@ function initTsConfigUser(path: string = './'): void {
     }, null, 2));
 }
 
+/**
+ * Updates the tsconfig.json file.
+ * 
+ * @param path - The path to update the tsconfig.json file.
+ */
+function updateTsConfig(andesiteConfig: Readonly<IAndesiteApiConfigDTO>, path: string = './'): void {
+    const conf: ITsConfig = tsConfig as ITsConfig;
+    conf.include = [
+        `${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,
+    ];
+    conf.compilerOptions.rootDir = andesiteConfig.Config.BaseSourceDir;
+    conf.compilerOptions.baseUrl = andesiteConfig.Config.BaseSourceDir;
+    conf.compilerOptions.paths = {
+        [`${andesiteConfig.Config.PathAlias}/*`]: ['./*']
+    };
+    conf.compilerOptions.outDir = andesiteConfig.Config.OutputDir;
+    writeTsConfig(conf, `${path}/.andesite/tsconfig.json`);
+}
+
 export {
     initTsConfig,
-    initTsConfigUser
+    initTsConfigUser,
+    updateTsConfig,
+    writeFileSync
 };
+
