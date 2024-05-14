@@ -1,8 +1,8 @@
 {
-  "Library": {
-    "Config": {
-      "EntryPoint": "Source/App.ts",
-      "PathAlias": "@/"
-    }
+  "ProjectType": "Library",
+  "Config": {
+    "EntryPoint": "Source/App.ts",
+    "OutputPath": "dist",
+    "PathAlias": "@/"
   }
 }

@@ -1,52 +1,24 @@
 {
-  "Api": {
-    "Config": {
-      "Logger": true,
-      "EntryPoint": "Source/App.ts",
-      "PathAlias": "@/",
-      "FolderStructure": {
-        "BaseSource": "Source",
-        "Common": "Common",
-        "CommonUtils": "Common/Utils",
-        "Config": "Config",
-        "Domain": "Domain",
-        "DomainInterface": "Domain/Interface",
-        "DomainService": "Domain/Service",
-        "DomaineUseCase": "Domain/UseCase",
-        "DTO": "DTO",
-        "Infrastructure": "Infrastructure",
-        "InfrastructureRepository": "Infrastructure/Repository",
-        "Presentation": "Presentation",
-        "PresentationHTTP": "Presentation/HTTP",
-        "PresentationHTTPHandler": "Presentation/HTTP/Handler",
-        "PresentationHTTPMiddleware": "Presentation/HTTP/Middleware",
-        "PresentationHTTPRouter": "Presentation/HTTP/Router",
-        "PresentationSchema": "Presentation/Schema",
-        "PresentationWebSocket": "Presentation/WebSocket",
-        "PresentationWebSocketHandler": "Presentation/WebSocket/Handler",
-        "PresentationWebSocketMiddleware": "Presentation/WebSocket/Middleware",
-        "PresentationWebSocketRouter": "Presentation/WebSocket/Router"
-      }
-    },
-    "Infrastructure": {
-      "Database": null,
-      "RedPanda": null,
-      "DragonFly": null
-    },
-    "Server": {
-      "Host": "${HOST}",
-      "Port": "${PORT}",
-      "BaseUrl": "${BASE_URL}",
-      "HTTPS": {
-        "Enable": "${HTTPS_ENABLE}",
-        "CertFile": "${HTTPS_CERT_FILE}",
-        "KeyFile": "${HTTPS_KEY_FILE}"
-      },
-      "Security": {
-        "AllowedIPs": "${ALLOWED_IPS}",
-        "BlockedIPs": "${BLOCKED_IPS}",
-        "AllowedOrigins": "${ALLOWED_ORIGINS}"
-      }
+  "ProjectType": "API",
+  "Config": {
+    "Logger": true,
+    "EntryPoint": "Source/App.ts",
+    "OutputPath": "dist",
+    "PathAlias": "@/"
+  },
+  "Infrastructure": {
+    "Database": null,
+    "RedPanda": null,
+    "DragonFly": null
+  },
+  "Server": {
+    "Host": "${HOST}",
+    "Port": "${PORT}",
+    "BaseUrl": "${BASE_URL}",
+    "Security": {
+      "AllowedIPs": "${ALLOWED_IPS}",
+      "BlockedIPs": "${BLOCKED_IPS}",
+      "AllowedOrigins": "${ALLOWED_ORIGINS}"
     }
   }
 }

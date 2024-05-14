@@ -1,8 +1,8 @@
 {
-  "WorkerManager": {
-    "Config": {
-      "EntryPoint": "Source/App.ts",
-      "PathAlias": "@/"
-    }
+  "ProjectType": "WorkerManager",
+  "Config": {
+    "EntryPoint": "Source/App.ts",
+    "OutputPath": "dist",
+    "PathAlias": "@/"
   }
 }
