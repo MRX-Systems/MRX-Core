@@ -1,8 +1,9 @@
 {
   "ProjectType": "Library",
   "Config": {
+    "BaseSourceDir": "Source",
     "EntryPoint": "Source/App.ts",
-    "OutputPath": "dist",
+    "OutputDir": "dist",
     "PathAlias": "@/"
   }
 }

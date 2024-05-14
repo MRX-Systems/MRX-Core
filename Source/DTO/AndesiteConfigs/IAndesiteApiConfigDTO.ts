@@ -2,8 +2,9 @@ export interface IAndesiteApiConfigDTO {
     ProjectType: string;
     Config: {
         Logger: boolean;
+        BaseSourceDir: string,
         EntryPoint: string;
-        OutputPath: string;
+        OutputDir: string;
         PathAlias: string;
     };
     Infrastructure: Record<string, unknown>;

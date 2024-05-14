@@ -2,8 +2,9 @@
   "ProjectType": "API",
   "Config": {
     "Logger": true,
+    "BaseSourceDir": "Source",
     "EntryPoint": "Source/App.ts",
-    "OutputPath": "dist",
+    "OutputDir": "dist",
     "PathAlias": "@/"
   },
   "Infrastructure": {
