@@ -9,8 +9,6 @@ import { buildFolderStructureByObject } from '@/Common/Util';
  * 
  * @param type - The project type.
  * @param path - The parent path of the folder structure.
- * 
- * @throws {@link AndesiteError} - If failed to create folder structure. {@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE}
  */
 function initFolderStructure(type: string, path: string = './'): void {
     switch (type) {
