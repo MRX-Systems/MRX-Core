@@ -5,7 +5,8 @@ import {
     outro,
     select,
     text
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
 } from '@clack/prompts';
 import { exit } from 'process';
 
@@ -23,6 +24,7 @@ import {
     initNpmIgnoreFile,
     initEntryPoint
 } from '@/Domain/Service';
+import { type IProjectInformationDTO } from '@/DTO';
 
 /**
  * Cancel the project initialization and stop the process.
@@ -97,13 +99,13 @@ async function _requestProjectDescription(): Promise<string> {
 /**
  * Initialize a new project by asking the user several questions.
  */
-async function InitProject(): Promise<void> {
+async function initProject(): Promise<void> {
     intro('Initializing a new project');
     const projectType = await _requestProjectTypeSelected();
     const projectName = await _requestProjectName();
     const projectDescription = await _requestProjectDescription();
     try {
-        const projectInformation = {
+        const projectInformation: IProjectInformationDTO = {
             name: projectName,
             description: projectDescription,
             type: projectType
@@ -132,4 +134,4 @@ async function InitProject(): Promise<void> {
     outro('Project initialized 😊');
 }
 
-export { InitProject };
+export { initProject };

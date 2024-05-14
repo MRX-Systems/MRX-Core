@@ -5,7 +5,7 @@ import {
 
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-import { type IProjectInformation } from '@/Domain/Interface';
+import { type IProjectInformationDTO } from '@/DTO';
 import base from '@/../Templates/PackageJson/base.json';
 import api from '@/../Templates/PackageJson/api.json';
 import library from '@/../Templates/PackageJson/library.json';
@@ -54,7 +54,7 @@ interface IPackageJson {
  * 
  * @returns The package.json object. ({@link IPackageJson})
  */
-function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformation>): IPackageJson {
+function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformationDTO>): IPackageJson {
     const packageJson: IPackageJson = {
         name: projectInformation.name,
         version: '1.0.0',
@@ -87,7 +87,7 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
  * 
  * @throws {@link AndesiteError} - If the package.json file already exists. {@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS}
  */
-function initPackageJson(projectInformation: Readonly<IProjectInformation>, path: string = './'): void {
+function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, path: string = './'): void {
     if (existsSync(`${path}/package.json`))
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS
