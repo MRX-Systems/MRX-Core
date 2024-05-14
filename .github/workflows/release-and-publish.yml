@@ -38,11 +38,9 @@ jobs:
           node-version: 22.1.0
           registry-url: 'https://registry.npmjs.org'
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm install
-        if: ${{ steps.release.outputs.release_created }}
-      - run: npm run prod::build
-        if: ${{ steps.release.outputs.release_created }}
       - run: npm ci
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm run build
         if: ${{ steps.release.outputs.release_created }}
       - run: npm publish --access public
         env:

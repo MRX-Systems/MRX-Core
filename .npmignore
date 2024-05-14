@@ -8,7 +8,6 @@ docs/
 Configs/esbuild.config.package.ts
 Source/
 Tests/
-tsconfig.json
 tsconfig.tsbuildinfo
 jest.config.json
 CHANGELOG.md
