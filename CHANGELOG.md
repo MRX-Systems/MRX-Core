@@ -1,5 +1,64 @@
 # Changelog
 
+## [1.3.0](https://github.com/Andesite-Lab/Core/compare/v1.2.0...v1.3.0) (2024-05-15)
+
+
+### Features
+
+* add AndesiteFolder Service ([00d288f](https://github.com/Andesite-Lab/Core/commit/00d288f1926b1343fe4fdfc637fd8e4514f2b5fe))
+* add build message ... etc ([90c2b2a](https://github.com/Andesite-Lab/Core/commit/90c2b2a489997828948f062e42c557d1117502e3))
+* add dev command + improvement ([a99ea04](https://github.com/Andesite-Lab/Core/commit/a99ea0473aa2286dbfc9da06e31452386a2cf771))
+* add MSSQLCreator ([cf274ce](https://github.com/Andesite-Lab/Core/commit/cf274ce3830e1baa0da36e0edcf21ac264b620c8))
+* add read yml conf + export write yml conf ([718d806](https://github.com/Andesite-Lab/Core/commit/718d806cd40b259dc176c3a90dba049e53eeed04))
+* add sleep utility ([dbf79e9](https://github.com/Andesite-Lab/Core/commit/dbf79e9f84e19ea9fac6a4abab9de908498d38f6))
+* add spinner for init project ([7ea6fb7](https://github.com/Andesite-Lab/Core/commit/7ea6fb753c2788ad3f3954c801fa3e147603a758))
+* add start command + add EnvironnementUser service ([d9050bb](https://github.com/Andesite-Lab/Core/commit/d9050bbfd465c4538fd1bf500102d49da3b767e5))
+* add templates + improvement + add config andesite yml + folder ... ([40cbb9d](https://github.com/Andesite-Lab/Core/commit/40cbb9d825701f3989042275a2e560ad2df4cc29))
+* add yaml utils ([92f458f](https://github.com/Andesite-Lab/Core/commit/92f458f2d3a1623a9ff59c6d124d52fb6fcd769f))
+* improvement + refactor + add build command ([7be9da5](https://github.com/Andesite-Lab/Core/commit/7be9da53882a3ef46620bb4ca9619b0536588ef3))
+* update template ([010e093](https://github.com/Andesite-Lab/Core/commit/010e0935117b9fe072c2486299a149b47ea338f7))
+
+
+### Bug Fixes
+
+* change OutputPath to OutputDir ([cd3ee45](https://github.com/Andesite-Lab/Core/commit/cd3ee458def2c77f94efbbd074ed175c91e2b6ad))
+* correction of invalid path ([af47b82](https://github.com/Andesite-Lab/Core/commit/af47b825660e9623d259a9ec4350d666e59ff1ca))
+* move Domain/Interface to DTO for clean arch ([059519d](https://github.com/Andesite-Lab/Core/commit/059519d90d31dd5bb8815adfe6ad4c5a66b344c9))
+
+
+### Code Refactoring
+
+* improvement architecture ([8ad1a75](https://github.com/Andesite-Lab/Core/commit/8ad1a7536d072cdf70a131b41b068ee9e42ff724))
+* improvement of template folder structure ([6726c2a](https://github.com/Andesite-Lab/Core/commit/6726c2a79812bbe5763655cea7623056658b7927))
+* juste order import + little modif for the futur ([abfd2eb](https://github.com/Andesite-Lab/Core/commit/abfd2eb3e07a82ee35478bea6583ec4c988aecad))
+* move buildFolderStructureByObject to Common Util ([f88d520](https://github.com/Andesite-Lab/Core/commit/f88d520bcd27bd1c4cf95ebb03004c2ed5ba3813))
+
+
+### Build System
+
+* downgrade packages tedious for kysely compatibility ([2d9c41c](https://github.com/Andesite-Lab/Core/commit/2d9c41ccf5a08344b38df0e42c18149bd3c4c82b))
+* improvement build env ([b633881](https://github.com/Andesite-Lab/Core/commit/b6338811c230bf9da09eda1f55b1769557fb6173))
+* improvement build environnement + simplify ([658b063](https://github.com/Andesite-Lab/Core/commit/658b0632538dfa241e31ac96db2a5a0cbc1cf258))
+* improvement of environnement ([0162fe3](https://github.com/Andesite-Lab/Core/commit/0162fe33839f15d883a11f20a1090b593fd5b512))
+
+
+### Continuous Integration
+
+* delete coverage workflow for the moment and update node version ([c425a6d](https://github.com/Andesite-Lab/Core/commit/c425a6da996d96db616fab0907394809f4625496))
+* remove useless command ([3072b0d](https://github.com/Andesite-Lab/Core/commit/3072b0da462e69256c70b97f751f4aeb2a40bed7))
+
+
+### Documentation
+
+* comment mssql creator ([ed80cd6](https://github.com/Andesite-Lab/Core/commit/ed80cd6bcdc451f7c90f452447ce7f5bf21aad7c))
+* remove useless comment ([1e63758](https://github.com/Andesite-Lab/Core/commit/1e6375871fe4d192ce8fe29328da78d97715e4b4))
+* update commands ([dc68720](https://github.com/Andesite-Lab/Core/commit/dc6872029a8d4f6fb5245054359d9ea3611e8afa))
+
+
+### Styles
+
+* update rule ([e9d3eb9](https://github.com/Andesite-Lab/Core/commit/e9d3eb9f9e8f4b78ee992190b28545d626688c59))
+
 ## [1.2.0](https://github.com/Andesite-Lab/Core/compare/v1.1.0...v1.2.0) (2024-05-06)
 
 
