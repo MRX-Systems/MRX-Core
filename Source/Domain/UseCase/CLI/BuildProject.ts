@@ -21,11 +21,11 @@ import { sleep } from '@/lib';
  * Build the project
  */
 async function buildProject(): Promise<void> {
-    const s = spinner();
     intro('Hey there! 👋');
-    s.start('Running build process 🚀');
-    await sleep(70);
     try {
+        const s = spinner();
+        s.start('Running build process 🚀');
+        await sleep(70);
         s.message('Reading configuration 📖');
         await sleep(100);
         
@@ -48,11 +48,12 @@ async function buildProject(): Promise<void> {
         s.message('Building project 🏗️');
         await sleep(60);
         execBuildCommand(buildOptions);
+        s.stop('Build successful! ✅');
     } catch (error) {
         cancel('Build failed ❌');
+        console.error(error);
         exit(1);
     }
-    s.stop('Build successful! ✅');
     const date = new Date();
     if (date.getHours() >= 8 && date.getHours() <= 18)
         outro('Have a great day! 🌞');

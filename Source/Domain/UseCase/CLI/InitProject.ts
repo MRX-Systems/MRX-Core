@@ -4,6 +4,7 @@ import {
     isCancel,
     outro,
     select,
+    spinner,
     text
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
@@ -100,19 +101,21 @@ async function _requestProjectDescription(): Promise<string> {
  * Initialize a new project by asking the user several questions.
  */
 async function initProject(): Promise<void> {
-    intro('Initializing a new project');
+    intro('Hey there! 👋');
     const projectType = await _requestProjectTypeSelected();
     const projectName = await _requestProjectName();
     const projectDescription = await _requestProjectDescription();
     try {
+        const s = spinner();
+        s.start('Running initialization process 🚀');    
         const projectInformation: IProjectInformationDTO = {
             name: projectName,
             description: projectDescription,
             type: projectType
         };
         initAndesiteFolderStructure();
-        initAndesiteYmlConfig(projectInformation.type);
         initFolderStructure(projectInformation.type);
+        initAndesiteYmlConfig(projectInformation.type);
         initPackageJson(projectInformation);
         initEslint();
         initJestConfig(projectInformation.name);
@@ -122,7 +125,7 @@ async function initProject(): Promise<void> {
 
         if (projectType === 'Library') 
             initNpmIgnoreFile();
-
+        s.stop('Project initialized 😊');
     } catch (error) {
         if (error instanceof AndesiteError)
             cancel(`An error occurred while initializing the project 😢 ${error.message}`);
@@ -131,7 +134,12 @@ async function initProject(): Promise<void> {
         console.error(error);
         exit(1);
     }
-    outro('Project initialized 😊');
+
+    const date = new Date();
+    if (date.getHours() >= 8 && date.getHours() <= 18)
+        outro('Have a great day! 🌞');
+    else
+        outro('Have a great night! 🌚');
 }
 
 export { initProject };
