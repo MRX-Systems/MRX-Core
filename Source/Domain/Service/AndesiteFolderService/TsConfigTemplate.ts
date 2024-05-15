@@ -49,10 +49,10 @@ function initTsConfig(path: string = './'): void {
 
     const conf: ITsConfig = tsConfig as ITsConfig;
     conf.include = [
-        'Source/**/*.ts',
+        '../Source/**/*.ts',
     ];
-    conf.compilerOptions.rootDir = 'Source';
-    conf.compilerOptions.baseUrl = 'Source';
+    conf.compilerOptions.rootDir = '../Source';
+    conf.compilerOptions.baseUrl = '../Source';
     conf.compilerOptions.paths = {
         '@/*': ['./*']
     };
@@ -86,10 +86,10 @@ function initTsConfigUser(path: string = './'): void {
 function updateTsConfig(andesiteConfig: Readonly<IAndesiteApiConfigDTO>, path: string = './'): void {
     const conf: ITsConfig = tsConfig as ITsConfig;
     conf.include = [
-        `${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,
+        `../${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,
     ];
-    conf.compilerOptions.rootDir = andesiteConfig.Config.BaseSourceDir;
-    conf.compilerOptions.baseUrl = andesiteConfig.Config.BaseSourceDir;
+    conf.compilerOptions.rootDir = `../${andesiteConfig.Config.BaseSourceDir}`;
+    conf.compilerOptions.baseUrl = `../${andesiteConfig.Config.BaseSourceDir}`;
     conf.compilerOptions.paths = {
         [`${andesiteConfig.Config.PathAlias}/*`]: ['./*']
     };
