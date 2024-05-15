@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "fix-lint": "eslint --fix . --ext .ts",
+    "lint": "eslint . --ext .ts",
+    "dev": "andesite dev",
+    "build": "andesite build",
+    "start": "andesite start"
+  },
+  "devDependencies": {
+    "@microsoft/tsdoc": "^0.14.2",
+    "@tsconfig/node22": "^22.0.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.4",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.5.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typedoc": "^0.25.12",
+    "typescript": "^5.4.3"
+  }
+}

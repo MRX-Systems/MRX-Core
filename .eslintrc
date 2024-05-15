@@ -17,7 +17,12 @@
         "sourceType": "module",
         "project": "./tsconfig.json"
     },
-    "ignorePatterns": ["node_modules/*", "esbuild.config.ts", "**/*.spec.ts", "Build/*"],
+    "ignorePatterns": [
+        "node_modules/*",
+        "Configs/*",
+        "**/*.spec.ts",
+        "Build/*"
+    ],
     "rules": {
         "tsdoc/syntax": "error",
         "indent": [
@@ -40,7 +45,7 @@
         "@typescript-eslint/array-type": [
             "error",
             {
-              "default": "array"
+              "default": "array-simple"
             }
         ], // https://typescript-eslint.io/rules/array-type
         "@typescript-eslint/await-thenable": "error", // https://typescript-eslint.io/rules/await-thenable

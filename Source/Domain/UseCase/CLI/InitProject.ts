@@ -4,27 +4,23 @@ import {
     isCancel,
     outro,
     select,
+    spinner,
     text
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
 } from '@clack/prompts';
 import { exit } from 'process';
 
 
 import { AndesiteError } from '@/Common/Error';
-import {
-    createEsbuildConfigFile,
-    createEslint,
-    createFolderStructure,
-    createJestConfig,
-    createNpmIgnoreFile,
-    createPackageJson,
-    createTsConfig
-} from '@/Domain/Service';
+import { type IProjectInformationDTO } from '@/DTO';
+import { initAndesiteYmlConfig, initEntryPoint, initEslint, initFolderStructure, initNpmIgnoreFile, initPackageJson } from '@/Domain/Service/User/Config';
+import { initAndesiteFolderStructure, initJestConfig, initTsConfig, initTsConfigUser } from '@/Domain/Service/User/Config/AndesiteFolder';
 
 /**
  * Cancel the project initialization and stop the process.
  */
-function cancelAndStop(): void {
+function _cancelAndStop(): void {
     cancel('Project initialization canceled');
     exit(0);
 }
@@ -34,7 +30,7 @@ function cancelAndStop(): void {
  * 
  * @returns The project type selected by the user.
  */
-async function requestProjectTypeSelected(): Promise<string> {
+async function _requestProjectTypeSelected(): Promise<string> {
     const projectType = await select({
         message: 'Select the project type',
         initialValue: 'API',
@@ -57,7 +53,7 @@ async function requestProjectTypeSelected(): Promise<string> {
             },
         ]
     });
-    if (isCancel(projectType)) cancelAndStop();
+    if (isCancel(projectType)) _cancelAndStop();
     return projectType as string;
 }
 
@@ -66,13 +62,13 @@ async function requestProjectTypeSelected(): Promise<string> {
  * 
  * @returns The project name.
  */
-async function requestProjectName(): Promise<string> {
+async function _requestProjectName(): Promise<string> {
     const projectName = await text({
         message: 'Enter the project name',
         defaultValue: 'my-project',
         placeholder: 'my-project'
     });
-    if (isCancel(projectName)) cancelAndStop();
+    if (isCancel(projectName)) _cancelAndStop();
     return projectName as string;
 }
 
@@ -81,40 +77,45 @@ async function requestProjectName(): Promise<string> {
  * 
  * @returns The project description.
  */
-async function requestProjectDescription(): Promise<string> {
+async function _requestProjectDescription(): Promise<string> {
     const projectDescription = await text({
         message: 'Enter the project description',
         defaultValue: '',
         placeholder: ''
     });
-    if (isCancel(projectDescription)) cancelAndStop();
+    if (isCancel(projectDescription)) _cancelAndStop();
     return projectDescription as string;
 }
 
 /**
  * Initialize a new project by asking the user several questions.
  */
-async function InitProject(): Promise<void> {
-    intro('Initializing a new project');
-    const projectType = await requestProjectTypeSelected();
-    const projectName = await requestProjectName();
-    const projectDescription = await requestProjectDescription();
+async function initProject(): Promise<void> {
+    intro('Hey there! 👋');
+    const projectType = await _requestProjectTypeSelected();
+    const projectName = await _requestProjectName();
+    const projectDescription = await _requestProjectDescription();
     try {
-        const projectInformation = {
+        const s = spinner();
+        s.start('Running initialization process 🚀');    
+        const projectInformation: IProjectInformationDTO = {
             name: projectName,
             description: projectDescription,
             type: projectType
         };
-        createPackageJson(projectInformation, './');
-        createFolderStructure(projectInformation.type, './');
-        createTsConfig('./');
-        createEslint('./');
-        createJestConfig(projectInformation.name, './');
-        createEsbuildConfigFile('./');
+        initAndesiteFolderStructure();
+        initFolderStructure(projectInformation.type);
+        initAndesiteYmlConfig(projectInformation.type);
+        initPackageJson(projectInformation);
+        initEslint();
+        initJestConfig(projectInformation.name);
+        initTsConfig();
+        initTsConfigUser();
+        initEntryPoint();
 
         if (projectType === 'Library') 
-            createNpmIgnoreFile('./');
-
+            initNpmIgnoreFile();
+        s.stop('Project initialized 😊');
     } catch (error) {
         if (error instanceof AndesiteError)
             cancel(`An error occurred while initializing the project 😢 ${error.message}`);
@@ -123,7 +124,12 @@ async function InitProject(): Promise<void> {
         console.error(error);
         exit(1);
     }
-    outro('Project initialized 😊');
+
+    const date = new Date();
+    if (date.getHours() >= 8 && date.getHours() <= 18)
+        outro('Have a great day! 🌞');
+    else
+        outro('Have a great night! 🌚');
 }
 
-export { InitProject };
+export { initProject };

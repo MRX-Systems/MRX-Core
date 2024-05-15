@@ -1,7 +1,7 @@
 /**
  * Interface for Project Information object that is used to store information about a project.
  */
-export interface IProjectInformation {
+export interface IProjectInformationDTO {
     /**
      * The name of the project.
      */

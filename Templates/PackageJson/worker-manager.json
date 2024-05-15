@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@andesite-lab/andesite-core": "latest",
+    "@basalt-lab/basalt-logger": "^1.6.2",
+    "@basalt-lab/basalt-helper": "^1.2.5",
+    "source-map-support": "^0.5.21"
+  }
+}
