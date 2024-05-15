@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/Andesite-Lab/Core/compare/v1.3.0...v1.3.1) (2024-05-15)
+
+
+### Build System
+
+* exlude all index.ts ([f50a72a](https://github.com/Andesite-Lab/Core/commit/f50a72a6bac84d714503b64c9b99722ef51a8446))
+
 ## [1.3.0](https://github.com/Andesite-Lab/Core/compare/v1.2.0...v1.3.0) (2024-05-15)
 
 
