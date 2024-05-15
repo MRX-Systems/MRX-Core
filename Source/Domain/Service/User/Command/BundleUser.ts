@@ -1,7 +1,6 @@
 import { execFile, type ChildProcess } from 'child_process';
 import { cwd } from 'process';
 
-
 /** 
  * Execute the script with the environment variables
  * 
@@ -15,14 +14,6 @@ function execBundleCommand(scriptPath: string, env: Record<string, string>): Chi
         env: { ...process.env, ...env },
         cwd: cwd(),
         windowsHide: true
-    });
-
-    child.stdout?.on('data', (data: string | Uint8Array) => {
-        process.stdout.write(data);
-    });
-    
-    child.stderr?.on('data', (data: string | Uint8Array) => {
-        process.stderr.write(data);
     });
 
     return child;

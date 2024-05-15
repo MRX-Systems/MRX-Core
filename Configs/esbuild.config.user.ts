@@ -70,7 +70,7 @@ commander
             await ctx.watch();
         } else {
             await esbuild.build(buildOptions);
-        }   
+        }
     });
 
 commander.parse(argv)

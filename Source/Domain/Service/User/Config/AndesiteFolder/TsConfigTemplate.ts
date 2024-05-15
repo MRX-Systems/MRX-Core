@@ -6,7 +6,12 @@ import {
 import tsConfig from '@/../Templates/tsconfig.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-import { type IAndesiteApiConfigDTO } from '@/DTO';
+import {
+    type IAndesiteApiConfigDTO,
+    type IAndesiteLibraryConfigDTO,
+    type IAndesiteSampleScriptConfigDTO,
+    type IAndesiteWorkerManagerConfigDTO
+} from '@/DTO';
 
 /**
  * Interface for the tsconfig.json file.
@@ -80,10 +85,13 @@ function initTsConfigUser(path: string = './'): void {
 /**
  * Updates the tsconfig.json file.
  * 
- * @param andesiteConfig - The andesite configuration object. {@link IAndesiteApiConfigDTO}
+ * @param andesiteConfig - The andesite configuration object. {@link IAndesiteApiConfigDTO} | {@link IAndesiteLibraryConfigDTO} | {@link IAndesiteSampleScriptConfigDTO} | {@link IAndesiteWorkerManagerConfigDTO}
  * @param path - The parent path of the tsconfig.json.
  */
-function updateTsConfig(andesiteConfig: Readonly<IAndesiteApiConfigDTO>, path: string = './'): void {
+function updateTsConfig(
+    andesiteConfig: Readonly<IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO>,
+    path: string = './'
+): void {
     const conf: ITsConfig = tsConfig as ITsConfig;
     conf.include = [
         `../${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,

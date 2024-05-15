@@ -3,17 +3,22 @@ import { cwd } from 'process';
 
 import {
     type IAndesiteApiConfigDTO,
+    type IAndesiteLibraryConfigDTO,
+    type IAndesiteSampleScriptConfigDTO,
+    type IAndesiteWorkerManagerConfigDTO,
     type IBuildProjectOptionsDTO
 } from '@/DTO';
 
 /**
  * Builds the command to build the project using esbuild with the given options.
  * 
- * @param config - The build project options. {@link IBuildProjectOptionsDTO} & {@link IAndesiteApiConfigDTO}
+ * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteLibraryConfigDTO} | {@link IAndesiteSampleScriptConfigDTO} | {@link IAndesiteWorkerManagerConfigDTO})
  * 
  * @returns The build command.
  */
-function _buildCommandEsbuild(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO)>): string {
+function _buildCommandEsbuild(
+    config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO)>
+): string {
     let command: string = `npm --prefix ${__dirname}/../ run user::build -- -cwd ${process.cwd()}`;
 
     if (config.watch)
@@ -38,20 +43,18 @@ function _buildCommandEsbuild(config: Readonly<IBuildProjectOptionsDTO & (IAndes
 /**
  * Executes the build command.
  * 
- * @param config - The build project options. {@link IBuildProjectOptionsDTO} & {@link IAndesiteApiConfigDTO}
+ * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteLibraryConfigDTO} | {@link IAndesiteSampleScriptConfigDTO} | {@link IAndesiteWorkerManagerConfigDTO})
  * 
  * @returns The child process.
  */ 
-function execBuildCommand(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO)>): ChildProcess {
+function execBuildCommand(
+    config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO)>
+): ChildProcess {
     const command: string = _buildCommandEsbuild(config);
 
     const child: ChildProcess = exec(command, {
         cwd: process.cwd(),
         windowsHide: true, 
-    });
-
-    child.stderr?.on('data', (data: string | Uint8Array) => {
-        process.stderr.write(data);
     });
 
     return child;

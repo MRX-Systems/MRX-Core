@@ -16,7 +16,7 @@ function initEntryPoint(path: string = './'): void {
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_ENTRY_POINT_EXISTS
         });
-    writeFileSync(`${path}/Source/App.ts`, 'console.log("Hello, World!");');
+    writeFileSync(`${path}/Source/App.ts`, 'console.log(\'Hello, World!\');');
 }
 
 export {
