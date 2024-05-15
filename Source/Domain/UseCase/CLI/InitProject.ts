@@ -13,19 +13,9 @@ import { exit } from 'process';
 
 
 import { AndesiteError } from '@/Common/Error';
-import {
-    initAndesiteFolderStructure,
-    initAndesiteYmlConfig,
-    initEntryPoint,
-    initEslint,
-    initFolderStructure,
-    initJestConfig,
-    initNpmIgnoreFile,
-    initPackageJson,
-    initTsConfig,
-    initTsConfigUser
-} from '@/Domain/Service';
 import { type IProjectInformationDTO } from '@/DTO';
+import { initAndesiteFolderStructure, initJestConfig, initTsConfig, initTsConfigUser } from '@/Domain/Service/User/Config/AndesiteFolder';
+import { initAndesiteYmlConfig, initEntryPoint, initEslint, initFolderStructure, initNpmIgnoreFile, initPackageJson } from '@/Domain/Service/User/Config';
 
 /**
  * Cancel the project initialization and stop the process.

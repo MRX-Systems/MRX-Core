@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { exec, type ChildProcess } from 'child_process';
 import { cwd } from 'process';
 
 import {
@@ -31,9 +31,7 @@ function _buildCommandEsbuild(config: Readonly<IBuildProjectOptionsDTO & (IAndes
         command += ` -entry ${config.Config.EntryPoint}`;
     if (config.Config.OutputDir)
         command += ` -o ${config.Config.OutputDir}`;
-
     command += ` -cwd ${cwd()}`;
-
     return command;
 }
 
@@ -41,13 +39,22 @@ function _buildCommandEsbuild(config: Readonly<IBuildProjectOptionsDTO & (IAndes
  * Executes the build command.
  * 
  * @param config - The build project options. {@link IBuildProjectOptionsDTO} & {@link IAndesiteApiConfigDTO}
+ * 
+ * @returns The child process.
  */ 
-function execBuildCommand(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO)>): void {
+function execBuildCommand(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO)>): ChildProcess {
     const command: string = _buildCommandEsbuild(config);
-    execSync(command, {
+
+    const child: ChildProcess = exec(command, {
         cwd: process.cwd(),
-        stdio: ['ignore', 'ignore', 'ignore']
+        windowsHide: true, 
     });
+
+    child.stderr?.on('data', (data: string | Uint8Array) => {
+        process.stderr.write(data);
+    });
+
+    return child;
 }
 
 export {

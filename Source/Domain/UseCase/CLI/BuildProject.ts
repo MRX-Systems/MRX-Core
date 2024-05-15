@@ -8,14 +8,12 @@ import {
     // @ts-expect-error
 } from '@clack/prompts';
 
-import {
-    execBuildCommand,
-    initAndesiteFolderStructure,
-    readAndesiteYmlConfig,
-    updateTsConfig
-} from '@/Domain/Service';
+
 import { type IAndesiteApiConfigDTO, type IBuildProjectOptionsDTO } from '@/DTO';
-import { sleep } from '@/lib';
+import { readAndesiteYmlConfig } from '@/Domain/Service/User/Config';
+import { initAndesiteFolderStructure, updateTsConfig } from '@/Domain/Service/User/Config/AndesiteFolder';
+import { execBuildCommand } from '@/Domain/Service/User/Command';
+import { type ChildProcess } from 'child_process';
 
 /**
  * Build the project
@@ -25,14 +23,7 @@ async function buildProject(): Promise<void> {
     try {
         const s = spinner();
         s.start('Running build process 🚀');
-        await sleep(70);
-        s.message('Reading configuration 📖');
-        await sleep(100);
-        
-        const config: IAndesiteApiConfigDTO = readAndesiteYmlConfig() as IAndesiteApiConfigDTO;
-        
-        s.message('Reconfiguring project 🛠️');
-        await sleep(100);
+        const config: IAndesiteApiConfigDTO = readAndesiteYmlConfig() as IAndesiteApiConfigDTO;        
         initAndesiteFolderStructure();
         updateTsConfig(config);
         
@@ -45,9 +36,13 @@ async function buildProject(): Promise<void> {
             ...config
         };
 
-        s.message('Building project 🏗️');
-        await sleep(60);
-        execBuildCommand(buildOptions);
+        await new Promise<void>((resolve) => {
+            const child: ChildProcess = execBuildCommand(buildOptions);
+            child.on('close', () => {
+                resolve();
+            });
+        });
+
         s.stop('Build successful! ✅');
     } catch (error) {
         cancel('Build failed ❌');
