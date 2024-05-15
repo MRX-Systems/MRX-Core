@@ -15,7 +15,8 @@
       "Source/**/*.ts"
     ],
     "exclude": [
-      "cli.ts"
+      "cli.ts",
+      "./**/index.ts"
     ],
     "out": "docs"
   },
