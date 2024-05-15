@@ -82,6 +82,8 @@ function initAndesiteYmlConfig(type: string, path: string = './'): void {
 
 export {
     checkAndesiteYmlConfigExistsAndThrow,
-    initAndesiteYmlConfig, readAndesiteYmlConfig, writeAndesiteYmlConfig
+    initAndesiteYmlConfig,
+    readAndesiteYmlConfig,
+    writeAndesiteYmlConfig
 };
 

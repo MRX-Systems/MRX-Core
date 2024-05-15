@@ -1,8 +1,9 @@
+import { exit } from 'process';
 import {
+    cancel,
     intro,
     outro,
     spinner,
-    cancel,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
 } from '@clack/prompts';
@@ -16,6 +17,9 @@ import {
 import { type IAndesiteApiConfigDTO, type IBuildProjectOptionsDTO } from '@/DTO';
 import { sleep } from '@/lib';
 
+/**
+ * Build the project
+ */
 async function buildProject(): Promise<void> {
     const s = spinner();
     intro('Hey there! 👋');
@@ -46,7 +50,7 @@ async function buildProject(): Promise<void> {
         execBuildCommand(buildOptions);
     } catch (error) {
         cancel('Build failed ❌');
-        throw error;
+        exit(1);
     }
     s.stop('Build successful! ✅');
     const date = new Date();

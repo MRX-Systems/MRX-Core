@@ -80,7 +80,8 @@ function initTsConfigUser(path: string = './'): void {
 /**
  * Updates the tsconfig.json file.
  * 
- * @param path - The path to update the tsconfig.json file.
+ * @param andesiteConfig - The andesite configuration object. {@link IAndesiteApiConfigDTO}
+ * @param path - The parent path of the tsconfig.json.
  */
 function updateTsConfig(andesiteConfig: Readonly<IAndesiteApiConfigDTO>, path: string = './'): void {
     const conf: ITsConfig = tsConfig as ITsConfig;

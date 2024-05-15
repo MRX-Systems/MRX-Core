@@ -50,6 +50,7 @@ interface IPackageJson {
 
 /**
  * Builds the package.json object based on the project information.
+ *
  * @param projectInformation - The project information. ({@link IProjectInformation})
  * 
  * @returns The package.json object. ({@link IPackageJson})
@@ -83,6 +84,7 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
 
 /**
  * Creates the package.json file.
+ *
  * @param projectInformation - The project information. ({@link IProjectInformation})
  * 
  * @throws {@link AndesiteError} - If the package.json file already exists. {@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS}

@@ -6,6 +6,13 @@ import {
     type IBuildProjectOptionsDTO
 } from '@/DTO';
 
+/**
+ * Builds the command to build the project using esbuild with the given options.
+ * 
+ * @param config - The build project options. {@link IBuildProjectOptionsDTO} & {@link IAndesiteApiConfigDTO}
+ * 
+ * @returns The build command.
+ */
 function _buildCommandEsbuild(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO)>): string {
     let command: string = `npm --prefix ${__dirname}/../ run user::build -- -cwd ${process.cwd()}`;
 
@@ -30,6 +37,11 @@ function _buildCommandEsbuild(config: Readonly<IBuildProjectOptionsDTO & (IAndes
     return command;
 }
 
+/**
+ * Executes the build command.
+ * 
+ * @param config - The build project options. {@link IBuildProjectOptionsDTO} & {@link IAndesiteApiConfigDTO}
+ */ 
 function execBuildCommand(config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO)>): void {
     const command: string = _buildCommandEsbuild(config);
     execSync(command, {
