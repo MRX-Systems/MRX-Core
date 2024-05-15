@@ -1,0 +1,25 @@
+{
+  "ProjectType": "API",
+  "Config": {
+    "Logger": true,
+    "BaseSourceDir": "Source",
+    "EntryPoint": "Source/App.ts",
+    "OutputDir": "Build",
+    "PathAlias": "@/"
+  },
+  "Infrastructure": {
+    "Database": null,
+    "RedPanda": null,
+    "DragonFly": null
+  },
+  "Server": {
+    "Host": "${HOST}",
+    "Port": "${PORT}",
+    "BaseUrl": "${BASE_URL}",
+    "Security": {
+      "AllowedIPs": "${ALLOWED_IPS}",
+      "BlockedIPs": "${BLOCKED_IPS}",
+      "AllowedOrigins": "${ALLOWED_ORIGINS}"
+    }
+  }
+}

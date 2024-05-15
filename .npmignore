@@ -5,10 +5,9 @@
 .vscode
 coverage/
 docs/
-esbuild.config.ts
+Configs/esbuild.config.package.ts
 Source/
 Tests/
-tsconfig.json
 tsconfig.tsbuildinfo
 jest.config.json
 CHANGELOG.md

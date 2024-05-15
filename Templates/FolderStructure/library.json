@@ -1,0 +1,16 @@
+{
+  "Source": {
+    "Common": {
+      "Error": {
+        "Enum": null
+      },
+      "Util": null
+    },
+    "Config": null,
+    "Domain": {
+      "Interface": null,
+      "Service": null,
+      "UseCase": null
+    }
+  }
+}
