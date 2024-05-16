@@ -98,8 +98,9 @@ function updateTsConfig(
     ];
     conf.compilerOptions.rootDir = `../${andesiteConfig.Config.BaseSourceDir}`;
     conf.compilerOptions.baseUrl = `../${andesiteConfig.Config.BaseSourceDir}`;
+    andesiteConfig.Config.PathAlias = andesiteConfig.Config.PathAlias.endsWith('/') ? andesiteConfig.Config.PathAlias : `${andesiteConfig.Config.PathAlias}/`;
     conf.compilerOptions.paths = {
-        [`${andesiteConfig.Config.PathAlias}/*`]: ['./*']
+        [`${andesiteConfig.Config.PathAlias}*`]: ['./*']
     };
     conf.compilerOptions.outDir = andesiteConfig.Config.OutputDir;
     writeTsConfig(conf, `${path}/.andesite/tsconfig.json`);
