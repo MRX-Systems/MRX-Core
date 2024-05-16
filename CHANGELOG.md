@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/Andesite-Lab/Core/compare/v1.3.1...v1.3.2) (2024-05-16)
+
+
+### Bug Fixes
+
+* correction path tsconfig ([3479f31](https://github.com/Andesite-Lab/Core/commit/3479f3110e2b1cd94cb90553fde46b2873f8c578))
+
 ## [1.3.1](https://github.com/Andesite-Lab/Core/compare/v1.3.0...v1.3.1) (2024-05-15)
 
 
