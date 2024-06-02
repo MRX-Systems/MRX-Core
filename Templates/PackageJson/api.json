@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@andesite-lab/andesite-core": "latest",
-    "@basalt-lab/basalt-logger": "^1.6.2",
-    "@basalt-lab/basalt-helper": "^1.2.5",
     "@basalt-lab/basalt-auth": "^1.1.7",
+    "@basalt-lab/basalt-helper": "^1.2.5",
+    "@basalt-lab/basalt-logger": "^1.6.2",
     "source-map-support": "^0.5.21"
   }
 }

@@ -1,32 +1,48 @@
-import {
-    cancel,
-    intro,
-    isCancel,
-    outro,
-    select,
-    spinner,
-    text
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-} from '@clack/prompts';
 import { exit } from 'process';
 
 
 import { AndesiteError } from '@/Common/Error';
-import { type IProjectInformationDTO } from '@/DTO';
-import { initAndesiteYmlConfig, initEntryPoint, initEslint, initFolderStructure, initNpmIgnoreFile, initPackageJson } from '@/Domain/Service/User/Config';
+import type { IProjectInformationDTO } from '@/DTO';
+import { cancel, intro, outroBasedOnTime, select, spinner, text } from '@/Domain/Service';
+import { initAndesiteYmlConfig, initEntryPoint, initEslint, initFolderStructure, initPackageJson } from '@/Domain/Service/User/Config';
 import { initAndesiteFolderStructure, initJestConfig, initTsConfig, initTsConfigUser } from '@/Domain/Service/User/Config/AndesiteFolder';
 
 /**
- * Cancel the project initialization and stop the process.
+ * The project types.
  */
-function _cancelAndStop(): void {
-    cancel('Project initialization canceled');
-    exit(0);
+export const PROJECT_TYPES = {
+    API: 'API',
+    SAMPLE_SCRIPT: 'Sample Script',
+};
+
+/**
+ * Cancel the project initialization and stop the process.
+ * 
+ * @param message - The message to display when canceling the project initialization.
+ * @param code - The exit code.
+ */
+function _cancelAndStop(message: string = 'Project initialization canceled', code: number = 0): void {
+    cancel(message);
+    exit(code);
+}
+
+/**
+ * Handle the error occurred during the project initialization.
+ * 
+ * @param error - The error occurred.
+ */
+function _handleError(error: unknown): void {
+    console.error(error);
+    if (error instanceof AndesiteError) 
+        _cancelAndStop(`An error occurred while initializing the project 😢 ${error.message}`, 1);
+    else 
+        _cancelAndStop('An unexpected error occurred while initializing the project 😢', 1);
 }
 
 /**
  * The user selects the project type.
+ *
+ * @throws {@link AndesiteError} - If the user cancels the prompt. {@link ServiceErrorKeys.ERROR_CANCEL_PROMPT}
  * 
  * @returns The project type selected by the user.
  */
@@ -40,25 +56,18 @@ async function _requestProjectTypeSelected(): Promise<string> {
                 label: 'API',
             },
             {
-                value: 'Worker Manager',
-                label: 'Worker Manager',
-            },
-            {
-                value: 'Library',
-                label: 'Library',
-            },
-            {
                 value: 'Sample Script',
                 label: 'Sample Script',
             },
         ]
     });
-    if (isCancel(projectType)) _cancelAndStop();
     return projectType as string;
 }
 
 /**
  * Request the project name to the user.
+ *
+ * @throws {@link AndesiteError} - If the user cancels the prompt. {@link ServiceErrorKeys.ERROR_CANCEL_PROMPT}
  * 
  * @returns The project name.
  */
@@ -68,7 +77,6 @@ async function _requestProjectName(): Promise<string> {
         defaultValue: 'my-project',
         placeholder: 'my-project'
     });
-    if (isCancel(projectName)) _cancelAndStop();
     return projectName as string;
 }
 
@@ -83,7 +91,6 @@ async function _requestProjectDescription(): Promise<string> {
         defaultValue: '',
         placeholder: ''
     });
-    if (isCancel(projectDescription)) _cancelAndStop();
     return projectDescription as string;
 }
 
@@ -113,23 +120,11 @@ async function initProject(): Promise<void> {
         initTsConfigUser();
         initEntryPoint();
 
-        if (projectType === 'Library') 
-            initNpmIgnoreFile();
         s.stop('Project initialized 😊');
     } catch (error) {
-        if (error instanceof AndesiteError)
-            cancel(`An error occurred while initializing the project 😢 ${error.message}`);
-        else
-            cancel('An error occurred while initializing the project 😢');
-        console.error(error);
-        exit(1);
+        _handleError(error);
     }
-
-    const date = new Date();
-    if (date.getHours() >= 8 && date.getHours() <= 18)
-        outro('Have a great day! 🌞');
-    else
-        outro('Have a great night! 🌚');
+    outroBasedOnTime();
 }
 
 export { initProject };

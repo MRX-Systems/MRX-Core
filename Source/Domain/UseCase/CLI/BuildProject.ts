@@ -1,24 +1,17 @@
-import {
-    cancel,
-    intro,
-    outro,
-    spinner,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-} from '@clack/prompts';
+import type { ChildProcess } from 'child_process';
 import { exit } from 'process';
 
-import {
-    type IAndesiteApiConfigDTO,
-    type IAndesiteLibraryConfigDTO,
-    type IAndesiteSampleScriptConfigDTO,
-    type IAndesiteWorkerManagerConfigDTO,
-    type IBuildProjectOptionsDTO
+import type {
+    IAndesiteApiConfigDTO,
+    IAndesiteLibraryConfigDTO,
+    IAndesiteSampleScriptConfigDTO,
+    IAndesiteWorkerManagerConfigDTO,
+    IBuildProjectOptionsDTO
 } from '@/DTO';
+import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service';
 import { execBuildCommand } from '@/Domain/Service/User/Command';
 import { readAndesiteYmlConfig } from '@/Domain/Service/User/Config';
 import { initAndesiteFolderStructure, updateTsConfig } from '@/Domain/Service/User/Config/AndesiteFolder';
-import { type ChildProcess } from 'child_process';
 
 /**
  * Build the project
@@ -49,7 +42,6 @@ async function buildProject(): Promise<void> {
             child.on('close', () => {
                 resolve();
             });
-        
         });
 
         s.stop('Build successful! ✅');
@@ -58,11 +50,7 @@ async function buildProject(): Promise<void> {
         console.error(error);
         exit(1);
     }
-    const date = new Date();
-    if (date.getHours() >= 8 && date.getHours() <= 18)
-        outro('Have a great day! 🌞');
-    else
-        outro('Have a great night! 🌚');
+    outroBasedOnTime();
 }
 
 export {
