@@ -6,11 +6,11 @@ import {
 import tsConfig from '@/../Templates/tsconfig.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-import {
-    type IAndesiteApiConfigDTO,
-    type IAndesiteLibraryConfigDTO,
-    type IAndesiteSampleScriptConfigDTO,
-    type IAndesiteWorkerManagerConfigDTO
+import type {
+    IAndesiteApiConfigDTO,
+    IAndesiteLibraryConfigDTO,
+    IAndesiteSampleScriptConfigDTO,
+    IAndesiteWorkerManagerConfigDTO
 } from '@/DTO';
 
 /**
