@@ -1,13 +1,13 @@
-import { type ChildProcess } from 'child_process';
+import type { ChildProcess } from 'child_process';
 import { watchFile } from 'fs';
 import { cwd, exit } from 'process';
 
-import {
-    type IAndesiteApiConfigDTO,
-    type IAndesiteLibraryConfigDTO,
-    type IAndesiteSampleScriptConfigDTO,
-    type IAndesiteWorkerManagerConfigDTO,
-    type IBuildProjectOptionsDTO
+import type {
+    IAndesiteApiConfigDTO,
+    IAndesiteLibraryConfigDTO,
+    IAndesiteSampleScriptConfigDTO,
+    IAndesiteWorkerManagerConfigDTO,
+    IBuildProjectOptionsDTO
 } from '@/DTO';
 import { getFileEnvUsers } from '@/Domain/Service/User';
 import { execBuildCommand, execBundleCommand } from '@/Domain/Service/User/Command';
@@ -49,6 +49,7 @@ async function devProject(): Promise<void> {
         watchFile(scriptPath, { persistent: true, interval: 50 }, (curr, prev) => {
             if (curr.mtimeMs !== prev.mtimeMs) {
                 bundleChild.kill();
+                console.clear();
                 bundleChild = execBundleCommand(scriptPath, env);
                 bundleChild.stdout?.on('data', (data: string | Uint8Array) => {
                     process.stdout.write(data);

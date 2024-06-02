@@ -1,12 +1,12 @@
 import { exec, type ChildProcess } from 'child_process';
 import { cwd } from 'process';
 
-import {
-    type IAndesiteApiConfigDTO,
-    type IAndesiteLibraryConfigDTO,
-    type IAndesiteSampleScriptConfigDTO,
-    type IAndesiteWorkerManagerConfigDTO,
-    type IBuildProjectOptionsDTO
+import type {
+    IAndesiteApiConfigDTO,
+    IAndesiteLibraryConfigDTO,
+    IAndesiteSampleScriptConfigDTO,
+    IAndesiteWorkerManagerConfigDTO,
+    IBuildProjectOptionsDTO
 } from '@/DTO';
 
 /**
@@ -20,7 +20,6 @@ function _buildCommandEsbuild(
     config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO)>
 ): string {
     let command: string = `npm --prefix ${__dirname}/../ run user::build -- -cwd ${process.cwd()}`;
-
     if (config.watch)
         command += ' -w';
     if (config.dev)
@@ -51,7 +50,6 @@ function execBuildCommand(
     config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO)>
 ): ChildProcess {
     const command: string = _buildCommandEsbuild(config);
-
     const child: ChildProcess = exec(command, {
         cwd: process.cwd(),
         windowsHide: true, 

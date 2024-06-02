@@ -18,9 +18,9 @@ export interface IPackageJson {
 }
 
 const safePkg: IPackageJson = pkg as IPackageJson;
-const dependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
+// const dependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
  
-const external = dependencies ?? [];
+// const external = dependencies ?? [];
 
 
 const commander = new Command();
@@ -45,24 +45,25 @@ commander
         const entryPoints = options.entryPoint;
         const outputDir = `${userDir}/${options.output}`;
 
+        const minify = options.minify;
+        const treeShaking = options.treeShaking;
+        const keepNames = options.keepNames;
+
         const buildOptions: BuildOptions = {
-            entryPoints: [`${userDir}/${entryPoints}`],
-            outfile: `${outputDir}/app.js`,
             bundle: true,
-            platform: 'node',
-            external,
-            loader: { '.ts': 'ts' },
-            tsconfig: `${userDir}/tsconfig.json`,
             color: true,
+            entryPoints: [`${userDir}/${entryPoints}`],
+            keepNames,
+            loader: { '.ts': 'ts' },
+            minify,
+            outfile: `${outputDir}/app.js`,
+            platform: 'node',
+            treeShaking,
+            tsconfig: `${userDir}/tsconfig.json`,
         };
 
-        if (options.dev) {
+        if (options.dev)
             buildOptions.sourcemap = 'linked';
-        } else {
-            buildOptions.minify = true;
-            buildOptions.keepNames = true;
-            buildOptions.treeShaking = true;
-        }
 
         if (options.watch) {
             await esbuild.build(buildOptions);

@@ -5,12 +5,10 @@ import {
 
 import api from '@/../Templates/PackageJson/api.json';
 import base from '@/../Templates/PackageJson/base.json';
-import library from '@/../Templates/PackageJson/library.json';
 import sampleScript from '@/../Templates/PackageJson/sample-script.json';
-import workerManager from '@/../Templates/PackageJson/worker-manager.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
-import { type IProjectInformationDTO } from '@/DTO';
+import type { IProjectInformationDTO } from '@/DTO';
 
 /**
  * An object representing the package.json file.
@@ -67,12 +65,6 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
     switch (projectInformation.type) {
     case 'API':
         packageJson.dependencies = api.dependencies;
-        return packageJson;
-    case 'Worker Manager':
-        packageJson.dependencies = workerManager.dependencies;
-        return packageJson;
-    case 'Library':
-        packageJson.dependencies = library.dependencies;
         return packageJson;
     case 'Sample Script':
         packageJson.dependencies = sampleScript.dependencies;

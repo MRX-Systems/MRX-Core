@@ -5,9 +5,7 @@ import {
 } from 'fs';
 
 import apiConfig from '@/../Templates/AndesiteConfigs/api.json';
-import libraryConfig from '@/../Templates/AndesiteConfigs/library.json';
 import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.json';
-import workerManagerConfig from '@/../Templates/AndesiteConfigs/worker-manager.json';
 import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
 import { parse, stringify } from '@/Common/Util';
@@ -66,12 +64,6 @@ function initAndesiteYmlConfig(type: string, path: string = './'): void {
     switch (type) {
     case 'API':
         writeAndesiteYmlConfig(apiConfig, path);
-        break;
-    case 'Worker Manager':
-        writeAndesiteYmlConfig(workerManagerConfig, path);
-        break;
-    case 'Library':
-        writeAndesiteYmlConfig(libraryConfig, path);
         break;
     case 'Sample Script':
         writeAndesiteYmlConfig(sampleScriptConfig, path);

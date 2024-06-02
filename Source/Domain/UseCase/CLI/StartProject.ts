@@ -1,10 +1,10 @@
+import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import { type IAndesiteApiConfigDTO } from '@/DTO';
+import type { IAndesiteApiConfigDTO } from '@/DTO';
 import { getFileEnvUsers } from '@/Domain/Service/User';
 import { execBundleCommand } from '@/Domain/Service/User/Command';
 import { readAndesiteYmlConfig } from '@/Domain/Service/User/Config';
-import { type ChildProcess } from 'child_process';
 
 /**
  * Start the project
