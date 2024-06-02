@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.3](https://github.com/Andesite-Lab/Core/compare/v1.3.2...v1.3.3) (2024-06-02)
+
+
+### Code Refactoring
+
+* global improvement + remove useless project type ([c7e15f1](https://github.com/Andesite-Lab/Core/commit/c7e15f16c2e37ecfb19170ec8778844b58f34585))
+
+
+### Build System
+
+* update deps ([a5106d4](https://github.com/Andesite-Lab/Core/commit/a5106d41238d91f34d04141bade3f9152274575b))
+
 ## [1.3.2](https://github.com/Andesite-Lab/Core/compare/v1.3.1...v1.3.2) (2024-05-16)
 
 
