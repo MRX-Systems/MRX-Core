@@ -3,8 +3,9 @@ import AjvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
 import fastify, { type FastifyInstance } from 'fastify';
 
-import { loggerHook } from './Hook';
-import type { IServerOptions, IStartOptions } from './Interface';
+import { LoggerHook } from './Hook';
+import type { IHook, IPlugin, IServerOptions, IStartOptions } from './Interface';
+import { FormBodyPlugin } from './Plugins';
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)
@@ -12,9 +13,18 @@ import type { IServerOptions, IStartOptions } from './Interface';
 export class ServerManager {
     /**
      * The Fastify instance.
-     * @readonly
      */
     private readonly _app: FastifyInstance;
+
+    /**
+     * The plugins for the server.
+     */
+    private readonly _plugins: IPlugin[] = [];
+
+    /**
+     * The hooks for the server.
+     */
+    private readonly _hooks: IHook[] = [];
 
     /**
      * The options for the server. 
@@ -60,25 +70,74 @@ export class ServerManager {
     }
 
     /**
-     * Add hooks to the Fastify instance.
+     * Initialize hooks to the Fastify instance.
      */
-    private _addHooks(): void {
-        if (this._options.logger) 
-            this._app.addHook('onRequest', loggerHook);
+    private async _initializeHooks(): Promise<void> {
+        for (const hook of this._hooks) 
+            await hook.configure(this._app);
     }
 
     /**
-     * Add plugins to the Fastify instance.
+     * Initialize plugins to the Fastify instance.
      */
-    private _addPlugins(): void {
+    private async _initializePlugins(): Promise<void> {
+        for (const plugin of this._plugins) 
+            await plugin.configure(this._app);   
     }
 
+    /**
+     * Add default hooks to the Fastify instance.
+     */
+    private _addDefaultHooks(): void {
+        if (this._options.logger) 
+            this._hooks.push(new LoggerHook());
+    }
+
+    /**
+     * Add default plugins to the Fastify instance.
+     */
+    private _addDefaultPlugins(): void {
+        this._plugins.push(new FormBodyPlugin());
+    }
+
+    /**
+     * Add hook to the Fastify instance.
+     * 
+     * @param hook - The hook to add.
+     */
+    public addHook(hook: IHook): void {
+        this._hooks.push(hook);
+    }
+
+    /**
+     * Add plugin to the Fastify instance.
+     * 
+     * @param plugin - The plugin to add.
+     */
+    public addPlugin(plugin: IPlugin): void {
+        this._plugins.push(plugin);
+    }
+
+    /**
+     * Close the server.
+     */
     public async close(): Promise<void> {
         await this._app.close();
     }
 
+    /**
+     * Start the server.
+     * 
+     * @param options - The start options.
+     */
     public async start(options: IStartOptions): Promise<void> {
-        this._addHooks();
+        this._addDefaultHooks();
+        this._addDefaultPlugins();
+    
+        await Promise.all([
+            this._initializeHooks(),
+            this._initializePlugins()
+        ]);
 
         await this._app.ready();
         await this._app.listen({
@@ -87,6 +146,11 @@ export class ServerManager {
         });
     }
 
+    /**
+     * Get the Fastify instance.
+     * 
+     * @returns The Fastify instance.
+     */
     public get app(): FastifyInstance {
         return this._app;
     }
