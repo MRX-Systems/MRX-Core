@@ -5,7 +5,7 @@ import fastify, { type FastifyInstance } from 'fastify';
 
 import { LoggerHook } from './Hook';
 import type { IHook, IPlugin, IServerOptions, IStartOptions } from './Interface';
-import { FormBodyPlugin } from './Plugins';
+import { FormBodyPlugin, HelmetPlugin } from './Plugins';
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)
@@ -97,7 +97,10 @@ export class ServerManager {
      * Add default plugins to the Fastify instance.
      */
     private _addDefaultPlugins(): void {
-        this._plugins.push(new FormBodyPlugin());
+        this._plugins.push(
+            new FormBodyPlugin(),
+            new HelmetPlugin()
+        );
     }
 
     /**
