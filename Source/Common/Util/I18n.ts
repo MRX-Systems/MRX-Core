@@ -31,6 +31,7 @@ async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en
             escapeValue: false,
         },
         resources,
+        joinArrays: ' ',
     });
 }
 
