@@ -3,9 +3,7 @@ import { exit } from 'process';
 
 import type {
     IAndesiteApiConfigDTO,
-    IAndesiteLibraryConfigDTO,
     IAndesiteSampleScriptConfigDTO,
-    IAndesiteWorkerManagerConfigDTO,
     IBuildProjectOptionsDTO
 } from '@/DTO';
 import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service';
@@ -21,11 +19,11 @@ async function buildProject(): Promise<void> {
     try {
         const s = spinner();
         s.start('Running build process 🚀');
-        const config = readAndesiteYmlConfig() as IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO;
+        const config = readAndesiteYmlConfig() as IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO;
         initAndesiteFolderStructure();
         updateTsConfig(config);
         
-        const buildOptions: IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO) = {
+        const buildOptions: IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO) = {
             minify: true,
             keepNames: true,
             treeShaking: true,

@@ -3,21 +3,19 @@ import { cwd } from 'process';
 
 import type {
     IAndesiteApiConfigDTO,
-    IAndesiteLibraryConfigDTO,
     IAndesiteSampleScriptConfigDTO,
-    IAndesiteWorkerManagerConfigDTO,
     IBuildProjectOptionsDTO
 } from '@/DTO';
 
 /**
  * Builds the command to build the project using esbuild with the given options.
  * 
- * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteLibraryConfigDTO} | {@link IAndesiteSampleScriptConfigDTO} | {@link IAndesiteWorkerManagerConfigDTO})
+ * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO})
  * 
  * @returns The build command.
  */
 function _buildCommandEsbuild(
-    config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO)>
+    config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO)>
 ): string {
     let command: string = `npm --prefix ${__dirname}/../ run user::build -- -cwd ${process.cwd()}`;
     if (config.watch)
@@ -42,12 +40,12 @@ function _buildCommandEsbuild(
 /**
  * Executes the build command.
  * 
- * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteLibraryConfigDTO} | {@link IAndesiteSampleScriptConfigDTO} | {@link IAndesiteWorkerManagerConfigDTO})
+ * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO})
  * 
  * @returns The child process.
  */ 
 function execBuildCommand(
-    config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO)>
+    config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO)>
 ): ChildProcess {
     const command: string = _buildCommandEsbuild(config);
     const child: ChildProcess = exec(command, {

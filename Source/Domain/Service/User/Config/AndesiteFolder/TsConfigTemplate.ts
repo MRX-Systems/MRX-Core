@@ -8,9 +8,7 @@ import { AndesiteError } from '@/Common/Error';
 import { ServiceErrorKeys } from '@/Common/Error/Enum';
 import type {
     IAndesiteApiConfigDTO,
-    IAndesiteLibraryConfigDTO,
     IAndesiteSampleScriptConfigDTO,
-    IAndesiteWorkerManagerConfigDTO
 } from '@/DTO';
 
 /**
@@ -85,11 +83,11 @@ function initTsConfigUser(path: string = './'): void {
 /**
  * Updates the tsconfig.json file.
  * 
- * @param andesiteConfig - The andesite configuration object. {@link IAndesiteApiConfigDTO} | {@link IAndesiteLibraryConfigDTO} | {@link IAndesiteSampleScriptConfigDTO} | {@link IAndesiteWorkerManagerConfigDTO}
+ * @param andesiteConfig - The andesite configuration object. {@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO}
  * @param path - The parent path of the tsconfig.json.
  */
 function updateTsConfig(
-    andesiteConfig: Readonly<IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO>,
+    andesiteConfig: Readonly<IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO>,
     path: string = './'
 ): void {
     const conf: ITsConfig = tsConfig as ITsConfig;

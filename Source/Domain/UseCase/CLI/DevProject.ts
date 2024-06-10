@@ -4,9 +4,7 @@ import { cwd, exit } from 'process';
 
 import type {
     IAndesiteApiConfigDTO,
-    IAndesiteLibraryConfigDTO,
     IAndesiteSampleScriptConfigDTO,
-    IAndesiteWorkerManagerConfigDTO,
     IBuildProjectOptionsDTO
 } from '@/DTO';
 import { getFileEnvUsers } from '@/Domain/Service/User';
@@ -18,10 +16,10 @@ import { readAndesiteYmlConfig } from '@/Domain/Service/User/Config';
  */
 async function devProject(): Promise<void> {
     try {
-        const config = readAndesiteYmlConfig() as IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO;
+        const config = readAndesiteYmlConfig() as IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO;
         const scriptPath: string = `${cwd()}/${config.Config.OutputDir}/app.js`;
         const env: Record<string, string> = getFileEnvUsers();
-        const buildOptions: IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteLibraryConfigDTO | IAndesiteSampleScriptConfigDTO | IAndesiteWorkerManagerConfigDTO) = {
+        const buildOptions: IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO) = {
             minify: false,
             keepNames: false,
             treeShaking: false,
