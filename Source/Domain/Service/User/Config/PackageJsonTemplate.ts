@@ -79,7 +79,7 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
  *
  * @param projectInformation - The project information. ({@link IProjectInformation})
  * 
- * @throws {@link AndesiteError} - If the package.json file already exists. {@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS}
+ * @throws ({@link AndesiteError}) - If the package.json file already exists. ({@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS})
  */
 function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, path: string = './'): void {
     if (existsSync(`${path}/package.json`))

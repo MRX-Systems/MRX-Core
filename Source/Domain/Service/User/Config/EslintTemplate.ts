@@ -12,7 +12,7 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
  *
  * @param path - The parent path of the .eslintrc.
  * 
- * @throws {@link AndesiteError} - If the .eslintrc file already exists. {@link ServiceErrorKeys.ERROR_ESLINT_EXISTS}
+ * @throws ({@link AndesiteError}) - If the .eslintrc file already exists. ({@link ServiceErrorKeys.ERROR_ESLINT_EXISTS})
  */
 function initEslint(path: string = './'): void {
     if (existsSync(`${path}/.eslintrc`))

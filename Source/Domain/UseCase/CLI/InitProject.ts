@@ -42,7 +42,7 @@ function _handleError(error: unknown): void {
 /**
  * The user selects the project type.
  *
- * @throws {@link AndesiteError} - If the user cancels the prompt. {@link ServiceErrorKeys.ERROR_CANCEL_PROMPT}
+ * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
  * 
  * @returns The project type selected by the user.
  */
@@ -67,7 +67,7 @@ async function _requestProjectTypeSelected(): Promise<string> {
 /**
  * Request the project name to the user.
  *
- * @throws {@link AndesiteError} - If the user cancels the prompt. {@link ServiceErrorKeys.ERROR_CANCEL_PROMPT}
+ * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
  * 
  * @returns The project name.
  */

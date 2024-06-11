@@ -42,7 +42,7 @@ function _buildCommandEsbuild(
  * 
  * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO})
  * 
- * @returns The child process.
+ * @returns The child process. ({@link ChildProcess})
  */ 
 function execBuildCommand(
     config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO)>

@@ -29,7 +29,7 @@ interface ITsConfig {
 /**
  * Writes the tsconfig.json file.
  * 
- * @param conf - The tsconfig.json object to write.
+ * @param conf - The tsconfig.json object to write. ({@link ITsConfig})
  * @param path - The path to write the tsconfig.json.
  */
 function writeTsConfig(conf: Readonly<ITsConfig>, path: string = './'): void {
@@ -41,7 +41,7 @@ function writeTsConfig(conf: Readonly<ITsConfig>, path: string = './'): void {
  *
  * @param path - The parent path of the tsconfig.json.
  * 
- * @throws {@link AndesiteError} - If the tsconfig.json file already exists. {@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS}
+ * @throws ({@link AndesiteError}) - If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
  */
 function initTsConfig(path: string = './'): void {
     if (existsSync(`${path}/.andesite/tsconfig.json`))
@@ -67,7 +67,7 @@ function initTsConfig(path: string = './'): void {
  * 
  * @param path - The parent path of the tsconfig.json.
  * 
- * @throws {@link AndesiteError} - If the tsconfig.json file already exists. {@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS}
+ * @throws ({@link AndesiteError}) - If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
  */
 function initTsConfigUser(path: string = './'): void {
     if (existsSync(`${path}/tsconfig.json`))
@@ -83,7 +83,7 @@ function initTsConfigUser(path: string = './'): void {
 /**
  * Updates the tsconfig.json file.
  * 
- * @param andesiteConfig - The andesite configuration object. {@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO}
+ * @param andesiteConfig - The andesite configuration object. ({@link IAndesiteApiConfigDTO}) | ({@link IAndesiteSampleScriptConfigDTO})
  * @param path - The parent path of the tsconfig.json.
  */
 function updateTsConfig(
