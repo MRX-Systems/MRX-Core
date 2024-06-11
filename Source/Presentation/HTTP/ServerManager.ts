@@ -3,9 +3,12 @@ import AjvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
 import fastify, { type FastifyInstance } from 'fastify';
 
-import { LoggerHook } from './Hook';
-import type { IHook, IPlugin, IServerOptions, IStartOptions } from './Interface';
-import { FormBodyPlugin, HelmetPlugin } from './Plugin';
+import { LoggerHook } from '@/Presentation/HTTP/Hook';
+import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface';
+import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin';
+import type { AbstractRouter } from '@/Presentation/HTTP/Router';
+
+export type { FastifyInstance };
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)
@@ -80,19 +83,55 @@ export class ServerManager {
     /**
      * Add hook to the Fastify instance.
      * 
-     * @param Hook - The hook to add.
+     * @param Hook - The hook to add. ({@link IHook})
      */
     public async addHook(hook: IHook): Promise<void> {
         await hook.configure(this._app);
     }
 
     /**
+     * Add hooks to the Fastify instance.
+     * 
+     * @param hooks - The hooks to add. ({@link IHook})
+     */
+    public async addHooks(hooks: IHook[]): Promise<void> {
+        await Promise.all(hooks.map(hook => hook.configure(this._app)));
+    }
+
+    /**
      * Add plugin to the Fastify instance.
      * 
-     * @param plugin - The plugin to add.
+     * @param plugin - The plugin to add. ({@link IPlugin})
      */
     public async addPlugin(plugin: IPlugin): Promise<void> {
         await plugin.configure(this._app);
+    }
+
+    /**
+     * Add plugins to the Fastify instance.
+     * 
+     * @param plugins - The plugins to add. ({@link IPlugin})
+     */
+    public async addPlugins(plugins: IPlugin[]): Promise<void> {
+        await Promise.all(plugins.map(plugin => plugin.configure(this._app)));
+    }
+
+    /**
+     * Add router to the Fastify instance.
+     * 
+     * @param router - The router to add. ({@link AbstractRouter})
+     */
+    public async addRouter(router: AbstractRouter): Promise<void> {
+        await router.configure(this._app, this._options.baseUrl ?? '/');
+    }
+
+    /**
+     * Add routers to the Fastify instance.
+     * 
+     * @param routers - The routers to add. ({@link AbstractRouter})
+     */
+    public async addRouters(routers: AbstractRouter[]): Promise<void> {
+        await Promise.all(routers.map(router => router.configure(this._app, this._options.baseUrl ?? '/')));
     }
 
     /**
@@ -101,7 +140,6 @@ export class ServerManager {
     public async close(): Promise<void> {
         await this._app.close();
     }
-
 
     /**
      * Start the server.
