@@ -17,6 +17,9 @@ export class SwaggerScalarUiPlugin implements IPlugin {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
         await app.register(require('@scalar/fastify-api-reference'), {
             routePrefix: '/swagger',
+            configuration: {
+                theme: 'purple'
+            }
         });
     }
 }

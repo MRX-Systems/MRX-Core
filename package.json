@@ -64,6 +64,7 @@
     "@fastify/helmet": "^11.1.1",
     "@fastify/swagger": "^8.14.0",
     "@scalar/fastify-api-reference": "^1.23.5",
+    "@scalar/themes": "^0.8.2",
     "@tsconfig/node22": "^22.0.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",
