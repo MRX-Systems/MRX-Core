@@ -5,7 +5,7 @@ import fastify, { type FastifyInstance } from 'fastify';
 
 import { LoggerHook } from './Hook';
 import type { IHook, IPlugin, IServerOptions, IStartOptions } from './Interface';
-import { FormBodyPlugin, HelmetPlugin } from './Plugins';
+import { FormBodyPlugin, HelmetPlugin } from './Plugin';
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)
@@ -15,16 +15,6 @@ export class ServerManager {
      * The Fastify instance.
      */
     private readonly _app: FastifyInstance;
-
-    /**
-     * The plugins for the server.
-     */
-    private readonly _plugins: IPlugin[] = [];
-
-    /**
-     * The hooks for the server.
-     */
-    private readonly _hooks: IHook[] = [];
 
     /**
      * The options for the server. 
@@ -70,46 +60,30 @@ export class ServerManager {
     }
 
     /**
-     * Initialize hooks to the Fastify instance.
-     */
-    private async _initializeHooks(): Promise<void> {
-        for (const hook of this._hooks) 
-            await hook.configure(this._app);
-    }
-
-    /**
-     * Initialize plugins to the Fastify instance.
-     */
-    private async _initializePlugins(): Promise<void> {
-        for (const plugin of this._plugins) 
-            await plugin.configure(this._app);   
-    }
-
-    /**
      * Add default hooks to the Fastify instance.
      */
     private _addDefaultHooks(): void {
         if (this._options.logger) 
-            this._hooks.push(new LoggerHook());
+            (new LoggerHook()).configure(this._app);
     }
 
     /**
      * Add default plugins to the Fastify instance.
      */
-    private _addDefaultPlugins(): void {
-        this._plugins.push(
-            new FormBodyPlugin(),
-            new HelmetPlugin()
-        );
+    private async _addDefaultPlugins(): Promise<void> {
+        await Promise.all([
+            (new FormBodyPlugin()).configure(this._app),
+            (new HelmetPlugin()).configure(this._app)
+        ]);
     }
 
     /**
      * Add hook to the Fastify instance.
      * 
-     * @param hook - The hook to add.
+     * @param Hook - The hook to add.
      */
-    public addHook(hook: IHook): void {
-        this._hooks.push(hook);
+    public async addHook(hook: IHook): Promise<void> {
+        await hook.configure(this._app);
     }
 
     /**
@@ -117,8 +91,8 @@ export class ServerManager {
      * 
      * @param plugin - The plugin to add.
      */
-    public addPlugin(plugin: IPlugin): void {
-        this._plugins.push(plugin);
+    public async addPlugin(plugin: IPlugin): Promise<void> {
+        await plugin.configure(this._app);
     }
 
     /**
@@ -128,6 +102,7 @@ export class ServerManager {
         await this._app.close();
     }
 
+
     /**
      * Start the server.
      * 
@@ -135,12 +110,7 @@ export class ServerManager {
      */
     public async start(options: IStartOptions): Promise<void> {
         this._addDefaultHooks();
-        this._addDefaultPlugins();
-    
-        await Promise.all([
-            this._initializeHooks(),
-            this._initializePlugins()
-        ]);
+        await this._addDefaultPlugins();
 
         await this._app.ready();
         await this._app.listen({

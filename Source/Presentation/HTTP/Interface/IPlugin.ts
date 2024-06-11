@@ -10,5 +10,5 @@ export interface IPlugin {
      * @param app - The Fastify instance.
      * @param options - The options for the plugin.
      */
-    configure(app: FastifyInstance, options?: unknown): Promise<void>;
+    configure(app: FastifyInstance, options?: unknown): Promise<void> | void;
 }
