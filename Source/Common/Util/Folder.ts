@@ -12,7 +12,7 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
  * @param obj - The object that represents the folder structure.
  * @param parentPath - The parent path of the folder structure.
  * 
- * @throws ({@link AndesiteError}) - If failed to create folder structure. ({@link ServiceErrorKeys.CREATE_FOLDER_STRUCTURE_ERROR})
+ * @throws ({@link AndesiteError}) - If failed to create folder structure. ({@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE})
  */
 function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: string = './example'): void {
     for (const key in obj)
@@ -23,7 +23,7 @@ function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: 
                     mkdirSync(path, { recursive: true });
             } catch (e) {
                 throw new AndesiteError({
-                    messageKey: ServiceErrorKeys.CREATE_FOLDER_STRUCTURE_ERROR,
+                    messageKey: ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE,
                     detail: e
                 });
             }
