@@ -24,7 +24,7 @@ export class FactoryDatabase {
 
     /**
      * Constructor of the FactoryDatabase class.
-     * 
+     *
      * @returns A new instance of the FactoryDatabase class. ({@link FactoryDatabase})
      */
     public static get instance(): FactoryDatabase {

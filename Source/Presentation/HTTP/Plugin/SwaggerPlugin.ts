@@ -15,7 +15,7 @@ export class SwaggerPlugin implements IPlugin {
 
     /**
      * Constructor of the SwaggerPlugin.
-     * 
+     *
      * @param options - The options for the Swagger.
      */
     public constructor(options: FastifyRegisterOptions<SwaggerOptions>) {
@@ -24,7 +24,7 @@ export class SwaggerPlugin implements IPlugin {
 
     /**
      * Configures the Swagger.
-     * 
+     *
      * @param app - The Fastify instance.
      */
     public async configure(app: FastifyInstance): Promise<void> {

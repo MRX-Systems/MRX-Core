@@ -36,7 +36,7 @@ export class CorsPlugin implements IPlugin {
 
     /**
      * Constructor of the CorsPlugin.
-     * 
+     *
      * @param options - The options for the CORS.
      */
     public constructor(options?: ICorsOptions) {
@@ -45,7 +45,7 @@ export class CorsPlugin implements IPlugin {
 
     /**
      * Configures the CORS.
-     * 
+     *
      * @param app - The Fastify instance.
      */
     public async configure(app: FastifyInstance): Promise<void> {

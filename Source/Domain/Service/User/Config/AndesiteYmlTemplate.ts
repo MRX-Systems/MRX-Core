@@ -12,7 +12,7 @@ import { parse, stringify } from '@/Common/Util';
 
 /**
  * Writes the Andesite yml config.
- * 
+ *
  * @param config - The config object to write.
  * @param path - The path to write the config.
  */
@@ -22,7 +22,7 @@ function writeAndesiteYmlConfig(config: Record<string, unknown>, path: string = 
 
 /**
  * Checks if the Andesite yml config exists and throws an error if it does.
- * 
+ *
  * @param path - The path to check for the andesite yml config.
  *
  * @throws ({@link AndesiteError}) - If the andesite yml config does not exist. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_NOT_EXISTS})
@@ -36,11 +36,11 @@ function checkAndesiteYmlConfigExistsAndThrow(path: string = './'): void {
 
 /**
  * Reads the Andesite yml config.
- * 
+ *
  * @param path - The path to read the config.
- * 
+ *
  * @throws ({@link AndesiteError}) - If the andesite yml config does not exist. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_NOT_EXISTS})
- * 
+ *
  * @returns The Andesite yml config.
  */
 function readAndesiteYmlConfig(path: string = './'): unknown {
@@ -50,10 +50,10 @@ function readAndesiteYmlConfig(path: string = './'): unknown {
 
 /**
  * Creates the Andesite yml config.
- * 
+ *
  * @param type - The type of the Andesite yml config to create.
  * @param path - The path to write the config.
- * 
+ *
  * @throws ({@link AndesiteError}) - If the andesite yml config already exists. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_EXISTS})
  */
 function initAndesiteYmlConfig(type: string, path: string = './'): void {

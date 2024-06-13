@@ -3,7 +3,7 @@ import { cwd } from 'process';
 
 /**
  * Return the environment variables from the .env file of users project
- * 
+ *
  * @returns Get the environment variables from the .env file
  */
 function getFileEnvUsers(): Record<string, string> {
@@ -13,7 +13,7 @@ function getFileEnvUsers(): Record<string, string> {
         const envConfig = readFileSync(envFile, 'utf-8');
         envConfig.split('\n').forEach((envVar) => {
             const [key, value] = envVar.split('=');
-            if (key && value) 
+            if (key && value)
                 env[key.trim()] = value.trim();
         });
     }

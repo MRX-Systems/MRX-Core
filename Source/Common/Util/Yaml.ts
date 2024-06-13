@@ -8,8 +8,8 @@ import { parse as parseYml, stringify as stringifyYml } from 'yaml';
  * @returns The object with the environment variables replaced.
  */
 function replaceEnvVars(obj: Record<string, unknown>): Record<string, unknown> {
-    for (const key in obj) 
-        if (typeof obj[key] === 'string') 
+    for (const key in obj)
+        if (typeof obj[key] === 'string')
             obj[key] = (obj[key] as string)
                 .replace(/\$\{(?:.+?)\}/g, (match: string) => {
                     const envVar = match.substring(2, match.length - 1);
@@ -33,7 +33,7 @@ function parse(yml: string): Record<string, unknown> {
 
 /**
  * Stringify the object to yml.
- * 
+ *
  * @param obj - THe object to stringify.
  * @returns The stringified object.
  */

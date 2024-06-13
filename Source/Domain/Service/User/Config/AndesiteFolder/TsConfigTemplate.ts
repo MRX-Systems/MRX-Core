@@ -28,7 +28,7 @@ interface ITsConfig {
 
 /**
  * Writes the tsconfig.json file.
- * 
+ *
  * @param conf - The tsconfig.json object to write. ({@link ITsConfig})
  * @param path - The path to write the tsconfig.json.
  */
@@ -40,7 +40,7 @@ function writeTsConfig(conf: Readonly<ITsConfig>, path: string = './'): void {
  * Creates the tsconfig.json file for the project.
  *
  * @param path - The parent path of the tsconfig.json.
- * 
+ *
  * @throws ({@link AndesiteError}) - If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
  */
 function initTsConfig(path: string = './'): void {
@@ -64,9 +64,9 @@ function initTsConfig(path: string = './'): void {
 
 /**
  * Creates the tsconfig.json file for the user.
- * 
+ *
  * @param path - The parent path of the tsconfig.json.
- * 
+ *
  * @throws ({@link AndesiteError}) - If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
  */
 function initTsConfigUser(path: string = './'): void {
@@ -82,7 +82,7 @@ function initTsConfigUser(path: string = './'): void {
 
 /**
  * Updates the tsconfig.json file.
- * 
+ *
  * @param andesiteConfig - The andesite configuration object. ({@link IAndesiteApiConfigDTO}) | ({@link IAndesiteSampleScriptConfigDTO})
  * @param path - The parent path of the tsconfig.json.
  */

@@ -11,7 +11,7 @@ export abstract class AbstractRouter {
 
     /**
      * Constructor of the AbstractRouter class.
-     * 
+     *
      * @param prefix - The prefix of the router.
      */
     public constructor(prefix: string) {
@@ -20,19 +20,21 @@ export abstract class AbstractRouter {
 
     /**
      * Initialize the routes of the router.
-     * 
+     *
      * @param fastify - The Fastify instance.
      */
     protected abstract initRoutes(fastify: FastifyInstance): void;
 
     /**
      * Configure the router.
-     * 
+     *
      * @param app - The Fastify instance.
      * @param baseUrl - The base URL of the router.
      */
     public async configure(app: FastifyInstance, baseUrl: string): Promise<void> {
-        await app.register(this._router, { prefix: `${baseUrl}${this._routerPrefix}` });
+        await app.register(this._router, {
+            prefix: `${baseUrl}${this._routerPrefix}`
+        });
     }
 
     /**

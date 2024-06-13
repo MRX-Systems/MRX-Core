@@ -8,7 +8,7 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
 
 /**
  * Initialize the entry point of the project.
- * 
+ *
  * @param path - The path where the entry point will be created.
  */
 function initEntryPoint(path: string = './'): void {

@@ -48,14 +48,14 @@ export interface IMSSQLDatabaseOptions {
 }
 /**
  * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern)
- * 
+ *
  * @typeparam T - The database schema types
  */
 export class MSSQLCreator<T> extends AbstractCreator<T> {
-    
+
     /**
      * Constructor of the MSSQLCreator class
-     * 
+     *
      * @param options - The options of the database ({@link IMSSQLDatabaseOptions})
      */
     public constructor(options: IMSSQLDatabaseOptions) {

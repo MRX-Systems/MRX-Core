@@ -24,7 +24,7 @@ export class FormBodyPlugin implements IPlugin {
 
     /**
      * Constructor of the FormBodyPlugin.
-     * 
+     *
      * @param options - The options for the FormBody.
      */
     public constructor(options?: IFormBodyOptions) {
@@ -33,7 +33,7 @@ export class FormBodyPlugin implements IPlugin {
 
     /**
      * Configures the FormBody.
-     * 
+     *
      * @param app - The Fastify instance.
      */
     public async configure(app: FastifyInstance): Promise<void> {

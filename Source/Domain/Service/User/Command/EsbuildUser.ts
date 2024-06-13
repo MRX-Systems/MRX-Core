@@ -9,9 +9,9 @@ import type {
 
 /**
  * Builds the command to build the project using esbuild with the given options.
- * 
+ *
  * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO})
- * 
+ *
  * @returns The build command.
  */
 function _buildCommandEsbuild(
@@ -39,18 +39,18 @@ function _buildCommandEsbuild(
 
 /**
  * Executes the build command.
- * 
+ *
  * @param config - The build project options. {@link IBuildProjectOptionsDTO} & ({@link IAndesiteApiConfigDTO} | {@link IAndesiteSampleScriptConfigDTO})
- * 
+ *
  * @returns The child process. ({@link ChildProcess})
- */ 
+ */
 function execBuildCommand(
     config: Readonly<IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO)>
 ): ChildProcess {
     const command: string = _buildCommandEsbuild(config);
     const child: ChildProcess = exec(command, {
         cwd: process.cwd(),
-        windowsHide: true, 
+        windowsHide: true,
     });
 
     return child;

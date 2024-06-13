@@ -4,7 +4,7 @@ import { buildFolderStructureByObject } from '@/Common/Util';
 
 /**
  * Creates the folder structure based on the project information.
- * 
+ *
  * @param type - The project type.
  * @param path - The parent path of the folder structure.
  */

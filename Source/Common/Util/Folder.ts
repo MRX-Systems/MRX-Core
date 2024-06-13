@@ -8,10 +8,10 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
 
 /**
  * Builds the folder structure by the object.
- * 
+ *
  * @param obj - The object that represents the folder structure.
  * @param parentPath - The parent path of the folder structure.
- * 
+ *
  * @throws ({@link AndesiteError}) - If failed to create folder structure. ({@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE})
  */
 function buildFolderStructureByObject(obj: Record<string, unknown>, parentPath: string = './example'): void {

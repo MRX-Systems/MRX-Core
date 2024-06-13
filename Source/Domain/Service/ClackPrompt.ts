@@ -84,14 +84,14 @@ interface ITextOptions {
 interface ISpinnerOptions {
     /**
      * Start the spinner.
-     * 
+     *
      * @param msg - The message to display when the spinner starts.
      */
     start: (msg?: string) => void;
 
     /**
      * Stop the spinner.
-     * 
+     *
      * @param msg - The message to display when the spinner stops.
      * @param code - The code to display when the spinner stops.
      */
@@ -99,7 +99,7 @@ interface ISpinnerOptions {
 
     /**
      * Display a message.
-     * 
+     *
      * @param msg - The message to display.
      */
     message: (msg?: string) => void;
@@ -107,7 +107,7 @@ interface ISpinnerOptions {
 
 /**
  * Display the intro message.
- * 
+ *
  * @param message - The message to display in the intro.
  */
 function intro(message: string): void {
@@ -116,7 +116,7 @@ function intro(message: string): void {
 
 /**
  * Display the outro message.
- * 
+ *
  * @param message - The message to display in the outro.
  */
 function outro(message: string): void {
@@ -125,7 +125,7 @@ function outro(message: string): void {
 
 /**
  * Throw an error when the user cancels the prompt.
- * 
+ *
  * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
  */
 function _throwWhenCancel(): void {
@@ -136,7 +136,7 @@ function _throwWhenCancel(): void {
 
 /**
  * Display the outro message based on the time of the day.
- * 
+ *
  * @param dayMessage - The message to display if it is day time.
  * @param nightMessage - The message to display if it is night time.
  */
@@ -153,7 +153,7 @@ function outroBasedOnTime(
 
 /**
  * Cancel the prompt.
- * 
+ *
  * @param message - The message to display when the prompt is canceled.
  */
 function cancel(message: string = 'Canceled'): void {
@@ -162,11 +162,11 @@ function cancel(message: string = 'Canceled'): void {
 
 /**
  * Display a select prompt to the user.
- * 
+ *
  * @param opt - The options for the select prompt. ({@link ISelectOptions})
- * 
+ *
  * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
- * 
+ *
  * @returns The value selected by the user.
  */
 async function select(opt: ISelectOptions): Promise<string | number | boolean | symbol>  {
@@ -186,9 +186,9 @@ async function select(opt: ISelectOptions): Promise<string | number | boolean | 
 
 /**
  * Display a text prompt to the user.
- * 
+ *
  * @param opt - The options for the text prompt. ({@link ITextOptions})
- * 
+ *
  * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
  *
  * @returns The value entered by the user.
@@ -208,7 +208,7 @@ function text(opt: ITextOptions): Promise<string | symbol> {
 
 /**
  * Display a spinner prompt to the user.
- * 
+ *
  * @returns The spinner options. ({@link ISpinnerOptions})
  */
 function spinner(): ISpinnerOptions {

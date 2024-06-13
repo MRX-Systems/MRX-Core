@@ -19,7 +19,7 @@ function startProject(): void {
         child.stdout?.on('data', (data: string | Uint8Array) => {
             process.stdout.write(data);
         });
-        
+
         child.stderr?.on('data', (data: string | Uint8Array) => {
             process.stderr.write(data);
         });

@@ -9,10 +9,10 @@ import { ServiceErrorKeys } from '@/Common/Error/Enum';
 
 /**
  * Create a jest.config.json file.
- * 
+ *
  * @param projectName - The name of the project.
  * @param path - The parent path of the jest.config.json.
- * 
+ *
  * @throws ({@link AndesiteError}) - If jest.config.json already exists. ({@link ServiceErrorKeys.ERROR_JEST_EXISTS})
  */
 function initJestConfig(

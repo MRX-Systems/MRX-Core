@@ -17,7 +17,7 @@ export const PROJECT_TYPES = {
 
 /**
  * Cancel the project initialization and stop the process.
- * 
+ *
  * @param message - The message to display when canceling the project initialization.
  * @param code - The exit code.
  */
@@ -28,14 +28,14 @@ function _cancelAndStop(message: string = 'Project initialization canceled', cod
 
 /**
  * Handle the error occurred during the project initialization.
- * 
+ *
  * @param error - The error occurred.
  */
 function _handleError(error: unknown): void {
     console.error(error);
-    if (error instanceof AndesiteError) 
+    if (error instanceof AndesiteError)
         _cancelAndStop(`An error occurred while initializing the project 😢 ${error.message}`, 1);
-    else 
+    else
         _cancelAndStop('An unexpected error occurred while initializing the project 😢', 1);
 }
 
@@ -43,7 +43,7 @@ function _handleError(error: unknown): void {
  * The user selects the project type.
  *
  * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
- * 
+ *
  * @returns The project type selected by the user.
  */
 async function _requestProjectTypeSelected(): Promise<string> {
@@ -68,7 +68,7 @@ async function _requestProjectTypeSelected(): Promise<string> {
  * Request the project name to the user.
  *
  * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
- * 
+ *
  * @returns The project name.
  */
 async function _requestProjectName(): Promise<string> {
@@ -82,7 +82,7 @@ async function _requestProjectName(): Promise<string> {
 
 /**
  * Request the project description to the user.
- * 
+ *
  * @returns The project description.
  */
 async function _requestProjectDescription(): Promise<string> {
@@ -104,7 +104,7 @@ async function initProject(): Promise<void> {
     const projectDescription = await _requestProjectDescription();
     try {
         const s = spinner();
-        s.start('Running initialization process 🚀');    
+        s.start('Running initialization process 🚀');
         const projectInformation: IProjectInformationDTO = {
             name: projectName,
             description: projectDescription,

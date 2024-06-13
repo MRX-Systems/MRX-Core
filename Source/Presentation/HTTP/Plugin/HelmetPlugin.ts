@@ -9,7 +9,7 @@ import type { IPlugin } from '@/Presentation/HTTP/Interface';
 export class HelmetPlugin implements IPlugin {
     /**
      * Configures the HelmetPlugin.
-     * 
+     *
      * @param app - The Fastify instance.
      */
     public async configure(app: FastifyInstance): Promise<void> {

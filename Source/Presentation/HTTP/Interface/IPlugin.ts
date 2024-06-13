@@ -6,7 +6,7 @@ import type { FastifyInstance } from 'fastify';
 export interface IPlugin {
     /**
      * Configures the plugin.
-     * 
+     *
      * @param app - The Fastify instance.
      * @param options - The options for the plugin.
      */

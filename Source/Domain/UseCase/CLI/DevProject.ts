@@ -31,7 +31,7 @@ async function devProject(): Promise<void> {
             const child: ChildProcess = execBuildCommand(buildOptions);
             child.stderr?.on('data', (data: string | Uint8Array) => {
                 process.stderr.write(data);
-            });        
+            });
             child.on('close', () => {
                 resolve();
             });
@@ -52,12 +52,12 @@ async function devProject(): Promise<void> {
                 bundleChild.stdout?.on('data', (data: string | Uint8Array) => {
                     process.stdout.write(data);
                 });
-                
+
                 bundleChild.stderr?.on('data', (data: string | Uint8Array) => {
                     process.stderr.write(data);
                 });
             }
-        });    
+        });
     } catch (error) {
         console.error(error);
         exit(1);

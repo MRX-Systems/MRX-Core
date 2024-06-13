@@ -22,7 +22,7 @@ async function buildProject(): Promise<void> {
         const config = readAndesiteYmlConfig() as IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO;
         initAndesiteFolderStructure();
         updateTsConfig(config);
-        
+
         const buildOptions: IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO) = {
             minify: true,
             keepNames: true,

@@ -45,7 +45,7 @@ export class SwaggerScalarUiPlugin implements IPlugin {
 
     /**
      * Constructor of the SwaggerScalarUiPlugin.
-     * 
+     *
      * @param options - The options for the SwaggerScalarUi. ({@link ISwaggerScalarUiPluginOptions})
      */
     public constructor(options?: ISwaggerScalarUiPluginOptions) {
@@ -56,7 +56,7 @@ export class SwaggerScalarUiPlugin implements IPlugin {
 
     /**
      * Configures the SwaggerScalarUi.
-     * 
+     *
      * @param app - The Fastify instance.
      */
     public async configure(app: FastifyInstance): Promise<void> {
