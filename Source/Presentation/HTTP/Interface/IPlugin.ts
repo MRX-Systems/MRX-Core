@@ -8,7 +8,7 @@ export interface IPlugin {
      * Configures the plugin.
      *
      * @param app - The Fastify instance. ({@link FastifyInstance})
-     * @param options - The options for the plugin.
+     * @param baseUrl - The base URL of the SwaggerScalarUi.
      */
-    configure(app: FastifyInstance, options?: unknown): Promise<void> | void;
+    configure(app: FastifyInstance, baseUrl: string): Promise<void> | void;
 }

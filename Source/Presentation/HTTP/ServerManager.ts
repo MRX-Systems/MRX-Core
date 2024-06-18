@@ -136,7 +136,7 @@ export class ServerManager {
      * @param plugin - The plugin to add. ({@link IPlugin})
      */
     public async addPlugin(plugin: IPlugin): Promise<void> {
-        await plugin.configure(this._app);
+        await plugin.configure(this._app, this._options.Server.BaseUrl ?? '/');
     }
 
     /**
@@ -145,7 +145,7 @@ export class ServerManager {
      * @param plugins - The plugins to add. ({@link IPlugin})
      */
     public async addPlugins(plugins: IPlugin[]): Promise<void> {
-        await Promise.all(plugins.map(plugin => plugin.configure(this._app)));
+        await Promise.all(plugins.map(plugin => plugin.configure(this._app, this._options.Server.BaseUrl ?? '/')));
     }
 
     /**
