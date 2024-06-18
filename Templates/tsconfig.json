@@ -21,7 +21,7 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./Build",
-    "removeComments": true,
+    "removeComments": false,
     "importHelpers": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

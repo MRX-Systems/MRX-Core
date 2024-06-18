@@ -6,10 +6,10 @@ import { AbstractCreator } from './AbstractCreator';
 export interface ISQLiteDatabaseOptions {
 
     /**
-     * The filename of the database 
+     * The filename of the database
      * U can set :memory: for in-memory database
      */
-    filename: string; 
+    filename: string;
     /**
      * Activate the log
      */
@@ -18,7 +18,7 @@ export interface ISQLiteDatabaseOptions {
 
 /**
  * SQLite Creator is a concrete creator for SQLite Database (Factory Pattern)
- * 
+ *
  * @typeparam T - The database schema types
  */
 export class SQLiteCreator<T> extends AbstractCreator<T> {

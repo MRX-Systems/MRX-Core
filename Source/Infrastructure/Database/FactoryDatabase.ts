@@ -24,7 +24,7 @@ export class FactoryDatabase {
 
     /**
      * Constructor of the FactoryDatabase class.
-     * 
+     *
      * @returns A new instance of the FactoryDatabase class. ({@link FactoryDatabase})
      */
     public static get instance(): FactoryDatabase {
@@ -71,6 +71,7 @@ export class FactoryDatabase {
      * Get a database by name.
      *
      * @param name - The name of the database to get
+     *
      * @returns The {@link Kysely} instance with the database schema types
      */
     public get<T>(name: string): Kysely<T> | undefined {

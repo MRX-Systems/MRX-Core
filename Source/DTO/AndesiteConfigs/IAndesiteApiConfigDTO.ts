@@ -11,10 +11,6 @@ export interface IAndesiteApiConfigDTO {
      */
     Config: {
         /**
-         * Activates the logger.
-         */
-        Logger: boolean;
-        /**
          * The base source directory.
          */
         BaseSourceDir: string,
@@ -51,6 +47,14 @@ export interface IAndesiteApiConfigDTO {
          * The base URL of the server.
          */
         BaseUrl: string;
+        /**
+         * Activates the logger.
+         */
+        Logger: boolean;
+        /**
+         * Activates HTTP/2.
+         */
+        Http2: boolean;
         /**
          * The security configuration of the server.
          */

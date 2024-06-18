@@ -29,7 +29,8 @@
       "Http": {
         "Handler": null,
         "Middleware": null,
-        "Router": null
+        "Router": null,
+        "Schema": null
       },
       "Schema": null,
       "WebSocket": {
