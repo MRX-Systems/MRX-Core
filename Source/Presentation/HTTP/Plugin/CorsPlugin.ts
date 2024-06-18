@@ -26,18 +26,18 @@ export interface ICorsOptions {
 }
 
 /**
- * The cors plugin.
+ * The cors plugin implement the IPlugin interface ({@link IPlugin})
  */
 export class CorsPlugin implements IPlugin {
     /**
-     * The options for the CORS.
+     * The options for the CORS. ({@link ICorsOptions})
      */
     private readonly _options: ICorsOptions | undefined;
 
     /**
      * Constructor of the CorsPlugin.
      *
-     * @param options - The options for the CORS.
+     * @param options - The options for the CORS. ({@link ICorsOptions})
      */
     public constructor(options?: ICorsOptions) {
         this._options = options;
@@ -46,7 +46,7 @@ export class CorsPlugin implements IPlugin {
     /**
      * Configures the CORS.
      *
-     * @param app - The Fastify instance.
+     * @param app - The Fastify instance. ({@link FastifyInstance})
      */
     public async configure(app: FastifyInstance): Promise<void> {
         await app.register(cors, {

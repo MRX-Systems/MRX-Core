@@ -4,6 +4,9 @@ import {
     existsSync,
 } from 'fs';
 
+/**
+ * Represents the path.
+ */
 export class Path {
     /**
      * It's a path.
@@ -12,7 +15,7 @@ export class Path {
 
     /**
      * Initializes a new instance of the Path class.
-     * 
+     *
      * @param path - The path.
      */
     public constructor(path: string) {
@@ -21,7 +24,7 @@ export class Path {
 
     /**
      * Gets the path of the file.
-     * 
+     *
      * @returns The path of the file.
      */
     public get path(): string {
@@ -30,7 +33,7 @@ export class Path {
 
     /**
      * Checks the access of the folder. ({@link constants.F_OK}, {@link constants.W_OK}, {@link constants.R_OK})
-     * 
+     *
      * @returns True if the folder has access; otherwise, false.
      */
     public checkAccess(): boolean {
@@ -44,7 +47,7 @@ export class Path {
 
     /**
      * Checks if the path exists.
-     * 
+     *
      * @returns True if the path exists; otherwise, false.
      */
     public exists(): boolean {

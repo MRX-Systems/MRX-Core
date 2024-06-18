@@ -71,6 +71,7 @@ export class FactoryDatabase {
      * Get a database by name.
      *
      * @param name - The name of the database to get
+     *
      * @returns The {@link Kysely} instance with the database schema types
      */
     public get<T>(name: string): Kysely<T> | undefined {

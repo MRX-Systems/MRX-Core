@@ -4,8 +4,17 @@ import { exit } from 'process';
 import { AndesiteError } from '@/Common/Error';
 import type { IProjectInformationDTO } from '@/DTO';
 import { cancel, intro, outroBasedOnTime, select, spinner, text } from '@/Domain/Service';
-import { initAndesiteYmlConfig, initEntryPoint, initEslint, initFolderStructure, initPackageJson } from '@/Domain/Service/User/Config';
-import { initAndesiteFolderStructure, initJestConfig, initTsConfig, initTsConfigUser } from '@/Domain/Service/User/Config/AndesiteFolder';
+import {
+    AndesiteYml,
+    type ProjectType,
+    initAndesiteFolderStructure,
+    initEntryPoint,
+    initEslint,
+    initFolderStructure,
+    initJestConfig,
+    initPackageJson,
+    TsConfig,
+} from '@/Domain/Service/User/Config';
 
 /**
  * The project types.
@@ -99,7 +108,7 @@ async function _requestProjectDescription(): Promise<string> {
  */
 async function initProject(): Promise<void> {
     intro('Hey there! 👋');
-    const projectType = await _requestProjectTypeSelected();
+    const projectType = await _requestProjectTypeSelected() as ProjectType;
     const projectName = await _requestProjectName();
     const projectDescription = await _requestProjectDescription();
     try {
@@ -112,12 +121,18 @@ async function initProject(): Promise<void> {
         };
         initAndesiteFolderStructure();
         initFolderStructure(projectInformation.type);
-        initAndesiteYmlConfig(projectInformation.type);
+
+        const andesiteYml = new AndesiteYml();
+        andesiteYml.initializeAndesiteYml(projectType);
+
         initPackageJson(projectInformation);
         initEslint();
+
         initJestConfig(projectInformation.name);
-        initTsConfig();
-        initTsConfigUser();
+
+        const tsConfig = new TsConfig();
+        tsConfig.initializeTsConfig();
+
         initEntryPoint();
 
         s.stop('Project initialized 😊');

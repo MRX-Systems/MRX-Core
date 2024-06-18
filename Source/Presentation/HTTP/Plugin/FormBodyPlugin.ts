@@ -14,18 +14,18 @@ export interface IFormBodyOptions {
     bodyLimit?: number;
 }
 /**
- * The FormBody plugin.
+ * The FormBody plugin implement the IPlugin interface ({@link IPlugin})
  */
 export class FormBodyPlugin implements IPlugin {
     /**
-     * The options for the FormBody.
+     * The options for the FormBody. ({@link IFormBodyOptions})
      */
     private readonly _options: IFormBodyOptions | undefined;
 
     /**
      * Constructor of the FormBodyPlugin.
      *
-     * @param options - The options for the FormBody.
+     * @param options - The options for the FormBody. ({@link IFormBodyOptions})
      */
     public constructor(options?: IFormBodyOptions) {
         this._options = options;
@@ -34,7 +34,7 @@ export class FormBodyPlugin implements IPlugin {
     /**
      * Configures the FormBody.
      *
-     * @param app - The Fastify instance.
+     * @param app - The Fastify instance. ({@link FastifyInstance})
      */
     public async configure(app: FastifyInstance): Promise<void> {
         await app.register(formBody, {

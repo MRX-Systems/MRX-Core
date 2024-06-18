@@ -5,7 +5,7 @@ import type { IPlugin } from '@/Presentation/HTTP/Interface';
 
 
 /**
- * The Swagger plugin.
+ * The Swagger plugin implement the IPlugin interface ({@link IPlugin})
  */
 export class SwaggerPlugin implements IPlugin {
     /**
@@ -16,7 +16,7 @@ export class SwaggerPlugin implements IPlugin {
     /**
      * Constructor of the SwaggerPlugin.
      *
-     * @param options - The options for the Swagger.
+     * @param options - The options for the Swagger. ({@link FastifyRegisterOptions}) ({@link SwaggerOptions})
      */
     public constructor(options: FastifyRegisterOptions<SwaggerOptions>) {
         this._options = options;
@@ -25,9 +25,10 @@ export class SwaggerPlugin implements IPlugin {
     /**
      * Configures the Swagger.
      *
-     * @param app - The Fastify instance.
+     * @param app - The Fastify instance. ({@link FastifyInstance})
+     * @param baseUrl - The base URL of the Swagger.
      */
-    public async configure(app: FastifyInstance): Promise<void> {
-        await app.register(fastifySwagger, this._options);
+    public async configure(app: FastifyInstance, baseUrl: string): Promise<void> {
+        await app.register(fastifySwagger, { ...this._options, prefix: baseUrl });
     }
 }

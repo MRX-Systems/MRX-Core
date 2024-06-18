@@ -137,8 +137,8 @@ function _throwWhenCancel(): void {
 /**
  * Display the outro message based on the time of the day.
  *
- * @param dayMessage - The message to display if it is day time.
- * @param nightMessage - The message to display if it is night time.
+ * @param dayMessage - The message to display if it is day time. (Default: 'Have a great day! 🌞')
+ * @param nightMessage - The message to display if it is night time. (Default: 'Have a great night! 🌚')
  */
 function outroBasedOnTime(
     dayMessage: string = 'Have a great day! 🌞',

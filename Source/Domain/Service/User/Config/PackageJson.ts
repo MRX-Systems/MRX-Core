@@ -1,13 +1,10 @@
-import {
-    existsSync,
-    writeFileSync
-} from 'fs';
-
 import api from '@/../Templates/PackageJson/api.json';
 import base from '@/../Templates/PackageJson/base.json';
 import sampleScript from '@/../Templates/PackageJson/sample-script.json';
 import { AndesiteError } from '@/Common/Error';
-import { ServiceErrorKeys } from '@/Common/Error/Enum';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
+import { File } from '@/Common/Util';
 import type { IProjectInformationDTO } from '@/DTO';
 
 /**
@@ -61,7 +58,6 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
         keywords: [],
         ...base
     };
-
     switch (projectInformation.type) {
     case 'API':
         packageJson.dependencies = api.dependencies;
@@ -80,14 +76,19 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
  * @param projectInformation - The project information. ({@link IProjectInformation})
  *
  * @throws ({@link AndesiteError}) - If the package.json file already exists. ({@link ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS})
+ * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
+ * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
 function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, path: string = './'): void {
-    if (existsSync(`${path}/package.json`))
+    const file = new File({
+        path: `${path}/package.json`
+    });
+    if (file.exists())
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS
         });
     const packageJson = _buildPackageJsonObject(projectInformation);
-    writeFileSync(`${path}/package.json`, JSON.stringify(packageJson, null, 2));
+    file.write(JSON.stringify(packageJson, null, 2));
 }
 
 export {

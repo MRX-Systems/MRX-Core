@@ -7,6 +7,9 @@ import { CommonErrorKeys } from '@/Common/Error/Enum';
  */
 export type Interpolation = Record<string, unknown>;
 
+/**
+ * The i18n instance.
+ */
 let _i18n: i18n | undefined = undefined;
 
 /**
@@ -37,6 +40,7 @@ async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en
 
 /**
  * Check if i18n is initialized.
+ *
  * @returns Whether i18n is initialized.
  */
 function isI18nInitialized(): boolean {
@@ -58,6 +62,7 @@ function resetI18n(): void {
 
 /**
  * Translate the given key to the given language. If the language is not provided, 'en' is used.
+ *
  * @param key - The key to translate.
  * @param language - The language to translate to. Defaults to 'en'.
  * @param interpolation - The interpolation values to use. Defaults to an empty object.

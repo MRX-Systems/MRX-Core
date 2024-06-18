@@ -21,24 +21,28 @@ export abstract class AbstractRouter {
     /**
      * Initialize the routes of the router.
      *
-     * @param fastify - The Fastify instance.
+     * @param fastify - The Fastify instance. ({@link FastifyInstance})
      */
     protected abstract initRoutes(fastify: FastifyInstance): void;
 
     /**
      * Configure the router.
      *
-     * @param app - The Fastify instance.
+     * @param app - The Fastify instance. ({@link FastifyInstance})
      * @param baseUrl - The base URL of the router.
      */
     public async configure(app: FastifyInstance, baseUrl: string): Promise<void> {
+        let sanitizedBaseUrl = baseUrl.replace(/\/{2,}/g, '/');
+        sanitizedBaseUrl = sanitizedBaseUrl.startsWith('/') ? sanitizedBaseUrl : `/${sanitizedBaseUrl}`;
         await app.register(this._router, {
-            prefix: `${baseUrl}${this._routerPrefix}`
+            prefix: `${sanitizedBaseUrl}${this._routerPrefix}`
         });
     }
 
     /**
      * Get the router.
+     *
+     * @returns The router. ({@link FastifyPluginAsync})
      */
     private get _router(): FastifyPluginAsync {
         return (fastify: FastifyInstance): Promise<void> => {

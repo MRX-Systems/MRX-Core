@@ -3,13 +3,11 @@ import { exit } from 'process';
 
 import type {
     IAndesiteApiConfigDTO,
-    IAndesiteSampleScriptConfigDTO,
-    IBuildProjectOptionsDTO
+    IAndesiteSampleScriptConfigDTO
 } from '@/DTO';
 import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service';
-import { execBuildCommand } from '@/Domain/Service/User/Command';
-import { readAndesiteYmlConfig } from '@/Domain/Service/User/Config';
-import { initAndesiteFolderStructure, updateTsConfig } from '@/Domain/Service/User/Config/AndesiteFolder';
+import { EsbuildUser } from '@/Domain/Service/User/Command';
+import { AndesiteYml, TsConfig, initAndesiteFolderStructure } from '@/Domain/Service/User/Config';
 
 /**
  * Build the project
@@ -19,23 +17,27 @@ async function buildProject(): Promise<void> {
     try {
         const s = spinner();
         s.start('Running build process 🚀');
-        const config = readAndesiteYmlConfig() as IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO;
-        initAndesiteFolderStructure();
-        updateTsConfig(config);
 
-        const buildOptions: IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO) = {
+        const config: IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO = new AndesiteYml().readConfig();
+
+        initAndesiteFolderStructure();
+
+        new TsConfig().updateTsConfigUser(config);
+
+        const esbuildUser: EsbuildUser = new EsbuildUser({
             minify: true,
             keepNames: true,
             treeShaking: true,
             dev: false,
             watch: false,
             ...config
-        };
+        });
 
-        await new Promise<void>((resolve) => {
-            const child: ChildProcess = execBuildCommand(buildOptions);
+        await new Promise<void>((resolve, reject) => {
+            const child: ChildProcess = esbuildUser.exec();
             child.stderr?.on('data', (data: string | Uint8Array) => {
                 process.stderr.write(data);
+                reject(new Error(data.toString()));
             });
             child.on('close', () => {
                 resolve();

@@ -3,7 +3,7 @@ import {
 } from 'fs';
 
 import { AndesiteError } from '@/Common/Error';
-import { ServiceErrorKeys } from '@/Common/Error/Enum';
+import { CommonErrorKeys } from '@/Common/Error/Enum';
 import { Path } from './Path';
 
 /**
@@ -21,7 +21,7 @@ export interface IFolderOptions {
 }
 
 /**
- * Represents the folder.
+ * Represents the folder. extends ({@link Path})
  */
 export class Folder extends Path {
     /**
@@ -31,8 +31,8 @@ export class Folder extends Path {
 
     /**
      * Initializes a new instance of the Folder class.
-     * 
-     * @param options - The options of the folder.
+     *
+     * @param options - The options of the folder. ({@link IFolderOptions})
      */
     public constructor(options: IFolderOptions) {
         super(options.path);
@@ -41,7 +41,7 @@ export class Folder extends Path {
 
     /**
      * Gets the structure of the folder.
-     * 
+     *
      * @returns The structure of the folder.
      */
     public get structure(): Record<string, unknown> {
@@ -50,31 +50,31 @@ export class Folder extends Path {
 
     /**
      * Builds the folder structure.
-     * 
-     * @throws ({@link AndesiteError}) - If failed to create folder structure. ({@link ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE})
-     * @throws ({@link AndesiteError}) - If failed to access folder. ({@link ServiceErrorKeys.ERROR_ACCESS_FOLDER})
+     *
+     * @throws ({@link AndesiteError}) - If failed to create folder structure. ({@link CommonErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE})
+     * @throws ({@link AndesiteError}) - If failed to access folder. ({@link CommonErrorKeys.ERROR_ACCESS_FOLDER})
      */
     public build(): void {
         const createFolderStructure = (structure: Record<string, unknown>, parentPath: string): void => {
-            for (const key in structure) 
-                if (Object.hasOwn(structure, key) && (structure[key] === undefined || structure[key] === null)) 
+            for (const key in structure)
+                if (Object.hasOwn(structure, key) && (structure[key] === undefined || structure[key] === null))
                     try {
                         const path = new Path(`${parentPath}/${key}`);
-                        if (!path.exists()) 
+                        if (!path.exists())
                             mkdirSync(path.path, { recursive: true });
-                            
+
                     } catch (e) {
                         throw new AndesiteError({
-                            messageKey: ServiceErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE,
+                            messageKey: CommonErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE,
                             detail: e
                         });
                     }
-                else 
+                else
                     createFolderStructure(structure[key] as Record<string, unknown>, `${parentPath}/${key}`);
         };
         if (!this.checkAccess())
             throw new AndesiteError({
-                messageKey: ServiceErrorKeys.ERROR_ACCESS_FOLDER,
+                messageKey: CommonErrorKeys.ERROR_ACCESS_FOLDER,
                 detail: this._path
             });
         createFolderStructure(this._structure, this._path);

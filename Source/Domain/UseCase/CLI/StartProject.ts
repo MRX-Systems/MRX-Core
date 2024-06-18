@@ -1,20 +1,21 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import type { IAndesiteApiConfigDTO } from '@/DTO';
-import { getFileEnvUsers } from '@/Domain/Service/User';
+import type { IAndesiteApiConfigDTO, IAndesiteSampleScriptConfigDTO } from '@/DTO';
+import { EnvironnementUser } from '@/Domain/Service/User';
 import { execBundleCommand } from '@/Domain/Service/User/Command';
-import { readAndesiteYmlConfig } from '@/Domain/Service/User/Config';
+import { AndesiteYml } from '@/Domain/Service/User/Config';
 
 /**
  * Start the project
  */
 function startProject(): void {
     try {
-        const config: IAndesiteApiConfigDTO = readAndesiteYmlConfig() as IAndesiteApiConfigDTO;
+        const andesiteYml = new AndesiteYml();
+        const config: IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO = andesiteYml.readConfig();
         const scriptPath: string = `${cwd()}/${config.Config.OutputDir}/app.js`;
-        const env: Record<string, string> = getFileEnvUsers();
-        const child: ChildProcess = execBundleCommand(scriptPath, env);
+        const env: EnvironnementUser = new EnvironnementUser();
+        const child: ChildProcess = execBundleCommand(scriptPath, env.getEnv());
 
         child.stdout?.on('data', (data: string | Uint8Array) => {
             process.stdout.write(data);

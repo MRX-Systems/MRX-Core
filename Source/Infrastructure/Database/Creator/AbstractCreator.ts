@@ -17,11 +17,11 @@ import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum';
  */
 export abstract class AbstractCreator<T> {
     /**
-     * The database connection object
+     * The database connection object ({@link Kysely})
      */
     private _database: Kysely<T> | undefined;
     /**
-     * The dialect of the database
+     * The dialect of the database ({@link Dialect})
      */
     private readonly _dialect: Dialect;
     /**
@@ -31,6 +31,7 @@ export abstract class AbstractCreator<T> {
 
     /**
      * Constructor of the AbstractCreator class
+     *
      * @param dialect - The {@link Dialect} of the database (ex: PostgresDialect, MySQLDialect ...)
      * @param log - Activate the log (default: false)
      */
@@ -41,6 +42,7 @@ export abstract class AbstractCreator<T> {
 
     /**
      * Check if the database is connected
+     *
      * @returns If the database is connected
      */
     public isConnected(): boolean {
@@ -75,6 +77,8 @@ export abstract class AbstractCreator<T> {
 
     /**
      * Get the database connection object
+     *
+     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
      *
      * @returns The database connection object. ({@link Kysely})
      */

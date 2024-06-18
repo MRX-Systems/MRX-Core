@@ -9,5 +9,11 @@ export * from '@/Presentation/HTTP/Hook';
 export * from '@/Presentation/HTTP/Interface';
 export * from '@/Presentation/HTTP/Plugin';
 export * from '@/Presentation/HTTP/Router';
-export * from '@/Presentation/HTTP/ServerManager';
 
+import { ServerManager, type FastifyInstance } from '@/Presentation/HTTP/ServerManager';
+
+export const serverManager = ServerManager.instance;
+
+export {
+    type FastifyInstance
+};
