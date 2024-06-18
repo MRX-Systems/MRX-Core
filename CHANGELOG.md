@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/Andesite-Lab/Core/compare/v1.4.0...v1.4.1) (2024-06-18)
+
+
+### Continuous Integration
+
+* update github action release ([c837fdc](https://github.com/Andesite-Lab/Core/commit/c837fdcae6bd42041463a5cf1d2622c5858f3ad1))
+
 ## [1.4.0](https://github.com/Andesite-Lab/Core/compare/v1.3.3...v1.4.0) (2024-06-18)
 
 
