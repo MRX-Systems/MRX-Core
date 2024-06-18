@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import esbuild, { type BuildOptions } from 'esbuild';
+import fs from 'fs';
 import { argv } from 'process';
 
 import pkg from '../package.json';
@@ -18,10 +19,6 @@ export interface IPackageJson {
 }
 
 const safePkg: IPackageJson = pkg as IPackageJson;
-// const dependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
- 
-// const external = dependencies ?? [];
-
 
 const commander = new Command();
 
@@ -39,8 +36,14 @@ commander
     .requiredOption('-entry, --entry-point <entry>', 'Entry point')
     .requiredOption('-o, --output <output>', 'Output directory')
     
-    
     .action(async (options) => {
+        const coreDependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
+        const filePath = `${options.currentWorkingDirectory}/package.json`;
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const userPkg = JSON.parse(fileContent);
+        const userDependencies = userPkg.dependencies ? Object.keys(userPkg.dependencies) : undefined;
+        const external = [...coreDependencies ? coreDependencies : [], ...userDependencies ? userDependencies : []];
+
         const userDir = options.currentWorkingDirectory;
         const entryPoints = options.entryPoint;
         const outputDir = `${userDir}/${options.output}`;
@@ -48,12 +51,13 @@ commander
         const minify = options.minify;
         const treeShaking = options.treeShaking;
         const keepNames = options.keepNames;
-
+        console.log(external);
         const buildOptions: BuildOptions = {
             bundle: true,
             color: true,
             entryPoints: [`${userDir}/${entryPoints}`],
             keepNames,
+            external,
             loader: { '.ts': 'ts' },
             minify,
             outfile: `${outputDir}/app.js`,

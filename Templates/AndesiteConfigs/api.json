@@ -1,7 +1,6 @@
 {
   "ProjectType": "API",
   "Config": {
-    "Logger": true,
     "BaseSourceDir": "Source",
     "EntryPoint": "Source/App.ts",
     "OutputDir": "Build",
@@ -16,6 +15,8 @@
     "Host": "${HOST}",
     "Port": "${PORT}",
     "BaseUrl": "${BASE_URL}",
+    "Logger": true,
+    "Http2": false,
     "Security": {
       "AllowedIPs": "${ALLOWED_IPS}",
       "BlockedIPs": "${BLOCKED_IPS}",

@@ -39,7 +39,7 @@ export interface IPostgresDatabaseOptions {
 
 /**
  * Postgres Creator is a concrete creator for Postgres Database (Factory Pattern)
- * 
+ *
  * @typeparam T - The database schema types
  */
 export class PostgresCreator<T> extends AbstractCreator<T> {
