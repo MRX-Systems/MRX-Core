@@ -1,5 +1,50 @@
 # Changelog
 
+## [1.4.0](https://github.com/Andesite-Lab/Core/compare/v1.3.3...v1.4.0) (2024-06-18)
+
+
+### Features
+
+* add _setErrorHandler ([dfbaedf](https://github.com/Andesite-Lab/Core/commit/dfbaedf2f001bf62738a13b9d4b6de155bd8d96c))
+* add abstract router and features to server manager ([94a09c7](https://github.com/Andesite-Lab/Core/commit/94a09c7abdc315bf6415e713374a6bb1157a527d))
+* add class Path, File and Folder ([3fbce87](https://github.com/Andesite-Lab/Core/commit/3fbce8714f6e55d56c58a31cde8b6c4f1956935d))
+* add Helmet plugin ([3d24fa0](https://github.com/Andesite-Lab/Core/commit/3d24fa0a4ca7864a793fd00691876f27a4e03a25))
+* add new errors key ([f06b224](https://github.com/Andesite-Lab/Core/commit/f06b22416b414b3860545da3f40d017cbe3356da))
+* add option for swagger scalar ui ([6512536](https://github.com/Andesite-Lab/Core/commit/65125365cb3d9a9f91ad21fecb6cd61e7aa360d2))
+* add plugins + improvement of server .. ([52193ae](https://github.com/Andesite-Lab/Core/commit/52193aee992453676e8a8684cc265ab2dc9b6f59))
+* add schema folder ([e11cf80](https://github.com/Andesite-Lab/Core/commit/e11cf807a7e3f4678b9e97901a8924a160410ab9))
+* add server and logger hook + new dependencies ([20922c8](https://github.com/Andesite-Lab/Core/commit/20922c8922c5d8bc6b01566ebde61c4a3c8c5738))
+* add swagger plugin + improvement of server manager ([37c8fbe](https://github.com/Andesite-Lab/Core/commit/37c8fbe0635825100e3ed28c9d8d55ceb720ecc6))
+* add theme temps ([cdf1f9d](https://github.com/Andesite-Lab/Core/commit/cdf1f9d64794d24b2640cc32433671e41e9c5f3f))
+* improve error key + add PresentationHttpServerErrorKeys ([7e3dd84](https://github.com/Andesite-Lab/Core/commit/7e3dd84c746387bee5581e336d708fd82663e43e))
+* improvement code comment + add features ([f59a957](https://github.com/Andesite-Lab/Core/commit/f59a957e55b633f181595db66a8905b255b8f0ef))
+
+
+### Bug Fixes
+
+* move properties and remove old interface ([ba7efa4](https://github.com/Andesite-Lab/Core/commit/ba7efa4cd89a7c1a6409f6d523157ff9e5bf6541))
+* remove old project type ([e6c8a53](https://github.com/Andesite-Lab/Core/commit/e6c8a53295ee772e9880c5305797419426092e1b))
+
+
+### Build System
+
+* update package ([bb6a53d](https://github.com/Andesite-Lab/Core/commit/bb6a53d76e364d6f6c5b0d5e1d13099f50391897))
+
+
+### Tests
+
+* remove old tests ([0efa873](https://github.com/Andesite-Lab/Core/commit/0efa873781be158f319f475459d2655eb45a5f9c))
+
+
+### Documentation
+
+* improvement of comment ([765e630](https://github.com/Andesite-Lab/Core/commit/765e630c1bd9ddf5d984c230c44e700d96320160))
+
+
+### Styles
+
+* remove useless comment ([8fc74c3](https://github.com/Andesite-Lab/Core/commit/8fc74c37edcd3580fbade2e3a118266f1cb1fe66))
+
 ## [1.3.3](https://github.com/Andesite-Lab/Core/compare/v1.3.2...v1.3.3) (2024-06-02)
 
 
