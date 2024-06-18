@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/Andesite-Lab/Core/compare/v1.4.1...v1.4.2) (2024-06-18)
+
+
+### Bug Fixes
+
+* correction parameter of configure method (IPlugin) ([d0fe4c1](https://github.com/Andesite-Lab/Core/commit/d0fe4c1528d1a0ebe108f3649809f9955a689f83))
+
 ## [1.4.1](https://github.com/Andesite-Lab/Core/compare/v1.4.0...v1.4.1) (2024-06-18)
 
 
