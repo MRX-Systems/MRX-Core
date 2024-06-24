@@ -3,8 +3,7 @@ import { cwd, exit } from 'process';
 
 import { File } from '@/Common/Util';
 import type {
-    IAndesiteApiConfigDTO,
-    IAndesiteSampleScriptConfigDTO
+    IAndesiteConfigDTO
 } from '@/DTO';
 import { EnvironnementUser } from '@/Domain/Service/User';
 import { EsbuildUser, execBundleCommand } from '@/Domain/Service/User/Command';
@@ -16,8 +15,10 @@ import { AndesiteYml } from '@/Domain/Service/User/Config';
  * @param bundleChild - The child process of the bundle command. ({@link ChildProcess})
  * @param scriptFile - The script file to watch. ({@link File})
  * @param env - The environment variables to pass to the child process.
+ *
+ * @returns The child process of the bundle command. ({@link ChildProcess})
  */
-function reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<string, string>): void {
+function reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<string, string>): ChildProcess {
     let child = bundleChild;
     child.kill();
     console.clear();
@@ -28,6 +29,7 @@ function reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<st
     child.stderr?.on('data', (data: string | Uint8Array) => {
         process.stderr.write(data);
     });
+    return child;
 }
 
 /**
@@ -36,7 +38,7 @@ function reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<st
 async function devProject(): Promise<void> {
     try {
         const andesiteYml = new AndesiteYml();
-        const config: IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO = andesiteYml.readConfig();
+        const config: IAndesiteConfigDTO = andesiteYml.readConfig();
         const esbuildUser: EsbuildUser = new EsbuildUser({
             minify: false,
             keepNames: false,
@@ -63,16 +65,13 @@ async function devProject(): Promise<void> {
         buildChild.stderr?.on('data', (data: string | Uint8Array) => {
             process.stderr.write(data);
         });
-
         const env: EnvironnementUser = new EnvironnementUser();
         const scriptFile = new File({ path: `${cwd()}/${config.Config.OutputDir}/app.js` });
-        const bundleChild = execBundleCommand(scriptFile.path, env.getEnv());
+        let bundleChild = execBundleCommand(scriptFile.path, env.getEnv());
 
-        // Start the watch start process when scriptFile and andesiteYml changes
-        scriptFile.watch(25, () => { reloadWatch(bundleChild, scriptFile, env.getEnv()); });
-        andesiteYml.watch(25, () => { reloadWatch(bundleChild, scriptFile, env.getEnv()); });
-        env.watch(25, () => { reloadWatch(bundleChild, scriptFile, env.getEnv()); });
-
+        // Start the watch start process when scriptFile and env changes
+        scriptFile.watch(25, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
+        env.watch(25, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
     } catch (error) {
         console.error(error);
         exit(1);

@@ -5,7 +5,7 @@ import { argv } from 'process';
 import 'source-map-support/register';
 
 import { PackageJsonCore } from '@/Config';
-import { buildProject, initProject, startProject, devProject } from '@/Domain/UseCase/CLI';
+import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI';
 
 const commander = new Command();
 
