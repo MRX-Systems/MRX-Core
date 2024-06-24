@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/Andesite-Lab/Core/compare/v1.4.2...v1.5.0) (2024-06-24)
+
+
+### Features
+
+* improvement ([5efab0a](https://github.com/Andesite-Lab/Core/commit/5efab0a5e67c1ed1105bef2172b12f819c671d81))
+
 ## [1.4.2](https://github.com/Andesite-Lab/Core/compare/v1.4.1...v1.4.2) (2024-06-18)
 
 
