@@ -1,2 +1,1 @@
-export * from './IAndesiteApiConfigDTO';
-export * from './IAndesiteSampleScriptConfigDTO';
+export * from './IAndesiteConfigDTO';

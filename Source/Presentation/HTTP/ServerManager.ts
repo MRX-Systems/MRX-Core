@@ -5,13 +5,10 @@ import { parse } from 'fast-querystring';
 import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
 import { AndesiteError } from '@/Common/Error';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, PresentationHttpServerErrorKeys } from '@/Common/Error/Enum';
+import { PresentationHttpServerErrorKeys } from '@/Common/Error/Enum';
 import { I18n } from '@/Common/Util';
-import type { IAndesiteApiConfigDTO } from '@/DTO';
-import { AndesiteYml } from '@/Domain/Service/User/Config';
 import { LoggerHook } from '@/Presentation/HTTP/Hook';
-import type { IHook, IPlugin } from '@/Presentation/HTTP/Interface';
+import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface';
 import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin';
 import type { AbstractRouter } from '@/Presentation/HTTP/Router';
 
@@ -22,27 +19,29 @@ export type { FastifyInstance };
  */
 export class ServerManager {
     /**
-     * Instance of the ServerManager class. ({@link ServerManager})
-     */
-    private static _instance: ServerManager;
-
-    /**
      * The Fastify instance. ({@link FastifyInstance})
      */
     private readonly _app: FastifyInstance;
 
     /**
-     * The options for the server. ({@link IAndesiteApiConfigDTO})
+     * The options for starting the server. ({@link IStartOptions})
      */
-    private readonly _options: IAndesiteApiConfigDTO;
+    private _startOptions: Partial<IStartOptions> = {};
+
+    /**
+     * The options for the server. ({@link IServerOptions})
+     */
+    private readonly _options: IServerOptions;
 
     /**
      * Constructor of the ServerManager class.
+     *
+     * @param options - The options for the server. ({@link IServerOptions})
      */
-    public constructor() {
-        this._options = this._getServerOptions();
+    public constructor(options: IServerOptions) {
+        this._options = options;
         this._app = fastify({
-            ...this._options.Server.Http2 ? { http2: true } : {},
+            ...this._options.http2 ? { http2: true } : {},
             querystringParser: str => parse(str),
             logger: false,
             ignoreTrailingSlash: true,
@@ -80,7 +79,7 @@ export class ServerManager {
      * @returns The port of the server.
      */
     public get port(): number {
-        return this._options.Server.Port ?? 3000;
+        return this._startOptions.port ?? 3000;
     }
 
     /**
@@ -89,18 +88,7 @@ export class ServerManager {
      * @returns The host of the server.
      */
     public get host(): string {
-        return this._options.Server.Host ?? '0.0.0.0';
-    }
-
-    /**
-     * Get the instance of the ServerManager class.
-     *
-     * @returns The instance of the ServerManager class. ({@link ServerManager})
-     */
-    public static get instance(): ServerManager {
-        if (!ServerManager._instance)
-            ServerManager._instance = new ServerManager();
-        return ServerManager._instance;
+        return this._startOptions.host ?? '0.0.0.0';
     }
 
     /**
@@ -136,7 +124,7 @@ export class ServerManager {
      * @param plugin - The plugin to add. ({@link IPlugin})
      */
     public async addPlugin(plugin: IPlugin): Promise<void> {
-        await plugin.configure(this._app, this._options.Server.BaseUrl ?? '/');
+        await plugin.configure(this._app, this._options.baseUrl ?? '/');
     }
 
     /**
@@ -145,7 +133,7 @@ export class ServerManager {
      * @param plugins - The plugins to add. ({@link IPlugin})
      */
     public async addPlugins(plugins: IPlugin[]): Promise<void> {
-        await Promise.all(plugins.map(plugin => plugin.configure(this._app, this._options.Server.BaseUrl ?? '/')));
+        await Promise.all(plugins.map(plugin => plugin.configure(this._app, this._options.baseUrl ?? '/')));
     }
 
     /**
@@ -154,7 +142,7 @@ export class ServerManager {
      * @param router - The router to add. ({@link AbstractRouter})
      */
     public async addRouter(router: AbstractRouter): Promise<void> {
-        await router.configure(this._app, this._options.Server.BaseUrl ?? '/');
+        await router.configure(this._app, this._options.baseUrl ?? '/');
     }
 
     /**
@@ -163,7 +151,7 @@ export class ServerManager {
      * @param routers - The routers to add. ({@link AbstractRouter})
      */
     public async addRouters(routers: AbstractRouter[]): Promise<void> {
-        await Promise.all(routers.map(router => router.configure(this._app, this._options.Server.BaseUrl ?? '/')));
+        await Promise.all(routers.map(router => router.configure(this._app, this._options.baseUrl ?? '/')));
     }
 
     /**
@@ -175,28 +163,18 @@ export class ServerManager {
 
     /**
      * Start the server.
+     *
+     * @param startOptions - The options for starting the server. ({@link IStartOptions})
      */
-    public async start(): Promise<void> {
+    public async start(startOptions: Partial<IStartOptions>): Promise<void> {
+        this._startOptions = startOptions;
         this._addDefaultHooks();
         await this._addDefaultPlugins();
         await this._app.ready();
         await this._app.listen({
-            port: this._options.Server.Port ?? 3000,
-            host: this._options.Server.Host ?? '0.0.0.0'
+            port: this._startOptions.port ?? 3000,
+            host: this._startOptions.host ?? '0.0.0.0'
         });
-    }
-
-    /**
-     * Get the server options. (from andesite.yml of the user)
-     *
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
-     *
-     * @returns The server options. ({@link IAndesiteApiConfigDTO})
-     */
-    private _getServerOptions(): IAndesiteApiConfigDTO {
-        const andesiteYml = new AndesiteYml();
-        return andesiteYml.readConfig() as IAndesiteApiConfigDTO;
     }
 
     /**
@@ -237,7 +215,7 @@ export class ServerManager {
      * @param reply - The reply. ({@link FastifyReply})
      */
     private async _setErrorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
-        if (this._options.Server.Logger)
+        if (this._options.logger)
             BasaltLogger.error(error);
         if (error.validation)
             await this._handleValidationErrors(error, request, reply);
@@ -264,12 +242,13 @@ export class ServerManager {
      * Add default hooks to the Fastify instance.
      */
     private _addDefaultHooks(): void {
-        if (this._options.Server.Logger)
+        if (this._options.logger)
             (new LoggerHook()).configure(this._app);
     }
 
     /**
      * Add default plugins to the Fastify instance.
+     * (Helmet, FormBody)
      */
     private async _addDefaultPlugins(): Promise<void> {
         await Promise.all([

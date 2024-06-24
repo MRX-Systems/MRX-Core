@@ -1,7 +1,7 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import type { IAndesiteApiConfigDTO, IAndesiteSampleScriptConfigDTO } from '@/DTO';
+import type { IAndesiteConfigDTO } from '@/DTO';
 import { EnvironnementUser } from '@/Domain/Service/User';
 import { execBundleCommand } from '@/Domain/Service/User/Command';
 import { AndesiteYml } from '@/Domain/Service/User/Config';
@@ -12,7 +12,7 @@ import { AndesiteYml } from '@/Domain/Service/User/Config';
 function startProject(): void {
     try {
         const andesiteYml = new AndesiteYml();
-        const config: IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO = andesiteYml.readConfig();
+        const config: IAndesiteConfigDTO = andesiteYml.readConfig();
         const scriptPath: string = `${cwd()}/${config.Config.OutputDir}/app.js`;
         const env: EnvironnementUser = new EnvironnementUser();
         const child: ChildProcess = execBundleCommand(scriptPath, env.getEnv());

@@ -8,7 +8,7 @@ import { AndesiteError } from '@/Common/Error';
 import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
 import { stringify } from '@/Common/Util';
 import { File } from '@/Common/Util/File';
-import type { IAndesiteApiConfigDTO, IAndesiteSampleScriptConfigDTO } from '@/DTO';
+import type { IAndesiteConfigDTO } from '@/DTO';
 
 /**
  * Project type (API or Sample Script)
@@ -36,12 +36,12 @@ export class AndesiteYml extends File {
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
      *
-     * @returns ({@link IAndesiteApiConfigDTO}) or ({@link IAndesiteSampleScriptConfigDTO})
+     * @returns ({@link IAndesiteConfigDTO})
      */
-    public readConfig(): IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO {
+    public readConfig(): IAndesiteConfigDTO {
         const config: unknown = this._loadEnvAndReplace(parse(this.read()) as Record<string, unknown>);
         this._checkAndesiteYmlConfig(config);
-        return config as IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO;
+        return config as IAndesiteConfigDTO;
     }
 
     /**
@@ -85,6 +85,8 @@ export class AndesiteYml extends File {
                     const envKey = (config[key] as string).slice(2, -1);
                     if (envKey in process.env)
                         config[key] = process.env[envKey];
+                    else
+                        config[key] = '';
                 } else if (typeof config[key] === 'object') {
                     this._loadEnvAndReplace(config[key] as Record<string, unknown>);
                 }
