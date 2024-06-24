@@ -4,8 +4,7 @@ import { AndesiteError } from '@/Common/Error';
 import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
 import { File } from '@/Common/Util/File';
 import type {
-    IAndesiteApiConfigDTO,
-    IAndesiteSampleScriptConfigDTO,
+    IAndesiteConfigDTO
 } from '@/DTO';
 
 /**
@@ -77,7 +76,7 @@ export class TsConfig {
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
      */
-    public updateTsConfigUser(andesiteConfig: Readonly<IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO>): void {
+    public updateTsConfigUser(andesiteConfig: Readonly<IAndesiteConfigDTO>): void {
         const conf: ITsConfig = tsConfig as ITsConfig;
         conf.include = [
             `../${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,

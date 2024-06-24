@@ -2,15 +2,14 @@ import { exec, type ChildProcess } from 'child_process';
 import { cwd } from 'process';
 
 import type {
-    IAndesiteApiConfigDTO,
-    IAndesiteSampleScriptConfigDTO,
+    IAndesiteConfigDTO,
     IBuildProjectOptionsDTO
 } from '@/DTO';
 
 /**
- * The esbuild user options.
+ * The esbuild user options. ({@link IBuildProjectOptionsDTO} & {@link IAndesiteConfigDTO})
  */
-export type EsbuildUserOption = IBuildProjectOptionsDTO & (IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO);
+export type EsbuildUserOption = IBuildProjectOptionsDTO & IAndesiteConfigDTO;
 
 /**
  * The esbuild user class. It builds the project using esbuild.

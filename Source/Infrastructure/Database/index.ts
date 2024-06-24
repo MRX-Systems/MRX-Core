@@ -1,2 +1,2 @@
-export type { IPostgresDatabaseOptions, ISQLiteDatabaseOptions } from './Creator';
+export type * from './Creator';
 export * from './FactoryDatabase';

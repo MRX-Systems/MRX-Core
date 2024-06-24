@@ -1,7 +1,7 @@
 /**
- * Interface for the Andesite Sample Script Config DTO
+ * Interface for the Andesite Config DTO
  */
-export interface IAndesiteSampleScriptConfigDTO {
+export interface IAndesiteConfigDTO {
     /**
      * The type of the project.
      */
@@ -10,10 +10,6 @@ export interface IAndesiteSampleScriptConfigDTO {
      * The configuration of the project.
      */
     Config: {
-        /**
-         * Activates the logger.
-         */
-        Logger: boolean;
         /**
          * The base source directory.
          */

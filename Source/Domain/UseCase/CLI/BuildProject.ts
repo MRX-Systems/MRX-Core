@@ -2,8 +2,7 @@ import type { ChildProcess } from 'child_process';
 import { exit } from 'process';
 
 import type {
-    IAndesiteApiConfigDTO,
-    IAndesiteSampleScriptConfigDTO
+    IAndesiteConfigDTO
 } from '@/DTO';
 import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service';
 import { EsbuildUser } from '@/Domain/Service/User/Command';
@@ -18,7 +17,7 @@ async function buildProject(): Promise<void> {
         const s = spinner();
         s.start('Running build process 🚀');
 
-        const config: IAndesiteApiConfigDTO | IAndesiteSampleScriptConfigDTO = new AndesiteYml().readConfig();
+        const config: IAndesiteConfigDTO = new AndesiteYml().readConfig();
 
         initAndesiteFolderStructure();
 
