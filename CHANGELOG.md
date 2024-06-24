@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/Andesite-Lab/Core/compare/v1.5.0...v1.5.1) (2024-06-24)
+
+
+### Build System
+
+* update dependencies ([f31b8bf](https://github.com/Andesite-Lab/Core/commit/f31b8bfa3700484da593d428ca09bc6b661b5b52))
+
 ## [1.5.0](https://github.com/Andesite-Lab/Core/compare/v1.4.2...v1.5.0) (2024-06-24)
 
 
