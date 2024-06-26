@@ -1,15 +1,15 @@
 import { exec, type ChildProcess } from 'child_process';
 import { cwd } from 'process';
 
+import { getDirname } from '@/Common/Util/index.js';
 import type {
     IAndesiteConfigDTO,
-    IBuildProjectOptionsDTO
 } from '@/DTO/index.js';
 
 /**
- * The esbuild user options. ({@link IBuildProjectOptionsDTO} & {@link IAndesiteConfigDTO})
+ * The esbuild user options. ({@link IAndesiteConfigDTO})
  */
-export type EsbuildUserOption = IBuildProjectOptionsDTO & IAndesiteConfigDTO;
+export type EsbuildUserOption = IAndesiteConfigDTO;
 
 /**
  * The esbuild user class. It builds the project using esbuild.
@@ -50,11 +50,13 @@ export class EsbuildUser {
     /**
      * Executes the build command, and returns the child process.
      *
+     * @param watchMode - The watch mode. (default: false)
+     *
      * @returns The child process. ({@link ChildProcess})
      */
-    public exec(): ChildProcess {
+    public exec(watchMode: boolean = false): ChildProcess {
         const command = this._buildCommandEsbuild();
-        return exec(command, {
+        return exec(`${command}${watchMode ? ' --watch' : ''}`, {
             cwd: cwd(),
             windowsHide: true,
         });
@@ -66,23 +68,6 @@ export class EsbuildUser {
      * @returns The command to build the project using esbuild.
      */
     private _buildCommandEsbuild(): string {
-        let command: string = `npm --prefix ${__dirname}/../ run user::build -- -cwd ${cwd()}`;
-        const flags = [
-            this._config.watch && '-w',
-            this._config.dev && '-d',
-            this._config.minify && '-min',
-            this._config.keepNames && '-k',
-            this._config.treeShaking && '-t'
-        ].filter(Boolean).join(' ');
-        command += ` ${flags}`;
-
-        if (this._config.Config.EntryPoint)
-            command += ` -entry ${this._config.Config.EntryPoint}`;
-
-        if (this._config.Config.OutputDir)
-            command += ` -o ${this._config.Config.OutputDir}`;
-
-        command += ` -cwd ${cwd()}`;
-        return command;
+        return `npm --prefix ${getDirname()}/../ run user::build -- -cwd ${cwd()} -entry ${this._config.Config.EntryPoint} -o ${this._config.Config.OutputDir}`;
     }
 }

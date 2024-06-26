@@ -39,14 +39,7 @@ async function devProject(): Promise<void> {
     try {
         const andesiteYml = new AndesiteYml();
         const config: IAndesiteConfigDTO = andesiteYml.readConfig();
-        const esbuildUser: EsbuildUser = new EsbuildUser({
-            minify: false,
-            keepNames: false,
-            treeShaking: false,
-            dev: true,
-            watch: false,
-            ...config
-        });
+        const esbuildUser: EsbuildUser = new EsbuildUser(config);
 
         // Build the project first
         await new Promise<void>((resolve) => {
@@ -60,18 +53,20 @@ async function devProject(): Promise<void> {
         });
 
         // Start the watch build process
-        esbuildUser.config.watch = true;
-        const buildChild = esbuildUser.exec();
+        const buildChild = esbuildUser.exec(true);
         buildChild.stderr?.on('data', (data: string | Uint8Array) => {
             process.stderr.write(data);
+        });
+        buildChild.stdout?.on('data', (data: string | Uint8Array) => {
+            process.stdout.write(data);
         });
         const env: EnvironnementUser = new EnvironnementUser();
         const scriptFile = new File({ path: `${cwd()}/${config.Config.OutputDir}/app.js` });
         let bundleChild = execBundleCommand(scriptFile.path, env.getEnv());
 
         // Start the watch start process when scriptFile and env changes
-        scriptFile.watch(25, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
-        env.watch(25, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
+        scriptFile.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
+        env.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
     } catch (error) {
         console.error(error);
         exit(1);

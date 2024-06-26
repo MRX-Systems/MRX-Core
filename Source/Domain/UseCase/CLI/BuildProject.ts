@@ -23,21 +23,15 @@ async function buildProject(): Promise<void> {
 
         new TsConfig().updateTsConfigUser(config);
 
-        const esbuildUser: EsbuildUser = new EsbuildUser({
-            minify: true,
-            keepNames: true,
-            treeShaking: true,
-            dev: false,
-            watch: false,
-            ...config
-        });
+        const esbuildUser: EsbuildUser = new EsbuildUser(config);
 
-        await new Promise<void>((resolve, reject) => {
+        await new Promise<void>((resolve) => {
             const child: ChildProcess = esbuildUser.exec();
+
             child.stderr?.on('data', (data: string | Uint8Array) => {
                 process.stderr.write(data);
-                reject(new Error(data.toString()));
             });
+
             child.on('close', () => {
                 resolve();
             });

@@ -2,13 +2,13 @@
 
 import { Command } from 'commander';
 import { argv } from 'process';
-// import 'source-map-support/register';
+import 'source-map-support/register.js';
+
 
 import { PackageJsonCore } from '@/Config/index.js';
 import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI/index.js';
 
 const commander = new Command();
-
 
 commander.version(PackageJsonCore.version, '-v, --version', 'output the current version');
 

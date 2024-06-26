@@ -61,7 +61,7 @@ export class File extends Path {
      * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
      */
     public write(content: string = this._content): void {
-        if (this.checkAccess())
+        if (this.exists() && !this.checkAccess())
             throw new AndesiteError({
                 messageKey: CommonErrorKeys.ERROR_ACCESS_FILE,
                 detail: this._path
