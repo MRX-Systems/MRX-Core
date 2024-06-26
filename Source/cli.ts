@@ -2,10 +2,10 @@
 
 import { Command } from 'commander';
 import { argv } from 'process';
-import 'source-map-support/register';
+// import 'source-map-support/register';
 
-import { PackageJsonCore } from '@/Config';
-import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI';
+import { PackageJsonCore } from '@/Config/index.js';
+import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI/index.js';
 
 const commander = new Command();
 

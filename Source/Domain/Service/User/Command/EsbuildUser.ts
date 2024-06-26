@@ -4,7 +4,7 @@ import { cwd } from 'process';
 import type {
     IAndesiteConfigDTO,
     IBuildProjectOptionsDTO
-} from '@/DTO';
+} from '@/DTO/index.js';
 
 /**
  * The esbuild user options. ({@link IBuildProjectOptionsDTO} & {@link IAndesiteConfigDTO})

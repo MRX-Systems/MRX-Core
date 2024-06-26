@@ -3,10 +3,10 @@ import { exit } from 'process';
 
 import type {
     IAndesiteConfigDTO
-} from '@/DTO';
-import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service';
-import { EsbuildUser } from '@/Domain/Service/User/Command';
-import { AndesiteYml, TsConfig, initAndesiteFolderStructure } from '@/Domain/Service/User/Config';
+} from '@/DTO/index.js';
+import { EsbuildUser } from '@/Domain/Service/User/Command/index.js';
+import { AndesiteYml, TsConfig, initAndesiteFolderStructure } from '@/Domain/Service/User/Config/index.js';
+import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service/index.js';
 
 /**
  * Build the project

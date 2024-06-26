@@ -1,2 +1,2 @@
-export * from './ClackPrompt';
-export * from './Hash';
+export * from './ClackPrompt.js';
+export * from './Hash.js';

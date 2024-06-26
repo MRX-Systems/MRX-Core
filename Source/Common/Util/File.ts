@@ -1,13 +1,13 @@
 import {
-    writeFileSync,
     readFileSync,
-    type Stats,
     watchFile,
+    writeFileSync,
+    type Stats,
 } from 'fs';
 
-import { AndesiteError } from '@/Common/Error';
-import { CommonErrorKeys } from '@/Common/Error/Enum';
-import { Path } from './Path';
+import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
+import { AndesiteError } from '@/Common/Error/index.js';
+import { Path } from './Path.js';
 
 /**
  * Interface for the file options.

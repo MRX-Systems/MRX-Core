@@ -1,6 +1,5 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "@tsconfig/node22/tsconfig.json",
   "exclude": [
     "node_modules",
     "Build",
@@ -10,6 +9,10 @@
   ],
   
   "compilerOptions": {
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "checkJs": true,
     "composite": true,
     "experimentalDecorators": true,
     "rootDir": "",

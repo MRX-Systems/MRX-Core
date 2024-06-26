@@ -6,12 +6,10 @@ import {
     text as _text,
     spinner as _spinner,
     isCancel
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
 } from '@clack/prompts';
 
-import { AndesiteError } from '@/Common/Error';
-import { ServiceErrorKeys } from '@/Common/Error/Enum';
+import { AndesiteError } from '@/Common/Error/index.js';
+import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
 
 /**
  * Interface for the options of the select prompt.

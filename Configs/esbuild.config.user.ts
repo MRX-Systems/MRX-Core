@@ -3,7 +3,7 @@ import esbuild, { type BuildOptions } from 'esbuild';
 import fs from 'fs';
 import { argv } from 'process';
 
-import pkg from '../package.json';
+import pkg from '../package.json' with { type: 'json' };
 
 export interface IPackageJson {
     version?: string;

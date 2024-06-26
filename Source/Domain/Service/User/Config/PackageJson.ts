@@ -1,11 +1,11 @@
-import api from '@/../Templates/PackageJson/api.json';
-import base from '@/../Templates/PackageJson/base.json';
-import sampleScript from '@/../Templates/PackageJson/sample-script.json';
-import { AndesiteError } from '@/Common/Error';
+import api from '@/../Templates/PackageJson/api.json' with { type: 'json' };
+import base from '@/../Templates/PackageJson/base.json' with { type: 'json' };
+import sampleScript from '@/../Templates/PackageJson/sample-script.json' with { type: 'json' };
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { File } from '@/Common/Util';
-import type { IProjectInformationDTO } from '@/DTO';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { File } from '@/Common/Util/index.js';
+import type { IProjectInformationDTO } from '@/DTO/index.js';
 
 /**
  * An object representing the package.json file.

@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 
-import { type IAndesiteErrorOptions } from '@/Common/Interface';
+import { type IAndesiteErrorOptions } from '@/Common/Interface/index.js';
 
 /**
  * AndesiteError is a class that represents an error entity with a unique identifier.

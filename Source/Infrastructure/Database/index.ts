@@ -1,2 +1,2 @@
-export type * from './Creator';
-export * from './FactoryDatabase';
+export type * from './Creator/index.js';
+export * from './FactoryDatabase.js';

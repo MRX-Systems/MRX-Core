@@ -1,13 +1,13 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import { File } from '@/Common/Util';
+import { File } from '@/Common/Util/index.js';
 import type {
     IAndesiteConfigDTO
-} from '@/DTO';
-import { EnvironnementUser } from '@/Domain/Service/User';
-import { EsbuildUser, execBundleCommand } from '@/Domain/Service/User/Command';
-import { AndesiteYml } from '@/Domain/Service/User/Config';
+} from '@/DTO/index.js';
+import { EsbuildUser, execBundleCommand } from '@/Domain/Service/User/Command/index.js';
+import { AndesiteYml } from '@/Domain/Service/User/Config/index.js';
+import { EnvironnementUser } from '@/Domain/Service/User/index.js';
 
 /**
  * Reload the watch process.

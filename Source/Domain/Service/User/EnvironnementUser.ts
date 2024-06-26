@@ -1,6 +1,6 @@
 import { cwd } from 'process';
 
-import { File } from '@/Common/Util';
+import { File } from '@/Common/Util/index.js';
 
 /**
  * EnvironnementUser class is responsible for managing the environment variables.

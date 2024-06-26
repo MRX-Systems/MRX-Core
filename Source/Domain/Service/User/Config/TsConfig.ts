@@ -1,11 +1,11 @@
-import tsConfig from '@/../Templates/tsconfig.json';
-import { AndesiteError } from '@/Common/Error';
+import tsConfig from '@/../Templates/tsconfig.json' with { type: 'json' };
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { File } from '@/Common/Util/File';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { File } from '@/Common/Util/index.js';
 import type {
     IAndesiteConfigDTO
-} from '@/DTO';
+} from '@/DTO/index.js';
 
 /**
  * Interface for the tsconfig.json file.
@@ -80,6 +80,7 @@ export class TsConfig {
         const conf: ITsConfig = tsConfig as ITsConfig;
         conf.include = [
             `../${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,
+            `../${andesiteConfig.Config.BaseSourceDir}/**/*.json`
         ];
         conf.compilerOptions.rootDir = `../${andesiteConfig.Config.BaseSourceDir}`;
         conf.compilerOptions.baseUrl = `../${andesiteConfig.Config.BaseSourceDir}`;
@@ -113,6 +114,7 @@ export class TsConfig {
         const conf: ITsConfig = tsConfig as ITsConfig;
         conf.include = [
             '../Source/**/*.ts',
+            '../Source/**/*.json'
         ];
         conf.compilerOptions.rootDir = '../Source';
         conf.compilerOptions.baseUrl = '../Source';

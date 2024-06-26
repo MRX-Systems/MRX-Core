@@ -1,8 +1,8 @@
-import { version } from '../../package.json';
+import pkg from '../../package.json' with { type: 'json' };
 
 /**
  * PackageJsonCore is an object that contains information from the package.json file
  */
 export const PackageJsonCore = {
-    version,
+    version: pkg.version,
 };
