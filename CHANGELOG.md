@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.0](https://github.com/Andesite-Lab/Core/compare/v1.5.1...v1.6.0) (2024-06-27)
+
+
+### Features
+
+* add mssql type option ([1f5b978](https://github.com/Andesite-Lab/Core/commit/1f5b978a47fc8fec9b7830fbb6ae52b9ee4b31c9))
+* change cjs to esm and prepare for new build systems ([c92f238](https://github.com/Andesite-Lab/Core/commit/c92f238b30b7baec3f1f8dd4e67beaa01a1a944d))
+* new build system + global improvements ([be76918](https://github.com/Andesite-Lab/Core/commit/be76918a112080e157208ae815b1ac4980321f09))
+
 ## [1.5.1](https://github.com/Andesite-Lab/Core/compare/v1.5.0...v1.5.1) (2024-06-24)
 
 
