@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-
 import { Command } from 'commander';
 import { argv } from 'process';
 import 'source-map-support/register.js';
 
 
-import { PackageJsonCore } from '@/Config/index.js';
-import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI/index.js';
+import { PackageJsonCore } from '@/Config';
+import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI';
 
 const commander = new Command();
 

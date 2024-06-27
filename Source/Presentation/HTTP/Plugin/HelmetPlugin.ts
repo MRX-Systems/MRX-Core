@@ -1,7 +1,7 @@
 import helmet from '@fastify/helmet';
 import type { FastifyInstance } from 'fastify';
 
-import type { IPlugin } from '@/Presentation/HTTP/Interface/index.js';
+import type { IPlugin } from '@/Presentation/HTTP/Interface';
 
 /**
  * The HelmetPlugin plugin implement the IPlugin interface ({@link IPlugin})

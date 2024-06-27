@@ -2,7 +2,7 @@ import formBody from '@fastify/formbody';
 import type { FastifyInstance } from 'fastify';
 import { parse } from 'fast-querystring';
 
-import type { IPlugin } from '@/Presentation/HTTP/Interface/index.js';
+import type { IPlugin } from '@/Presentation/HTTP/Interface';
 
 /**
  * The options for the FormBody.

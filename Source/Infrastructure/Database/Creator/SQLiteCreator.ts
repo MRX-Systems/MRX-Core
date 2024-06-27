@@ -1,7 +1,7 @@
 import SQLite from 'better-sqlite3';
 import { SqliteDialect } from 'kysely';
 
-import { AbstractCreator } from './AbstractCreator.js';
+import { AbstractCreator } from './AbstractCreator';
 
 export interface ISQLiteDatabaseOptions {
 

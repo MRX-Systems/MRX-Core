@@ -5,9 +5,9 @@ import {
     type Stats,
 } from 'fs';
 
-import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
-import { Path } from './Path.js';
+import { AndesiteError } from '@/Common/Error';
+import { CommonErrorKeys } from '@/Common/Error/Enum';
+import { Path } from './Path';
 
 /**
  * Interface for the file options.
