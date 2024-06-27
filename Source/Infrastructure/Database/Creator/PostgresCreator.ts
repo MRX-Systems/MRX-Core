@@ -1,7 +1,7 @@
 import { PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
-import { AbstractCreator } from './AbstractCreator';
+import { AbstractCreator } from './AbstractCreator.js';
 
 /**
  * Interface for Postgres Database

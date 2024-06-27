@@ -1,11 +1,15 @@
 import { type Kysely } from 'kysely';
 
 import {
+    MSSQLCreator,
     PostgresCreator,
     SQLiteCreator,
+    MSSQLCreator,
     type AbstractCreator,
+    type IMSSQLDatabaseOptions,
     type IPostgresDatabaseOptions,
-    type ISQLiteDatabaseOptions
+    type ISQLiteDatabaseOptions,
+    type IMSSQLDatabaseOptions
 } from '@/Infrastructure/Database/Creator';
 
 /**
@@ -38,19 +42,20 @@ export class FactoryDatabase {
      *
      * @param name - The name of the database
      * @param type - The type of the database (ex: postgres, sqlite, mssql)
-     * @param options - The options of the database. ({@link IPostgresDatabaseOptions}, {@link ISQLiteDatabaseOptions})
+     * @param options - The options of the database. ({@link IPostgresDatabaseOptions} or {@link ISQLiteDatabaseOptions} or {@link IMSSQLDatabaseOptions})
      */
     public register<T>(
         name: string,
         type: 'postgres' | 'sqlite' | 'mssql',
-        options: IPostgresDatabaseOptions | ISQLiteDatabaseOptions
+        options: IPostgresDatabaseOptions | ISQLiteDatabaseOptions | IMSSQLDatabaseOptions
     ): void {
         let creator: AbstractCreator<T> | undefined = undefined;
         if (type === 'postgres')
             creator = new PostgresCreator<T>(options as IPostgresDatabaseOptions);
         else if (type === 'sqlite')
             creator = new SQLiteCreator<T>(options as ISQLiteDatabaseOptions);
-
+        else if (type === 'mssql')
+            creator = new MSSQLCreator<T>(options as IMSSQLDatabaseOptions);
         if (creator)
             this._database.set(name, creator);
     }

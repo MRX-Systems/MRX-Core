@@ -1,7 +1,7 @@
-export * from './File';
-export * from './Folder';
-export * from './I18n';
-export * from './Path';
-export * from './Sleep';
-export * from './Yaml';
+export * from './File.js';
+export * from './Folder.js';
+export * from './I18n.js';
+export * from './Path.js';
+export * from './Sleep.js';
+export * from './Yaml.js';
 
