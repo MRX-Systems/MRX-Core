@@ -3,10 +3,10 @@ import { exit } from 'process';
 
 import type {
     IAndesiteConfigDTO
-} from '@/DTO';
-import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service';
-import { EsbuildUser } from '@/Domain/Service/User/Command';
-import { AndesiteYml, TsConfig, initAndesiteFolderStructure } from '@/Domain/Service/User/Config';
+} from '@/DTO/index.js';
+import { EsbuildUser } from '@/Domain/Service/User/Command/index.js';
+import { AndesiteYml, TsConfig, initAndesiteFolderStructure } from '@/Domain/Service/User/Config/index.js';
+import { cancel, intro, outroBasedOnTime, spinner } from '@/Domain/Service/index.js';
 
 /**
  * Build the project
@@ -23,21 +23,15 @@ async function buildProject(): Promise<void> {
 
         new TsConfig().updateTsConfigUser(config);
 
-        const esbuildUser: EsbuildUser = new EsbuildUser({
-            minify: true,
-            keepNames: true,
-            treeShaking: true,
-            dev: false,
-            watch: false,
-            ...config
-        });
+        const esbuildUser: EsbuildUser = new EsbuildUser(config);
 
-        await new Promise<void>((resolve, reject) => {
+        await new Promise<void>((resolve) => {
             const child: ChildProcess = esbuildUser.exec();
+
             child.stderr?.on('data', (data: string | Uint8Array) => {
                 process.stderr.write(data);
-                reject(new Error(data.toString()));
             });
+
             child.on('close', () => {
                 resolve();
             });

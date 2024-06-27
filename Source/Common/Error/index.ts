@@ -1,1 +1,1 @@
-export * from './AndesiteError';
+export * from './AndesiteError.js';

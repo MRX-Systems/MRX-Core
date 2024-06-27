@@ -1,14 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@tsconfig/node22/tsconfig.json",
   "exclude": [
     "node_modules",
     "Build",
-    "Configs/**/*.ts",
+    "Configs",
     "**/*.spec.ts"
   ],
   "include": [
-    "Source/**/*.ts"
+    "Source/**/*.ts",
+    "Templates/**/*.json"
   ],
   "typedocOptions": {
     "entryPoints": [
@@ -20,7 +20,15 @@
     ],
     "out": "docs"
   },
+  "ts-node": {
+    "esm": true
+  },
   "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "checkJs": true,
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

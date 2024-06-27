@@ -1,11 +1,11 @@
-import tsConfig from '@/../Templates/tsconfig.json';
-import { AndesiteError } from '@/Common/Error';
+import tsConfig from '@/../Templates/tsconfig.json' with { type: 'json' };
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { File } from '@/Common/Util/File';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { File } from '@/Common/Util/index.js';
 import type {
     IAndesiteConfigDTO
-} from '@/DTO';
+} from '@/DTO/index.js';
 
 /**
  * Interface for the tsconfig.json file.
@@ -38,8 +38,6 @@ export class TsConfig {
 
     /**
      * Initializes a new instance of the TsConfig class.
-     *
-     * @throws ({@link AndesiteError}) - If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
      */
     public constructor() {
         this._tsConfigUser = new File({
@@ -49,12 +47,6 @@ export class TsConfig {
         this._tsConfigPkg = new File({
             path: './.andesite/tsconfig.json'
         });
-
-        if (this._tsConfigUser.exists() || this._tsConfigPkg.exists())
-            throw new AndesiteError({
-                messageKey: ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS,
-                detail: './tsconfig.json'
-            });
     }
 
     /**
@@ -80,6 +72,7 @@ export class TsConfig {
         const conf: ITsConfig = tsConfig as ITsConfig;
         conf.include = [
             `../${andesiteConfig.Config.BaseSourceDir}/**/*.ts`,
+            `../${andesiteConfig.Config.BaseSourceDir}/**/*.json`
         ];
         conf.compilerOptions.rootDir = `../${andesiteConfig.Config.BaseSourceDir}`;
         conf.compilerOptions.baseUrl = `../${andesiteConfig.Config.BaseSourceDir}`;
@@ -96,8 +89,14 @@ export class TsConfig {
      *
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
+     * @throws ({@link AndesiteError}) If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
      */
     private _initializeTsConfigUser(): void {
+        if (this._tsConfigUser.exists() || this._tsConfigPkg.exists())
+            throw new AndesiteError({
+                messageKey: ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS,
+                detail: './tsconfig.json'
+            });
         this._tsConfigUser.write(JSON.stringify({
             'extends': './.andesite/tsconfig.json'
         }, null, 2));
@@ -113,6 +112,7 @@ export class TsConfig {
         const conf: ITsConfig = tsConfig as ITsConfig;
         conf.include = [
             '../Source/**/*.ts',
+            '../Source/**/*.json'
         ];
         conf.compilerOptions.rootDir = '../Source';
         conf.compilerOptions.baseUrl = '../Source';

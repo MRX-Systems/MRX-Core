@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
+import scalar from '@scalar/fastify-api-reference';
 
-import type { IPlugin } from '@/Presentation/HTTP/Interface';
+import type { IPlugin } from '@/Presentation/HTTP/Interface/index.js';
 
 
 /**
@@ -51,8 +52,7 @@ export class SwaggerScalarUiPlugin implements IPlugin {
     public async configure(app: FastifyInstance, baseUrl: string): Promise<void> {
         const routePrefix = `${baseUrl}${this._path}`;
         routePrefix.replace(/\/+/g, '/');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-        await app.register(require('@scalar/fastify-api-reference'), {
+        await app.register(scalar, {
             routePrefix,
             configuration: {
                 theme: this._theme,

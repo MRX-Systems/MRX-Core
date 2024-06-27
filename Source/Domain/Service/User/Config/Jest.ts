@@ -1,8 +1,8 @@
-import jest from '@/../Templates/jest.json';
-import { AndesiteError } from '@/Common/Error';
+import jest from '@/../Templates/jest.json' with { type: 'json' };
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { File } from '@/Common/Util';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { File } from '@/Common/Util/index.js';
 
 /**
  * Create a jest.config.json file.
