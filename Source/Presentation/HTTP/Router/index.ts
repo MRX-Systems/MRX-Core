@@ -1,1 +1,1 @@
-export * from './AbstractRouter.js';
+export * from './AbstractRouter';

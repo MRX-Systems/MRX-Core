@@ -1,5 +1,5 @@
-export * from './BuildProject.js';
-export * from './DevProject.js';
-export * from './InitProject.js';
-export * from './StartProject.js';
+export * from './BuildProject';
+export * from './DevProject';
+export * from './InitProject';
+export * from './StartProject';
 

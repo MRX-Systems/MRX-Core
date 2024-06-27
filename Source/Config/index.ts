@@ -1,1 +1,1 @@
-export * from './PackageJsonCore.js';
+export * from './PackageJsonCore';

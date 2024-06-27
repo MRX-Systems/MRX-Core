@@ -1,9 +1,9 @@
-export * from './AndesiteStructure.js';
-export * from './AndesiteYml.js';
-export * from './EntryPoint.js';
-export * from './Eslint.js';
-export * from './FolderStructure.js';
-export * from './Jest.js';
-export * from './PackageJson.js';
-export * from './TsConfig.js';
+export * from './AndesiteStructure';
+export * from './AndesiteYml';
+export * from './EntryPoint';
+export * from './Eslint';
+export * from './FolderStructure';
+export * from './Jest';
+export * from './PackageJson';
+export * from './TsConfig';
 

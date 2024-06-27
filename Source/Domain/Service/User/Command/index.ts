@@ -1,2 +1,2 @@
-export * from './BundleUser.js';
-export * from './EsbuildUser.js';
+export * from './BundleUser';
+export * from './EsbuildUser';

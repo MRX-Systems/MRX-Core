@@ -1,13 +1,13 @@
-export * from '@/Common/Error/Enum/index.js';
-export * from '@/Common/Error/index.js';
-export * from '@/Common/Interface/index.js';
-export * from '@/Common/Util/index.js';
-export * from '@/Config/index.js';
-export * from '@/Domain/Service/index.js';
-// export * from '@/Infrastructure/Database/index.js';
-export * from '@/Presentation/HTTP/Hook/index.js';
-export * from '@/Presentation/HTTP/Interface/index.js';
-export * from '@/Presentation/HTTP/Plugin/index.js';
-export * from '@/Presentation/HTTP/Router/index.js';
-export * from '@/Presentation/HTTP/ServerManager.js';
+export * from '@/Common/Error/Enum';
+export * from '@/Common/Error';
+export * from '@/Common/Interface';
+export * from '@/Common/Util';
+export * from '@/Config';
+export * from '@/Domain/Service';
+// export * from '@/Infrastructure/Database';
+export * from '@/Presentation/HTTP/Hook';
+export * from '@/Presentation/HTTP/Interface';
+export * from '@/Presentation/HTTP/Plugin';
+export * from '@/Presentation/HTTP/Router';
+export * from '@/Presentation/HTTP/ServerManager';
 

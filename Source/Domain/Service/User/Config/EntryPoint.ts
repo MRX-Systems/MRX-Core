@@ -1,7 +1,7 @@
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError } from '@/Common/Error';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
-import { File } from '@/Common/Util/index.js';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
+import { File } from '@/Common/Util';
 
 /**
  * Initialize the entry point of the project.

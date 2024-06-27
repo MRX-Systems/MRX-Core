@@ -1,7 +1,7 @@
 import andesiteFolderStructure from '@/../Templates/FolderStructure/andesite.json' with { type: 'json' };
-import { Folder } from '@/Common/Util/index.js';
+import { Folder } from '@/Common/Util';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
+import { CommonErrorKeys } from '@/Common/Error/Enum';
 
 /**
  * Create the Andesite folder structure.

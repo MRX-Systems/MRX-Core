@@ -2,9 +2,9 @@ import {
     mkdirSync
 } from 'fs';
 
-import { AndesiteError } from '@/Common/Error/index.js';
-import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
-import { Path } from './Path.js';
+import { AndesiteError } from '@/Common/Error';
+import { CommonErrorKeys } from '@/Common/Error/Enum';
+import { Path } from './Path';
 
 /**
  * Represents the folder options.

@@ -12,8 +12,7 @@
   "scripts": {
     "clear": "if [ -f tsconfig.tsbuildinfo ]; then rm tsconfig.tsbuildinfo; fi && if [ -d Build ]; then rm -rf Build; fi",
     "create-types": "tsc --emitDeclarationOnly && tsc-alias",
-    "build": "npm run clear && tsc --noEmit && npm run create-types && node ./Configs/esbuild.config.package build",
-    "dev::build": "npm run clear && node ./Configs/esbuild.config.package build",
+    "build": "npm run clear && tsc --noEmit && npm run create-types && node ./Configs/esbuild.config.package",
     "user::build": "node ./Configs/esbuild.config.user.js build",
     "docs": "typedoc",
     "fix-lint": "eslint --fix . --ext .ts",
