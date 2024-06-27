@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/Andesite-Lab/Core/compare/v1.6.0...v1.6.1) (2024-06-27)
+
+
+### Bug Fixes
+
+* remove duplicate import ([35dd9f5](https://github.com/Andesite-Lab/Core/commit/35dd9f5b3918cabc63a0fa2fec61991c17f24f6b))
+
 ## [1.6.0](https://github.com/Andesite-Lab/Core/compare/v1.5.1...v1.6.0) (2024-06-27)
 
 
