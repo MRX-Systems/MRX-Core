@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.2](https://github.com/Andesite-Lab/Core/compare/v1.6.1...v1.6.2) (2024-06-27)
+
+
+### Bug Fixes
+
+* remove useless extension ([ac09cb1](https://github.com/Andesite-Lab/Core/commit/ac09cb188ba16206d796ff20cc40330767b543a6))
+
 ## [1.6.1](https://github.com/Andesite-Lab/Core/compare/v1.6.0...v1.6.1) (2024-06-27)
 
 
