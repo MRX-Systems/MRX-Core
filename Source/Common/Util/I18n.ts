@@ -1,7 +1,7 @@
 import i18next, { type Resource, type i18n } from 'i18next';
 
-import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError } from '@/Common/Error';
+import { CommonErrorKeys } from '@/Common/Error/Enum';
 
 /**
  * An object containing the values to interpolate into the translated string.

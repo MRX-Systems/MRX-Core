@@ -1,1 +1,1 @@
-export * from './IAndesiteConfigDTO.js';
+export * from './IAndesiteConfigDTO';

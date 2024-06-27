@@ -1,1 +1,1 @@
-export * from './IAndesiteErrorOptions.js';
+export * from './IAndesiteErrorOptions';

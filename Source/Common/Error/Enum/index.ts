@@ -1,4 +1,5 @@
-export * from './CommonErrorKeys.js';
-export * from './InfrastructureDatabaseKeys.js';
-export * from './PresentationHttpServerErrorKeys.js';
-export * from './ServiceErrorKeys.js';
+export * from './CommonErrorKeys';
+export * from './InfrastructureDatabaseKeys';
+export * from './PresentationHttpServerErrorKeys';
+export * from './ServiceErrorKeys';
+

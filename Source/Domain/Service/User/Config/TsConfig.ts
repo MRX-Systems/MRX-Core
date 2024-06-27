@@ -1,11 +1,11 @@
 import tsConfig from '@/../Templates/tsconfig.json' with { type: 'json' };
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError } from '@/Common/Error';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
-import { File } from '@/Common/Util/index.js';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
+import { File } from '@/Common/Util';
 import type {
     IAndesiteConfigDTO
-} from '@/DTO/index.js';
+} from '@/DTO';
 
 /**
  * Interface for the tsconfig.json file.

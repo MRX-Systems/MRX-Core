@@ -1,15 +1,15 @@
 import {
+    cancel as _cancel,
     intro as _intro,
     outro as _outro,
     select as _select,
-    cancel as _cancel,
-    text as _text,
     spinner as _spinner,
+    text as _text,
     isCancel
 } from '@clack/prompts';
 
-import { AndesiteError } from '@/Common/Error/index.js';
-import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { AndesiteError } from '@/Common/Error';
+import { ServiceErrorKeys } from '@/Common/Error/Enum';
 
 /**
  * Interface for the options of the select prompt.
@@ -214,11 +214,8 @@ function spinner(): ISpinnerOptions {
 }
 
 export {
-    intro,
+    cancel, intro,
     outro,
-    outroBasedOnTime,
-    cancel,
-    select,
-    text,
-    spinner
+    outroBasedOnTime, select, spinner, text
 };
+

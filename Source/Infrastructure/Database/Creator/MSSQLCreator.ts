@@ -2,7 +2,7 @@ import * as tedious from 'tedious';
 import * as tarn from 'tarn';
 import { MssqlDialect, type TediousConnection } from 'kysely';
 
-import { AbstractCreator } from './AbstractCreator.js';
+import { AbstractCreator } from './AbstractCreator';
 
 export interface IMSSQLDatabaseOptions {
     /**

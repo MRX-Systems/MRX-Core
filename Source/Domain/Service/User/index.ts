@@ -1,1 +1,1 @@
-export * from './EnvironnementUser.js';
+export * from './EnvironnementUser';

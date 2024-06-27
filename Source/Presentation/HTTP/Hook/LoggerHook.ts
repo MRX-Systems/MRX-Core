@@ -1,7 +1,7 @@
 import { BasaltLogger } from '@basalt-lab/basalt-logger';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-import type { IHook } from '@/Presentation/HTTP/Interface/index.js';
+import type { IHook } from '@/Presentation/HTTP/Interface';
 
 /**
  * Logger Hook class implement the IHook interface ({@link IHook})

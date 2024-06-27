@@ -1,5 +1,6 @@
-export * from './CorsPlugin.js';
-export * from './FormBodyPlugin.js';
-export * from './HelmetPlugin.js';
-export * from './SwaggerPlugin.js';
-export * from './SwaggerScalarUiPlugin.js';
+export * from './CorsPlugin';
+export * from './FormBodyPlugin';
+export * from './HelmetPlugin';
+export * from './SwaggerPlugin';
+export * from './SwaggerScalarUiPlugin';
+

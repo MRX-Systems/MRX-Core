@@ -7,8 +7,8 @@ import {
     type QueryLogEvent
 } from 'kysely';
 
-import { AndesiteError } from '@/Common/Error/index.js';
-import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
+import { AndesiteError } from '@/Common/Error';
+import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum';
 
 /**
  * Abstract class for Database Creator

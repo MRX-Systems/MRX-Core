@@ -1,10 +1,10 @@
 import { exec, type ChildProcess } from 'child_process';
 import { cwd } from 'process';
 
-import { getDirname } from '@/Common/Util/index.js';
+import { getDirname } from '@/Common/Util';
 import type {
     IAndesiteConfigDTO,
-} from '@/DTO/index.js';
+} from '@/DTO';
 
 /**
  * The esbuild user options. ({@link IAndesiteConfigDTO})
