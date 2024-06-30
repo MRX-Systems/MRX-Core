@@ -15,7 +15,7 @@ export class LoggerHook implements IHook {
 
     /**
      * Constructor of the LoggerHook class.
-     * 
+     *
      * @param basaltLogger - Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
     public constructor(basaltLogger: BasaltLogger) {

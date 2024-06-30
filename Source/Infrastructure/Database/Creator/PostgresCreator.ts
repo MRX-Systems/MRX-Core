@@ -1,3 +1,4 @@
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import { PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
@@ -32,9 +33,9 @@ export interface IPostgresDatabaseOptions {
      */
     poolSizeMax?: number;
     /**
-     * Activate the log
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    log?: boolean;
+    log: BasaltLogger;
 }
 
 /**
@@ -48,14 +49,17 @@ export class PostgresCreator<T> extends AbstractCreator<T> {
      * @param options - The options for the Postgres Database. ({@link IPostgresDatabaseOptions})
      */
     public constructor(options: Readonly<IPostgresDatabaseOptions>) {
-        super(new PostgresDialect({
-            pool: new Pool({
-                database: options.databaseName,
-                host: options.host,
-                user: options.user,
-                port: options.port,
-                max: options.poolSizeMax ?? 10,
-            })
-        }), options.log ?? true);
+        super({
+            dialect: new PostgresDialect({
+                pool: new Pool({
+                    database: options.databaseName,
+                    host: options.host,
+                    user: options.user,
+                    port: options.port,
+                    max: options.poolSizeMax ?? 10,
+                })
+            }),
+            log: options.log
+        });
     }
 }

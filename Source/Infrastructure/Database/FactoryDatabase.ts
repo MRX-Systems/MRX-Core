@@ -1,4 +1,4 @@
-import { type Kysely } from 'kysely';
+import type { Kysely } from 'kysely';
 
 import {
     MSSQLCreator,
@@ -20,7 +20,7 @@ export class FactoryDatabase {
     private static _instance: FactoryDatabase;
 
     /**
-     * Map of database. Key is the name of the database and value is the {@link AbstractCreator} with the database schema types.
+     * Map of database. Key is the name of the database and value is the ({@link AbstractCreator}) with the database schema types.
      */
     private readonly _database: Map<string, unknown> = new Map();
 

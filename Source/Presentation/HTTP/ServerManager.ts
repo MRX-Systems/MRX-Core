@@ -1,4 +1,3 @@
-import { BasaltLogger } from '@basalt-lab/basalt-logger';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';

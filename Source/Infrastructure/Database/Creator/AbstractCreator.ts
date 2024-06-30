@@ -1,4 +1,4 @@
-import { BasaltLogger } from '@basalt-lab/basalt-logger';
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import {
     DeduplicateJoinsPlugin,
     Kysely,
@@ -25,19 +25,22 @@ export abstract class AbstractCreator<T> {
      */
     private readonly _dialect: Dialect;
     /**
-     * Activate the log
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    private readonly _log: boolean;
+    private readonly _log: BasaltLogger | undefined;
 
     /**
      * Constructor of the AbstractCreator class
      *
      * @param dialect - The {@link Dialect} of the database (ex: PostgresDialect, MySQLDialect ...)
-     * @param log - Activate the log (default: false)
+     * @param log - Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    protected constructor(dialect: Readonly<Dialect>, log: boolean = false) {
-        this._dialect = dialect;
-        this._log = log;
+    protected constructor(options: {
+        dialect: Readonly<Dialect>,
+        log?: BasaltLogger
+    }) {
+        this._dialect = options.dialect;
+        this._log = options.log;
     }
 
     /**
@@ -59,9 +62,9 @@ export abstract class AbstractCreator<T> {
                 if (!this._log)
                     return;
                 if (event.level === 'query')
-                    BasaltLogger.info(event);
+                    this._log.debug(event);
                 else
-                    BasaltLogger.error(event);
+                    this._log.error(event);
             },
             plugins: [new DeduplicateJoinsPlugin()]
         });

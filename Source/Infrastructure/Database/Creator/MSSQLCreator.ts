@@ -1,6 +1,7 @@
-import * as tedious from 'tedious';
-import * as tarn from 'tarn';
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import { MssqlDialect, type TediousConnection } from 'kysely';
+import tarn from 'tarn';
+import tedious from 'tedious';
 
 import { AbstractCreator } from './AbstractCreator';
 
@@ -42,9 +43,9 @@ export interface IMSSQLDatabaseOptions {
      */
     poolSizeMax?: number;
     /**
-     * Activate the log
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    log: boolean;
+    log: BasaltLogger;
 }
 /**
  * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern)
@@ -59,32 +60,35 @@ export class MSSQLCreator<T> extends AbstractCreator<T> {
      * @param options - The options of the database ({@link IMSSQLDatabaseOptions})
      */
     public constructor(options: IMSSQLDatabaseOptions) {
-        super(new MssqlDialect({
-            tarn: {
-                ...tarn,
-                options: {
-                    min: 0,
-                    max: options.poolSizeMax ?? 10
-                }
-            },
-            tedious: {
-                ...tedious,
-                connectionFactory: (): TediousConnection | Promise<TediousConnection> => new tedious.Connection({
-                    server: options.host,
-                    authentication: {
-                        type: options.type,
-                        options: {
-                            userName: options.user,
-                            password: options.password
-                        }
-                    },
+        super({
+            dialect: new MssqlDialect({
+                tarn: {
+                    ...tarn,
                     options: {
-                        appName: 'Andesite-Core',
-                        database: 'your_database',
-                        encrypt: true
-                    },
-                }) as TediousConnection,
-            }
-        }));
+                        min: 0,
+                        max: options.poolSizeMax ?? 10
+                    }
+                },
+                tedious: {
+                    ...tedious,
+                    connectionFactory: (): TediousConnection | Promise<TediousConnection> => new tedious.Connection({
+                        server: options.host,
+                        authentication: {
+                            type: options.type,
+                            options: {
+                                userName: options.user,
+                                password: options.password
+                            }
+                        },
+                        options: {
+                            appName: 'Andesite-Core',
+                            database: 'your_database',
+                            encrypt: true
+                        },
+                    }) as TediousConnection,
+                }
+            }),
+            log: options.log
+        });
     }
 }

@@ -1,19 +1,19 @@
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import SQLite from 'better-sqlite3';
 import { SqliteDialect } from 'kysely';
 
 import { AbstractCreator } from './AbstractCreator';
 
 export interface ISQLiteDatabaseOptions {
-
     /**
      * The filename of the database
      * U can set :memory: for in-memory database
      */
     filename: string;
     /**
-     * Activate the log
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    log?: boolean;
+    log: BasaltLogger;
 }
 
 /**
@@ -27,8 +27,11 @@ export class SQLiteCreator<T> extends AbstractCreator<T> {
      * @param options - The options for the SQLite Database. ({@link ISQLiteDatabaseOptions})
      */
     public constructor(options: Readonly<ISQLiteDatabaseOptions>) {
-        super(new SqliteDialect({
-            database: new SQLite(options.filename)
-        }), options.log ?? false);
+        super({
+            dialect: new SqliteDialect({
+                database: new SQLite(options.filename)
+            }),
+            log: options.log
+        });
     }
 }
