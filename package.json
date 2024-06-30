@@ -16,9 +16,7 @@
     "user::build": "node ./Configs/esbuild.config.user.js build",
     "docs": "typedoc",
     "fix-lint": "eslint --fix . --ext .ts",
-    "lint": "eslint . --ext .ts",
-    "test:watch": "jest --watch -c jest.config.json",
-    "test": "jest -c jest.config.json --ci --coverage"
+    "lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
@@ -58,7 +56,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@basalt-lab/basalt-logger": "^1.6.2",
+    "@basalt-lab/basalt-logger": "^1.7.0",
     "@clack/prompts": "^0.7.0",
     "@fastify/cors": "^9.0.1",
     "@fastify/formbody": "^7.4.0",
