@@ -1,2 +1,2 @@
-export * from './ClackPrompt';
+export * from './ClackPrompt.js';
 

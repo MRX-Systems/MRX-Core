@@ -1,10 +1,10 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import { EnvironnementUser } from '@/Config';
-import type { IAndesiteConfigDTO } from '@/DTO';
-import { execBundleCommand } from '@/Domain/Service/User/Command';
-import { AndesiteYml } from '@/Domain/Service/User/Config';
+import { EnvironnementUser } from '@/Config/index.js';
+import type { IAndesiteConfigDTO } from '@/DTO/index.js';
+import { execBundleCommand } from '@/Domain/Service/User/Command/index.js';
+import { AndesiteYml } from '@/Domain/Service/User/Config/index.js';
 
 /**
  * Start the project

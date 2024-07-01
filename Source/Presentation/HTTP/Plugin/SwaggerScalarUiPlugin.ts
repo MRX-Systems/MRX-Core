@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import scalar from '@scalar/fastify-api-reference';
 
-import type { IPlugin } from '@/Presentation/HTTP/Interface';
+import type { IPlugin } from '@/Presentation/HTTP/Interface/index.js';
 
 
 /**

@@ -3,12 +3,12 @@ import { parse } from 'yaml';
 
 import apiConfig from '@/../Templates/AndesiteConfigs/api.json' with { type: 'json' };
 import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.json' with { type: 'json' };
-import { AndesiteError } from '@/Common/Error';
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { stringify } from '@/Common/Util';
-import { File } from '@/Common/Util/File';
-import type { IAndesiteConfigDTO } from '@/DTO';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { stringify } from '@/Common/Util/index.js';
+import { File } from '@/Common/Util/File.js';
+import type { IAndesiteConfigDTO } from '@/DTO/index.js';
 
 /**
  * Project type (API or Sample Script)

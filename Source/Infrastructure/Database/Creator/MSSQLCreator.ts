@@ -1,6 +1,6 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 
-import { AbstractCreator } from './AbstractCreator';
+import { AbstractCreator } from './AbstractCreator.js';
 
 /**
  * Options for the MSSQL Database

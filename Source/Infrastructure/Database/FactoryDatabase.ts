@@ -8,7 +8,7 @@ import {
     type IBetterSQLiteDatabaseOptions,
     type IMSSQLDatabaseOptions,
     type IPostgresDatabaseOptions
-} from '@/Infrastructure/Database/Creator';
+} from '@/Infrastructure/Database/Creator/index.js';
 
 /**
  * FactoryDatabase class.

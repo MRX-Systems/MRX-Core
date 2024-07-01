@@ -1,10 +1,10 @@
 import { cwd, env } from 'process';
 
-import { File } from '@/Common/Util';
+import { File } from '@/Common/Util/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { AndesiteError } from '@/Common/Error';
+import type { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { CommonErrorKeys } from '@/Common/Error/Enum';
+import type { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
 
 /**
  * EnvironnementUser class is responsible for managing the environment variables.

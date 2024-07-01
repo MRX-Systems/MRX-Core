@@ -7,10 +7,10 @@ import {
 } from 'fs';
 import { createHash } from 'crypto';
 
-import { AndesiteError } from '@/Common/Error';
-import { CommonErrorKeys } from '@/Common/Error/Enum';
-import { Path } from './Path';
-import { Hash } from './Hash';
+import { AndesiteError } from '@/Common/Error/index.js';
+import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
+import { Path } from './Path.js';
+import { Hash } from './Hash.js';
 
 /**
  * Represents the file. extends ({@link Path})
