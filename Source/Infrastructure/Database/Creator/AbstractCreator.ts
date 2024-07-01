@@ -1,43 +1,38 @@
-import { BasaltLogger } from '@basalt-lab/basalt-logger';
-import {
-    DeduplicateJoinsPlugin,
-    Kysely,
-    type Dialect,
-    type ErrorLogEvent,
-    type QueryLogEvent
-} from 'kysely';
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
+import knex, { type Knex } from 'knex';
 
 import { AndesiteError } from '@/Common/Error';
 import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum';
 
+export type Dialect = Knex.Config;
+
 /**
  * Abstract class for Database Creator
- *
- * @typeparam T - The database schema types
  */
-export abstract class AbstractCreator<T> {
+export abstract class AbstractCreator {
     /**
-     * The database connection object ({@link Kysely})
+     * The database connection object ({@link Knex})
      */
-    private _database: Kysely<T> | undefined;
+    private _database: Knex | undefined;
     /**
      * The dialect of the database ({@link Dialect})
      */
     private readonly _dialect: Dialect;
     /**
-     * Activate the log
+     * /**
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    private readonly _log: boolean;
+    private readonly _log: BasaltLogger | undefined;
 
     /**
      * Constructor of the AbstractCreator class
-     *
-     * @param dialect - The {@link Dialect} of the database (ex: PostgresDialect, MySQLDialect ...)
-     * @param log - Activate the log (default: false)
      */
-    protected constructor(dialect: Readonly<Dialect>, log: boolean = false) {
-        this._dialect = dialect;
-        this._log = log;
+    protected constructor(options: {
+        dialect: Dialect
+        log?: BasaltLogger
+    }) {
+        this._dialect = options.dialect;
+        this._log = options.log;
     }
 
     /**
@@ -53,17 +48,22 @@ export abstract class AbstractCreator<T> {
      * Connect to the database
      */
     public connection(): void {
-        this._database = new Kysely<T>({
-            dialect: this._dialect,
-            log: (event: QueryLogEvent | ErrorLogEvent): void => {
-                if (!this._log)
-                    return;
-                if (event.level === 'query')
-                    BasaltLogger.info(event);
-                else
-                    BasaltLogger.error(event);
-            },
-            plugins: [new DeduplicateJoinsPlugin()]
+        this._database = knex({
+            ...this._dialect,
+            log: {
+                debug: (message) => {
+                    this._log?.debug(message);
+                },
+                error: (message) => {
+                    this._log?.error(message);
+                },
+                deprecate: (message) => {
+                    this._log?.warn(message);
+                },
+                warn: (message) => {
+                    this._log?.warn(message);
+                },
+            }
         });
     }
 
@@ -80,9 +80,9 @@ export abstract class AbstractCreator<T> {
      *
      * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
      *
-     * @returns The database connection object. ({@link Kysely})
+     * @returns The database connection object. ({@link Knex})
      */
-    public get database(): Kysely<T> {
+    public get database(): Knex {
         if (!this._database)
             throw new AndesiteError({
                 messageKey: InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED,

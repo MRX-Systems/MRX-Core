@@ -1,3 +1,5 @@
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
+
 /**
  * IServerOptions interface is responsible for defining the options for the server.
  */
@@ -14,7 +16,7 @@ export interface IServerOptions {
     http2?: boolean;
 
     /**
-     * Enable logger.
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    logger?: boolean;
+    logger?: BasaltLogger;
 }
