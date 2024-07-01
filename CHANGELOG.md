@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.8.0](https://github.com/Andesite-Lab/Core/compare/v1.7.0...v1.8.0) (2024-07-01)
+
+
+### Features
+
+* improvement for esm ([37f9738](https://github.com/Andesite-Lab/Core/commit/37f9738d75e0f176e9d2a5273132656c13a70d2d))
+* improvement of file class + move ... ([1913a81](https://github.com/Andesite-Lab/Core/commit/1913a8160ee229956a7e727984ab22cc48522ad8))
+
+
+### Bug Fixes
+
+* correction wrong version ([42a7e76](https://github.com/Andesite-Lab/Core/commit/42a7e7661040a057b73de5bd10a7d78de7d99eb0))
+
 ## [1.7.0](https://github.com/Andesite-Lab/Core/compare/v1.6.2...v1.7.0) (2024-07-01)
 
 
