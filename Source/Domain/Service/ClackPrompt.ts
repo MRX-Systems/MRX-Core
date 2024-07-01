@@ -8,8 +8,8 @@ import {
     isCancel
 } from '@clack/prompts';
 
-import { AndesiteError } from '@/Common/Error';
-import { ServiceErrorKeys } from '@/Common/Error/Enum';
+import { AndesiteError } from '@/Common/Error/index.js';
+import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
 
 /**
  * Interface for the options of the select prompt.

@@ -3,13 +3,13 @@ import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
 import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { AndesiteError } from '@/Common/Error';
-import { PresentationHttpServerErrorKeys } from '@/Common/Error/Enum';
-import { I18n } from '@/Common/Util';
-import { LoggerHook } from '@/Presentation/HTTP/Hook';
-import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface';
-import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin';
-import type { AbstractRouter } from '@/Presentation/HTTP/Router';
+import { AndesiteError } from '@/Common/Error/index.js';
+import { PresentationHttpServerErrorKeys } from '@/Common/Error/Enum/index.js';
+import { I18n } from '@/Common/Util/index.js';
+import { LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
+import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface/index.js';
+import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin/index.js';
+import type { AbstractRouter } from '@/Presentation/HTTP/Router/index.js';
 
 export type { FastifyInstance };
 

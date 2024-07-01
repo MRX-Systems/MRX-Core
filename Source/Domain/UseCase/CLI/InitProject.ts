@@ -1,9 +1,9 @@
 import { exit } from 'process';
 
 
-import { AndesiteError } from '@/Common/Error';
-import type { IProjectInformationDTO } from '@/DTO';
-import { cancel, intro, outroBasedOnTime, select, spinner, text } from '@/Domain/Service';
+import { AndesiteError } from '@/Common/Error/index.js';
+import type { IProjectInformationDTO } from '@/DTO/index.js';
+import { cancel, intro, outroBasedOnTime, select, spinner, text } from '@/Domain/Service/index.js';
 import {
     AndesiteYml,
     TsConfig,
@@ -14,7 +14,7 @@ import {
     initJestConfig,
     initPackageJson,
     type ProjectType,
-} from '@/Domain/Service/User/Config';
+} from '@/Domain/Service/User/Config/index.js';
 
 /**
  * The project types.

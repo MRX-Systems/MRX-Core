@@ -1,3 +1,3 @@
-export * from './AndesiteConfigs';
-export * from './IProjectInformationDTO';
+export * from './AndesiteConfigs/index.js';
+export * from './IProjectInformationDTO.js';
 

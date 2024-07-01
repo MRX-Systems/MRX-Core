@@ -1,11 +1,11 @@
 import tsConfig from '@/../Templates/tsconfig.json' with { type: 'json' };
-import { AndesiteError } from '@/Common/Error';
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { File } from '@/Common/Util';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { File } from '@/Common/Util/index.js';
 import type {
     IAndesiteConfigDTO
-} from '@/DTO';
+} from '@/DTO/index.js';
 
 /**
  * Interface for the tsconfig.json file.
@@ -40,13 +40,9 @@ export class TsConfig {
      * Initializes a new instance of the TsConfig class.
      */
     public constructor() {
-        this._tsConfigUser = new File({
-            path: './tsconfig.json'
-        });
+        this._tsConfigUser = new File('./tsconfig.json');
 
-        this._tsConfigPkg = new File({
-            path: './.andesite/tsconfig.json'
-        });
+        this._tsConfigPkg = new File('./.andesite/tsconfig.json');
     }
 
     /**

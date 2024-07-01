@@ -26,8 +26,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "checkJs": true,
     /* Visit https://aka.ms/tsconfig to read more about this file */
 

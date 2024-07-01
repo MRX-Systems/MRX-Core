@@ -1,7 +1,7 @@
 import cors from '@fastify/cors';
 import type { FastifyInstance } from 'fastify';
 
-import type { IPlugin } from '@/Presentation/HTTP/Interface';
+import type { IPlugin } from '@/Presentation/HTTP/Interface/index.js';
 
 /**
  * The options for the CORS.

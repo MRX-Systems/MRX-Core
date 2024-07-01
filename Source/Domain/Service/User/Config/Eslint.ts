@@ -1,9 +1,9 @@
 
 import eslint from '@/../Templates/eslint.json' with { type: 'json' };
-import { AndesiteError } from '@/Common/Error';
+import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum';
-import { File } from '@/Common/Util';
+import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { File } from '@/Common/Util/index.js';
 
 /**
  * Create the .eslintrc file.
@@ -15,7 +15,7 @@ import { File } from '@/Common/Util';
  * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
 function initEslint(path: string = './'): void {
-    const file = new File({ path: `${path}/.eslintrc` });
+    const file = new File(`${path}/.eslintrc`);
     if (file.exists())
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_ESLINT_EXISTS
