@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0](https://github.com/Andesite-Lab/Core/compare/v1.6.2...v1.7.0) (2024-07-01)
+
+
+### Features
+
+* refacto factory kysely to knex, add new log system and more ([6d66967](https://github.com/Andesite-Lab/Core/commit/6d669679a33db53352449dbe322e979d6fecb89f))
+
+
+### Code Refactoring
+
+* clean + refacto logger + update deps ([df486c9](https://github.com/Andesite-Lab/Core/commit/df486c9b5f3e9070e5d5e5f464993665aa0e4efa))
+* update basalt logger and refacto server and hook ([cd087ec](https://github.com/Andesite-Lab/Core/commit/cd087ec9076142df18e62aca07fc77341c087dbb))
+
 ## [1.6.2](https://github.com/Andesite-Lab/Core/compare/v1.6.1...v1.6.2) (2024-06-27)
 
 
