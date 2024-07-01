@@ -1,1 +1,1 @@
-export * from './LoggerHook';
+export * from './LoggerHook.js';

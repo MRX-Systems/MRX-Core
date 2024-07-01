@@ -1,7 +1,7 @@
 import fastifySwagger, { type SwaggerOptions } from '@fastify/swagger';
 import type { FastifyInstance, FastifyRegisterOptions } from 'fastify';
 
-import type { IPlugin } from '@/Presentation/HTTP/Interface';
+import type { IPlugin } from '@/Presentation/HTTP/Interface/index.js';
 
 
 /**

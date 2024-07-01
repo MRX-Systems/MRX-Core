@@ -1,8 +1,8 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import knex, { type Knex } from 'knex';
 
-import { AndesiteError } from '@/Common/Error';
-import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum';
+import { AndesiteError } from '@/Common/Error/index.js';
+import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
 
 export type Dialect = Knex.Config;
 
