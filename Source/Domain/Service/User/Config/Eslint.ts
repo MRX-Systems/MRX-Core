@@ -15,7 +15,7 @@ import { File } from '@/Common/Util';
  * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
 function initEslint(path: string = './'): void {
-    const file = new File({ path: `${path}/.eslintrc` });
+    const file = new File(`${path}/.eslintrc`);
     if (file.exists())
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_ESLINT_EXISTS

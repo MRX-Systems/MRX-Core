@@ -13,7 +13,7 @@ import { File } from '@/Common/Util';
  * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
 function initEntryPoint(path: string = './'): void {
-    const file = new File({ path: `${path}/Source/App.ts` });
+    const file = new File(`${path}/Source/App.ts`);
     if (file.exists())
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_ENTRY_POINT_EXISTS

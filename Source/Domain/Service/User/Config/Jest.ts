@@ -18,7 +18,7 @@ function initJestConfig(
     projectName: string,
     path: string = './'
 ): void {
-    const file = new File({ path: `${path}/.andesite/jest.config.json` });
+    const file = new File(`${path}/.andesite/jest.config.json`);
     if (file.exists())
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_JEST_EXISTS

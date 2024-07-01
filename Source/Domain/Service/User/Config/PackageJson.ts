@@ -80,9 +80,7 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
  * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
 function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, path: string = './'): void {
-    const file = new File({
-        path: `${path}/package.json`
-    });
+    const file = new File(`${path}/package.json`);
     if (file.exists())
         throw new AndesiteError({
             messageKey: ServiceErrorKeys.ERROR_PACKAGE_JSON_EXISTS

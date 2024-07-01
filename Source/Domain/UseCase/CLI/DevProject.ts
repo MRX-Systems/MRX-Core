@@ -2,10 +2,10 @@ import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
 import { File } from '@/Common/Util';
+import { EnvironnementUser } from '@/Config';
 import type {
     IAndesiteConfigDTO
 } from '@/DTO';
-import { EnvironnementUser } from '@/Domain/Service/User';
 import { EsbuildUser, execBundleCommand } from '@/Domain/Service/User/Command';
 import { AndesiteYml } from '@/Domain/Service/User/Config';
 
@@ -61,12 +61,12 @@ async function devProject(): Promise<void> {
             process.stdout.write(data);
         });
         const env: EnvironnementUser = new EnvironnementUser();
-        const scriptFile = new File({ path: `${cwd()}/${config.Config.OutputDir}/app.js` });
-        let bundleChild = execBundleCommand(scriptFile.path, env.getEnv());
+        const scriptFile = new File(`${cwd()}/${config.Config.OutputDir}/app.js`);
+        let bundleChild = execBundleCommand(scriptFile.path, env.env);
 
         // Start the watch start process when scriptFile and env changes
-        scriptFile.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
-        env.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.getEnv()); });
+        scriptFile.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.env); });
+        env.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.env); });
     } catch (error) {
         console.error(error);
         exit(1);

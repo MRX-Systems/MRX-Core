@@ -40,13 +40,9 @@ export class TsConfig {
      * Initializes a new instance of the TsConfig class.
      */
     public constructor() {
-        this._tsConfigUser = new File({
-            path: './tsconfig.json'
-        });
+        this._tsConfigUser = new File('./tsconfig.json');
 
-        this._tsConfigPkg = new File({
-            path: './.andesite/tsconfig.json'
-        });
+        this._tsConfigPkg = new File('./.andesite/tsconfig.json');
     }
 
     /**

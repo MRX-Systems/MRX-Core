@@ -1,5 +1,6 @@
 export * from './File';
 export * from './Folder';
+export * from './Hash';
 export * from './I18n';
 export * from './Path';
 export * from './Sleep';

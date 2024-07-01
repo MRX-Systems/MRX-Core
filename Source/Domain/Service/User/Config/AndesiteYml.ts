@@ -25,9 +25,7 @@ export class AndesiteYml extends File {
      * @param path - Path to andesite-config.yml
      */
     public constructor(path: string = './andesite-config.yml') {
-        super({
-            path,
-        });
+        super(path);
     }
 
     /**

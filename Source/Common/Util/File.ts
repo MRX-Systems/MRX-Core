@@ -3,53 +3,26 @@ import {
     watchFile,
     writeFileSync,
     type Stats,
+    createReadStream,
 } from 'fs';
+import { createHash } from 'crypto';
 
 import { AndesiteError } from '@/Common/Error';
 import { CommonErrorKeys } from '@/Common/Error/Enum';
 import { Path } from './Path';
-
-/**
- * Interface for the file options.
- */
-export interface IFileOptions {
-    /**
-     * The path of the file.
-     */
-    path: string;
-
-    /**
-     * The content of the file.
-     */
-    content?: string;
-}
+import { Hash } from './Hash';
 
 /**
  * Represents the file. extends ({@link Path})
  */
 export class File extends Path {
     /**
-     * The content of the file.
-     */
-    protected _content: string;
-
-    /**
      * Initializes a new instance of the File class.
      *
-     * @param options - The options of the file. ({@link IFileOptions})
+     * @param path - The path of the file.
      */
-    public constructor(options: IFileOptions) {
-        super(options.path);
-        this._content = options.content ?? '';
-    }
-
-    /**
-     * Gets the content of the file.
-     *
-     * @returns The content of the file.
-     */
-    public get content(): string {
-        return this._content;
+    public constructor(path: string) {
+        super(path);
     }
 
     /**
@@ -60,15 +33,14 @@ export class File extends Path {
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
      */
-    public write(content: string = this._content): void {
+    public write(content: string): void {
         if (this.exists() && !this.checkAccess())
             throw new AndesiteError({
                 messageKey: CommonErrorKeys.ERROR_ACCESS_FILE,
                 detail: this._path
             });
-        this._content = content;
         try {
-            writeFileSync(this._path, this._content);
+            writeFileSync(this._path, content);
         } catch (error) {
             throw new AndesiteError({
                 messageKey: CommonErrorKeys.ERROR_WRITE_FILE,
@@ -92,14 +64,13 @@ export class File extends Path {
                 detail: this._path
             });
         try {
-            this._content = readFileSync(this._path, 'utf8');
+            return readFileSync(this._path, 'utf8');
         } catch (error) {
             throw new AndesiteError({
                 messageKey: CommonErrorKeys.ERROR_READ_FILE,
                 detail: this._path
             });
         }
-        return this._content;
     }
 
     /**
@@ -113,5 +84,33 @@ export class File extends Path {
             if (curr.mtimeMs !== prev.mtimeMs)
                 callback();
         });
+    }
+
+    /**
+     * Calculates the hash of the file asynchronously with a stream.
+     *
+     * @returns The hash of the file.
+     */
+    public calculateStreamHashMD5(): Promise<string> {
+        const hash = createHash('md5');
+        const stream = createReadStream(this._path);
+
+        return new Promise((resolve, reject) => {
+            stream.on('data', (data) => hash.update(data));
+            stream.on('end', () => {
+                resolve(hash.digest('hex'));
+            });
+            stream.on('error', (error) => reject(error));
+        });
+    }
+
+    /**
+     * Calculates the hash of the file.
+     *
+     * @returns The hash of the file.
+     */
+    public calculateHashMD5(): string {
+        const data = this.read();
+        return Hash.md5(data);
     }
 }
