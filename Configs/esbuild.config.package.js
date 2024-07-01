@@ -6,7 +6,7 @@ const safePkg = pkg;
 const dependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
 const devDependencies = safePkg.devDependencies ? Object.keys(safePkg.devDependencies) : undefined;
  
-const external = [...dependencies, ...devDependencies];
+const external = [...(dependencies || []), ...(devDependencies || [])];
 
 const optionsLib = {
     bundle: true,

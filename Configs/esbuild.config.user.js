@@ -28,7 +28,7 @@ commander
         const userDependencies = userPkg.dependencies ? Object.keys(userPkg.dependencies) : undefined;
         const userDevDependencies = userPkg.devDependencies ? Object.keys(userPkg.devDependencies) : undefined;
 
-        const external = [...coreDependencies, ...coreDevDependencies, ...userDependencies, ...userDevDependencies];
+        const external = [...(coreDependencies || []), ...(coreDevDependencies || []), ...(userDependencies || []), ...(userDevDependencies || [])];
 
         const userDir = options.currentWorkingDirectory;
         const entryPoints = options.entryPoint;

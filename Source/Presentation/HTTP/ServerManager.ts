@@ -1,4 +1,3 @@
-import { BasaltLogger } from '@basalt-lab/basalt-logger';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
@@ -215,7 +214,7 @@ export class ServerManager {
      */
     private async _setErrorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         if (this._options.logger)
-            BasaltLogger.error(error);
+            this._options.logger.error(error);
         if (error.validation)
             await this._handleValidationErrors(error, request, reply);
         else if (error instanceof AndesiteError)
@@ -242,7 +241,7 @@ export class ServerManager {
      */
     private _addDefaultHooks(): void {
         if (this._options.logger)
-            (new LoggerHook()).configure(this._app);
+            (new LoggerHook(this._options.logger)).configure(this._app);
     }
 
     /**
