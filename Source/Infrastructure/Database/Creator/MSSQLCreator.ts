@@ -1,10 +1,10 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
-import { MssqlDialect, type TediousConnection } from 'kysely';
-import tarn from 'tarn';
-import tedious from 'tedious';
 
 import { AbstractCreator } from './AbstractCreator';
 
+/**
+ * Options for the MSSQL Database
+ */
 export interface IMSSQLDatabaseOptions {
     /**
      * Database Name
@@ -14,6 +14,10 @@ export interface IMSSQLDatabaseOptions {
      * The server of the database
      */
     host: string;
+    /**
+     * The port of the database
+     */
+    port: number;
     /**
      * The user of the database
      */
@@ -27,32 +31,27 @@ export interface IMSSQLDatabaseOptions {
      * default: true
      */
     encrypt?: boolean;
-
     /**
-     * The type of the authentication
+     * The minimum pool size of the database
      */
-    type:   | 'default'
-            | 'ntlm'
-            | 'azure-active-directory-password'
-            | 'azure-active-directory-access-token'
-            | 'azure-active-directory-msi-vm'
-            | 'azure-active-directory-msi-app-service'
-            | 'azure-active-directory-service-principal-secret';
+    poolMin?: number;
     /**
-     * The pool size min of the database
+     * The maximum pool size of the database
      */
-    poolSizeMax?: number;
+    poolMax?: number;
     /**
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
     log: BasaltLogger;
+    /**
+     * Debug mode (active debug + stack trace)
+     */
+    debug?: boolean;
 }
 /**
- * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern)
- *
- * @typeparam T - The database schema types
+ * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern) extending ({@link AbstractCreator})
  */
-export class MSSQLCreator<T> extends AbstractCreator<T> {
+export class MSSQLCreator extends AbstractCreator {
 
     /**
      * Constructor of the MSSQLCreator class
@@ -61,33 +60,25 @@ export class MSSQLCreator<T> extends AbstractCreator<T> {
      */
     public constructor(options: IMSSQLDatabaseOptions) {
         super({
-            dialect: new MssqlDialect({
-                tarn: {
-                    ...tarn,
+            dialect: {
+                client: 'mssql',
+                debug: options.debug ?? false,
+                connection: {
+                    database: options.databaseName,
+                    server: options.host,
+                    port: options.port,
+                    user: options.user,
+                    password: options.password,
+                    connectionTimeout: 20000,
                     options: {
-                        min: 0,
-                        max: options.poolSizeMax ?? 10
-                    }
+                        encrypt: options.encrypt ?? true,
+                    } as unknown as string
                 },
-                tedious: {
-                    ...tedious,
-                    connectionFactory: (): TediousConnection | Promise<TediousConnection> => new tedious.Connection({
-                        server: options.host,
-                        authentication: {
-                            type: options.type,
-                            options: {
-                                userName: options.user,
-                                password: options.password
-                            }
-                        },
-                        options: {
-                            appName: 'Andesite-Core',
-                            database: 'your_database',
-                            encrypt: true
-                        },
-                    }) as TediousConnection,
+                pool: {
+                    min: options.poolMin ?? 2,
+                    max: options.poolMax ?? 10
                 }
-            }),
+            },
             log: options.log
         });
     }
