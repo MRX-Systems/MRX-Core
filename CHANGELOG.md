@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/Andesite-Lab/Core/compare/v1.8.3...v1.9.0) (2024-07-02)
+
+
+### Features
+
+* add package json user ([f367d74](https://github.com/Andesite-Lab/Core/commit/f367d747fafdf93a86632471000db0073f9a6dbe))
+
+
+### Build System
+
+* update dependencies ([7ee76d2](https://github.com/Andesite-Lab/Core/commit/7ee76d2ad5630b2279a8e4fef41f962ae9ffc593))
+
 ## [1.8.3](https://github.com/Andesite-Lab/Core/compare/v1.8.2...v1.8.3) (2024-07-02)
 
 
