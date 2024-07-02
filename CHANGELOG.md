@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.3](https://github.com/Andesite-Lab/Core/compare/v1.8.2...v1.8.3) (2024-07-02)
+
+
+### Bug Fixes
+
+* remove duplicate folder 'Schema' in init ([cb08cbc](https://github.com/Andesite-Lab/Core/commit/cb08cbc7365ca8f6afee2c9624b35fd521532809))
+
 ## [1.8.2](https://github.com/Andesite-Lab/Core/compare/v1.8.1...v1.8.2) (2024-07-02)
 
 
