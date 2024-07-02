@@ -8,15 +8,15 @@ export interface IServerOptions {
     /**
      * The base URL of the server. (Default: '/')
      */
-    baseUrl?: string;
+    baseUrl: string;
 
     /**
      * Enable HTTP/2.
      */
-    http2?: boolean;
+    http2: boolean;
 
     /**
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    logger?: BasaltLogger;
+    logger: BasaltLogger | undefined;
 }
