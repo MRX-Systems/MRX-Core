@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/Andesite-Lab/Core/compare/v1.10.0...v1.11.0) (2024-07-02)
+
+
+### Features
+
+* add language hook ([cfe42c9](https://github.com/Andesite-Lab/Core/commit/cfe42c974bb4df8454eced89ad834addb285e8ae))
+
 ## [1.10.0](https://github.com/Andesite-Lab/Core/compare/v1.9.1...v1.10.0) (2024-07-02)
 
 
