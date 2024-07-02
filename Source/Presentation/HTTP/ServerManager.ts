@@ -6,7 +6,7 @@ import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, ty
 import { AndesiteError } from '@/Common/Error/index.js';
 import { PresentationHttpServerErrorKeys } from '@/Common/Error/Enum/index.js';
 import { I18n } from '@/Common/Util/index.js';
-import { LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
+import { LoggerHook, LanguageHook } from '@/Presentation/HTTP/Hook/index.js';
 import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface/index.js';
 import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin/index.js';
 import type { AbstractRouter } from '@/Presentation/HTTP/Router/index.js';
@@ -260,6 +260,7 @@ export class ServerManager {
     private _addDefaultHooks(): void {
         if (this._options.logger)
             (new LoggerHook(this._options.logger)).configure(this._app);
+        (new LanguageHook()).configure(this._app);
     }
 
     /**
