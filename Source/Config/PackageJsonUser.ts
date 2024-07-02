@@ -23,10 +23,10 @@ export interface IPackageJsonUser {
 
 /**
  * Gets the package.json user.
- * 
+ *
  * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
  * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
- * 
+ *
  * @returns The package.json user. ({@link IPackageJsonUser})
  */
 export function packageJsonUser(): IPackageJsonUser {
