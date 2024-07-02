@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/Andesite-Lab/Core/compare/v1.8.0...v1.8.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* Correct error due to missing .env file ([3d395ea](https://github.com/Andesite-Lab/Core/commit/3d395ea0e58b6cc85af2c000680e20fcc1be4189))
+
 ## [1.8.0](https://github.com/Andesite-Lab/Core/compare/v1.7.0...v1.8.0) (2024-07-01)
 
 
