@@ -25,20 +25,30 @@ export class ServerManager {
     /**
      * The options for starting the server. ({@link IStartOptions})
      */
-    private _startOptions: Partial<IStartOptions> = {};
+    private _startOptions: IStartOptions = {
+        port: 3000,
+        host: '0.0.0.0'
+    };
 
     /**
      * The options for the server. ({@link IServerOptions})
      */
-    private readonly _options: IServerOptions;
+    private readonly _options: IServerOptions = {
+        baseUrl: '/',
+        http2: false,
+        logger: undefined
+    };
 
     /**
      * Constructor of the ServerManager class.
      *
      * @param options - The options for the server. ({@link IServerOptions})
      */
-    public constructor(options: IServerOptions) {
-        this._options = options;
+    public constructor(options?: Partial<IServerOptions>) {
+        this._options = {
+            ...this._options,
+            ...options
+        };
         this._app = fastify({
             querystringParser: str => parse(str),
             logger: false,
@@ -77,7 +87,7 @@ export class ServerManager {
      * @returns The port of the server.
      */
     public get port(): number {
-        return this._startOptions.port ?? 3000;
+        return this._startOptions.port;
     }
 
     /**
@@ -86,7 +96,7 @@ export class ServerManager {
      * @returns The host of the server.
      */
     public get host(): string {
-        return this._startOptions.host ?? '0.0.0.0';
+        return this._startOptions.host;
     }
 
     /**
@@ -122,7 +132,7 @@ export class ServerManager {
      * @param plugin - The plugin to add. ({@link IPlugin})
      */
     public async addPlugin(plugin: IPlugin): Promise<void> {
-        await plugin.configure(this._app, this._options.baseUrl ?? '/');
+        await plugin.configure(this._app, this._options.baseUrl);
     }
 
     /**
@@ -131,7 +141,7 @@ export class ServerManager {
      * @param plugins - The plugins to add. ({@link IPlugin})
      */
     public async addPlugins(plugins: IPlugin[]): Promise<void> {
-        await Promise.all(plugins.map(plugin => plugin.configure(this._app, this._options.baseUrl ?? '/')));
+        await Promise.all(plugins.map(plugin => plugin.configure(this._app, this._options.baseUrl)));
     }
 
     /**
@@ -140,7 +150,7 @@ export class ServerManager {
      * @param router - The router to add. ({@link AbstractRouter})
      */
     public async addRouter(router: AbstractRouter): Promise<void> {
-        await router.configure(this._app, this._options.baseUrl ?? '/');
+        await router.configure(this._app, this._options.baseUrl);
     }
 
     /**
@@ -149,7 +159,7 @@ export class ServerManager {
      * @param routers - The routers to add. ({@link AbstractRouter})
      */
     public async addRouters(routers: AbstractRouter[]): Promise<void> {
-        await Promise.all(routers.map(router => router.configure(this._app, this._options.baseUrl ?? '/')));
+        await Promise.all(routers.map(router => router.configure(this._app, this._options.baseUrl)));
     }
 
     /**
@@ -164,14 +174,17 @@ export class ServerManager {
      *
      * @param startOptions - The options for starting the server. ({@link IStartOptions})
      */
-    public async start(startOptions: Partial<IStartOptions>): Promise<void> {
-        this._startOptions = startOptions;
+    public async start(startOptions?: Partial<IStartOptions>): Promise<void> {
+        this._startOptions = {
+            ...this._startOptions,
+            ...startOptions
+        };
         this._addDefaultHooks();
         await this._addDefaultPlugins();
         await this._app.ready();
         await this._app.listen({
-            port: this._startOptions.port ?? 3000,
-            host: this._startOptions.host ?? '0.0.0.0'
+            port: this._startOptions.port,
+            host: this._startOptions.host
         });
     }
 
