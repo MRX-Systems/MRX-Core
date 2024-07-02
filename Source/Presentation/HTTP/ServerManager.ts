@@ -11,7 +11,12 @@ import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentati
 import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin/index.js';
 import type { AbstractRouter } from '@/Presentation/HTTP/Router/index.js';
 
-export type { FastifyInstance };
+export type {
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+    FastifyError
+};
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)
