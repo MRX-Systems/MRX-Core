@@ -33,21 +33,22 @@ export class EnvironnementUser extends File {
     /**
      * Gets the environment variables of the .env file of the user project.
      *
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
-     * 
      * @returns The user environment variables with the system environment variables.
      */
     public get env(): Record<string, string> {
-        this._hashFile ||= this.calculateHashMD5();
-        if (this._hashFile !== this.calculateHashMD5()) {
-            this._env = this._readEnv();
-            this._hashFile = this.calculateHashMD5();
+        try {
+            this._hashFile ||= this.calculateHashMD5();
+            if (this._hashFile !== this.calculateHashMD5()) {
+                this._env = this._readEnv();
+                this._hashFile = this.calculateHashMD5();
+            }
+            return {
+                ...env as Record<string, string>,
+                ...this._env
+            };
+        } catch {
+            return env as Record<string, string>;
         }
-        return {
-            ...env as Record<string, string>,
-            ...this._env
-        };
     }
 
     /**
