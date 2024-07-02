@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/Andesite-Lab/Core/compare/v1.9.1...v1.10.0) (2024-07-02)
+
+
+### Features
+
+* export fastify type (reply, request and error) ([8ea8198](https://github.com/Andesite-Lab/Core/commit/8ea8198a0b604adbb712d7affdc6059757d83132))
+
 ## [1.9.1](https://github.com/Andesite-Lab/Core/compare/v1.9.0...v1.9.1) (2024-07-02)
 
 
