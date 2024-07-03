@@ -4,6 +4,9 @@ import knex, { type Knex } from 'knex';
 import { AndesiteError } from '@/Common/Error/index.js';
 import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
 
+/**
+ * Dialect of the database
+ */
 export type Dialect = Knex.Config;
 
 /**
@@ -40,14 +43,23 @@ export abstract class AbstractCreator {
      *
      * @returns If the database is connected
      */
-    public isConnected(): boolean {
-        return Boolean(this._database);
+    public async isConnected(): Promise<boolean> {
+        if (!this._database)
+            return false;
+        try {
+            await this._database?.raw('SELECT 1');
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /**
      * Connect to the database
+     *
+     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
      */
-    public connection(): void {
+    public async connection(): Promise<void> {
         this._database = knex({
             ...this._dialect,
             log: {
@@ -65,6 +77,10 @@ export abstract class AbstractCreator {
                 },
             }
         });
+        if (await this.isConnected())
+            throw new AndesiteError({
+                messageKey: InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED,
+            });
     }
 
     /**
@@ -78,15 +94,9 @@ export abstract class AbstractCreator {
     /**
      * Get the database connection object
      *
-     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
-     *
      * @returns The database connection object. ({@link Knex})
      */
     public get database(): Knex {
-        if (!this._database)
-            throw new AndesiteError({
-                messageKey: InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED,
-            });
-        return this._database;
+        return this._database as Knex;
     }
 }
