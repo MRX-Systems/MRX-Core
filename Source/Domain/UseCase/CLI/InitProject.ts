@@ -1,36 +1,15 @@
 import { exit } from 'process';
 
-
 import { AndesiteError } from '@/Common/Error/index.js';
 import type { IProjectInformationDTO } from '@/DTO/index.js';
-import { cancel, intro, outroBasedOnTime, select, spinner, text } from '@/Domain/Service/index.js';
-import {
-    AndesiteYml,
-    TsConfig,
-    initAndesiteFolderStructure,
-    initEntryPoint,
-    initEslint,
-    initFolderStructure,
-    initJestConfig,
-    initPackageJson,
-    type ProjectType,
-} from '@/Domain/Service/User/Config/index.js';
-
-/**
- * The project types.
- */
-export const PROJECT_TYPES = {
-    API: 'API',
-    SAMPLE_SCRIPT: 'Sample Script',
-};
-
 /**
  * Cancel the project initialization and stop the process.
  *
  * @param message - The message to display when canceling the project initialization.
  * @param code - The exit code.
  */
-function _cancelAndStop(message: string = 'Project initialization canceled', code: number = 0): void {
+async function _cancelAndStop(message: string = 'Project initialization canceled', code: number = 0): Promise<void> {
+    const { cancel } = await import('@/Domain/Service/index.js');
     cancel(message);
     exit(code);
 }
@@ -40,11 +19,11 @@ function _cancelAndStop(message: string = 'Project initialization canceled', cod
  *
  * @param error - The error occurred.
  */
-function _handleError(error: unknown): void {
+async function _handleError(error: unknown): Promise<void> {
     if (error instanceof AndesiteError)
-        _cancelAndStop(`An error occurred while initializing the project 😢 ${error.message}`, 1);
+        await _cancelAndStop(`An error occurred while initializing the project 😢 ${error.message}`, 1);
     else
-        _cancelAndStop('An unexpected error occurred while initializing the project 😢', 1);
+        await _cancelAndStop('An unexpected error occurred while initializing the project 😢', 1);
 }
 
 /**
@@ -55,6 +34,7 @@ function _handleError(error: unknown): void {
  * @returns The project type selected by the user.
  */
 async function _requestProjectTypeSelected(): Promise<string> {
+    const { select } = await import('@/Domain/Service/index.js');
     const projectType = await select({
         message: 'Select the project type',
         initialValue: 'API',
@@ -64,8 +44,8 @@ async function _requestProjectTypeSelected(): Promise<string> {
                 label: 'API',
             },
             {
-                value: 'Sample Script',
-                label: 'Sample Script',
+                value: 'Script',
+                label: 'Script',
             },
         ]
     });
@@ -80,6 +60,7 @@ async function _requestProjectTypeSelected(): Promise<string> {
  * @returns The project name.
  */
 async function _requestProjectName(): Promise<string> {
+    const { text } = await import('@/Domain/Service/index.js');
     const projectName = await text({
         message: 'Enter the project name',
         defaultValue: 'my-project',
@@ -94,6 +75,7 @@ async function _requestProjectName(): Promise<string> {
  * @returns The project description.
  */
 async function _requestProjectDescription(): Promise<string> {
+    const { text } = await import('@/Domain/Service/index.js');
     const projectDescription = await text({
         message: 'Enter the project description',
         defaultValue: '',
@@ -102,43 +84,70 @@ async function _requestProjectDescription(): Promise<string> {
     return projectDescription as string;
 }
 
+async function _request(): Promise<IProjectInformationDTO>{
+    const projectType = await _requestProjectTypeSelected();
+    const projectName = await _requestProjectName();
+    const projectDescription = await _requestProjectDescription();
+    return {
+        name: projectName,
+        description: projectDescription,
+        type: projectType
+    };
+}
+
 /**
  * Initialize a new project by asking the user several questions.
  */
-async function initProject(): Promise<void> {
+// eslint-disable-next-line max-lines-per-function
+export async function initProject(): Promise<void> {
+    const { intro, spinner, outroBasedOnTime } = await import('@/Domain/Service/index.js');
+    const {
+        AndesiteYml,
+        Jest,
+        TsConfigPkg,
+        TsConfigUser,
+        initAndesiteFolderStructure,
+        initEntryPoint,
+        initEslint,
+        initFolderStructure,
+        initPackageJson,
+    } = await import('@/Domain/Service/User/Config/index.js');
     intro('Hey there! 👋');
-    const projectType = await _requestProjectTypeSelected() as ProjectType;
-    const projectName = await _requestProjectName();
-    const projectDescription = await _requestProjectDescription();
+
+    const projectInformation: IProjectInformationDTO = await _request();
+
     try {
         const s = spinner();
         s.start('Running initialization process 🚀');
-        const projectInformation: IProjectInformationDTO = {
-            name: projectName,
-            description: projectDescription,
-            type: projectType
-        };
-        initAndesiteFolderStructure();
-        initFolderStructure(projectInformation.type);
 
+        // Initialize the andesite.yml file
         const andesiteYml = new AndesiteYml();
-        andesiteYml.initializeAndesiteYml(projectType);
+        andesiteYml.initializeAndesiteYml(projectInformation.type);
 
+        // Initialize the folder .andesite
+        initAndesiteFolderStructure();
+        const jest = new Jest();
+        jest.initJestConfig(projectInformation.name);
+        const tsConfigPkg = new TsConfigPkg();
+        tsConfigPkg.update({
+            Config: {
+                BaseSourceDir: 'Source',
+                EntryPoint: 'Source/App.ts',
+                OutputDir: 'Build',
+                PathAlias: '@/'
+            }
+        });
+
+        // Initialize the package.json file, folder structure, tsconfig.json file, eslint file, and entry point
         initPackageJson(projectInformation);
+        initFolderStructure(projectInformation.type);
+        const tsConfigUser = new TsConfigUser();
+        tsConfigUser.init();
         initEslint();
-
-        initJestConfig(projectInformation.name);
-
-        const tsConfig = new TsConfig();
-        tsConfig.initializeTsConfig();
-
         initEntryPoint();
-
         s.stop('Project initialized 😊');
     } catch (error) {
-        _handleError(error);
+        await _handleError(error);
     }
     outroBasedOnTime();
 }
-
-export { initProject };

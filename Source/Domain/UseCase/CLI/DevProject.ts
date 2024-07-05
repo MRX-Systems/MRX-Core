@@ -35,13 +35,23 @@ function reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<st
 /**
  * Start the project in development mode with watch mode
  */
-async function devProject(): Promise<void> {
+export async function devProject(): Promise<void> {
+    const { initAndesiteFolderStructure, Jest, TsConfigPkg } = await import('@/Domain/Service/User/Config/index.js');
+    const { packageJsonUser } = await import('@/Config/PackageJsonUser.js');
+
     try {
         const andesiteYml = new AndesiteYml();
-        const config: IAndesiteConfigDTO = andesiteYml.readConfig();
-        const esbuildUser: EsbuildUser = new EsbuildUser(config);
-
+        const config: IAndesiteConfigDTO = await andesiteYml.readConfig();
+        
+        // Initialize the folder .andesite
+        initAndesiteFolderStructure();
+        const jest = new Jest();
+        jest.initJestConfig(packageJsonUser.name);
+        const tsConfigPkg = new TsConfigPkg();
+        tsConfigPkg.update(config);
+        
         // Build the project first
+        const esbuildUser: EsbuildUser = new EsbuildUser(config);
         await new Promise<void>((resolve) => {
             const child: ChildProcess = esbuildUser.exec();
             child.stderr?.on('data', (data: string | Uint8Array) => {
@@ -72,7 +82,3 @@ async function devProject(): Promise<void> {
         exit(1);
     }
 }
-
-export {
-    devProject
-};

@@ -1,18 +1,19 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import { EnvironnementUser } from '@/Config/index.js';
+import type { EnvironnementUser } from '@/Config/index.js';
 import type { IAndesiteConfigDTO } from '@/DTO/index.js';
-import { execBundleCommand } from '@/Domain/Service/User/Command/index.js';
-import { AndesiteYml } from '@/Domain/Service/User/Config/index.js';
 
 /**
  * Start the project
  */
-function startProject(): void {
+export async function startProject(): Promise<void> {
+    const { AndesiteYml } = await import('@/Domain/Service/User/Config/index.js');
+    const { execBundleCommand } = await import('@/Domain/Service/User/Command/index.js');
+    const { EnvironnementUser } = await import('@/Config/index.js');
     try {
         const andesiteYml = new AndesiteYml();
-        const config: IAndesiteConfigDTO = andesiteYml.readConfig();
+        const config: IAndesiteConfigDTO = await andesiteYml.readConfig();
         const scriptPath: string = `${cwd()}/${config.Config.OutputDir}/app.js`;
         const env: EnvironnementUser = new EnvironnementUser();
         const child: ChildProcess = execBundleCommand(scriptPath, env.env);
@@ -29,7 +30,3 @@ function startProject(): void {
         exit(1);
     }
 }
-
-export {
-    startProject
-};

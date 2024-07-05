@@ -5,5 +5,6 @@ export * from './Eslint.js';
 export * from './FolderStructure.js';
 export * from './Jest.js';
 export * from './PackageJson.js';
-export * from './TsConfig.js';
+export * from './TsConfigPkg.js';
+export * from './TsConfigUser.js';
 

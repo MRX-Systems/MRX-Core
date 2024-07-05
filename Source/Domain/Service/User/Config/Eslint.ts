@@ -14,7 +14,7 @@ import { File } from '@/Common/Util/index.js';
  * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
  * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
-function initEslint(path: string = './'): void {
+export function initEslint(path: string = './'): void {
     const file = new File(`${path}/.eslintrc`);
     if (file.exists())
         throw new AndesiteError({
@@ -22,7 +22,3 @@ function initEslint(path: string = './'): void {
         });
     file.write(JSON.stringify(eslint, null, 2));
 }
-
-export {
-    initEslint
-};

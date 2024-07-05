@@ -1,6 +1,6 @@
 import api from '@/../Templates/PackageJson/api.json' with { type: 'json' };
 import base from '@/../Templates/PackageJson/base.json' with { type: 'json' };
-import sampleScript from '@/../Templates/PackageJson/sample-script.json' with { type: 'json' };
+import script from '@/../Templates/PackageJson/script.json' with { type: 'json' };
 import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
@@ -58,16 +58,11 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
         keywords: [],
         ...base
     };
-    switch (projectInformation.type) {
-    case 'API':
+    if (projectInformation.type === 'API')
         packageJson.dependencies = api.dependencies;
-        return packageJson;
-    case 'Sample Script':
-        packageJson.dependencies = sampleScript.dependencies;
-        return packageJson;
-    default:
-        return packageJson;
-    }
+    else if (projectInformation.type === 'Script')
+        packageJson.dependencies = script.dependencies;
+    return packageJson;
 }
 
 /**
@@ -79,7 +74,7 @@ function _buildPackageJsonObject(projectInformation: Readonly<IProjectInformatio
  * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
  * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
  */
-function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, path: string = './'): void {
+export function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, path: string = './'): void {
     const file = new File(`${path}/package.json`);
     if (file.exists())
         throw new AndesiteError({
@@ -89,6 +84,3 @@ function initPackageJson(projectInformation: Readonly<IProjectInformationDTO>, p
     file.write(JSON.stringify(packageJson, null, 2));
 }
 
-export {
-    initPackageJson
-};
