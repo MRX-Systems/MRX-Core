@@ -29,7 +29,7 @@ interface ITsConfig {
 export class TsConfigPkg extends File {
     /**
      * Initializes a new instance of the TsConfigPkg class.
-     * 
+     *
      * @param path - The path where the file will be created.
      */
     public constructor(path: string = './.andesite/tsconfig.json') {

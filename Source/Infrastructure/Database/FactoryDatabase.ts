@@ -1,5 +1,7 @@
 import type { Knex } from 'knex';
 
+import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
+import { AndesiteError } from '@/Common/Error/index.js';
 import {
     BetterSQLiteCreator,
     MSSQLCreator,
@@ -9,8 +11,6 @@ import {
     type IMSSQLDatabaseOptions,
     type IPostgresDatabaseOptions
 } from '@/Infrastructure/Database/Creator/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
-import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
 
 /**
  * FactoryDatabase class.
@@ -24,7 +24,14 @@ export class FactoryDatabase {
     /**
      * Map of database. Key is the name of the database and value is the ({@link AbstractCreator}) with the database schema types.
      */
-    private readonly _database: Map<string, unknown> = new Map();
+    private readonly _database: Map<string, unknown>;
+
+    /**
+     * Private constructor of the FactoryDatabase class.
+     */
+    private constructor() {
+        this._database = new Map();
+    }
 
     /**
      * Constructor of the FactoryDatabase class.
@@ -65,8 +72,8 @@ export class FactoryDatabase {
         else if (type === 'mssql')
             creator = new MSSQLCreator(options as IMSSQLDatabaseOptions);
         if (creator) {
-            await creator.connection();
             this._database.set(name, creator);
+            await creator.connection();
         }
     }
 
@@ -106,5 +113,12 @@ export class FactoryDatabase {
             });
         const database: AbstractCreator = this._database.get(name) as AbstractCreator;
         return database.database;
+    }
+
+    /**
+     * Get the list of registered databases.
+     */
+    public get registry(): string[] {
+        return Array.from(this._database.keys());
     }
 }

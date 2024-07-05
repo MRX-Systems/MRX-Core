@@ -42,14 +42,14 @@ export async function devProject(): Promise<void> {
     try {
         const andesiteYml = new AndesiteYml();
         const config: IAndesiteConfigDTO = await andesiteYml.readConfig();
-        
+
         // Initialize the folder .andesite
         initAndesiteFolderStructure();
         const jest = new Jest();
         jest.initJestConfig(packageJsonUser.name);
         const tsConfigPkg = new TsConfigPkg();
         tsConfigPkg.update(config);
-        
+
         // Build the project first
         const esbuildUser: EsbuildUser = new EsbuildUser(config);
         await new Promise<void>((resolve) => {

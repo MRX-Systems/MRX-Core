@@ -9,7 +9,7 @@ import { File } from '@/Common/Util/index.js';
 export class TsConfigUser extends File {
     /**
      * Initializes a new instance of the TsConfig class.
-     * 
+     *
      * @param path - The path where the file will be created.
      */
     public constructor(path: string = './tsconfig.json') {

@@ -42,7 +42,7 @@ export interface IMSSQLDatabaseOptions {
     /**
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
-    log: BasaltLogger;
+    log?: BasaltLogger;
     /**
      * Debug mode (active debug + stack trace)
      */

@@ -114,6 +114,6 @@ export class AndesiteYml extends File {
                 detail
             });
         }
-        
+
     }
 }

@@ -1,13 +1,9 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import knex, { type Knex } from 'knex';
 
-import { AndesiteError } from '@/Common/Error/index.js';
 import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
-
-/**
- * Dialect of the database
- */
-export type Dialect = Knex.Config;
+import { AndesiteError } from '@/Common/Error/index.js';
+import type { Dialect } from '../KnexType.js';
 
 /**
  * Abstract class for Database Creator
@@ -32,7 +28,7 @@ export abstract class AbstractCreator {
      */
     protected constructor(options: {
         dialect: Dialect
-        log?: BasaltLogger
+        log: BasaltLogger | undefined
     }) {
         this._dialect = options.dialect;
         this._log = options.log;
@@ -77,7 +73,7 @@ export abstract class AbstractCreator {
                 },
             }
         });
-        if (await this.isConnected())
+        if (!(await this.isConnected()))
             throw new AndesiteError({
                 messageKey: InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED,
             });
