@@ -11,11 +11,7 @@ import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
  *
  * @param path - The parent path of the folder structure. (default: './')
  */
-function initAndesiteFolderStructure(path: string = './'): void {
-    const folder = new Folder({ structure: andesiteFolderStructure, path });
-    folder.build();
+export function initAndesiteFolderStructure(path: string = './'): void {
+    const folder = new Folder(path);
+    folder.build(andesiteFolderStructure);
 }
-
-export {
-    initAndesiteFolderStructure
-};

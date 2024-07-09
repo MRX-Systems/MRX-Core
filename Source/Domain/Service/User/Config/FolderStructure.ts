@@ -1,5 +1,5 @@
 import apiStructure from '@/../Templates/FolderStructure/api.json' with { type: 'json' };
-import sampleScriptStructure from '@/../Templates/FolderStructure/sample-script.json' with { type: 'json' };
+import scriptStructure from '@/../Templates/FolderStructure/sample-script.json' with { type: 'json' };
 import { Folder } from '@/Common/Util/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
@@ -13,22 +13,9 @@ import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
  * @throws ({@link AndesiteError}) - If failed to create folder structure. ({@link CommonErrorKeys.ERROR_CREATE_FOLDER_STRUCTURE})
  * @throws ({@link AndesiteError}) - If failed to access folder. ({@link CommonErrorKeys.ERROR_ACCESS_FOLDER})
  */
-function initFolderStructure(type: string, path: string = './'): void {
-    if (type === 'API') {
-        const apiFolder = new Folder({
-            path,
-            structure: apiStructure
-        });
-        apiFolder.build();
-    } if (type === 'Sample Script') {
-        const sampleScriptFolder = new Folder({
-            path,
-            structure: sampleScriptStructure
-        });
-        sampleScriptFolder.build();
-    }
+export function initFolderStructure(type: string, path: string = './'): void {
+    if (type === 'API')
+        new Folder(path).build(apiStructure);
+    if (type === 'Script')
+        new Folder(path).build(scriptStructure);
 }
-
-export {
-    initFolderStructure
-};

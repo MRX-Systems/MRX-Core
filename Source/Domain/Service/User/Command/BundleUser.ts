@@ -9,7 +9,7 @@ import { cwd } from 'process';
  *
  * @returns The child process. ({@link ChildProcess})
  */
-function execBundleCommand(scriptPath: string, env: Record<string, string>): ChildProcess {
+export function execBundleCommand(scriptPath: string, env: Record<string, string>): ChildProcess {
     const child: ChildProcess = execFile('node', [scriptPath], {
         env: { ...process.env, ...env },
         cwd: cwd(),
@@ -18,7 +18,3 @@ function execBundleCommand(scriptPath: string, env: Record<string, string>): Chi
 
     return child;
 }
-
-export {
-    execBundleCommand
-};

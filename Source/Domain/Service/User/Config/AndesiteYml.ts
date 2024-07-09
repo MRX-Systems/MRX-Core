@@ -1,19 +1,13 @@
-// Import vine from '@vinejs/vine';
-import { parse } from 'yaml';
+import vine, { errors } from '@vinejs/vine';
 
 import apiConfig from '@/../Templates/AndesiteConfigs/api.json' with { type: 'json' };
 import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.json' with { type: 'json' };
 import { AndesiteError } from '@/Common/Error/index.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
-import { stringify } from '@/Common/Util/index.js';
 import { File } from '@/Common/Util/File.js';
+import { stringifyToYml, parseYml } from '@/Common/Util/index.js';
 import type { IAndesiteConfigDTO } from '@/DTO/index.js';
-
-/**
- * Project type (API or Sample Script)
- */
-export type ProjectType = 'API' | 'Sample Script';
 
 /**
  * Andesite Yml class to handle andesite-config.yml file. Extends ({@link File})
@@ -33,40 +27,35 @@ export class AndesiteYml extends File {
      *
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
+     * @throws ({@link AndesiteError}) If the config object is not an object. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
      *
      * @returns ({@link IAndesiteConfigDTO})
      */
-    public readConfig(): IAndesiteConfigDTO {
-        const config: unknown = this._loadEnvAndReplace(parse(this.read()) as Record<string, unknown>);
-        this._checkAndesiteYmlConfig(config);
-        return config as IAndesiteConfigDTO;
+    public async readConfig(): Promise<IAndesiteConfigDTO> {
+        const config: Record<string, unknown> = this._loadEnvAndReplace(parseYml(this.read()) as Record<string, unknown>);
+        await this._validateAndesiteConfig(config);
+        return config as unknown as IAndesiteConfigDTO;
     }
 
     /**
      * Initialize andesite-config.yml file
      *
-     * @param projectType - Project type (API or Sample Script)
+     * @param projectType - Project type (API or Script)
      *
      * @throws ({@link AndesiteError}) If the file already exists. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_EXISTS})
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
      */
-    public initializeAndesiteYml(projectType: ProjectType): void {
+    public initializeAndesiteYml(projectType: string): void {
         if (this.exists())
             throw new AndesiteError({
                 messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_EXISTS,
                 detail: this._path
             });
-        switch (projectType) {
-        case 'API':
-            this.write(stringify(apiConfig));
-            break;
-        case 'Sample Script':
-            this.write(stringify(sampleScriptConfig));
-            break;
-        default:
-            this.write('');
-        }
+        if (projectType === 'API')
+            this.write(stringifyToYml(apiConfig) as string);
+        else if (projectType === 'Script')
+            this.write(stringifyToYml(sampleScriptConfig) as string);
     }
 
     /**
@@ -74,9 +63,16 @@ export class AndesiteYml extends File {
      *
      * @param config - It's a config object got from andesite-config.yml
      *
+     * @throws ({@link AndesiteError}) If the config object is not an object. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
+     *
      * @returns config object with replaced environment variables
      */
-    private _loadEnvAndReplace(config: Record<string, unknown>): unknown {
+    private _loadEnvAndReplace(config: Record<string, unknown>): Record<string, unknown> {
+        if (!config || typeof config !== 'object')
+            throw new AndesiteError({
+                messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG,
+                detail: this._path
+            });
         if (config && typeof config === 'object')
             for (const key in config)
                 if (typeof config[key] === 'string' && /^\${.*}$/.test(config[key] as string)) {
@@ -91,93 +87,32 @@ export class AndesiteYml extends File {
         return config;
     }
 
-    /*
-     * Private async _checkAndesiteApiConfig(config: IAndesiteApiConfigDTO): Promise<void> {
-     *     const schema = vine.object({
-     *         ProjectType: vine.enum(['API', 'Sample Script']),
-     *         Config: vine.object({
-     */
-
-    /*
-     *         }),
-     *         Server: vine.object({
-     *             Host: vine
-     *                 .string()
-     *                 .optional()
-     *                 .requiredWhen('ProjectType', '=', 'API'),
-     *             Port: vine.unionOfTypes([
-     *                 vine
-     *                     .number()
-     *                     .positive()
-     *                     .min(1024)
-     *                     .withoutDecimals()
-     *                     .optional()
-     *                     .requiredWhen('ProjectType', '=', 'API'),
-     *                 vine
-     *                     .string()
-     *                     .optional()
-     *                     .requiredWhen('ProjectType', '=', 'API')
-     *             ]),
-     *             BaseUrl: vine
-     *                 .string()
-     *                 .optional()
-     *                 .requiredWhen('ProjectType', '=', 'API'),
-     *             Logger: vine
-     *                 .boolean()
-     *                 .optional()
-     *                 .requiredWhen('ProjectType', '=', 'API'),
-     *         }).optional(),
-     *     });
-     *     await vine.validate({
-     *         schema,
-     *         data: config,
-     *     });
-     * }
-     */
-
     /**
-     * Detect project type from andesite-config.yml (API or Sample Script)
+     * Validate andesite-config.yml file
      *
-     * @param config - config object got from andesite-config.yml
+     * @param config - It's a config object got from andesite-config.yml
      *
-     * @throws ({@link AndesiteError}) If the project type is invalid. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_PROJECT_TYPE})
-     *
-     * @returns ({@link ProjectType}) or void
+     * @throws ({@link AndesiteError}) If the config object is not valid. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
      */
-    private _detectProjectType(config: unknown): ProjectType | void {
-        if (config && typeof config === 'object' && 'ProjectType' in config)
-            switch ((config as Record<string, unknown>).ProjectType) {
-            case 'API':
-                return 'API';
-            case 'Sample Script':
-                return 'Sample Script';
-            default:
-                throw new AndesiteError({
-                    messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_PROJECT_TYPE,
-                    detail: (config as Record<string, unknown>).ProjectType
-                });
-            }
-        throw new AndesiteError({
-            messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_PROJECT_TYPE
+    private async _validateAndesiteConfig(config: Record<string, unknown>): Promise<void> {
+        const schema = vine.object({
+            ProjectType: vine.enum(['API', 'Script']),
+            Config: vine.object({
+                BaseSourceDir: vine.string(),
+                EntryPoint: vine.string(),
+                OutputDir: vine.string(),
+                PathAlias: vine.string(),
+            }),
         });
-    }
-
-    /**
-     * Check andesite-config.yml config
-     *
-     * @param config - config object got from andesite-config.yml
-     */
-    private _checkAndesiteYmlConfig(config: unknown): void {
-        const projectType: ProjectType = this._detectProjectType(config) as ProjectType;
-
-        switch (projectType) {
-        case 'API':
-            // Await this._checkAndesiteApiConfig(config as IAndesiteApiConfigDTO);
-            break;
-        case 'Sample Script':
-            break;
-        default:
-            break;
+        try {
+            await vine.validate({ schema, data: config });
+        } catch (error) {
+            const isValidationError = error instanceof errors.E_VALIDATION_ERROR;
+            const detail = isValidationError ? error.messages : [''];
+            throw new AndesiteError({
+                messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG,
+                detail
+            });
         }
     }
 }
