@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/Andesite-Lab/Core/compare/v1.12.0...v1.12.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* correction build ([7dc29cf](https://github.com/Andesite-Lab/Core/commit/7dc29cf290d4c306e095855477b17b952aed0c72))
+
 ## [1.12.0](https://github.com/Andesite-Lab/Core/compare/v1.11.0...v1.12.0) (2024-07-09)
 
 
