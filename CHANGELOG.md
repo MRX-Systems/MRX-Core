@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.12.0](https://github.com/Andesite-Lab/Core/compare/v1.11.0...v1.12.0) (2024-07-09)
+
+
+### Features
+
+* add Model class ([0fcccb7](https://github.com/Andesite-Lab/Core/commit/0fcccb79b9416c6e67b2bb40ab05a3a5de2354ab))
+* improve build system + rebuild .andesite folder ([cd8add8](https://github.com/Andesite-Lab/Core/commit/cd8add8f715732cb40ceff5680da2bab66c0a6cb))
+
+
+### Code Refactoring
+
+* improvement of code ([298565e](https://github.com/Andesite-Lab/Core/commit/298565e94f49417357308f2b761ca7562ce7efb2))
+* imrpovement of factory ([6524809](https://github.com/Andesite-Lab/Core/commit/652480994e4379bbff02897871e2d22769a7ce3b))
+
 ## [1.11.0](https://github.com/Andesite-Lab/Core/compare/v1.10.0...v1.11.0) (2024-07-02)
 
 
