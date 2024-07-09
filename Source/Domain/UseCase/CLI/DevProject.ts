@@ -18,7 +18,7 @@ import { AndesiteYml } from '@/Domain/Service/User/Config/index.js';
  *
  * @returns The child process of the bundle command. ({@link ChildProcess})
  */
-function reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<string, string>): ChildProcess {
+function _reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<string, string>): ChildProcess {
     let child = bundleChild;
     child.kill();
     console.clear();
@@ -75,8 +75,8 @@ export async function devProject(): Promise<void> {
         let bundleChild = execBundleCommand(scriptFile.path, env.env);
 
         // Start the watch start process when scriptFile and env changes
-        scriptFile.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.env); });
-        env.watch(10, () => { bundleChild = reloadWatch(bundleChild, scriptFile, env.env); });
+        scriptFile.watch(10, () => { bundleChild = _reloadWatch(bundleChild, scriptFile, env.env); });
+        env.watch(10, () => { bundleChild = _reloadWatch(bundleChild, scriptFile, env.env); });
     } catch (error) {
         console.error(error);
         exit(1);

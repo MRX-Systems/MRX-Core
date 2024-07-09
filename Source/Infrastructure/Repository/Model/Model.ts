@@ -113,7 +113,9 @@ export interface IWhereClause {
     $gte: string | number;
 }
 
-
+/**
+ * Model class, allow to have CRUD operations on a table when extending this class.
+ */
 export class Model<T> {
     /**
      * Table name in database
