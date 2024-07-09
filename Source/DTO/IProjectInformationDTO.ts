@@ -11,7 +11,7 @@ export interface IProjectInformationDTO {
      */
     description: string;
     /**
-     * The type of the project. (ex: 'API', 'SampleScript')
+     * The type of the project. (ex: 'API', 'Script')
      */
     type: string;
 }

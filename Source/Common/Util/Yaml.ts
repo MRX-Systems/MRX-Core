@@ -1,5 +1,5 @@
 import { env } from 'process';
-import { parse as parseYml, stringify as stringifyYml } from 'yaml';
+import { parse, stringify } from 'yaml';
 
 /**
  * Replace the environment variables in the object.
@@ -8,16 +8,15 @@ import { parse as parseYml, stringify as stringifyYml } from 'yaml';
  *
  * @returns The object with the environment variables replaced.
  */
-function replaceEnvVars(obj: Record<string, unknown>): Record<string, unknown> {
+function _replaceEnvVars(obj: Record<string, unknown>): Record<string, unknown> {
     for (const key in obj)
         if (typeof obj[key] === 'string')
-            obj[key] = (obj[key] as string)
-                .replace(/\$\{(?:.+?)\}/g, (match: string) => {
-                    const envVar = match.substring(2, match.length - 1);
-                    return env[envVar] ?? '';
-                });
+            obj[key] = (obj[key] as string).replace(/\$\{(?:.+?)\}/g, (match: string) => {
+                const envVar = match.substring(2, match.length - 1);
+                return env[envVar] ?? '';
+            });
         else if (typeof obj[key] === 'object')
-            obj[key] = replaceEnvVars(obj[key] as Record<string, unknown>);
+            obj[key] = _replaceEnvVars(obj[key] as Record<string, unknown>);
     return obj;
 }
 
@@ -28,9 +27,9 @@ function replaceEnvVars(obj: Record<string, unknown>): Record<string, unknown> {
  *
  * @returns The parsed object.
  */
-function parse(yml: string): Record<string, unknown> {
-    const obj: Record<string, unknown> = parseYml(yml);
-    return replaceEnvVars(obj);
+export function parseYml(yml: string): unknown {
+    const obj: Record<string, unknown> = parse(yml);
+    return _replaceEnvVars(obj);
 }
 
 /**
@@ -40,11 +39,6 @@ function parse(yml: string): Record<string, unknown> {
  *
  * @returns The stringified object.
  */
-function stringify(obj: Record<string, unknown>): string {
-    return stringifyYml(obj);
+export function stringifyToYml(obj: Record<string, unknown>): string {
+    return stringify(obj);
 }
-
-export {
-    parse,
-    stringify
-};

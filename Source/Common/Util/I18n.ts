@@ -21,7 +21,7 @@ let _i18n: i18n | undefined = undefined;
  *
  * @throws ({@link AndesiteError}) - If i18n is already initialized. ({@link CommonErrorKeys.I18N_IS_ALREADY_INITIALIZED})
  */
-async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en'): Promise<void> {
+export async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en'): Promise<void> {
     if (_i18n && _i18n.isInitialized)
         throw new AndesiteError({
             messageKey: CommonErrorKeys.I18N_IS_ALREADY_INITIALIZED
@@ -44,7 +44,7 @@ async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en
  *
  * @returns Whether i18n is initialized.
  */
-function isI18nInitialized(): boolean {
+export function isI18nInitialized(): boolean {
     return _i18n !== undefined && _i18n.isInitialized;
 }
 
@@ -53,7 +53,7 @@ function isI18nInitialized(): boolean {
  *
  * @throws ({@link AndesiteError}) - If i18n is not initialized. ({@link CommonErrorKeys.I18N_NOT_INITIALIZED})
  */
-function resetI18n(): void {
+export function resetI18n(): void {
     if (!(_i18n && _i18n.isInitialized))
         throw new AndesiteError({
             messageKey: CommonErrorKeys.I18N_NOT_INITIALIZED
@@ -72,7 +72,7 @@ function resetI18n(): void {
  *
  * @returns The translated string.
  */
-function translate(key: string, language: string = 'en', interpolation: Interpolation = {}): string {
+export function translate(key: string, language: string = 'en', interpolation: Interpolation = {}): string {
     if (!(_i18n && _i18n.isInitialized))
         throw new AndesiteError({
             messageKey: CommonErrorKeys.I18N_NOT_INITIALIZED
@@ -83,10 +83,3 @@ function translate(key: string, language: string = 'en', interpolation: Interpol
         ...interpolation
     });
 }
-
-export const I18n = {
-    isI18nInitialized,
-    initI18n,
-    resetI18n,
-    translate,
-};

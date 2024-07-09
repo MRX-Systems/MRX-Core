@@ -22,4 +22,4 @@ export class LanguageHook implements IHook {
             done();
         });
     }
-}    
+}

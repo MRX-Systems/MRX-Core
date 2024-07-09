@@ -1,5 +1,5 @@
 {
-  "ProjectType": "SampleScript",
+  "ProjectType": "Script",
   "Config": {
     "BaseSourceDir": "Source",
     "EntryPoint": "Source/App.ts",

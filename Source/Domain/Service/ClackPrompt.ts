@@ -108,7 +108,7 @@ interface ISpinnerOptions {
  *
  * @param message - The message to display in the intro.
  */
-function intro(message: string): void {
+export function intro(message: string): void {
     _intro(message);
 }
 
@@ -117,7 +117,7 @@ function intro(message: string): void {
  *
  * @param message - The message to display in the outro.
  */
-function outro(message: string): void {
+export function outro(message: string): void {
     _outro(message);
 }
 
@@ -138,7 +138,7 @@ function _throwWhenCancel(): void {
  * @param dayMessage - The message to display if it is day time. (Default: 'Have a great day! 🌞')
  * @param nightMessage - The message to display if it is night time. (Default: 'Have a great night! 🌚')
  */
-function outroBasedOnTime(
+export function outroBasedOnTime(
     dayMessage: string = 'Have a great day! 🌞',
     nightMessage: string = 'Have a great night! 🌚'
 ): void {
@@ -154,7 +154,7 @@ function outroBasedOnTime(
  *
  * @param message - The message to display when the prompt is canceled.
  */
-function cancel(message: string = 'Canceled'): void {
+export function cancel(message: string = 'Canceled'): void {
     _cancel(message);
 }
 
@@ -167,7 +167,7 @@ function cancel(message: string = 'Canceled'): void {
  *
  * @returns The value selected by the user.
  */
-async function select(opt: ISelectOptions): Promise<string | number | boolean | symbol>  {
+export async function select(opt: ISelectOptions): Promise<string | number | boolean | symbol>  {
     const result = await _select({
         message: opt.message,
         initialValue: opt.initialValue ?? '',
@@ -191,7 +191,7 @@ async function select(opt: ISelectOptions): Promise<string | number | boolean | 
  *
  * @returns The value entered by the user.
  */
-function text(opt: ITextOptions): Promise<string | symbol> {
+export function text(opt: ITextOptions): Promise<string | symbol> {
     const result = _text({
         message: opt.message,
         placeholder: opt.placeholder ?? '',
@@ -209,13 +209,6 @@ function text(opt: ITextOptions): Promise<string | symbol> {
  *
  * @returns The spinner options. ({@link ISpinnerOptions})
  */
-function spinner(): ISpinnerOptions {
+export function spinner(): ISpinnerOptions {
     return _spinner();
 }
-
-export {
-    cancel, intro,
-    outro,
-    outroBasedOnTime, select, spinner, text
-};
-
