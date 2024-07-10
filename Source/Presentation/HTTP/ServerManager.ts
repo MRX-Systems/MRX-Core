@@ -3,19 +3,21 @@ import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
 import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { AndesiteError } from '@/Common/Error/index.js';
 import { PresentationHttpServerErrorKeys } from '@/Common/Error/Enum/index.js';
+import { AndesiteError } from '@/Common/Error/index.js';
 import { I18n } from '@/Common/Util/index.js';
-import { LoggerHook, LanguageHook } from '@/Presentation/HTTP/Hook/index.js';
+import { LanguageHook, LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
 import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface/index.js';
-import { FormBodyPlugin, HelmetPlugin } from '@/Presentation/HTTP/Plugin/index.js';
 import type { AbstractRouter } from '@/Presentation/HTTP/Router/index.js';
 
+/**
+ * Fastify type.
+ */
 export type {
+    FastifyError,
     FastifyInstance,
     FastifyReply,
-    FastifyRequest,
-    FastifyError
+    FastifyRequest
 };
 
 /**
@@ -65,7 +67,7 @@ export class ServerManager {
                     $data: true,
                     removeAdditional: true,
                     allowUnionTypes: true,
-                    coerceTypes: true,
+                    coerceTypes: false,
                     allErrors: true,
                     parseDate: true,
                     allowDate: true,
@@ -81,9 +83,9 @@ export class ServerManager {
                     ajvFormats.default
                 ],
             },
-
         });
         this._app.setErrorHandler(this._setErrorHandler.bind(this));
+        this._addDefaultHooks();
     }
 
     /**
@@ -184,13 +186,13 @@ export class ServerManager {
             ...this._startOptions,
             ...startOptions
         };
-        this._addDefaultHooks();
-        await this._addDefaultPlugins();
         await this._app.ready();
         await this._app.listen({
             port: this._startOptions.port,
             host: this._startOptions.host
         });
+        if (this._options.logger)
+            this._options.logger.info(`Server listening on ${this._startOptions.host}:${this._startOptions.port}`);
     }
 
     /**
@@ -202,19 +204,24 @@ export class ServerManager {
      */
     private async _handleValidationErrors(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         const rawAjvError = error.validation;
-        if (!rawAjvError) return;
-        const sanitezedAjvError = rawAjvError.map(e => {
-            e.message = `error.presentation.schema.${e.message}`;
-            if (e.instancePath === '') {
-                const [param] = e.params?.errors as Array<{ params: { missingProperty: string } }>;
-                return {
-                    property: param?.params.missingProperty,
-                    constraints: I18n.isI18nInitialized() ? I18n.translate(e.message, request.headers['accept-language']) : e.message
+        const sanitezedAjvError = rawAjvError?.map(e => {
+            const keyword = `error.presentation.schema.${e.keyword}`;
+            const { instancePath, params } = e;
+            const { missingProperty } = params;
+            if (instancePath === '' && params && missingProperty) 
+                return {        
+                    property: missingProperty,
+                    message: I18n.isI18nInitialized() ? I18n.translate(keyword  , request.headers['accept-language'], {
+                        property: missingProperty
+                    }) : keyword,
+                    contraints: params
                 };
-            }
             return {
                 property: e.instancePath.slice(1),
-                constraints: I18n.isI18nInitialized() ? I18n.translate(e.message, request.headers['accept-language']) : e.message
+                message: I18n.isI18nInitialized() ? I18n.translate(keyword  , request.headers['accept-language'], {
+                    property: e.instancePath.slice(1),
+                }) : keyword,
+                contraints: params
             };
         });
         await reply.status(400).send({
@@ -233,7 +240,7 @@ export class ServerManager {
     private async _setErrorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         if (this._options.logger)
             this._options.logger.error(error);
-        if (error.validation)
+        if ('validation' in error)
             await this._handleValidationErrors(error, request, reply);
         else if (error instanceof AndesiteError)
             await reply.status(400).send({
@@ -251,6 +258,7 @@ export class ServerManager {
                     PresentationHttpServerErrorKeys.INTERNAL_SERVER_ERROR,
                     request.headers['accept-language']
                 ) : PresentationHttpServerErrorKeys.INTERNAL_SERVER_ERROR,
+                detail: error
             });
     }
 
@@ -261,16 +269,5 @@ export class ServerManager {
         if (this._options.logger)
             (new LoggerHook(this._options.logger)).configure(this._app);
         (new LanguageHook()).configure(this._app);
-    }
-
-    /**
-     * Add default plugins to the Fastify instance.
-     * (Helmet, FormBody)
-     */
-    private async _addDefaultPlugins(): Promise<void> {
-        await Promise.all([
-            (new FormBodyPlugin()).configure(this._app),
-            (new HelmetPlugin()).configure(this._app)
-        ]);
     }
 }
