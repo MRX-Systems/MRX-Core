@@ -75,6 +75,9 @@ export class FactoryDatabase {
             this._database.set(name, creator);
             await creator.connection();
         }
+        const { log } = options;
+        if (log)
+            log.info(`Database ${name} initialized`);
     }
 
     /**

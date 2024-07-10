@@ -38,10 +38,6 @@ export interface IPostgresDatabaseOptions {
      * Instance of BasaltLogger  allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
     log?: BasaltLogger;
-    /**
-     * Debug mode (active debug + stack trace)
-     */
-    debug?: boolean;
 }
 
 /**
@@ -57,7 +53,7 @@ export class PostgresCreator extends AbstractCreator {
         super({
             dialect: {
                 client: 'pg',
-                debug: options.debug ?? false,
+                debug: Boolean(options.log),
                 acquireConnectionTimeout: 15000,
                 connection: {
                     host: options.host,

@@ -15,10 +15,6 @@ export interface IBetterSQLiteDatabaseOptions {
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
     log?: BasaltLogger;
-    /**
-     * Debug mode (active debug + stack trace)
-     */
-    debug?: boolean;
 }
 
 /**
@@ -34,7 +30,7 @@ export class BetterSQLiteCreator extends AbstractCreator {
         super({
             dialect: {
                 client: 'better-sqlite3',
-                debug: options.debug ?? false,
+                debug: Boolean(options.log),
                 connection: {
                     filename: options.filename,
                 },

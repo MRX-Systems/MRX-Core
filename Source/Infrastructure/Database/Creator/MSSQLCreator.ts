@@ -43,10 +43,6 @@ export interface IMSSQLDatabaseOptions {
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
     log?: BasaltLogger;
-    /**
-     * Debug mode (active debug + stack trace)
-     */
-    debug?: boolean;
 }
 /**
  * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern) extending ({@link AbstractCreator})
@@ -62,7 +58,7 @@ export class MSSQLCreator extends AbstractCreator {
         super({
             dialect: {
                 client: 'mssql',
-                debug: options.debug ?? false,
+                debug: Boolean(options.log),
                 connection: {
                     database: options.databaseName,
                     server: options.host,

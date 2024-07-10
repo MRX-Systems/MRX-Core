@@ -116,7 +116,7 @@ export interface IWhereClause {
 /**
  * Model class, allow to have CRUD operations on a table when extending this class.
  */
-export class Model<T> {
+export abstract class AbstractModel<T> {
     /**
      * Table name in database
      */
@@ -183,7 +183,7 @@ export class Model<T> {
      * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link InfrastructureDatabaseKeys.DATABASE_NOT_REGISTERED})
      * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
      */
-    public constructor(
+    protected constructor(
         table: string,
         databaseName: string,
         primaryKey?: [keyof T, 'NUMBER' | 'STRING']
