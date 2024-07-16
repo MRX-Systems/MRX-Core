@@ -208,8 +208,8 @@ export class ServerManager {
             const keyword = `error.presentation.schema.${e.keyword}`;
             const { instancePath, params } = e;
             const { missingProperty } = params;
-            if (instancePath === '' && params && missingProperty) 
-                return {        
+            if (instancePath === '' && params && missingProperty)
+                return {
                     property: missingProperty,
                     message: I18n.isI18nInitialized() ? I18n.translate(keyword  , request.headers['accept-language'], {
                         property: missingProperty
