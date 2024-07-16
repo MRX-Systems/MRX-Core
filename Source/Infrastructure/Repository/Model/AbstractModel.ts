@@ -11,9 +11,13 @@ import type { Transaction } from '@/Infrastructure/Database/index.js';
  */
 export interface IOptionQuery {
     /**
+     * If the query does not return any result, throw an error
+     */
+    throwIfNoResult?: boolean;
+    /**
      * If the query can throw an error
      */
-    canThrow?: boolean;
+    throwIfQueryError?: boolean;
     /**
      * If the query is a transaction
      */
@@ -129,8 +133,8 @@ export abstract class AbstractModel<T> {
             query = query.transacting(options.transaction);
 
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_CREATED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_CREATED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -163,8 +167,8 @@ export abstract class AbstractModel<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow) === undefined ? [] : []);
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? [] : []);
     }
 
     /**
@@ -191,8 +195,8 @@ export abstract class AbstractModel<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleResult(result as Partial<T>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleResult(result as Partial<T>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -222,8 +226,8 @@ export abstract class AbstractModel<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow) === undefined ? [] : []);
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? [] : []);
     }
 
     /**
@@ -254,8 +258,8 @@ export abstract class AbstractModel<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -279,12 +283,11 @@ export abstract class AbstractModel<T> {
             .update(data)
             .from(this._table)
             .returning(this._transformColumnObjectToArray(columns ?? {}));
-
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -313,8 +316,8 @@ export abstract class AbstractModel<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -340,8 +343,8 @@ export abstract class AbstractModel<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -366,7 +369,7 @@ export abstract class AbstractModel<T> {
             query = query.transacting(options.transaction);
         return query
             .then((result) => parseInt(result[0]?.count?.toString() ?? '0', 10))
-            .catch((error) => this._handleError(error, options?.canThrow) === undefined ? 0 : 0);
+            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? 0 : 0);
     }
 
     /**
