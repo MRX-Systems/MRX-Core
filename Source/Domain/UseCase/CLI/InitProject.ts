@@ -98,7 +98,6 @@ async function _request(): Promise<IProjectInformationDTO>{
 /**
  * Initialize a new project by asking the user several questions.
  */
-// eslint-disable-next-line max-lines-per-function
 export async function initProject(): Promise<void> {
     const { intro, spinner, outroBasedOnTime } = await import('@/Domain/Service/index.js');
     const {
@@ -113,9 +112,7 @@ export async function initProject(): Promise<void> {
         initPackageJson,
     } = await import('@/Domain/Service/User/Config/index.js');
     intro('Hey there! 👋');
-
     const projectInformation: IProjectInformationDTO = await _request();
-
     try {
         const s = spinner();
         s.start('Running initialization process 🚀');

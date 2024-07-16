@@ -1,8 +1,6 @@
 import apiStructure from '@/../Templates/FolderStructure/api.json' with { type: 'json' };
 import scriptStructure from '@/../Templates/FolderStructure/sample-script.json' with { type: 'json' };
 import { Folder } from '@/Common/Util/index.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
 
 /**
  * Creates the folder structure based on the project information.
