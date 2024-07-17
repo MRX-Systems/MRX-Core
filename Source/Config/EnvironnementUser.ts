@@ -1,15 +1,17 @@
 import { cwd, env } from 'process';
 
 import { File } from '@/Common/Util/index.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { AndesiteError } from '@/Common/Error/index.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { CommonErrorKeys } from '@/Common/Error/Enum/index.js';
 
 /**
- * EnvironnementUser class is responsible for managing the environment variables.
+ * EnvironnementUser class is responsible for managing the environment variables. (Singleton)
+ * Inherit from the File class ({@link File})
  */
-export class EnvironnementUser extends File {
+class EnvironmentUserSingleton extends File {
+    /**
+     * The instance of the EnvironnementUser class. ({@link EnvironmentUserSingleton})
+     */
+    private static _instance: EnvironmentUserSingleton | undefined;
+
     /**
      * The environment variables.
      */
@@ -26,8 +28,19 @@ export class EnvironnementUser extends File {
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
      */
-    public constructor() {
+    private constructor() {
         super(`${cwd()}/.env`);
+    }
+
+    /**
+     * Gets the instance of the EnvironnementUser class.
+     *
+     * @returns Instance of EnvironnementUser. ({@link EnvironmentUserSingleton})
+     */
+    public static get instance(): EnvironmentUserSingleton {
+        if (!this._instance)
+            this._instance = new EnvironmentUserSingleton();
+        return this._instance;
     }
 
     /**
@@ -35,7 +48,7 @@ export class EnvironnementUser extends File {
      *
      * @returns The user environment variables with the system environment variables.
      */
-    public get env(): Record<string, string> {
+    public get content(): Record<string, string> {
         try {
             if (this._hashFile !== this.calculateHashMD5() || !this._hashFile) {
                 this._env = this._readEnv();
@@ -69,3 +82,8 @@ export class EnvironnementUser extends File {
         return env;
     }
 }
+
+/**
+ * The instance of the EnvironnementUser class. ({@link EnvironmentUserSingleton})
+ */
+export const EnvironmentUser = EnvironmentUserSingleton.instance;

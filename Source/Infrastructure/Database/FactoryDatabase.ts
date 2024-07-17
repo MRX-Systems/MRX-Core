@@ -13,13 +13,13 @@ import {
 } from '@/Infrastructure/Database/Creator/index.js';
 
 /**
- * FactoryDatabase class.
+ * FactoryDatabase class. (Singleton)
  */
-export class FactoryDatabase {
+class FactoryDatabaseSingleton {
     /**
-     * Singleton instance of the FactoryDatabase class. ({@link FactoryDatabase})
+     * Singleton instance of the FactoryDatabase class. ({@link FactoryDatabaseSingleton})
      */
-    private static _instance: FactoryDatabase;
+    private static _instance: FactoryDatabaseSingleton;
 
     /**
      * Map of database. Key is the name of the database and value is the ({@link AbstractCreator}) with the database schema types.
@@ -36,11 +36,11 @@ export class FactoryDatabase {
     /**
      * Constructor of the FactoryDatabase class.
      *
-     * @returns A new instance of the FactoryDatabase class. ({@link FactoryDatabase})
+     * @returns A new instance of the FactoryDatabase class. ({@link FactoryDatabaseSingleton})
      */
-    public static get instance(): FactoryDatabase {
+    public static get instance(): FactoryDatabaseSingleton {
         if (!this._instance)
-            this._instance = new FactoryDatabase();
+            this._instance = new FactoryDatabaseSingleton();
         return this._instance;
     }
 
@@ -125,3 +125,8 @@ export class FactoryDatabase {
         return Array.from(this._database.keys());
     }
 }
+
+/**
+ * The singleton instance of the FactoryDatabase class. ({@link FactoryDatabaseSingleton})
+ */
+export const FactoryDatabase = FactoryDatabaseSingleton.instance;

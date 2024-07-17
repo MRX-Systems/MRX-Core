@@ -3,12 +3,13 @@ import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
 import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { PresentationHttpServerErrorKeys } from '@/Common/Error/Enum/index.js';
+import { PresentationHttpErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
 import { I18n } from '@/Common/Util/index.js';
 import { LanguageHook, LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
 import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface/index.js';
 import type { AbstractRouter } from '@/Presentation/HTTP/Router/index.js';
+import { EnvironmentUser } from '@/lib.js';
 
 /**
  * Fastify type.
@@ -249,15 +250,15 @@ export class ServerManager {
                     error.message,
                     request.headers['accept-language']
                 ) : error.message,
-                ...error.code < 500 ? { detail: error.detail } : {}
+                ...error.code < 500 || EnvironmentUser.content.NODE_ENV === 'development' ? { detail: error.detail } : {}
             });
         else
             await reply.status(500).send({
                 code: 500,
                 message: I18n.isI18nInitialized() ? I18n.translate(
-                    PresentationHttpServerErrorKeys.INTERNAL_SERVER_ERROR,
+                    PresentationHttpErrorKeys.INTERNAL_SERVER_ERROR,
                     request.headers['accept-language']
-                ) : PresentationHttpServerErrorKeys.INTERNAL_SERVER_ERROR,
+                ) : PresentationHttpErrorKeys.INTERNAL_SERVER_ERROR,
                 detail: error
             });
     }

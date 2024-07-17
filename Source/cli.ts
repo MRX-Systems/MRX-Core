@@ -9,7 +9,7 @@ import { buildProject, devProject, initProject, startProject } from '@/Domain/Us
 
 const commander = new Command();
 
-commander.version(PackageJsonCore.version, '-v, --version', 'output the current version');
+commander.version(PackageJsonCore.content.version ?? '1.0.0', '-v, --version', 'output the current version');
 
 commander
     .command('init')

@@ -1,35 +1,28 @@
 import tsConfig from '@/../Templates/tsconfig.json' with { type: 'json' };
-import { File } from '@/Common/Util/index.js';
+import { type ITsConfig, TsConfig } from '@/Config/index.js';
 import type {
     IAndesiteConfigDTO
 } from '@/DTO/index.js';
 
 /**
- * Interface for the tsconfig.json file.
+ * The TsConfigPkgSingleton class has the responsibility to manage the tsconfig.json file for the package.
+ * Inherit from the File class ({@link TsConfig})
  */
-interface ITsConfig {
-    compilerOptions: {
-        [key: string]: unknown;
-        rootDir?: string;
-        baseUrl?: string;
-        paths?: Record<string, string[]>;
-      };
-      include?: string[];
-      exclude?: string[];
-      [key: string]: unknown;
-}
-
-/**
- * The TsConfigPkg class has the responsibility to manage the tsconfig.json file for the package. Inherits from ({@link File}).
- */
-export class TsConfigPkg extends File {
+export class TsConfigPkgSingleton extends TsConfig {
     /**
-     * Initializes a new instance of the TsConfigPkg class.
-     *
-     * @param path - The path where the file will be created.
+     * The instance of the TsConfigPkgSingleton class. ({@link TsConfigPkgSingleton})
      */
-    public constructor(path: string = './.andesite/tsconfig.json') {
-        super(path);
+    private static _instance: TsConfigPkgSingleton | undefined;
+
+    /**
+     * Gets the instance of the TsConfigPkgSingleton class.
+     *
+     * @returns Instance of TsConfigPkgSingleton. ({@link TsConfigPkgSingleton})
+     */
+    public static getInstance(path: string): TsConfigPkgSingleton {
+        if (!this._instance)
+            this._instance = new TsConfigPkgSingleton(path);
+        return this._instance;
     }
 
     /**
@@ -56,3 +49,5 @@ export class TsConfigPkg extends File {
         this.write(JSON.stringify(conf, null, 2));
     }
 }
+
+export const TsConfigPkg = TsConfigPkgSingleton.getInstance('./.andesite/tsconfig.json');

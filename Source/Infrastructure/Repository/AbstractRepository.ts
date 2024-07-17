@@ -25,11 +25,14 @@ export interface IOptionQuery {
 }
 
 /**
- * Model class, allow to have CRUD operations on a table when extending this class.
+ * Abstract Repository class, it's a repository for CRUD operations. It's an abstract class.
+ * It's used to have CRUD operations on a table when extending this class.
+ *
+ * You need to extend this class to use it?
  *
  * @typeparam T - The type of the data.
  */
-export abstract class AbstractModel<T> {
+export abstract class AbstractRepository<T> {
     /**
      * Table name in database
      */
@@ -87,7 +90,7 @@ export abstract class AbstractModel<T> {
     }
 
     /**
-     * Constructor of the AbstractModel class, allow to have CRUD operations on a table when extending this class.
+     * Constructor of the AbstractRepository class to create an instance of the class with the table name, database name, and primary key.
      *
      * @param table - Table name in database
      * @param databaseName - Database name to get in factory
@@ -103,7 +106,7 @@ export abstract class AbstractModel<T> {
     ) {
         this._table = table;
         this._databaseName = databaseName;
-        this._database = FactoryDatabase.instance.get(databaseName);
+        this._database = FactoryDatabase.get(databaseName);
         this._primaryKey = primaryKey ?? ['id', 'NUMBER'] as [keyof T, 'NUMBER'];
     }
 
@@ -497,7 +500,7 @@ export abstract class AbstractModel<T> {
     protected _handleArrayResult(
         result: Array<Partial<T>>,
         noResultKey: string,
-        canThrow: boolean = true
+        canThrow: boolean = false
     ): Array<Partial<T>> | void {
         if (result.length === 0 && canThrow)
             throw new AndesiteError({
@@ -521,7 +524,7 @@ export abstract class AbstractModel<T> {
     protected _handleResult(
         result: Partial<T>,
         noResultKey: string,
-        canThrow: boolean = true
+        canThrow: boolean = false
     ): Partial<T> | void {
         if (!result && canThrow)
             throw new AndesiteError({

@@ -1,20 +1,27 @@
 import { AndesiteError } from '@/Common/Error/index.js';
 import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
-import { File } from '@/Common/Util/index.js';
+import { TsConfig } from '@/Config/index.js';
 
 /**
- * The TsConfigPkg class has the responsibility to manage the tsconfig.json file for the user. Inherits from ({@link File}).
+ * The TsConfigUserSingleton class has the responsibility to manage the tsconfig.json file for the user.
+ * Inherit from the File class ({@link TsConfig})
  */
-export class TsConfigUser extends File {
+export class TsConfigUserSingleton extends TsConfig {
     /**
-     * Initializes a new instance of the TsConfig class.
-     *
-     * @param path - The path where the file will be created.
+     * The instance of the TsConfigUserSingleton class. ({@link TsConfigUserSingleton})
      */
-    public constructor(path: string = './tsconfig.json') {
-        super(path);
-    }
+    private static _instance: TsConfigUserSingleton | undefined;
 
+    /**
+     * Gets the instance of the TsConfigUserSingleton class.
+     *
+     * @returns Instance of TsConfigUserSingleton. ({@link TsConfigUserSingleton})
+     */
+    public static getInstance(path: string): TsConfigUserSingleton {
+        if (!this._instance)
+            this._instance = new TsConfigUserSingleton(path);
+        return this._instance;
+    }
     /**
      * Creates the tsconfig.json file for the user.
      *
@@ -33,3 +40,6 @@ export class TsConfigUser extends File {
         }, null, 2));
     }
 }
+
+
+export const TsConfigUser = TsConfigUserSingleton.getInstance('./tsconfig.json');
