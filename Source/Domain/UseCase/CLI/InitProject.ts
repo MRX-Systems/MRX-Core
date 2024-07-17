@@ -1,15 +1,25 @@
 import { exit } from 'process';
 
 import { AndesiteError } from '@/Common/Error/index.js';
+import {
+    AndesiteUserYml,
+    EslintUser,
+    JestUser,
+    PackageJsonUser,
+    TsConfigPkg,
+    TsConfigUser
+} from '@/Config/index.js';
 import type { IProjectInformationDTO } from '@/DTO/index.js';
+import { initAndesiteFolderStructure, initEntryPoint, initFolderStructure } from '@/Domain/Service/User/index.js';
+import { cancel, intro, outroBasedOnTime, select, spinner, text } from '@/Domain/Service/index.js';
+
 /**
  * Cancel the project initialization and stop the process.
  *
  * @param message - The message to display when canceling the project initialization.
  * @param code - The exit code.
  */
-async function _cancelAndStop(message: string = 'Project initialization canceled', code: number = 0): Promise<void> {
-    const { cancel } = await import('@/Domain/Service/index.js');
+function _cancelAndStop(message: string = 'Project initialization canceled', code: number = 0): Promise<void> {
     cancel(message);
     exit(code);
 }
@@ -34,7 +44,6 @@ async function _handleError(error: unknown): Promise<void> {
  * @returns The project type selected by the user.
  */
 async function _requestProjectTypeSelected(): Promise<string> {
-    const { select } = await import('@/Domain/Service/index.js');
     const projectType = await select({
         message: 'Select the project type',
         initialValue: 'API',
@@ -60,7 +69,6 @@ async function _requestProjectTypeSelected(): Promise<string> {
  * @returns The project name.
  */
 async function _requestProjectName(): Promise<string> {
-    const { text } = await import('@/Domain/Service/index.js');
     const projectName = await text({
         message: 'Enter the project name',
         defaultValue: 'my-project',
@@ -75,7 +83,6 @@ async function _requestProjectName(): Promise<string> {
  * @returns The project description.
  */
 async function _requestProjectDescription(): Promise<string> {
-    const { text } = await import('@/Domain/Service/index.js');
     const projectDescription = await text({
         message: 'Enter the project description',
         defaultValue: '',
@@ -98,38 +105,20 @@ async function _request(): Promise<IProjectInformationDTO>{
 /**
  * Initialize a new project by asking the user several questions.
  */
-// eslint-disable-next-line max-lines-per-function
 export async function initProject(): Promise<void> {
-    const { intro, spinner, outroBasedOnTime } = await import('@/Domain/Service/index.js');
-    const {
-        AndesiteYml,
-        Jest,
-        TsConfigPkg,
-        TsConfigUser,
-        initAndesiteFolderStructure,
-        initEntryPoint,
-        initEslint,
-        initFolderStructure,
-        initPackageJson,
-    } = await import('@/Domain/Service/User/Config/index.js');
     intro('Hey there! 👋');
-
     const projectInformation: IProjectInformationDTO = await _request();
-
     try {
         const s = spinner();
         s.start('Running initialization process 🚀');
 
         // Initialize the andesite.yml file
-        const andesiteYml = new AndesiteYml();
-        andesiteYml.initializeAndesiteYml(projectInformation.type);
+        AndesiteUserYml.initializeAndesiteYml(projectInformation.type);
 
         // Initialize the folder .andesite
         initAndesiteFolderStructure();
-        const jest = new Jest();
-        jest.initJestConfig(projectInformation.name);
-        const tsConfigPkg = new TsConfigPkg();
-        tsConfigPkg.update({
+        JestUser.init(projectInformation.name);
+        TsConfigPkg.update({
             Config: {
                 BaseSourceDir: 'Source',
                 EntryPoint: 'Source/App.ts',
@@ -139,11 +128,10 @@ export async function initProject(): Promise<void> {
         });
 
         // Initialize the package.json file, folder structure, tsconfig.json file, eslint file, and entry point
-        initPackageJson(projectInformation);
+        PackageJsonUser.init(projectInformation);
+        TsConfigUser.init();
+        EslintUser.init();
         initFolderStructure(projectInformation.type);
-        const tsConfigUser = new TsConfigUser();
-        tsConfigUser.init();
-        initEslint();
         initEntryPoint();
         s.stop('Project initialized 😊');
     } catch (error) {

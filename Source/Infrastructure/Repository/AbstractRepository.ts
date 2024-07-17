@@ -2,6 +2,7 @@ import type { Knex } from 'knex';
 
 import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/InfrastructureDatabaseKeys.js';
 import { AndesiteError } from '@/Common/Error/index.js';
+import type { IPaginationOptionQueryDTO, IWhereClauseDTO } from '@/DTO/index.js';
 import { FactoryDatabase } from '@/Infrastructure/Database/FactoryDatabase.js';
 import type { Transaction } from '@/Infrastructure/Database/index.js';
 
@@ -10,9 +11,13 @@ import type { Transaction } from '@/Infrastructure/Database/index.js';
  */
 export interface IOptionQuery {
     /**
+     * If the query does not return any result, throw an error
+     */
+    throwIfNoResult?: boolean;
+    /**
      * If the query can throw an error
      */
-    canThrow?: boolean;
+    throwIfQueryError?: boolean;
     /**
      * If the query is a transaction
      */
@@ -20,103 +25,14 @@ export interface IOptionQuery {
 }
 
 /**
- * Interface Pagination option query
+ * Abstract Repository class, it's a repository for CRUD operations. It's an abstract class.
+ * It's used to have CRUD operations on a table when extending this class.
+ *
+ * You need to extend this class to use it?
+ *
+ * @typeparam T - The type of the data.
  */
-export interface IPaginationOptionQuery {
-    /**
-     * The limit of the query
-     */
-    limit?: number;
-
-    /**
-     * The offset of the query
-     */
-    offset?: number;
-}
-
-
-/**
- * Interface Where clause, each key is a clause to use in the query
- */
-export interface IWhereClause {
-    /**
-     * In clause
-     * @example
-     * ```typescript
-     * { id: { $in: ['1', '2'] } }
-     * ```
-     */
-    $in: string[];
-    /**
-     * Not in clause
-     * @example
-     * ```typescript
-     * { id: { $nin: ['1', '2'] } }
-     * ```
-     */
-    $nin: string[];
-    /**
-     * Equal clause
-     * @example
-     * ```typescript
-     * { id: { $eq: '1' } }
-     * ```
-     */
-    $eq: string | number | boolean;
-    /**
-     * Not equal clause
-     * @example
-     * ```typescript
-     * { id: { $neq: '1' } }
-     * ```
-     */
-    $neq: string | number | boolean;
-    /**
-     * Like clause
-     * @example
-     * ```typescript
-     * { id: { $match: '1' } }
-     * ```
-     */
-    $match: string;
-    /**
-     * Less than
-     * @example
-     * ```typescript
-     * { id: { $lt: '3' } }
-     * ```
-     */
-    $lt: string | number;
-    /**
-     * Less than or equal
-     * @example
-     * ```typescript
-     * { id: { $lte: '3' } }
-     * ```
-     */
-    $lte: string | number;
-    /**
-     * Greater than
-     * @example
-     * ```typescript
-     * { id: { $gt: '3' } }
-     * ```
-     */
-    $gt: string | number;
-    /**
-     * Greater than or equal
-     * @example
-     * ```typescript
-     * { id: { $gte: '3' } }
-     * ```
-     */
-    $gte: string | number;
-}
-
-/**
- * Model class, allow to have CRUD operations on a table when extending this class.
- */
-export class Model<T> {
+export abstract class AbstractRepository<T> {
     /**
      * Table name in database
      */
@@ -174,7 +90,7 @@ export class Model<T> {
     }
 
     /**
-     * Constructor of the AbstractModel class, allow to have CRUD operations on a table when extending this class.
+     * Constructor of the AbstractRepository class to create an instance of the class with the table name, database name, and primary key.
      *
      * @param table - Table name in database
      * @param databaseName - Database name to get in factory
@@ -183,14 +99,14 @@ export class Model<T> {
      * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link InfrastructureDatabaseKeys.DATABASE_NOT_REGISTERED})
      * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
      */
-    public constructor(
+    protected constructor(
         table: string,
         databaseName: string,
         primaryKey?: [keyof T, 'NUMBER' | 'STRING']
     ) {
         this._table = table;
         this._databaseName = databaseName;
-        this._database = FactoryDatabase.instance.get(databaseName);
+        this._database = FactoryDatabase.get(databaseName);
         this._primaryKey = primaryKey ?? ['id', 'NUMBER'] as [keyof T, 'NUMBER'];
     }
 
@@ -220,16 +136,16 @@ export class Model<T> {
             query = query.transacting(options.transaction);
 
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_CREATED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_CREATED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
      * Find rows in the table based on equal or conditional entities
      *
-     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClause})
+     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClauseDTO})
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
-     * @param options - Options of the query ({@link IOptionQuery} & {@link IPaginationOptionQuery})
+     * @param options - Options of the query ({@link IOptionQuery} & {@link IPaginationOptionQueryDTO})
      *
      * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureDatabaseKeys.DATABASE_QUERY_ERROR})
      * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND})
@@ -237,9 +153,9 @@ export class Model<T> {
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
     public find(
-        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClause>>>>,
+        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClauseDTO>>>>,
         columns?: Partial<Record<keyof T, boolean | string>>,
-        options?: IOptionQuery & IPaginationOptionQuery,
+        options?: IOptionQuery & IPaginationOptionQueryDTO,
     ): Promise<Array<Partial<T>> | void>  {
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns ?? {}))
@@ -254,14 +170,14 @@ export class Model<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow) === undefined ? [] : []);
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? [] : []);
     }
 
     /**
      * Find the first row in the table based on equal or conditional entities
      *
-     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClause})
+     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClauseDTO})
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
@@ -271,7 +187,7 @@ export class Model<T> {
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
     public findOne(
-        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClause>>>>,
+        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClauseDTO>>>>,
         columns?: Partial<Record<keyof T, boolean | string>>,
         options?: IOptionQuery
     ): Promise<Partial<T> | void> {
@@ -282,15 +198,15 @@ export class Model<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleResult(result as Partial<T>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleResult(result as Partial<T>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
      * Find all rows in the table
      *
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
-     * @param options - Options of the query ({@link IOptionQuery} & {@link IPaginationOptionQuery})
+     * @param options - Options of the query ({@link IOptionQuery} & {@link IPaginationOptionQueryDTO})
      *
      * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureDatabaseKeys.DATABASE_QUERY_ERROR})
      * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND})
@@ -299,7 +215,7 @@ export class Model<T> {
      */
     public findAll(
         columns?: Partial<Record<keyof T, boolean | string>>,
-        options?: IOptionQuery & IPaginationOptionQuery,
+        options?: IOptionQuery & IPaginationOptionQueryDTO,
     ): Promise<Array<Partial<T>> | void> {
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns ?? {}))
@@ -313,15 +229,15 @@ export class Model<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow) === undefined ? [] : []);
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? [] : []);
     }
 
     /**
      * Update the data in the table based on equal or conditional entities
      *
      * @param data - Data to be updated, it's an object ({@link T})
-     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClause})
+     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClauseDTO})
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
@@ -332,7 +248,7 @@ export class Model<T> {
      */
     public update(
         data: Partial<T>,
-        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClause>>>>,
+        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClauseDTO>>>>,
         columns?: Partial<Record<keyof T, boolean | string>>,
         options?: IOptionQuery
     ): Promise<Array<Partial<T>> | void> {
@@ -345,8 +261,8 @@ export class Model<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -370,18 +286,17 @@ export class Model<T> {
             .update(data)
             .from(this._table)
             .returning(this._transformColumnObjectToArray(columns ?? {}));
-
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
      * Delete the data in the table based on equal or conditional entities
      *
-     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClause})
+     * @param search - Is the data used to find the data in the table ({@link T} | {@link IWhereClauseDTO})
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
@@ -391,7 +306,7 @@ export class Model<T> {
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
     public delete(
-        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClause>>>>,
+        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClauseDTO>>>>,
         columns?: Partial<Record<keyof T, boolean | string>>,
         options?: IOptionQuery
     ): Promise<Array<Partial<T>> | void> {
@@ -404,8 +319,8 @@ export class Model<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
@@ -431,14 +346,14 @@ export class Model<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.canThrow))
-            .catch((error) => this._handleError(error, options?.canThrow));
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureDatabaseKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
+            .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
     /**
      * Count the number of results based on the search performed using equal or conditional entities
      *
-     * @param search - The search data used to find the data in the table ({@link T} | {@link IWhereClause})
+     * @param search - The search data used to find the data in the table ({@link T} | {@link IWhereClauseDTO})
      * @param options - Query options ({@link IOptionQuery})
      *
      * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureDatabaseKeys.DATABASE_QUERY_ERROR})
@@ -446,9 +361,9 @@ export class Model<T> {
      * @returns The number of results
      */
     public count(
-        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClause>>>>,
+        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClauseDTO>>>>,
         options?: IOptionQuery
-    ): Promise<number> {
+    ): Promise<number | void> {
         let query = this._database(this._table)
             .count('*')
             .from(this._table);
@@ -457,21 +372,21 @@ export class Model<T> {
             query = query.transacting(options.transaction);
         return query
             .then((result) => parseInt(result[0]?.count?.toString() ?? '0', 10))
-            .catch((error) => this._handleError(error, options?.canThrow) === undefined ? 0 : 0);
+            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? 0 : 0);
     }
 
     /**
      * Add a condition to the query builder
      *
      * @param query - Is the knex query builder ({@link Knex.QueryBuilder})
-     * @param complexQuery - Is the data used for building the complex query ({@link IWhereClause})
+     * @param complexQuery - Is the data used for building the complex query ({@link IWhereClauseDTO})
      *
      * @returns The knex query builder ({@link Knex.QueryBuilder})
      */
-    private _applyComplexQuery(query: Knex.QueryBuilder, complexQuery: Partial<Record<keyof T, IWhereClause>>): Knex.QueryBuilder {
+    private _applyComplexQuery(query: Knex.QueryBuilder, complexQuery: Partial<Record<keyof T, IWhereClauseDTO>>): Knex.QueryBuilder {
         let builder = query;
         Object.entries(complexQuery).forEach(([key, value], index): void => {
-            const whereClause: IWhereClause = (value as IWhereClause);
+            const whereClause: IWhereClauseDTO = (value as IWhereClauseDTO);
             if ('$in' in whereClause)
                 builder = builder.orWhereIn(key, whereClause.$in);
             if ('$nin' in whereClause)
@@ -497,11 +412,11 @@ export class Model<T> {
     /**
      * Check if the data is a complex query
      *
-     * @param data - Is the data to check if it's a complex query or not ({@link T} | {@link IWhereClause})
+     * @param data - Is the data to check if it's a complex query or not ({@link T} | {@link IWhereClauseDTO})
      *
      * @returns If the data is a complex query or not return a boolean
      */
-    private _isComplexQuery(data: Partial<T> | Partial<Record<keyof T, Partial<IWhereClause>>>): boolean {
+    private _isComplexQuery(data: Partial<T> | Partial<Record<keyof T, Partial<IWhereClauseDTO>>>): boolean {
         const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte']);
         return Object.values(data).some(value =>
             value && typeof value === 'object' && Object.keys(value).every(key => validKeys.has(key))
@@ -512,16 +427,16 @@ export class Model<T> {
      * Create the query builder
      *
      * @param query - Is the knex query builder ({@link Knex.QueryBuilder})
-     * @param search - Is the data used for building the query ({@link T} | {@link IWhereClause})
+     * @param search - Is the data used for building the query ({@link T} | {@link IWhereClauseDTO})
      *
      * @returns The knex query builder ({@link Knex.QueryBuilder})
      */
     protected _queryBuilder(
         query: Knex.QueryBuilder,
-        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClause>>>>
+        search: Array<Partial<T>> | Array<Partial<Record<keyof T, Partial<IWhereClauseDTO>>>>
     ): Knex.QueryBuilder {
         return search.reduce((builder, data) => this._isComplexQuery(data)
-            ? this._applyComplexQuery(builder, data as Partial<Record<keyof T, IWhereClause>>)
+            ? this._applyComplexQuery(builder, data as Partial<Record<keyof T, IWhereClauseDTO>>)
             : builder.where(data as Partial<T>), query);
     }
 
@@ -585,7 +500,7 @@ export class Model<T> {
     protected _handleArrayResult(
         result: Array<Partial<T>>,
         noResultKey: string,
-        canThrow: boolean = true
+        canThrow: boolean = false
     ): Array<Partial<T>> | void {
         if (result.length === 0 && canThrow)
             throw new AndesiteError({
@@ -609,7 +524,7 @@ export class Model<T> {
     protected _handleResult(
         result: Partial<T>,
         noResultKey: string,
-        canThrow: boolean = true
+        canThrow: boolean = false
     ): Partial<T> | void {
         if (!result && canThrow)
             throw new AndesiteError({

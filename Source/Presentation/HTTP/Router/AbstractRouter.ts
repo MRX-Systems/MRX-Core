@@ -19,13 +19,6 @@ export abstract class AbstractRouter {
     }
 
     /**
-     * Initialize the routes of the router.
-     *
-     * @param fastify - The Fastify instance. ({@link FastifyInstance})
-     */
-    protected abstract initRoutes(fastify: FastifyInstance): void;
-
-    /**
      * Configure the router.
      *
      * @param app - The Fastify instance. ({@link FastifyInstance})
@@ -40,13 +33,20 @@ export abstract class AbstractRouter {
     }
 
     /**
+     * Initialize the routes of the router.
+     *
+     * @param fastify - The Fastify instance. ({@link FastifyInstance})
+     */
+    protected abstract _initRoutes(fastify: FastifyInstance): void;
+
+    /**
      * Get the router.
      *
      * @returns The router. ({@link FastifyPluginAsync})
      */
     private get _router(): FastifyPluginAsync {
         return (fastify: FastifyInstance): Promise<void> => {
-            this.initRoutes(fastify);
+            this._initRoutes(fastify);
             return Promise.resolve();
         };
     }

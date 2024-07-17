@@ -97,7 +97,7 @@
         "@typescript-eslint/max-params": [
             "error",
             {
-                "max": 4
+                "max": 5
             }
         ],
         "@typescript-eslint/member-ordering": "off",

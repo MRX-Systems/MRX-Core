@@ -1,8 +1,25 @@
-import pkg from '../../package.json' with { type: 'json' };
+import { PackageJson } from '@/Config/index.js';
 
 /**
- * PackageJsonCore is an object that contains information from the package.json file
+ * The PackageJsonCoreSingleton class is a singleton class that extends the PackageJson class. (Singleton)
+ * Inherit from the File class ({@link PackageJson})
  */
-export const PackageJsonCore = {
-    version: pkg.version,
-};
+export class PackageJsonCoreSingleton extends PackageJson {
+    /**
+     * The instance of the PackageJsonCoreSingleton class. ({@link PackageJsonCoreSingleton})
+     */
+    private static _instance: PackageJsonCoreSingleton | undefined;
+
+    /**
+     * Gets the instance of the PackageJsonCoreSingleton class.
+     *
+     * @returns Instance of PackageJsonCoreSingleton. ({@link PackageJsonCoreSingleton})
+     */
+    public static getInstance(path: string): PackageJsonCoreSingleton {
+        if (!this._instance)
+            this._instance = new PackageJsonCoreSingleton(path);
+        return this._instance;
+    }
+}
+
+export const PackageJsonCore = PackageJsonCoreSingleton.getInstance('../../package.json');

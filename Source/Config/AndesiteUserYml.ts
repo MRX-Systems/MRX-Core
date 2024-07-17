@@ -2,24 +2,40 @@ import vine, { errors } from '@vinejs/vine';
 
 import apiConfig from '@/../Templates/AndesiteConfigs/api.json' with { type: 'json' };
 import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.json' with { type: 'json' };
+import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CommonErrorKeys, ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
 import { File } from '@/Common/Util/File.js';
-import { stringifyToYml, parseYml } from '@/Common/Util/index.js';
+import { parseYml, stringifyToYml } from '@/Common/Util/index.js';
 import type { IAndesiteConfigDTO } from '@/DTO/index.js';
 
 /**
- * Andesite Yml class to handle andesite-config.yml file. Extends ({@link File})
+ * AndesiteUserYmlSingleton class to handle andesite-config.yml file. (Singleton)
+ * Inherit from the File class ({@link File})
  */
-export class AndesiteYml extends File {
+export class AndesiteUserYmlSingleton extends File {
     /**
-     * Constructor of AndesiteYml
+     * The instance of the AndesiteUserYmlSingleton class. ({@link AndesiteUserYmlSingleton})
+     */
+    public static _instance: AndesiteUserYmlSingleton | undefined;
+
+    /**
+     * Constructor of AndesiteUserYmlSingleton
      *
      * @param path - Path to andesite-config.yml
      */
-    public constructor(path: string = './andesite-config.yml') {
+    private constructor(path: string) {
         super(path);
+    }
+
+    /**
+     * Gets the instance of the AndesiteUserYmlSingleton class.
+     *
+     * @returns Instance of AndesiteUserYmlSingleton. ({@link AndesiteUserYmlSingleton})
+     */
+    public static getInstance(path: string): AndesiteUserYmlSingleton {
+        if (!this._instance)
+            this._instance = new AndesiteUserYmlSingleton(path);
+        return this._instance;
     }
 
     /**
@@ -116,3 +132,5 @@ export class AndesiteYml extends File {
         }
     }
 }
+
+export const AndesiteUserYml = AndesiteUserYmlSingleton.getInstance('./andesite-config.yml');

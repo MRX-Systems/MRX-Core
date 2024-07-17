@@ -19,11 +19,15 @@
     },
     "DTO": null,
     "Infrastructure": {
-      "Database": {
+      "Database": null,
+      "Model": {
         "__Static__": null,
         "__Dynamic__": null
       },
-      "Repository": null
+      "Repository": {
+        "__Static__": null,
+        "__Dynamic__": null
+      }
     },
     "Presentation": {
       "Http": {
