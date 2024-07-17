@@ -3,8 +3,8 @@ import { exit } from 'process';
 
 import type { IAndesiteConfigDTO } from '@/DTO/index.js';
 import { EsbuildUser } from '@/Domain/Service/User/Command/index.js';
+import { initAndesiteFolderStructure } from '@/Domain/Service/User/index.js';
 import { intro, outroBasedOnTime, spinner } from '@/Domain/Service/index.js';
-import { initAndesiteFolderStructure } from '@/Domain/Service/User/Config/UserProjectStructure.js';
 import {
     AndesiteUserYml,
     JestUser,
