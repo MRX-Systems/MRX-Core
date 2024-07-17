@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.13.0](https://github.com/Andesite-Lab/Core/compare/v1.12.1...v1.13.0) (2024-07-17)
+
+
+### Features
+
+* add throwIfNoResult and throwIfQueryError ([9fecb65](https://github.com/Andesite-Lab/Core/commit/9fecb65b1a1001d6f7cdb6478b2d80004651d623))
+* global improvement (Config/Service/Server/Repository..) ([68315ec](https://github.com/Andesite-Lab/Core/commit/68315ecd1cb1e0e61366fb3d9238bed14fd243ae))
+* improvement error handler + remove default plugin ([2f25cb0](https://github.com/Andesite-Lab/Core/commit/2f25cb03fc81a39204f0e1db2d5f1645ab2eae4c))
+* remove useless property for register in factory + rename + log ([e7b8e1b](https://github.com/Andesite-Lab/Core/commit/e7b8e1bc1b88a0779da9b012fcd5db8ccef95d6a))
+
+
+### Bug Fixes
+
+* correction bad import ([c56d2f6](https://github.com/Andesite-Lab/Core/commit/c56d2f6488acefac05bade5026910a3639145800))
+
+
+### Code Refactoring
+
+* improvement code ([e42397d](https://github.com/Andesite-Lab/Core/commit/e42397d4430e0e53fc2207edf16e129f28b2b6cb))
+* remove unused import ([8775095](https://github.com/Andesite-Lab/Core/commit/8775095176818fe4a62c0a942b97eab7575f1465))
+
+
+### Build System
+
+* update dependencies ([312e81f](https://github.com/Andesite-Lab/Core/commit/312e81fff12a9d107a3a572ba79265fb8431ddd6))
+* update dependencies ([280d7a3](https://github.com/Andesite-Lab/Core/commit/280d7a33addd8c2cf5ae72afe07c14d13ce2cc3b))
+
+
+### Styles
+
+* allow 5 paramaters ([7621094](https://github.com/Andesite-Lab/Core/commit/7621094006d2a18d865ee5ae84cb478427163632))
+
 ## [1.12.1](https://github.com/Andesite-Lab/Core/compare/v1.12.0...v1.12.1) (2024-07-09)
 
 
