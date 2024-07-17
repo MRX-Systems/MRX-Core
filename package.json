@@ -35,7 +35,7 @@
   "author": "Ruby",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.14.11",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
     "esbuild": "^0.23.0",
@@ -53,7 +53,7 @@
     "@fastify/formbody": "^7.4.0",
     "@fastify/helmet": "^11.1.1",
     "@fastify/swagger": "^8.14.0",
-    "@scalar/fastify-api-reference": "^1.24.46",
+    "@scalar/fastify-api-reference": "^1.24.48",
     "@vinejs/vine": "^2.1.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",
