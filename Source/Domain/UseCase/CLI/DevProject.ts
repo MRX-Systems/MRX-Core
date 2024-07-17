@@ -2,12 +2,18 @@ import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
 import { File } from '@/Common/Util/index.js';
-import { EnvironnementUser } from '@/Config/index.js';
+import {
+    AndesiteUserYml,
+    EnvironmentUser,
+    JestUser,
+    PackageJsonUser,
+    TsConfigPkg
+} from '@/Config/index.js';
 import type {
     IAndesiteConfigDTO
 } from '@/DTO/index.js';
 import { EsbuildUser, execBundleCommand } from '@/Domain/Service/User/Command/index.js';
-import { AndesiteYml } from '@/Domain/Service/User/Config/index.js';
+import { initAndesiteFolderStructure } from '@/Domain/Service/User/index.js';
 
 /**
  * Reload the watch process.
@@ -36,19 +42,13 @@ function _reloadWatch(bundleChild: ChildProcess, scriptFile: File, env: Record<s
  * Start the project in development mode with watch mode
  */
 export async function devProject(): Promise<void> {
-    const { initAndesiteFolderStructure, Jest, TsConfigPkg } = await import('@/Domain/Service/User/Config/index.js');
-    const { packageJsonUser } = await import('@/Config/PackageJsonUser.js');
-
     try {
-        const andesiteYml = new AndesiteYml();
-        const config: IAndesiteConfigDTO = await andesiteYml.readConfig();
+        const config: IAndesiteConfigDTO = await AndesiteUserYml.readConfig();
 
         // Initialize the folder .andesite
         initAndesiteFolderStructure();
-        const jest = new Jest();
-        jest.initJestConfig(packageJsonUser.name);
-        const tsConfigPkg = new TsConfigPkg();
-        tsConfigPkg.update(config);
+        JestUser.init(PackageJsonUser.content.name ?? 'andesite');
+        TsConfigPkg.update(config);
 
         // Build the project first
         const esbuildUser: EsbuildUser = new EsbuildUser(config);
@@ -70,13 +70,13 @@ export async function devProject(): Promise<void> {
         buildChild.stdout?.on('data', (data: string | Uint8Array) => {
             process.stdout.write(data);
         });
-        const env: EnvironnementUser = new EnvironnementUser();
+
         const scriptFile = new File(`${cwd()}/${config.Config.OutputDir}/app.js`);
-        let bundleChild = execBundleCommand(scriptFile.path, env.env);
+        let bundleChild = execBundleCommand(scriptFile.path, EnvironmentUser.content);
 
         // Start the watch start process when scriptFile and env changes
-        scriptFile.watch(10, () => { bundleChild = _reloadWatch(bundleChild, scriptFile, env.env); });
-        env.watch(10, () => { bundleChild = _reloadWatch(bundleChild, scriptFile, env.env); });
+        scriptFile.watch(10, () => { bundleChild = _reloadWatch(bundleChild, scriptFile, EnvironmentUser.content); });
+        EnvironmentUser.watch(10, () => { bundleChild = _reloadWatch(bundleChild, scriptFile, EnvironmentUser.content); });
     } catch (error) {
         console.error(error);
         exit(1);

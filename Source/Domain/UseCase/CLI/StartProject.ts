@@ -1,22 +1,18 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import type { EnvironnementUser } from '@/Config/index.js';
+import { AndesiteUserYml, EnvironmentUser } from '@/Config/index.js';
 import type { IAndesiteConfigDTO } from '@/DTO/index.js';
+import { execBundleCommand } from '@/Domain/Service/User/Command/index.js';
 
 /**
  * Start the project
  */
 export async function startProject(): Promise<void> {
-    const { AndesiteYml } = await import('@/Domain/Service/User/Config/index.js');
-    const { execBundleCommand } = await import('@/Domain/Service/User/Command/index.js');
-    const { EnvironnementUser } = await import('@/Config/index.js');
     try {
-        const andesiteYml = new AndesiteYml();
-        const config: IAndesiteConfigDTO = await andesiteYml.readConfig();
+        const config: IAndesiteConfigDTO = await AndesiteUserYml.readConfig();
         const scriptPath: string = `${cwd()}/${config.Config.OutputDir}/app.js`;
-        const env: EnvironnementUser = new EnvironnementUser();
-        const child: ChildProcess = execBundleCommand(scriptPath, env.env);
+        const child: ChildProcess = execBundleCommand(scriptPath, EnvironmentUser.content);
 
         child.stdout?.on('data', (data: string | Uint8Array) => {
             process.stdout.write(data);
