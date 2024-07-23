@@ -1,5 +1,5 @@
+import { DomainErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
-import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
 import { TsConfig } from '@/Config/index.js';
 
 /**
@@ -27,12 +27,12 @@ export class TsConfigUserSingleton extends TsConfig {
      *
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
-     * @throws ({@link AndesiteError}) If the tsconfig.json file already exists. ({@link ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS})
+     * @throws ({@link AndesiteError}) If the tsconfig.json file already exists. ({@link DomainErrorKeys.ERROR_TS_CONFIG_EXISTS})
      */
     public init(): void {
         if (this.exists() || this.exists())
             throw new AndesiteError({
-                messageKey: ServiceErrorKeys.ERROR_TS_CONFIG_EXISTS,
+                messageKey: DomainErrorKeys.ERROR_TS_CONFIG_EXISTS,
                 detail: './tsconfig.json'
             });
         this.write(JSON.stringify({

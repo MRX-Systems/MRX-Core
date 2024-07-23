@@ -1,7 +1,7 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import knex, { type Knex } from 'knex';
 
-import { InfrastructureDatabaseKeys } from '@/Common/Error/Enum/index.js';
+import { InfrastructureErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
 import type { Dialect } from '../KnexType.js';
 
@@ -53,7 +53,7 @@ export abstract class AbstractCreator {
     /**
      * Connect to the database
      *
-     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED})
+     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureErrorKeys.DATABASE_NOT_CONNECTED})
      */
     public async connection(): Promise<void> {
         this._database = knex({
@@ -75,7 +75,7 @@ export abstract class AbstractCreator {
         });
         if (!(await this.isConnected()))
             throw new AndesiteError({
-                messageKey: InfrastructureDatabaseKeys.DATABASE_NOT_CONNECTED,
+                messageKey: InfrastructureErrorKeys.DATABASE_NOT_CONNECTED,
             });
     }
 
