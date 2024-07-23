@@ -24,6 +24,7 @@
     "esm": true
   },
   "compilerOptions": {
+    "types": ["@types/node"],
     "target": "ESNext",
     "lib": ["ESNext"],
     "module": "NodeNext",
