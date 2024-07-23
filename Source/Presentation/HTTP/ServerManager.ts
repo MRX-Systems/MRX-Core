@@ -3,7 +3,7 @@ import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
 import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { PresentationHttpErrorKeys } from '@/Common/Error/Enum/index.js';
+import { PresentationErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
 import { I18n } from '@/Common/Util/index.js';
 import { LanguageHook, LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
@@ -256,9 +256,9 @@ export class ServerManager {
             await reply.status(500).send({
                 code: 500,
                 message: I18n.isI18nInitialized() ? I18n.translate(
-                    PresentationHttpErrorKeys.INTERNAL_SERVER_ERROR,
+                    PresentationErrorKeys.INTERNAL_SERVER_ERROR,
                     request.headers['accept-language']
-                ) : PresentationHttpErrorKeys.INTERNAL_SERVER_ERROR,
+                ) : PresentationErrorKeys.INTERNAL_SERVER_ERROR,
                 detail: error
             });
     }

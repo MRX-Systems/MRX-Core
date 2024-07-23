@@ -8,8 +8,8 @@ import {
     isCancel
 } from '@clack/prompts';
 
+import { DomainErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
-import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
 
 /**
  * Interface for the options of the select prompt.
@@ -124,11 +124,11 @@ export function outro(message: string): void {
 /**
  * Throw an error when the user cancels the prompt.
  *
- * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
+ * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link DomainErrorKeys.ERROR_CANCEL_PROMPT})
  */
 function _throwWhenCancel(): void {
     throw new AndesiteError({
-        messageKey: ServiceErrorKeys.ERROR_CANCEL_PROMPT,
+        messageKey: DomainErrorKeys.ERROR_CANCEL_PROMPT,
     });
 }
 
@@ -163,7 +163,7 @@ export function cancel(message: string = 'Canceled'): void {
  *
  * @param opt - The options for the select prompt. ({@link ISelectOptions})
  *
- * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
+ * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link DomainErrorKeys.ERROR_CANCEL_PROMPT})
  *
  * @returns The value selected by the user.
  */
@@ -187,7 +187,7 @@ export async function select(opt: ISelectOptions): Promise<string | number | boo
  *
  * @param opt - The options for the text prompt. ({@link ITextOptions})
  *
- * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link ServiceErrorKeys.ERROR_CANCEL_PROMPT})
+ * @throws ({@link AndesiteError}) - If the user cancels the prompt. ({@link DomainErrorKeys.ERROR_CANCEL_PROMPT})
  *
  * @returns The value entered by the user.
  */

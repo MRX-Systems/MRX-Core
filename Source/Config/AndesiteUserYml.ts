@@ -2,7 +2,7 @@ import vine, { errors } from '@vinejs/vine';
 
 import apiConfig from '@/../Templates/AndesiteConfigs/api.json' with { type: 'json' };
 import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.json' with { type: 'json' };
-import { ServiceErrorKeys } from '@/Common/Error/Enum/index.js';
+import { DomainErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
 import { File } from '@/Common/Util/File.js';
 import { parseYml, stringifyToYml } from '@/Common/Util/index.js';
@@ -43,7 +43,7 @@ export class AndesiteUserYmlSingleton extends File {
      *
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
-     * @throws ({@link AndesiteError}) If the config object is not an object. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
+     * @throws ({@link AndesiteError}) If the config object is not an object. ({@link DomainErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
      *
      * @returns ({@link IAndesiteConfigDTO})
      */
@@ -58,14 +58,14 @@ export class AndesiteUserYmlSingleton extends File {
      *
      * @param projectType - Project type (API or Script)
      *
-     * @throws ({@link AndesiteError}) If the file already exists. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_EXISTS})
+     * @throws ({@link AndesiteError}) If the file already exists. ({@link DomainErrorKeys.ERROR_ANDESITE_YML_EXISTS})
      * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
      * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
      */
     public initializeAndesiteYml(projectType: string): void {
         if (this.exists())
             throw new AndesiteError({
-                messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_EXISTS,
+                messageKey: DomainErrorKeys.ERROR_ANDESITE_YML_EXISTS,
                 detail: this._path
             });
         if (projectType === 'API')
@@ -79,14 +79,14 @@ export class AndesiteUserYmlSingleton extends File {
      *
      * @param config - It's a config object got from andesite-config.yml
      *
-     * @throws ({@link AndesiteError}) If the config object is not an object. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
+     * @throws ({@link AndesiteError}) If the config object is not an object. ({@link DomainErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
      *
      * @returns config object with replaced environment variables
      */
     private _loadEnvAndReplace(config: Record<string, unknown>): Record<string, unknown> {
         if (!config || typeof config !== 'object')
             throw new AndesiteError({
-                messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG,
+                messageKey: DomainErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG,
                 detail: this._path
             });
         if (config && typeof config === 'object')
@@ -108,7 +108,7 @@ export class AndesiteUserYmlSingleton extends File {
      *
      * @param config - It's a config object got from andesite-config.yml
      *
-     * @throws ({@link AndesiteError}) If the config object is not valid. ({@link ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
+     * @throws ({@link AndesiteError}) If the config object is not valid. ({@link DomainErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG})
      */
     private async _validateAndesiteConfig(config: Record<string, unknown>): Promise<void> {
         const schema = vine.object({
@@ -126,7 +126,7 @@ export class AndesiteUserYmlSingleton extends File {
             const isValidationError = error instanceof errors.E_VALIDATION_ERROR;
             const detail = isValidationError ? error.messages : [''];
             throw new AndesiteError({
-                messageKey: ServiceErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG,
+                messageKey: DomainErrorKeys.ERROR_ANDESITE_YML_INVALID_CONFIG,
                 detail
             });
         }
