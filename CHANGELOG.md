@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.1](https://github.com/Andesite-Lab/Core/compare/v1.14.0...v1.14.1) (2024-07-23)
+
+
+### Bug Fixes
+
+* export class SingletonManager ([6af26f6](https://github.com/Andesite-Lab/Core/commit/6af26f6a7e8cd157befa7b731a6111f08442a404))
+
 ## [1.14.0](https://github.com/Andesite-Lab/Core/compare/v1.13.0...v1.14.0) (2024-07-23)
 
 
