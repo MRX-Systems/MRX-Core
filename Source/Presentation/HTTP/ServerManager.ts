@@ -241,18 +241,21 @@ export class ServerManager {
     private async _setErrorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         if (this._options.logger)
             this._options.logger.error(error);
-        if ('validation' in error)
+        if ('validation' in error) {
             await this._handleValidationErrors(error, request, reply);
-        else if (error instanceof AndesiteError)
-            await reply.status(400).send({
+        } else if (error instanceof AndesiteError) {
+            const code: number = error.code ?? 500;
+            const detail: Record<string, unknown> = typeof error.detail === 'object' ? error.detail as Record<string, unknown> : {};
+            await reply.status(code).send({
                 code: error.code,
                 message: I18n.isI18nInitialized() ? I18n.translate(
                     error.message,
-                    request.headers['accept-language']
+                    request.headers['accept-language'],
+                    detail
                 ) : error.message,
                 ...error.code < 500 || EnvironmentUser.content.NODE_ENV === 'development' ? { detail: error.detail } : {}
             });
-        else
+        } else {
             await reply.status(500).send({
                 code: 500,
                 message: I18n.isI18nInitialized() ? I18n.translate(
@@ -261,6 +264,7 @@ export class ServerManager {
                 ) : PresentationErrorKeys.INTERNAL_SERVER_ERROR,
                 detail: error
             });
+        }
     }
 
     /**
