@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.14.0](https://github.com/Andesite-Lab/Core/compare/v1.13.0...v1.14.0) (2024-07-23)
+
+
+### Features
+
+* add SingletonManager ([d4dddfd](https://github.com/Andesite-Lab/Core/commit/d4dddfd6db4491eb2aa6bf719baa950c2ac4b810))
+
+
+### Code Refactoring
+
+* global improves ([7a787dd](https://github.com/Andesite-Lab/Core/commit/7a787dd39d50b20030919ab43e061a879b6fd00a))
+
+
+### Build System
+
+* update nvmrc and dependencies ([a23fe49](https://github.com/Andesite-Lab/Core/commit/a23fe4975a6b3db09fd653f8a136b5656fd299c6))
+
+
+### Styles
+
+* allow Function type + update indent to 2 spaces ([5a76056](https://github.com/Andesite-Lab/Core/commit/5a76056abbe4fa6d2b540df0fae8f7bf455c9baa))
+
 ## [1.13.0](https://github.com/Andesite-Lab/Core/compare/v1.12.1...v1.13.0) (2024-07-17)
 
 
