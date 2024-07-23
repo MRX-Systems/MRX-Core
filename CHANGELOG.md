@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/Andesite-Lab/Core/compare/v1.14.1...v1.15.0) (2024-07-23)
+
+
+### Features
+
+* add interpolation and status code in response ([654512b](https://github.com/Andesite-Lab/Core/commit/654512b8d0da07d524c897fcaa926b7b105cfa6b))
+
 ## [1.14.1](https://github.com/Andesite-Lab/Core/compare/v1.14.0...v1.14.1) (2024-07-23)
 
 
