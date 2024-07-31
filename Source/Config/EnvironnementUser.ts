@@ -1,6 +1,5 @@
+import { File } from '@basalt-lab/basalt-helper';
 import { cwd, env } from 'process';
-
-import { File } from '@/Common/Util/index.js';
 
 /**
  * EnvironnementUser class is responsible for managing the environment variables. (Singleton)

@@ -1,10 +1,10 @@
+import { File } from '@basalt-lab/basalt-helper';
 import vine, { errors } from '@vinejs/vine';
 
 import apiConfig from '@/../Templates/AndesiteConfigs/api.json' with { type: 'json' };
 import sampleScriptConfig from '@/../Templates/AndesiteConfigs/sample-script.json' with { type: 'json' };
 import { DomainErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
-import { File } from '@/Common/Util/File.js';
 import { parseYml, stringifyToYml } from '@/Common/Util/index.js';
 import type { IAndesiteConfigDTO } from '@/DTO/index.js';
 
