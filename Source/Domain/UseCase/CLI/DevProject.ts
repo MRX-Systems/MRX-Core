@@ -1,7 +1,7 @@
+import { File } from '@basalt-lab/basalt-helper';
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import { File } from '@/Common/Util/index.js';
 import {
     AndesiteUserYml,
     EnvironmentUser,

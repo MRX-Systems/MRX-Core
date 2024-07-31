@@ -1,7 +1,8 @@
+import { Folder } from '@basalt-lab/basalt-helper';
+
 import andesiteFolderStructure from '@/../Templates/FolderStructure/andesite.json' with { type: 'json' };
 import apiStructure from '@/../Templates/FolderStructure/api.json' with { type: 'json' };
 import scriptStructure from '@/../Templates/FolderStructure/sample-script.json' with { type: 'json' };
-import { Folder } from '@/Common/Util/index.js';
 
 /**
  * Creates the folder structure based on the project information.

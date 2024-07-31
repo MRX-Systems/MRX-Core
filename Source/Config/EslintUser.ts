@@ -1,8 +1,8 @@
+import { File } from '@basalt-lab/basalt-helper';
 
 import eslint from '@/../Templates/eslint.json' with { type: 'json' };
 import { DomainErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
-import { File } from '@/Common/Util/index.js';
 
 /**
  * Eslint User class to handle .eslintrc file. (Singleton)
