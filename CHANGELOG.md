@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.18.0](https://github.com/Andesite-Lab/Core/compare/v1.17.1...v1.18.0) (2024-07-31)
+
+
+### Features
+
+* add FactoryStore, creator, abstract creator and clean .. ([e3aa1fc](https://github.com/Andesite-Lab/Core/commit/e3aa1fc679e6715294ad256b3f090998f15054c6))
+
+
+### Build System
+
+* add ioredis dependency ([2aaa46f](https://github.com/Andesite-Lab/Core/commit/2aaa46ff37bc8f90b4aa9007fac2fdbd62054d6a))
+
 ## [1.17.1](https://github.com/Andesite-Lab/Core/compare/v1.17.0...v1.17.1) (2024-07-31)
 
 
