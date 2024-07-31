@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.1](https://github.com/Andesite-Lab/Core/compare/v1.17.0...v1.17.1) (2024-07-31)
+
+
+### Bug Fixes
+
+* reAdd dirname util ([ebe02e9](https://github.com/Andesite-Lab/Core/commit/ebe02e968fec17c154ec18d329fcab3f14e8c7ae))
+
 ## [1.17.0](https://github.com/Andesite-Lab/Core/compare/v1.16.0...v1.17.0) (2024-07-31)
 
 
