@@ -1,6 +1,6 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 
-import { AbstractCreator } from './AbstractCreator.js';
+import { AbstractDatabaseCreator } from './AbstractDatabaseCreator.js';
 
 /**
  * Options for the MSSQL Database
@@ -45,9 +45,9 @@ export interface IMSSQLDatabaseOptions {
     log?: BasaltLogger;
 }
 /**
- * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern) extending ({@link AbstractCreator})
+ * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern) extending ({@link AbstractDatabaseCreator})
  */
-export class MSSQLCreator extends AbstractCreator {
+export class MSSQLCreator extends AbstractDatabaseCreator {
 
     /**
      * Constructor of the MSSQLCreator class

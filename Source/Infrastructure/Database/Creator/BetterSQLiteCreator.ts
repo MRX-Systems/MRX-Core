@@ -1,6 +1,6 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 
-import { AbstractCreator } from './AbstractCreator.js';
+import { AbstractDatabaseCreator } from './AbstractDatabaseCreator.js';
 
 /**
  * Options for the Better SQLite Database
@@ -18,9 +18,9 @@ export interface IBetterSQLiteDatabaseOptions {
 }
 
 /**
- * Better SQLite Creator is a concrete creator for Better SQLite Database (Factory Pattern) extending ({@link AbstractCreator})
+ * Better SQLite Creator is a concrete creator for Better SQLite Database (Factory Pattern) extending ({@link AbstractDatabaseCreator})
  */
-export class BetterSQLiteCreator extends AbstractCreator {
+export class BetterSQLiteCreator extends AbstractDatabaseCreator {
     /**
      * Constructor of the BetterSQLiteCreator class
      *

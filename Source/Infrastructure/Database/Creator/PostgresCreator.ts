@@ -1,6 +1,6 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 
-import { AbstractCreator } from './AbstractCreator.js';
+import { AbstractDatabaseCreator } from './AbstractDatabaseCreator.js';
 
 /**
  * Options for the Postgres Database
@@ -41,9 +41,9 @@ export interface IPostgresDatabaseOptions {
 }
 
 /**
- * Postgres Creator is a concrete creator for Postgres Database (Factory Pattern) extending ({@link AbstractCreator})
+ * Postgres Creator is a concrete creator for Postgres Database (Factory Pattern) extending ({@link AbstractDatabaseCreator})
  */
-export class PostgresCreator extends AbstractCreator {
+export class PostgresCreator extends AbstractDatabaseCreator {
     /**
      * Constructor of the PostgresCreator class
      *

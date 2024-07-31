@@ -6,9 +6,9 @@ import { AndesiteError } from '@/Common/Error/index.js';
 import type { Dialect } from '../KnexType.js';
 
 /**
- * Abstract class for Database Creator
+ * Abstract Database class for Database Creator
  */
-export abstract class AbstractCreator {
+export abstract class AbstractDatabaseCreator {
     /**
      * The database connection object ({@link Knex})
      */
@@ -25,6 +25,8 @@ export abstract class AbstractCreator {
 
     /**
      * Constructor of the AbstractCreator class
+     * 
+     * @param options - The options of the AbstractDatabaseCreator (({@link Dialect}) & ({@link BasaltLogger}))
      */
     protected constructor(options: {
         dialect: Dialect
@@ -55,7 +57,7 @@ export abstract class AbstractCreator {
      *
      * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureErrorKeys.DATABASE_NOT_CONNECTED})
      */
-    public async connection(): Promise<void> {
+    public async connect(): Promise<void> {
         this._database = knex({
             ...this._dialect,
             log: {
@@ -82,17 +84,23 @@ export abstract class AbstractCreator {
     /**
      * Disconnect from the database
      */
-    public async disconnection(): Promise<void> {
+    public async disconnect(): Promise<void> {
         await this._database?.destroy();
         this._database = undefined;
     }
 
     /**
      * Get the database connection object
+     * 
+     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureErrorKeys.DATABASE_NOT_CONNECTED})
      *
      * @returns The database connection object. ({@link Knex})
      */
     public get database(): Knex {
+        if (!this._database)
+            throw new AndesiteError({
+                messageKey: InfrastructureErrorKeys.DATABASE_NOT_CONNECTED,
+            });
         return this._database as Knex;
     }
 }
