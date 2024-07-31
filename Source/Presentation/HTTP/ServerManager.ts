@@ -1,3 +1,4 @@
+import { BasaltError } from '@basalt-lab/basalt-helper';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
@@ -243,7 +244,7 @@ export class ServerManager {
             this._options.logger.error(error);
         if ('validation' in error) {
             await this._handleValidationErrors(error, request, reply);
-        } else if (error instanceof AndesiteError) {
+        } else if (error instanceof AndesiteError || error instanceof BasaltError) {
             const code: number = error.code ?? 500;
             const detail: Record<string, unknown> = typeof error.detail === 'object' ? error.detail as Record<string, unknown> : {};
             await reply.status(code).send({

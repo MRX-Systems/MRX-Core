@@ -1,5 +1,6 @@
+import { File } from '@basalt-lab/basalt-helper';
+
 import jest from '@/../Templates/jest.json' with { type: 'json' };
-import { File } from '@/Common/Util/index.js';
 
 /**
  * JestUserSingleton class to handle jest.config.json file. (Singleton)

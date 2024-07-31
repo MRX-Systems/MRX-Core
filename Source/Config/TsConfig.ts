@@ -1,4 +1,4 @@
-import { File } from '@/Common/Util/index.js';
+import { File } from '@basalt-lab/basalt-helper';
 
 /**
  * Interface for the tsconfig.json file.
