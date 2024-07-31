@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.17.0](https://github.com/Andesite-Lab/Core/compare/v1.16.0...v1.17.0) (2024-07-31)
+
+
+### Features
+
+* add basalt-helper, remove all useless utils & handle BasaltError ([673eacc](https://github.com/Andesite-Lab/Core/commit/673eacc83f7c37332bec30dde7b45fd741753506))
+
+
+### Build System
+
+* update packages ([b16f3d1](https://github.com/Andesite-Lab/Core/commit/b16f3d1e8848ef5b482b863e9ab43591639e2f51))
+
 ## [1.16.0](https://github.com/Andesite-Lab/Core/compare/v1.15.0...v1.16.0) (2024-07-23)
 
 
