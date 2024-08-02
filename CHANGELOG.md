@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/Andesite-Lab/Core/compare/v1.18.0...v1.19.0) (2024-08-02)
+
+
+### Features
+
+* add TLS for register redis ([b475ae4](https://github.com/Andesite-Lab/Core/commit/b475ae48eb29c88c8162ccb9ec53620b8f136023))
+
 ## [1.18.0](https://github.com/Andesite-Lab/Core/compare/v1.17.1...v1.18.0) (2024-07-31)
 
 
