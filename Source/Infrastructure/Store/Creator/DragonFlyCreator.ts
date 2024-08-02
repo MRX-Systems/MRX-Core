@@ -28,6 +28,11 @@ export interface IDragonFlyStoreOptions {
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
     log?: BasaltLogger;
+
+    /**
+     * Use TLS for the connection
+     */
+    tls?: boolean;
 }
 
 /**
@@ -47,6 +52,7 @@ export class DragonFlyCreator extends AbstractStoreCreator {
                 port: options.port ?? 6379,
                 ...(options.password && { password: options.password }),
                 ...(options.username && { username: options.username }),
+                ...(options.tls && { tls: {} }),
             },
             log: options.log,
         });
