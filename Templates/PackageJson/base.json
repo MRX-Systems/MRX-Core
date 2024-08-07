@@ -3,9 +3,11 @@
   "scripts": {
     "fix-lint": "eslint --fix . --ext .ts",
     "lint": "eslint . --ext .ts",
+    "type-check": "tsc --noEmit",
     "dev": "andesite dev",
-    "build": "tsc --noEmit && andesite build",
-    "start": "andesite start"
+    "build": "andesite build",
+    "start": "andesite start",
+    "postinstall": "andesite prepare"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",

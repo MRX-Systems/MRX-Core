@@ -5,7 +5,7 @@ import 'source-map-support/register.js';
 
 
 import { PackageJsonCore } from '@/Config/index.js';
-import { buildProject, devProject, initProject, startProject } from '@/Domain/UseCase/CLI/index.js';
+import { buildProject, devProject, initProject, prepareProject, startProject } from '@/Domain/UseCase/CLI/index.js';
 
 const commander = new Command();
 
@@ -31,5 +31,9 @@ commander
     .description('Start the project in development mode')
     .action(devProject);
 
+commander
+    .command('prepare')
+    .description('Create .andesite folder')
+    .action(prepareProject);
 
 commander.parse(argv);
