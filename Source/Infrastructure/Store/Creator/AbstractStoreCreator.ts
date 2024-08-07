@@ -20,7 +20,7 @@ export abstract class AbstractStoreCreator {
 
     /**
      * Constructor of the AbstractCreator class
-     * 
+     *
      * @param options - The options of the AbstractStoreCreator (({@link RedisOptions}) & ({@link BasaltLogger}))
      */
     protected constructor(options: {
@@ -32,7 +32,7 @@ export abstract class AbstractStoreCreator {
 
     /**
      *  Connect to the store
-     * 
+     *
      * @throws ({@link AndesiteError}) - If the store is not connected ({@link InfrastructureErrorKeys.STORE_NOT_CONNECTED})
      */
     public connect(): void {
@@ -48,7 +48,7 @@ export abstract class AbstractStoreCreator {
 
     /**
      * Check if the store is connected
-     * 
+     *
      * @returns If the store is connected or not
      */
     public isConnected(): boolean {
@@ -67,14 +67,14 @@ export abstract class AbstractStoreCreator {
 
     /**
      * Get the store connection object
-     * 
+     *
      * @throws ({@link AndesiteError}) - If the store is not connected ({@link InfrastructureErrorKeys.STORE_NOT_CONNECTED})
      */
     public get store(): Redis {
-        if (!this._store) 
+        if (!this._store)
             throw new AndesiteError({
                 messageKey: InfrastructureErrorKeys.STORE_NOT_CONNECTED,
-            });  
+            });
         return this._store;
     }
 }

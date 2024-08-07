@@ -25,7 +25,7 @@ export abstract class AbstractDatabaseCreator {
 
     /**
      * Constructor of the AbstractCreator class
-     * 
+     *
      * @param options - The options of the AbstractDatabaseCreator (({@link Dialect}) & ({@link BasaltLogger}))
      */
     protected constructor(options: {
@@ -91,7 +91,7 @@ export abstract class AbstractDatabaseCreator {
 
     /**
      * Get the database connection object
-     * 
+     *
      * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureErrorKeys.DATABASE_NOT_CONNECTED})
      *
      * @returns The database connection object. ({@link Knex})
