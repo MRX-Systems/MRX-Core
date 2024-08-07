@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.0](https://github.com/Andesite-Lab/Core/compare/v1.20.0...v1.21.0) (2024-08-07)
+
+
+### Features
+
+* add prepare command + add to template with type check ([008ff8c](https://github.com/Andesite-Lab/Core/commit/008ff8c24db5a7a53a695e45bbe27288a33ba8a9))
+
 ## [1.20.0](https://github.com/Andesite-Lab/Core/compare/v1.19.0...v1.20.0) (2024-08-07)
 
 
