@@ -4,7 +4,7 @@
     "fix-lint": "eslint --fix . --ext .ts",
     "lint": "eslint . --ext .ts",
     "dev": "andesite dev",
-    "build": "andesite build",
+    "build": "tsc --noEmit && andesite build",
     "start": "andesite start"
   },
   "devDependencies": {
