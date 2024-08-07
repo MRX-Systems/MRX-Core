@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.20.0](https://github.com/Andesite-Lab/Core/compare/v1.19.0...v1.20.0) (2024-08-07)
+
+
+### Features
+
+* add tsc --noEmit to template package json ([8c9d471](https://github.com/Andesite-Lab/Core/commit/8c9d47159d14d2cc5bcffb16d1581103568afdb7))
+
+
+### Styles
+
+* remove whitespace ([ad3b04f](https://github.com/Andesite-Lab/Core/commit/ad3b04f4df27d2e383f230b738ecd27fa8da3487))
+
 ## [1.19.0](https://github.com/Andesite-Lab/Core/compare/v1.18.0...v1.19.0) (2024-08-02)
 
 
