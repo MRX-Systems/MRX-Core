@@ -31,7 +31,7 @@ class FactoryStoreSingleton {
      * @returns A new instance of the FactoryStore class. ({@link FactoryStoreSingleton})
      */
     public static get instance(): FactoryStoreSingleton {
-        if (!FactoryStoreSingleton._instance) 
+        if (!FactoryStoreSingleton._instance)
             FactoryStoreSingleton._instance = new FactoryStoreSingleton();
         return FactoryStoreSingleton._instance;
     }
