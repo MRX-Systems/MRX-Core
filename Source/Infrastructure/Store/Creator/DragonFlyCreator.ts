@@ -42,7 +42,7 @@ export class DragonFlyCreator extends AbstractStoreCreator {
 
     /**
      * Constructor of the DragonFlyCreator class
-     * 
+     *
      * @param options - The options of the store ({@link IDragonFlyStoreOptions})
      */
     public constructor(options: IDragonFlyStoreOptions) {
