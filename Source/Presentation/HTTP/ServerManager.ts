@@ -234,8 +234,8 @@ export class ServerManager {
             };
         });
         await reply.status(400).send({
-            content: sanitezedAjvError,
             statusCode: 400,
+            content: sanitezedAjvError,
         });
     }
 
@@ -255,22 +255,22 @@ export class ServerManager {
             const code: number = error.code ?? 500;
             const detail: Record<string, unknown> = typeof error.detail === 'object' ? error.detail as Record<string, unknown> : {};
             await reply.status(code).send({
-                code: error.code,
+                statusCode: error.code,
                 message: I18n.isI18nInitialized() ? I18n.translate(
                     error.message,
                     request.headers['accept-language'],
                     detail
                 ) : error.message,
-                ...error.code < 500 || EnvironmentUser.content.NODE_ENV === 'development' ? { detail: error.detail } : {}
+                ...error.code < 500 || EnvironmentUser.content.NODE_ENV === 'development' ? { content: error.detail } : {}
             });
         } else {
             await reply.status(500).send({
-                code: 500,
+                statusCode: 500,
                 message: I18n.isI18nInitialized() ? I18n.translate(
                     PresentationErrorKeys.INTERNAL_SERVER_ERROR,
                     request.headers['accept-language']
                 ) : PresentationErrorKeys.INTERNAL_SERVER_ERROR,
-                detail: error
+                content: error
             });
         }
     }
