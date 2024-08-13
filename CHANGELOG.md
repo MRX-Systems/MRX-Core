@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.0](https://github.com/Andesite-Lab/Core/compare/v1.21.0...v1.22.0) (2024-08-13)
+
+
+### Features
+
+* add type HookHandlerDoneFunction ([cfa65a5](https://github.com/Andesite-Lab/Core/commit/cfa65a5c1fc4e9899db64339245d8be0f22744fc))
+
 ## [1.21.0](https://github.com/Andesite-Lab/Core/compare/v1.20.0...v1.21.0) (2024-08-07)
 
 
