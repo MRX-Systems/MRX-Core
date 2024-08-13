@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.1](https://github.com/Andesite-Lab/Core/compare/v1.22.0...v1.22.1) (2024-08-13)
+
+
+### Code Refactoring
+
+* reformat response ([8a40e87](https://github.com/Andesite-Lab/Core/commit/8a40e872d723b035b4fa753e97b176d1a38e2adf))
+
 ## [1.22.0](https://github.com/Andesite-Lab/Core/compare/v1.21.0...v1.22.0) (2024-08-13)
 
 
