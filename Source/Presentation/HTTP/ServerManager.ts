@@ -2,7 +2,13 @@ import { BasaltError } from '@basalt-lab/basalt-helper';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
-import fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import fastify, {
+    type FastifyError,
+    type FastifyInstance,
+    type FastifyReply,
+    type FastifyRequest,
+    type HookHandlerDoneFunction,
+} from 'fastify';
 
 import { PresentationErrorKeys } from '@/Common/Error/Enum/index.js';
 import { AndesiteError } from '@/Common/Error/index.js';
@@ -19,7 +25,8 @@ export type {
     FastifyError,
     FastifyInstance,
     FastifyReply,
-    FastifyRequest
+    FastifyRequest,
+    HookHandlerDoneFunction
 };
 
 /**
