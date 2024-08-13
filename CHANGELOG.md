@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.22.2](https://github.com/Andesite-Lab/Core/compare/v1.22.1...v1.22.2) (2024-08-13)
+
+
+### Bug Fixes
+
+* correction handle BasaltError and AndesiteError ([c90e221](https://github.com/Andesite-Lab/Core/commit/c90e2214cf422cb31ef5d64c916501be525bb3d6))
+
+
+### Build System
+
+* update dependencies ([f12af2e](https://github.com/Andesite-Lab/Core/commit/f12af2e409283a21af04186a32eef60df52f5b07))
+
+
+### Continuous Integration
+
+* update workflow ([8476953](https://github.com/Andesite-Lab/Core/commit/84769533bd38c3fac4ccaa5effa6966613473e01))
+
 ## [1.22.1](https://github.com/Andesite-Lab/Core/compare/v1.22.0...v1.22.1) (2024-08-13)
 
 
