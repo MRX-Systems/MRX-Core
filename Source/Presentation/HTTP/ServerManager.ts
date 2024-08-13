@@ -1,4 +1,4 @@
-import { BasaltError } from '@basalt-lab/basalt-helper';
+import type { BasaltError } from '@basalt-lab/basalt-helper';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
@@ -11,12 +11,12 @@ import fastify, {
 } from 'fastify';
 
 import { PresentationErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
+import { type AndesiteError } from '@/Common/Error/index.js';
 import { I18n } from '@/Common/Util/index.js';
+import { EnvironmentUser } from '@/Config/index.js';
 import { LanguageHook, LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
 import type { IHook, IPlugin, IServerOptions, IStartOptions } from '@/Presentation/HTTP/Interface/index.js';
 import type { AbstractRouter } from '@/Presentation/HTTP/Router/index.js';
-import { EnvironmentUser } from '@/lib.js';
 
 /**
  * Fastify type.
@@ -238,7 +238,6 @@ export class ServerManager {
             content: sanitezedAjvError,
         });
     }
-
     /**
      * Set the error handler.
      *
@@ -251,9 +250,10 @@ export class ServerManager {
             this._options.logger.error(error);
         if ('validation' in error) {
             await this._handleValidationErrors(error, request, reply);
-        } else if (error instanceof AndesiteError || error instanceof BasaltError) {
-            const code: number = error.code ?? 500;
-            const detail: Record<string, unknown> = typeof error.detail === 'object' ? error.detail as Record<string, unknown> : {};
+        } else if (error.name === 'AndesiteError' || error.name === 'BasaltError') {
+            const e: AndesiteError | BasaltError = error as unknown as AndesiteError | BasaltError;
+            const code: number = e.code ?? 500;
+            const detail: Record<string, unknown> = typeof e.detail === 'object' ? e.detail as Record<string, unknown> : {};
             await reply.status(code).send({
                 statusCode: error.code,
                 message: I18n.isI18nInitialized() ? I18n.translate(
@@ -261,7 +261,7 @@ export class ServerManager {
                     request.headers['accept-language'],
                     detail
                 ) : error.message,
-                ...error.code < 500 || EnvironmentUser.content.NODE_ENV === 'development' ? { content: error.detail } : {}
+                ...e.code < 500 || EnvironmentUser.content.NODE_ENV === 'development' ? { content: e.detail } : {}
             });
         } else {
             await reply.status(500).send({

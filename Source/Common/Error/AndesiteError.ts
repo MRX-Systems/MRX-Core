@@ -40,6 +40,7 @@ export class AndesiteError extends Error {
         this._code = andesiteErrorOptions.code ?? 500;
         this.message = andesiteErrorOptions.messageKey;
         this._detail = andesiteErrorOptions.detail;
+        this.name = this.constructor.name;
         if (Error.captureStackTrace)
             Error.captureStackTrace(this, this.constructor);
     }
