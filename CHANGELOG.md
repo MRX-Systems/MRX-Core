@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.22.3](https://github.com/Andesite-Lab/Core/compare/v1.22.2...v1.22.3) (2024-08-14)
+
+
+### Code Refactoring
+
+* merge all errorkeys + clean value... ([5a51e02](https://github.com/Andesite-Lab/Core/commit/5a51e02be1b7e173dc75141b7f9405857d104f0b))
+
+
+### Build System
+
+* update dependencies ([039b82c](https://github.com/Andesite-Lab/Core/commit/039b82c55252a33e91952268ba68b1bcccf61bcc))
+
 ## [1.22.2](https://github.com/Andesite-Lab/Core/compare/v1.22.1...v1.22.2) (2024-08-13)
 
 
