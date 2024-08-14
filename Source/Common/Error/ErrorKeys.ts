@@ -14,19 +14,68 @@ export enum ErrorKeys {
     CANCEL_PROMPT = 'error.andesite-core.cancel_prompt',
 
     DATABASE_NOT_CONNECTED = 'error.andesite-core.database_not_connected',
+    /**
+     * Interpolation :
+     * - name: The name of the database.
+     */
     DATABASE_ALREADY_REGISTERED = 'error.andesite-core.database_already_registered',
+    /**
+     * Interpolation :
+     * - name: The name of the database.
+     */
     DATABASE_NOT_REGISTERED = 'error.andesite-core.database_not_registered',
+    /**
+     * Interpolation :
+     * - type: The type of the database.
+     */
     DATABASE_INVALID_TYPE = 'error.andesite-core.database_invalid_type',
-
+    /**
+     * Interpolation :
+     * - table: The name of the table.
+     * - database: The name of the database.
+     * - error: The error.
+     */
     DATABASE_QUERY_ERROR = 'error.andesite-core.database_query_error',
+    /**
+     * Interpolation :
+     * - table: The name of the table.
+     * - database: The name of the database.
+     */
     DATABASE_MODEL_NOT_CREATED = 'error.andesite-core.database_model_not_created',
+    /**
+     * Interpolation :
+     * - table: The name of the table.
+     * - database: The name of the database.
+     */
     DATABASE_MODEL_NOT_FOUND = 'error.andesite-core.database_model_not_found',
+    /**
+     * Interpolation :
+     * - table: The name of the table.
+     * - database: The name of the database.
+     */
     DATABASE_MODEL_NOT_UPDATED = 'error.andesite-core.database_model_not_updated',
+    /**
+     * Interpolation :
+     * - table: The name of the table.
+     * - database: The name of the database.
+     */
     DATABASE_MODEL_NOT_DELETED = 'error.andesite-core.database_model_not_deleted',
 
     STORE_NOT_CONNECTED = 'error.andesite-core.store_not_connected',
+    /**
+     * Interpolation :
+     * - name: The name of the store.
+     */
     STORE_ALREADY_REGISTERED = 'error.andesite-core.store_already_registered',
+    /**
+     * Interpolation :
+     * - name: The name of the store.
+     */
     STORE_NOT_REGISTERED = 'error.andesite-core.store_not_registered',
+    /**
+     * Interpolation :
+     * - type: The type of the store.
+     */
     STORE_INVALID_TYPE = 'error.andesite-core.store_invalid_type',
 
     INTERNAL_SERVER_ERROR = 'error.andesite-core.internal_server_error',
