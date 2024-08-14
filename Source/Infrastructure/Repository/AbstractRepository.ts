@@ -1,7 +1,6 @@
 import type { Knex } from 'knex';
 
-import { InfrastructureErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError, ErrorKeys } from '@/Common/Error/index.js';
 import type { IPaginationOptionQueryDTO, IWhereClauseDTO } from '@/DTO/index.js';
 import { FactoryDatabase } from '@/Infrastructure/Database/FactoryDatabase.js';
 import type { Transaction } from '@/Infrastructure/Database/index.js';
@@ -96,8 +95,8 @@ export abstract class AbstractRepository<T> {
      * @param databaseName - Database name to get in factory
      * @param primaryKey - Primary key of table (default is ['id', 'NUMBER'])
      *
-     * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link InfrastructureErrorKeys.DATABASE_NOT_REGISTERED})
-     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureErrorKeys.DATABASE_NOT_CONNECTED})
+     * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link ErrorKeys.DATABASE_NOT_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the database is not connected ({@link ErrorKeys.DATABASE_NOT_CONNECTED})
      */
     protected constructor(
         table: string,
@@ -117,8 +116,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select, it's an object with the key as the column name and the value as a boolean to select or a string to alias the column ({@link T})
      * @param options - Query options ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_CREATED})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_CREATED})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -136,7 +135,7 @@ export abstract class AbstractRepository<T> {
             query = query.transacting(options.transaction);
 
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_CREATED, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_CREATED, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -147,8 +146,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery} & {@link IPaginationOptionQueryDTO})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_FOUND})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -170,7 +169,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? [] : []);
     }
 
@@ -181,8 +180,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_FOUND})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -198,7 +197,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleResult(result as Partial<T>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .then((result) => this._handleResult(result as Partial<T>, ErrorKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -208,8 +207,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery} & {@link IPaginationOptionQueryDTO})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_FOUND})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -229,7 +228,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_FOUND, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? [] : []);
     }
 
@@ -241,8 +240,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_UPDATED})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_UPDATED})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -261,7 +260,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -272,8 +271,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_UPDATED})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_UPDATED})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -289,7 +288,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_UPDATED, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -300,8 +299,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_DELETED})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_DELETED})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -319,7 +318,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -329,8 +328,8 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to select is an object with the key is the column name and the value is a boolean to select or a string to alias the column. ({@link T})
      * @param options - Options of the query ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_DELETED})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_DELETED})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -346,7 +345,7 @@ export abstract class AbstractRepository<T> {
         if (options?.transaction)
             query = query.transacting(options.transaction);
         return query
-            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, InfrastructureErrorKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
+            .then((result) => this._handleArrayResult(result as Array<Partial<T>>, ErrorKeys.DATABASE_MODEL_NOT_DELETED, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -356,7 +355,7 @@ export abstract class AbstractRepository<T> {
      * @param search - The search data used to find the data in the table ({@link T} | {@link IWhereClauseDTO})
      * @param options - Query options ({@link IOptionQuery})
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
      * @returns The number of results
      */
@@ -465,8 +464,8 @@ export abstract class AbstractRepository<T> {
      * @param error - Is the error to handle
      * @param canThrow - If the _handleError can throw an error to the caller (default is true)
      *
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_QUERY_ERROR})
-     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_CREATED} | {@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_FOUND} | {@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_UPDATED} | {@link InfrastructureErrorKeys.DATABASE_MODEL_NOT_DELETED})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link AndesiteError}) - If the query can throw an error and an error occurred ({@link ErrorKeys.DATABASE_MODEL_NOT_CREATED} | {@link ErrorKeys.DATABASE_MODEL_NOT_FOUND} | {@link ErrorKeys.DATABASE_MODEL_NOT_UPDATED} | {@link ErrorKeys.DATABASE_MODEL_NOT_DELETED})
      *
      * @returns The data returned from the query or void if an error occurred ({@link T})
      */
@@ -476,7 +475,7 @@ export abstract class AbstractRepository<T> {
                 throw error;
             else
                 throw new AndesiteError({
-                    messageKey: InfrastructureErrorKeys.DATABASE_QUERY_ERROR,
+                    messageKey: ErrorKeys.DATABASE_QUERY_ERROR,
                     detail: {
                         table: this._table,
                         database: this._databaseName,

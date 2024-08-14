@@ -1,7 +1,6 @@
 import type { Redis } from 'ioredis';
 
-import { InfrastructureErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError, ErrorKeys } from '@/Common/Error/index.js';
 import { DragonFlyCreator, type AbstractStoreCreator, type IDragonFlyStoreOptions } from './Creator/index.js';
 
 /**
@@ -43,8 +42,8 @@ class FactoryStoreSingleton {
      * @param type - The type of the store (ex: redis)
      * @param options - The options of the store. ({@link IDragonFlyStoreOptions})
      *
-     * @throws ({@link AndesiteError}) - If the store is already registered with the same name. ({@link InfrastructureErrorKeys.STORE_ALREADY_REGISTERED})
-     * @throws ({@link AndesiteError}) - If the store type is invalid. ({@link InfrastructureErrorKeys.STORE_INVALID_TYPE})
+     * @throws ({@link AndesiteError}) - If the store is already registered with the same name. ({@link ErrorKeys.STORE_ALREADY_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the store type is invalid. ({@link ErrorKeys.STORE_INVALID_TYPE})
      */
     public register(
         name: string,
@@ -53,7 +52,7 @@ class FactoryStoreSingleton {
     ): void {
         if (this._store.has(name))
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.STORE_ALREADY_REGISTERED,
+                messageKey: ErrorKeys.STORE_ALREADY_REGISTERED,
                 detail: { name }
             });
         let creator: AbstractStoreCreator | undefined = undefined;
@@ -61,7 +60,7 @@ class FactoryStoreSingleton {
             creator = new DragonFlyCreator(options);
         if (!creator)
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.STORE_INVALID_TYPE,
+                messageKey: ErrorKeys.STORE_INVALID_TYPE,
                 detail: { type }
             });
         this._store.set(name, creator);
@@ -76,12 +75,12 @@ class FactoryStoreSingleton {
      *
      * @param name - The name of the store
      *
-     * @throws ({@link AndesiteError}) - If the store is not registered. ({@link InfrastructureErrorKeys.STORE_NOT_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the store is not registered. ({@link ErrorKeys.STORE_NOT_REGISTERED})
      */
     public unregister(name: string): void {
         if (!this._store.has(name))
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.STORE_NOT_REGISTERED,
+                messageKey: ErrorKeys.STORE_NOT_REGISTERED,
                 detail: { name }
             });
         const store: AbstractStoreCreator = this._store.get(name) as AbstractStoreCreator;
@@ -95,14 +94,14 @@ class FactoryStoreSingleton {
      *
      * @param name - The name of the store
      *
-     * @throws ({@link AndesiteError}) - If the store is not registered. ({@link InfrastructureErrorKeys.STORE_NOT_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the store is not registered. ({@link ErrorKeys.STORE_NOT_REGISTERED})
      *
      * @returns The store. ({@link Redis})
      */
     public get(name: string): Redis {
         if (!this._store.has(name))
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.STORE_NOT_REGISTERED,
+                messageKey: ErrorKeys.STORE_NOT_REGISTERED,
                 detail: { name }
             });
         const store: AbstractStoreCreator = this._store.get(name) as AbstractStoreCreator;

@@ -10,8 +10,7 @@ import fastify, {
     type HookHandlerDoneFunction,
 } from 'fastify';
 
-import { PresentationErrorKeys } from '@/Common/Error/Enum/index.js';
-import { type AndesiteError } from '@/Common/Error/index.js';
+import { type AndesiteError, ErrorKeys } from '@/Common/Error/index.js';
 import { I18n } from '@/Common/Util/index.js';
 import { EnvironmentUser } from '@/Config/index.js';
 import { LanguageHook, LoggerHook } from '@/Presentation/HTTP/Hook/index.js';
@@ -267,9 +266,9 @@ export class ServerManager {
             await reply.status(500).send({
                 statusCode: 500,
                 message: I18n.isI18nInitialized() ? I18n.translate(
-                    PresentationErrorKeys.INTERNAL_SERVER_ERROR,
+                    ErrorKeys.INTERNAL_SERVER_ERROR,
                     request.headers['accept-language']
-                ) : PresentationErrorKeys.INTERNAL_SERVER_ERROR,
+                ) : ErrorKeys.INTERNAL_SERVER_ERROR,
                 content: error
             });
         }
