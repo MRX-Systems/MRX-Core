@@ -1,7 +1,6 @@
 import type { Knex } from 'knex';
 
-import { InfrastructureErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError, ErrorKeys } from '@/Common/Error/index.js';
 import {
     BetterSQLiteCreator,
     MSSQLCreator,
@@ -51,9 +50,9 @@ class FactoryDatabaseSingleton {
      * @param type - The type of the database (ex: postgres, better-sqlite, mssql)
      * @param options - The options of the database. ({@link IPostgresDatabaseOptions} or {@link IBetterSQLiteDatabaseOptions} or {@link IMSSQLDatabaseOptions})
      *
-     * @throws ({@link AndesiteError}) - If the database is already registered with the same name. ({@link InfrastructureErrorKeys.DATABASE_ALREADY_REGISTERED})
-     * @throws ({@link AndesiteError}) - If the database is not connected ({@link InfrastructureErrorKeys.DATABASE_NOT_CONNECTED})
-     * @throws ({@link AndesiteError}) - If the database type is invalid. ({@link InfrastructureErrorKeys.DATABASE_INVALID_TYPE})
+     * @throws ({@link AndesiteError}) - If the database is already registered with the same name. ({@link ErrorKeys.DATABASE_ALREADY_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the database is not connected ({@link ErrorKeys.DATABASE_NOT_CONNECTED})
+     * @throws ({@link AndesiteError}) - If the database type is invalid. ({@link ErrorKeys.DATABASE_INVALID_TYPE})
      */
     public async register(
         name: string,
@@ -62,7 +61,7 @@ class FactoryDatabaseSingleton {
     ): Promise<void> {
         if (this._database.has(name))
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.DATABASE_ALREADY_REGISTERED,
+                messageKey: ErrorKeys.DATABASE_ALREADY_REGISTERED,
                 detail: { name }
             });
         let creator: AbstractDatabaseCreator | undefined = undefined;
@@ -75,7 +74,7 @@ class FactoryDatabaseSingleton {
 
         if (!creator)
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.DATABASE_INVALID_TYPE,
+                messageKey: ErrorKeys.DATABASE_INVALID_TYPE,
                 detail: { type }
             });
         this._database.set(name, creator);
@@ -90,12 +89,12 @@ class FactoryDatabaseSingleton {
      *
      * @param name - The name of the database to unregister
      *
-     * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link InfrastructureErrorKeys.DATABASE_NOT_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link ErrorKeys.DATABASE_NOT_REGISTERED})
      */
     public async unregister(name: string): Promise<void> {
         if (!this._database.has(name))
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.DATABASE_NOT_REGISTERED,
+                messageKey: ErrorKeys.DATABASE_NOT_REGISTERED,
                 detail: { name }
             });
         const database: AbstractDatabaseCreator = this._database.get(name) as AbstractDatabaseCreator;
@@ -109,14 +108,14 @@ class FactoryDatabaseSingleton {
      *
      * @param name - The name of the database to get
      *
-     * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link InfrastructureErrorKeys.DATABASE_NOT_REGISTERED})
+     * @throws ({@link AndesiteError}) - If the database is not registered with the same name. ({@link ErrorKeys.DATABASE_NOT_REGISTERED})
      *
      * @returns The ({@link Knex}) instance
      */
     public get(name: string): Knex {
         if (!this._database.has(name))
             throw new AndesiteError({
-                messageKey: InfrastructureErrorKeys.DATABASE_NOT_REGISTERED,
+                messageKey: ErrorKeys.DATABASE_NOT_REGISTERED,
                 detail: { name }
             });
         const database: AbstractDatabaseCreator = this._database.get(name) as AbstractDatabaseCreator;

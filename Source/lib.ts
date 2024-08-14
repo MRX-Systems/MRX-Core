@@ -1,4 +1,3 @@
-export * from '@/Common/Error/Enum/index.js';
 export * from '@/Common/Error/index.js';
 export * from '@/Common/Interface/index.js';
 export * from '@/Common/Util/index.js';

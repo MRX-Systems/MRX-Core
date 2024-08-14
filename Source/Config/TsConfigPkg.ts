@@ -30,8 +30,8 @@ export class TsConfigPkgSingleton extends TsConfig {
      *
      * @param andesiteConfig - The andesite configuration object. ({@link IAndesiteApiConfigDTO})
      *
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
+     * @throws ({@link AndesiteError}) If the file access is denied. ({@link ErrorKeys.ERROR_ACCESS_FILE})
+     * @throws ({@link AndesiteError}) If the file write fails. ({@link ErrorKeys.ERROR_WRITE_FILE})
      */
     public update(andesiteConfig: Readonly<Omit<IAndesiteConfigDTO, 'ProjectType'>>): void {
         const conf: ITsConfig = tsConfig as ITsConfig;
