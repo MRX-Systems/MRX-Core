@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.4](https://github.com/Andesite-Lab/Core/compare/v1.22.3...v1.22.4) (2024-08-14)
+
+
+### Bug Fixes
+
+* change value of error for i18n ([610ca9c](https://github.com/Andesite-Lab/Core/commit/610ca9c50264dadc742b5876bba0e506c5ed1ce3))
+
 ## [1.22.3](https://github.com/Andesite-Lab/Core/compare/v1.22.2...v1.22.3) (2024-08-14)
 
 
