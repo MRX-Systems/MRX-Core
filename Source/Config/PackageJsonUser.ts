@@ -3,8 +3,7 @@ import { cwd } from 'process';
 import api from '@/../Templates/PackageJson/api.json' with { type: 'json' };
 import base from '@/../Templates/PackageJson/base.json' with { type: 'json' };
 import script from '@/../Templates/PackageJson/script.json' with { type: 'json' };
-import { DomainErrorKeys } from '@/Common/Error/Enum/index.js';
-import { AndesiteError } from '@/Common/Error/index.js';
+import { AndesiteError, ErrorKeys } from '@/Common/Error/index.js';
 import { PackageJson, type IPackageJson } from '@/Config/index.js';
 import type { IProjectInformationDTO } from '@/DTO/index.js';
 
@@ -34,14 +33,14 @@ export class PackageJsonUserSingleton extends PackageJson {
      *
      * @param projectInformation - The project information. ({@link IProjectInformation})
      *
-     * @throws ({@link AndesiteError}) If the package.json file already exists. ({@link DomainErrorKeys.ERROR_PACKAGE_JSON_EXISTS})
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
+     * @throws ({@link AndesiteError}) If the package.json file already exists. ({@link ErrorKeys.PACKAGE_JSON_EXISTS})
+     * @throws ({@link AndesiteError}) If the file access is denied. ({@link ErrorKeys.ERROR_ACCESS_FILE})
+     * @throws ({@link AndesiteError}) If the file write fails. ({@link ErrorKeys.ERROR_WRITE_FILE})
      */
     public init(projectInformation: Readonly<IProjectInformationDTO>): void {
         if (this.exists())
             throw new AndesiteError({
-                messageKey: DomainErrorKeys.ERROR_PACKAGE_JSON_EXISTS
+                messageKey: ErrorKeys.PACKAGE_JSON_EXISTS
             });
         const packageJson = this._buildPackageJsonObject(projectInformation);
         this.write(JSON.stringify(packageJson, null, 2));

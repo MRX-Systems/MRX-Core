@@ -39,8 +39,8 @@ export class JestUserSingleton extends File {
      *
      * @param projectName - The name of the project.
      *
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file write fails. ({@link CommonErrorKeys.ERROR_WRITE_FILE})
+     * @throws ({@link AndesiteError}) If the file access is denied. ({@link ErrorKeys.ERROR_ACCESS_FILE})
+     * @throws ({@link AndesiteError}) If the file write fails. ({@link ErrorKeys.ERROR_WRITE_FILE})
      */
     public init(projectName: string): void {
         jest.displayName = projectName;

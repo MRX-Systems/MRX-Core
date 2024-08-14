@@ -24,8 +24,8 @@ class EnvironmentUserSingleton extends File {
     /**
      * Initializes a new instance of the EnvironnementUser class.
      *
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
+     * @throws ({@link AndesiteError}) If the file access is denied. ({@link ErrorKeys.ERROR_ACCESS_FILE})
+     * @throws ({@link AndesiteError}) If the file read fails. ({@link ErrorKeys.ERROR_READ_FILE})
      */
     private constructor() {
         super(`${cwd()}/.env`);
@@ -65,8 +65,8 @@ class EnvironmentUserSingleton extends File {
     /**
      * Gets the environment variables of the .env file of the user project.
      *
-     * @throws ({@link AndesiteError}) If the file access is denied. ({@link CommonErrorKeys.ERROR_ACCESS_FILE})
-     * @throws ({@link AndesiteError}) If the file read fails. ({@link CommonErrorKeys.ERROR_READ_FILE})
+     * @throws ({@link AndesiteError}) If the file access is denied. ({@link ErrorKeys.ERROR_ACCESS_FILE})
+     * @throws ({@link AndesiteError}) If the file read fails. ({@link ErrorKeys.ERROR_READ_FILE})
      *
      * @returns The user environment variables.
      */
