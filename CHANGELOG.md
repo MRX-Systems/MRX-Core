@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.5](https://github.com/Andesite-Lab/Core/compare/v1.22.4...v1.22.5) (2024-08-14)
+
+
+### Documentation
+
+* add comment on errors when interpolated ([e83e85a](https://github.com/Andesite-Lab/Core/commit/e83e85a8071bf1b25b8acb61a84c950a7e48ed3f))
+
 ## [1.22.4](https://github.com/Andesite-Lab/Core/compare/v1.22.3...v1.22.4) (2024-08-14)
 
 
