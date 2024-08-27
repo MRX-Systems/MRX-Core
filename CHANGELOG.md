@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.0](https://github.com/Andesite-Lab/Core/compare/v1.22.5...v1.23.0) (2024-08-27)
+
+
+### Features
+
+* GLOB REFACTO, DELETE CLI, IMPROVEMENT, NEW FEATURES ([b620181](https://github.com/Andesite-Lab/Core/commit/b62018168b99820d3f508c56b01b0bb6a2712495))
+
 ## [1.22.5](https://github.com/Andesite-Lab/Core/compare/v1.22.4...v1.22.5) (2024-08-14)
 
 
