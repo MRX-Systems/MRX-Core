@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.1](https://github.com/Andesite-Lab/Core/compare/v1.23.0...v1.23.1) (2024-08-27)
+
+
+### Continuous Integration
+
+* fix github action for bun ([27a61fd](https://github.com/Andesite-Lab/Core/commit/27a61fdef773794a14682d857fb01b8cb28e902a))
+
 ## [1.23.0](https://github.com/Andesite-Lab/Core/compare/v1.22.5...v1.23.0) (2024-08-27)
 
 
