@@ -1,2 +1,2 @@
-export * from './language.hook';
-export * from './logger.hook';
+export * from './language.hook.ts';
+export * from './logger.hook.ts';

@@ -1,1 +1,1 @@
-export * from './crud.usecase.js';
+export * from './crud.usecase.ts';

@@ -1,8 +1,8 @@
-export * from './coreErrorOptions.data';
-export * from './database';
-export * from './hook';
-export * from './plugin';
-export * from './presentation';
-export * from './repository';
-export * from './store/creator';
+export * from './coreErrorOptions.data.ts';
+export * from './database/index.ts';
+export * from './hook/index.ts';
+export * from './plugin/index.ts';
+export * from './presentation/index.ts';
+export * from './repository/index.ts';
+export * from './store/creator/index.ts';
 

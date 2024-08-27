@@ -1,8 +1,8 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import knex, { type Knex } from 'knex';
 
-import { CoreError, ErrorKeys } from '@/common/error';
-import type { Dialect } from '../../../common/types/dependency/knexType';
+import { CoreError, ErrorKeys } from '@/common/error/index.ts';
+import type { Dialect } from '@/common/types/index.ts';
 
 /**
  * Abstract Database class for Database Creator

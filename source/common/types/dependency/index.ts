@@ -1,3 +1,3 @@
-export * from './knexType';
-export * from './vineType';
+export * from './knexType.ts';
+export * from './vineType.ts';
 

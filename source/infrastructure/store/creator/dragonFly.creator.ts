@@ -1,6 +1,6 @@
 
-import type { DragonFlyStoreOptions } from '@/common/types';
-import { AbstractStoreCreator } from './abstractStore.creator';
+import type { DragonFlyStoreOptions } from '@/common/types/index.ts';
+import { AbstractStoreCreator } from './abstractStore.creator.ts';
 
 /**
  * DragonFly Creator is a concrete creator for DragonFly Store (Factory Pattern) extending ({@link AbstractStoreCreator})

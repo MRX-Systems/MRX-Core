@@ -1,11 +1,11 @@
 import { filterByKeyInclusion } from '@basalt-lab/basalt-helper';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-import { CoreError, ErrorKeys } from '@/common/error';
-import type { CrudHandlerOptions, DynamicDatabaseOptions, PaginationQueryOptions, SearchModel } from '@/common/types';
-import { I18n, isJsonString } from '@/common/util';
-import { crud } from '@/domain/usecase';
-import { FactoryDatabase } from '@/infrastructure/database';
+import { CoreError, ErrorKeys } from '@/common/error/index.ts';
+import type { CrudHandlerOptions, PaginationQueryOptions, SearchModel } from '@/common/types/index.ts';
+import { I18n, isJsonString } from '@/common/util/index.ts';
+import { crud } from '@/domain/usecase/index.ts';
+import { FactoryDatabase } from '@/infrastructure/database/index.ts';
 
 /**
  * The CRUD handler.
@@ -21,11 +21,7 @@ export class CrudHandler<T> {
     /**
      * The constructor for the CRUD handler class. ({@link CrudHandler})
      *
-     * @param table - The table name.
-     * @param keyInclusion - The key inclusion is using for clean the request body or request query.
-     * @param databaseName - The database name.
-     * @param dynamicDatabaseConfig  - The dynamic database configuration. ({@link DynamicDatabaseOptions})
-     * @param primaryKey - The primary key for the table.
+     * @param options - The options for the CRUD handler. ({@link CrudHandlerOptions})
      */
     public constructor(options: CrudHandlerOptions<T>) {
         this._options = options;

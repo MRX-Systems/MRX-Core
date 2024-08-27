@@ -1,7 +1,7 @@
-export * from './cors.plugin';
-export * from './formBody.plugin';
-export * from './helmet.plugin';
-export * from './printRoutes.plugin';
-export * from './swagger.plugin';
-export * from './swaggerScalarUi.plugin';
+export * from './cors.plugin.ts';
+export * from './formBody.plugin.ts';
+export * from './helmet.plugin.ts';
+export * from './printRoutes.plugin.ts';
+export * from './swagger.plugin.ts';
+export * from './swaggerScalarUi.plugin.ts';
 

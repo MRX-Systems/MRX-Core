@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-import type { Hook } from '@/common/types';
+import type { Hook } from '@/common/types/index.ts';
 
 /**
  * Language Hook class implement the IHook interface ({@link Hook})

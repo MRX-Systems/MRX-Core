@@ -1,4 +1,4 @@
-export * from './environnement.utils';
-export * from './i18n.util';
-export * from './other.util';
+export * from './environnement.utils.ts';
+export * from './i18n.util.ts';
+export * from './other.util.ts';
 

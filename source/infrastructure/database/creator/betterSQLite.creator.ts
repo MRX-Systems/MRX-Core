@@ -1,5 +1,5 @@
-import type { BetterSQLiteDatabaseOptions } from '@/common/types/index.js';
-import { AbstractDatabaseCreator } from './abstractDatabase.creator.js';
+import type { BetterSQLiteDatabaseOptions } from '@/common/types/index.ts';
+import { AbstractDatabaseCreator } from './abstractDatabase.creator.ts';
 
 /**
  * Better SQLite Creator is a concrete creator for Better SQLite Database (Factory Pattern).
