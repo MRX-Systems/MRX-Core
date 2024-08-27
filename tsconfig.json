@@ -1,63 +1,37 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "exclude": [
-    "node_modules",
-    "Build",
-    "Configs",
-    "**/*.spec.ts"
-  ],
   "include": [
-    "Source/**/*.ts",
-    "Templates/**/*.json"
+    "source/**/*.ts",
   ],
   "typedocOptions": {
     "entryPoints": [
-      "Source/**/*.ts"
+      "source/**/*.ts"
     ],
     "exclude": [
-      "cli.ts",
       "./**/index.ts"
     ],
     "out": "docs"
   },
-  "ts-node": {
-    "esm": true
-  },
   "compilerOptions": {
     "types": ["@types/node"],
+    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
-    "lib": ["ESNext"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "checkJs": true,
-    /* Visit https://aka.ms/tsconfig to read more about this file */
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "allowJs": true,
 
-    /* Projects */
-    "composite": true,                                /* Enable constraints that allow a TypeScript project to be used with project references. */
+    // Bundler mode
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "./build",                              /* Specify an output folder for all emitted files. */
 
-    /* Language and Environment */
-    "experimentalDecorators": true,                   /* Enable experimental support for legacy experimental decorators. */
-
-    /* Modules */
-    "rootDir": "./Source",                            /* Specify the root folder within your source files. */
-    "baseUrl": "./Source",                            /* Specify the base directory to resolve non-relative module names. */
+    "rootDir": "./source",                            /* Specify the root folder within your source files. */
+    "baseUrl": "./source",
     "paths": {
       "@/*": ["./*"]
     },
-    "resolveJsonModule": true,                        /* Enable importing .json files. */
-    "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
-
-    /* Emit */
-    "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
-    "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
-    "outDir": "./Build",                              /* Specify an output folder for all emitted files. */
-    "removeComments": false,                           /* Disable emitting comments. */
-    "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
-
-    /* Interop Constraints */
-    "esModuleInterop": true,                          /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true,         /* Ensure that casing is correct in imports. */
-    "isolatedModules": true,                          /* Ensure that each file can be safely transpiled without relying on other imports. */
 
     /* Type Checking */
     "strict": true,                                   /* Enable all strict type-checking options. */
@@ -81,6 +55,6 @@
     "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
 
     /* Completeness */
-    "skipLibCheck": true                              /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true    
   }
 }
