@@ -1,22 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@andesite-lab/andesite-core",
+  "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "version": "1.22.5",
-  "description": "Andesite - Core allows you to create a new microservice with ease. It provides a set of tools to help you build a new microservice.",
-  "main": "Build/lib.js",
-  "types": "Build/lib.d.ts",
+  "module": "source/index.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "type": "module",
-  "bin": {
-    "andesite": "Build/cli.js"
-  },
   "scripts": {
-    "clear": "if [ -f tsconfig.tsbuildinfo ]; then rm tsconfig.tsbuildinfo; fi && if [ -d Build ]; then rm -rf Build; fi",
-    "create-types": "tsc --emitDeclarationOnly && tsc-alias",
-    "build": "npm run clear && tsc --noEmit && npm run create-types && node ./Configs/esbuild.config.package",
-    "user::build": "node ./Configs/esbuild.config.user.js build",
-    "docs": "typedoc",
-    "fix-lint": "eslint --fix . --ext .ts",
-    "lint": "eslint . --ext .ts"
+    "dev": "bun --watch source/index.ts",
+    "build": "NODE_ENV=production bun bundler.config.ts && tsc && tsc-alias",
+    "start": "NODE_ENV=production bun build/index.js",
+    "test": "bun test",
+    "docs": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -34,37 +30,33 @@
   ],
   "author": "Ruby",
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^22.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "esbuild": "^0.23.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-tsdoc": "^0.3.0",
-    "tsc-alias": "^1.8.10",
-    "tslib": "^2.6.3",
-    "typedoc": "^0.26.5",
-    "typescript": "^5.5.4"
-  },
   "dependencies": {
-    "@basalt-lab/basalt-helper": "^1.7.1",
-    "@basalt-lab/basalt-logger": "^1.8.1",
-    "@clack/prompts": "^0.7.0",
+    "@basalt-lab/basalt-logger": "^1.8.2",
     "@fastify/cors": "^9.0.1",
     "@fastify/formbody": "^7.4.0",
     "@fastify/helmet": "^11.1.1",
     "@fastify/swagger": "^8.15.0",
-    "@scalar/fastify-api-reference": "^1.24.75",
+    "@scalar/fastify-api-reference": "^1.25.7",
     "@vinejs/vine": "^2.1.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",
-    "commander": "^12.1.0",
     "fast-querystring": "^1.1.2",
     "fastify": "^4.28.1",
-    "i18next": "^23.12.3",
+    "fastify-print-routes": "^3.2.0",
+    "i18next": "^23.14.0",
     "ioredis": "^5.4.1",
-    "knex": "^3.1.0",
-    "source-map-support": "^0.5.21",
-    "yaml": "^2.5.0"
+    "knex": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.8",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-tsdoc": "^0.3.0",
+    "tsc-alias": "^1.8.10",
+    "typedoc": "^0.26.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.5.4"
   }
 }

@@ -1,9 +1,0 @@
-{
-  "ProjectType": "API",
-  "Config": {
-    "BaseSourceDir": "Source",
-    "EntryPoint": "Source/App.ts",
-    "OutputDir": "Build",
-    "PathAlias": "@/"
-  }
-}
