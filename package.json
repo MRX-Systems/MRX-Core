@@ -5,7 +5,7 @@
   "version": "1.24.0",
   "type": "module",
   "main": "build/lib.js",
-  "types": "Build/lib.d.ts",
+  "types": "build/lib.d.ts",
   "bin": {
     "andesite": "build/cli.js"
   },
