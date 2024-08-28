@@ -7,19 +7,73 @@ export enum ErrorKeys {
     INVALID_ENVIRONMENT = 'error.core-api.invalid_environment',
 
     DATABASE_NOT_CONNECTED = 'error.core-api.database_not_connected',
+    /**
+     * Interpolation :
+     * - name : The name of the database
+     */
     DATABASE_ALREADY_REGISTERED = 'error.core-api.database_already_registered',
+    /**
+     * Interpolation :
+     * - type : The type of the database
+     */
     DATABASE_INVALID_TYPE = 'error.core-api.database_invalid_type',
+    /**
+     * Interpolation :
+     * - name : The name of the database
+     */
     DATABASE_NOT_REGISTERED = 'error.core-api.database_not_registered',
 
+    /**
+     * Interpolation :
+     * - table : The name of the table
+     * - database : The name of the database
+     * - error : The error message
+     */
     DATABASE_MODEL_NOT_CREATED = 'error.core-api.database_model_not_created',
+    /**
+     * Interpolation :
+     * - table : The name of the table
+     * - database : The name of the database
+     * - error : The error message
+     */
     DATABASE_MODEL_NOT_FOUND = 'error.core-api.database_model_not_found',
+    /**
+     * Interpolation :
+     * - table : The name of the table
+     * - database : The name of the database
+     * - error : The error message
+     */
     DATABASE_MODEL_NOT_UPDATED = 'error.core-api.database_model_not_updated',
+    /**
+     * Interpolation :
+     * - table : The name of the table
+     * - database : The name of the database
+     * - error : The error message
+     */
     DATABASE_MODEL_NOT_DELETED = 'error.core-api.database_model_not_deleted',
+    /**
+     * Interpolation :
+     * - table : The name of the table
+     * - database : The name of the database
+     * - error : The error message
+     */
     DATABASE_QUERY_ERROR = 'error.core-api.database_query_error',
 
     STORE_NOT_CONNECTED = 'error.core-api.store_not_connected',
+    /**
+     * Interpolation :
+     * - name : The name of the store
+     */
     STORE_ALREADY_REGISTERED = 'error.core-api.store_already_registered',
+    /**
+     * Interpolation :
+     * - type : The type of the store
+     */
     STORE_INVALID_TYPE = 'error.core-api.store_invalid_type',
+    /**
+     * Interpolation :
+     * - name : The name of the store
+     */
     STORE_NOT_REGISTERED = 'error.core-api.store_not_registered',
     INTERNAL_SERVER_ERROR = 'error.core-api.internal_server_error',
 
