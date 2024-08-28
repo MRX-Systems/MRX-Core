@@ -1,1 +1,1 @@
-export * from './hook.data';
+export * from './hook.data.ts';

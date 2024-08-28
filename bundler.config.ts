@@ -7,10 +7,11 @@ const peerDependencies = 'peerDependencies' in pkg ? Object.keys(pkg.peerDepende
 await Bun.build({
     external: [...dependencies, ...devDependencies, ...peerDependencies],
     root: './source',
-    entrypoints: ['./source/index.ts'],
+    entrypoints: ['./source/cli.ts', './source/lib.ts'],
     outdir: './build',
     format: 'esm',
     minify: true,
     sourcemap: process.env.NODE_ENV === 'development' ? 'external' : 'none',
-    target: 'node'
+    target: 'node',
+    splitting: true,
 });

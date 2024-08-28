@@ -1,2 +1,2 @@
-export * from './core.error.js';
-export * from './keys.error.js';
+export * from './core.error.ts';
+export * from './keys.error.ts';

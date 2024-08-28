@@ -1,0 +1,43 @@
+{
+    "public": null,
+    "source": {
+        "common": {
+            "error": null,
+            "util": null,
+            "type": {
+                "data": null,
+                "request": null
+            }
+        },
+        "config": null,
+        "domain": {
+            "service": null,
+            "usecase": null
+        },
+        "infrastructure": {
+            "database": null,
+            "model": {
+                "__static__": null,
+                "__dynamic__": null
+            },
+            "repository": {
+                "__static__": null,
+                "__dynamic__": null
+            },
+            "store": null
+        },
+        "presentation": {
+            "http": {
+                "handler": null,
+                "middleware": null,
+                "router": null
+            },
+            "schema": null,
+            "webSocket": {
+                "handler": null,
+                "middleware": null,
+                "router": null
+            }
+        }
+    }
+}

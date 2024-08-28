@@ -1,1 +1,1 @@
-export * from './factory.store.js';
+export * from './factory.store.ts';

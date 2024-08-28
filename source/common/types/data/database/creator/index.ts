@@ -1,3 +1,3 @@
-export * from './betterSQLiteDatabaseOptions.data';
-export * from './mssqlDatabaseOptions.data';
-export * from './postgresDatabaseOptions.data';
+export * from './betterSQLiteDatabaseOptions.data.ts';
+export * from './mssqlDatabaseOptions.data.ts';
+export * from './postgresDatabaseOptions.data.ts';

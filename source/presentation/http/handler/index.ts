@@ -1,1 +1,1 @@
-export * from './crud.handler';
+export * from './crud.handler.ts';

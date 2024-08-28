@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 
-import type { CoreErrorOptions } from '@/common/types';
+import type { CoreErrorOptions } from '#/common/types/index.ts';
 
 /**
  * CoreError is a class that represents an error entity with a unique identifier.
