@@ -34,7 +34,6 @@ export async function buildProject(): Promise<void> {
         JestUser.init(PackageJsonUser.content.name ?? 'andesite');
         TsConfigPkg.update(config);
 
-
         const esbuildUser: EsbuildUser = new EsbuildUser(config);
         await new Promise<void>((resolve) => {
             const child: ChildProcess = esbuildUser.exec();
