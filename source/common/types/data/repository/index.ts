@@ -1,3 +1,3 @@
-export * from './paginationQueryOptions.data';
-export * from './queryOptions.data';
-export * from './whereClause.data';
+export * from './paginationQueryOptions.data.ts';
+export * from './queryOptions.data.ts';
+export * from './whereClause.data.ts';

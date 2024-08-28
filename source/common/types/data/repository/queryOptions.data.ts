@@ -1,4 +1,4 @@
-import type { Transaction } from '@/common/types';
+import type { Transaction } from '#/common/types/index.ts';
 
 /**
  * Interface Option query

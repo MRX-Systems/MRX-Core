@@ -1,5 +1,5 @@
-import type { PostgresDatabaseOptions } from '@/common/types/index.js';
-import { AbstractDatabaseCreator } from './abstractDatabase.creator.js';
+import type { PostgresDatabaseOptions } from '#/common/types/index.ts';
+import { AbstractDatabaseCreator } from './abstractDatabase.creator.ts';
 
 /**
  * Postgres Creator is a concrete creator for Postgres Database (Factory Pattern)

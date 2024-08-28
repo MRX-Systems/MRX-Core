@@ -26,4 +26,17 @@ export enum ErrorKeys {
     DATABASE_NOT_SPECIFIED_IN_HEADER = 'error.core-api.database_not_specified_in_header',
 
     SET_DATABASE_NAME_OR_DYNAMIC_DATABASE_CONFIG = 'error.core-api.set_database_name_or_dynamic_database_config',
+
+    ANDESITE_YML_EXISTS = 'error.core-api.andesite_yml_exists',
+    ANDESITE_YML_INVALID_CONFIG = 'error.core-api.andesite_yml_invalid_config',
+
+    ESLINT_EXISTS = 'error.core-api.eslint_exists',
+
+    PACKAGE_JSON_EXISTS = 'error.core-api.package_json_exists',
+
+    TS_CONFIG_EXISTS = 'error.core-api.ts_config_exists',
+
+    ENTRY_POINT_EXISTS = 'error.core-api.entry_point_exists',
+
+    CANCEL_PROMPT = 'error.core-api.cancel_prompt',
 }

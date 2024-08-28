@@ -1,5 +1,6 @@
-export * from './abstractCrudOptions.data';
-export * from './crudHandlerOptions.data';
-export * from './operationOptions.data';
-export * from './serverOptions.data';
-export * from './startOptions.data';
+export * from './abstractCrudOptions.data.ts';
+export * from './crudHandlerOptions.data.ts';
+export * from './operationOptions.data.ts';
+export * from './serverOptions.data.ts';
+export * from './startOptions.data.ts';
+

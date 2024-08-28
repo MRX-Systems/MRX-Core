@@ -1,7 +1,7 @@
 import i18next, { type Resource, type i18n } from 'i18next';
 
-import { CoreError, ErrorKeys } from '@/common/error';
-import type { Interpolation } from '@/common/types';
+import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import type { Interpolation } from '#/common/types/index.ts';
 
 /**
  * The i18n instance.
