@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.0](https://github.com/Andesite-Lab/Core/compare/v1.25.0...v1.26.0) (2024-08-28)
+
+
+### Features
+
+* add type with next parameter ([18a4bd4](https://github.com/Andesite-Lab/Core/commit/18a4bd4e6697875354be7c914b14730a59e09ced))
+
 ## [1.25.0](https://github.com/Andesite-Lab/Core/compare/v1.24.2...v1.25.0) (2024-08-28)
 
 
