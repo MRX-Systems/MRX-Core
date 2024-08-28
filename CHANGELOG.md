@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.24.0](https://github.com/Andesite-Lab/Core/compare/v1.23.1...v1.24.0) (2024-08-28)
+
+
+### Features
+
+* readd cli ([0e707b2](https://github.com/Andesite-Lab/Core/commit/0e707b2f377cf945cdab4951be0baef3868cae38))
+
+
+### Code Refactoring
+
+* change to NodeNext ([601f95a](https://github.com/Andesite-Lab/Core/commit/601f95a8c2bdd1ac900bb3d0231872bf27e4c208))
+
 ## [1.23.1](https://github.com/Andesite-Lab/Core/compare/v1.23.0...v1.23.1) (2024-08-27)
 
 
