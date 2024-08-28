@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.1](https://github.com/Andesite-Lab/Core/compare/v1.24.0...v1.24.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* correction types export ([cba187f](https://github.com/Andesite-Lab/Core/commit/cba187f850caabd490fb3f2cb442fccf4a6efc34))
+
 ## [1.24.0](https://github.com/Andesite-Lab/Core/compare/v1.23.1...v1.24.0) (2024-08-28)
 
 
