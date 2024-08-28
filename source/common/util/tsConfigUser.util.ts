@@ -40,5 +40,4 @@ export class TsConfigUserSingleton extends TsConfigFile {
     }
 }
 
-
 export const TsConfigUser = TsConfigUserSingleton.getInstance('./tsconfig.json');

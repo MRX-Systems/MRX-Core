@@ -18,7 +18,6 @@ commander
     .requiredOption('-cwd, --current-working-directory <current-working-directory>', 'Current working directory')
     .requiredOption('-entry, --entry-point <entry>', 'Entry point')
     .requiredOption('-o, --output <output>', 'Output directory')
-
     .action(async (options) => {
         const coreDependencies = safePkg.dependencies ? Object.keys(safePkg.dependencies) : undefined;
         const coreDevDependencies = safePkg.devDependencies ? Object.keys(safePkg.devDependencies) : undefined;
@@ -63,6 +62,3 @@ commander
     });
 
 commander.parse(argv)
-
-
-
