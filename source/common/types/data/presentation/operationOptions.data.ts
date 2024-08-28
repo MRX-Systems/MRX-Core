@@ -13,5 +13,8 @@ export interface OperationOptions {
      * The preHandler function for the operation.
      * Can be a function or an array of functions.
      */
-    preHandler: (request: FastifyRequest, reply: FastifyReply) => void | ((request: FastifyRequest, reply: FastifyReply) => void)[];
+    preHandler: ((request: FastifyRequest, reply: FastifyReply) => void)
+        | ((request: FastifyRequest, reply: FastifyReply, next: () => void) => void)
+        | ((request: FastifyRequest, reply: FastifyReply) => void)[]
+        | ((request: FastifyRequest, reply: FastifyReply, next: () => void) => void)[];
 }
