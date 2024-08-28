@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.0](https://github.com/Andesite-Lab/Core/compare/v1.24.2...v1.25.0) (2024-08-28)
+
+
+### Features
+
+* add WhereClauseSchema ([c0be214](https://github.com/Andesite-Lab/Core/commit/c0be2148d5f40fbddc48de317c9b750cf74e25b4))
+
 ## [1.24.2](https://github.com/Andesite-Lab/Core/compare/v1.24.1...v1.24.2) (2024-08-28)
 
 
