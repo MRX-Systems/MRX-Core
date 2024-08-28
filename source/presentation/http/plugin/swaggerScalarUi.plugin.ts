@@ -1,7 +1,7 @@
 import scalar from '@scalar/fastify-api-reference';
 import type { FastifyInstance } from 'fastify';
 
-import type { Plugin } from '@/common/types/index.ts';
+import type { Plugin } from '#/common/types/index.ts';
 
 
 /**

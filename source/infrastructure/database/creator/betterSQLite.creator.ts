@@ -1,4 +1,4 @@
-import type { BetterSQLiteDatabaseOptions } from '@/common/types/index.ts';
+import type { BetterSQLiteDatabaseOptions } from '#/common/types/index.ts';
 import { AbstractDatabaseCreator } from './abstractDatabase.creator.ts';
 
 /**

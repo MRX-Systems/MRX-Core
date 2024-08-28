@@ -1,4 +1,4 @@
-import type { MSSQLDatabaseOptions } from '@/common/types/index.ts';
+import type { MSSQLDatabaseOptions } from '#/common/types/index.ts';
 import { AbstractDatabaseCreator } from './abstractDatabase.creator.ts';
 
 /**

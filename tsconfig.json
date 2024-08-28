@@ -1,13 +1,15 @@
 {
   "include": [
     "source/**/*.ts",
+    "template/**/*.json"
   ],
   "typedocOptions": {
     "entryPoints": [
       "source/**/*.ts"
     ],
     "exclude": [
-      "./**/index.ts"
+      "./**/index.ts",
+      "cli.ts"
     ],
     "out": "docs"
   },
@@ -30,8 +32,11 @@
     "rootDir": "./source",                            /* Specify the root folder within your source files. */
     "baseUrl": "./source",
     "paths": {
-      "@/*": ["./*"]
+      "#/*": ["./*"]
     },
+    "resolveJsonModule": true,                        /* Enable importing .json files. */
+    "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
+
 
     /* Type Checking */
     "strict": true,                                   /* Enable all strict type-checking options. */

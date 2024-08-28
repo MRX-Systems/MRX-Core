@@ -15,9 +15,9 @@
     },
     "ignorePatterns": [
         "node_modules/*",
-        "Configs/*",
+        "configs/*",
         "**/*.spec.ts",
-        "Build/*"
+        "build/*"
     ],
     "rules": {
         "tsdoc/syntax": "error",

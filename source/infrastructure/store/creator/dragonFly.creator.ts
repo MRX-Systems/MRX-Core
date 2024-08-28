@@ -1,5 +1,5 @@
 
-import type { DragonFlyStoreOptions } from '@/common/types/index.ts';
+import type { DragonFlyStoreOptions } from '#/common/types/index.ts';
 import { AbstractStoreCreator } from './abstractStore.creator.ts';
 
 /**

@@ -1,0 +1,10 @@
+{
+    "ProjectType": "API",
+    "Config": {
+      "BaseSourceDir": "source",
+      "EntryPoint": "source/app.ts",
+      "OutputDir": "build",
+      "PathAlias": "#/"
+    }
+  }
+
