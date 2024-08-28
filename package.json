@@ -49,6 +49,7 @@
     "fast-querystring": "^1.1.2",
     "fastify": "^4.28.1",
     "fastify-print-routes": "^3.2.0",
+    "fluent-json-schema": "^5.0.0",
     "i18next": "^23.14.0",
     "ioredis": "^5.4.1",
     "knex": "^3.1.0",

@@ -69,5 +69,4 @@ export class PackageJsonUserSingleton extends PackageJsonFile {
     }
 }
 
-
 export const PackageJsonUser = PackageJsonUserSingleton.getInstance(`${cwd()}/package.json`);

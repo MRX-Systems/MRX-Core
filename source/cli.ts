@@ -3,7 +3,6 @@ import { Command } from 'commander';
 import { argv } from 'process';
 import 'source-map-support/register.js';
 
-
 import { PackageJsonCore } from '#/common/util/index.ts';
 import { initProject, prepareProject, buildProject, startProject, devProject } from '#/domain/usecase/index.ts';
 

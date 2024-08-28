@@ -11,4 +11,5 @@ export * from '#/presentation/http/hook/index.ts';
 export * from '#/presentation/http/plugin/index.ts';
 export * from '#/presentation/http/router/index.ts';
 export * from '#/presentation/http/serverManager.ts';
+export * from '#/presentation/schema/index.ts';
 
