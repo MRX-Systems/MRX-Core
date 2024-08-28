@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.2](https://github.com/Andesite-Lab/Core/compare/v1.24.1...v1.24.2) (2024-08-28)
+
+
+### Documentation
+
+* add interpolation comment ([37a6a8c](https://github.com/Andesite-Lab/Core/commit/37a6a8c876b070287e96fb4bcbae567fdeba0b66))
+
 ## [1.24.1](https://github.com/Andesite-Lab/Core/compare/v1.24.0...v1.24.1) (2024-08-28)
 
 
