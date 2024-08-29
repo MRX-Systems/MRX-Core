@@ -1,3 +1,5 @@
-import { S } from 'fluent-json-schema';
+import { S, type JSONSchema as schema,  } from 'fluent-json-schema';
 
 export { S };
+
+export type JSONSchema = schema;
