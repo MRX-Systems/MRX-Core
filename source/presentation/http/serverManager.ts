@@ -6,8 +6,7 @@ import fastify, {
     type FastifyError,
     type FastifyInstance,
     type FastifyReply,
-    type FastifyRequest,
-    type HookHandlerDoneFunction,
+    type FastifyRequest
 } from 'fastify';
 
 import { type CoreError, ErrorKeys } from '#/common/error/index.ts';
@@ -15,17 +14,6 @@ import type { Hook, Plugin, ServerOptions, StartOptions } from '#/common/types/i
 import { I18n } from '#/common/util/index.ts';
 import { LanguageHook, LoggerHook } from '#/presentation/http/hook/index.ts';
 import type { AbstractRouter } from '#/presentation/http/router/index.ts';
-
-/**
- * Fastify type.
- */
-export type {
-    FastifyError,
-    FastifyInstance,
-    FastifyReply,
-    FastifyRequest,
-    HookHandlerDoneFunction
-};
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)
