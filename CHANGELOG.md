@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.0](https://github.com/Andesite-Lab/Core/compare/v1.26.0...v1.27.0) (2024-08-29)
+
+
+### Features
+
+* export JSONSchema type from fluent and FastifySchema ([4f3060e](https://github.com/Andesite-Lab/Core/commit/4f3060e2cb7567c11fa75bacf4beceb7f594f3f2))
+
 ## [1.26.0](https://github.com/Andesite-Lab/Core/compare/v1.25.0...v1.26.0) (2024-08-28)
 
 
