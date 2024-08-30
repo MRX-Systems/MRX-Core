@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.0](https://github.com/Andesite-Lab/Core/compare/v1.27.0...v1.28.0) (2024-08-30)
+
+
+### Features
+
+* Crud deleteOne and UpdateOne return one item not array of one item ([613d770](https://github.com/Andesite-Lab/Core/commit/613d7709efe24f80bd74ed60be4e164793d40e44))
+
 ## [1.27.0](https://github.com/Andesite-Lab/Core/compare/v1.26.0...v1.27.0) (2024-08-29)
 
 
