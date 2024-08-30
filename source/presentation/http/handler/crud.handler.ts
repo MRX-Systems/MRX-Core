@@ -100,7 +100,7 @@ export class CrudHandler<T> {
         const search: Partial<T> = {
             [key]: value
         } as Partial<T>;
-        const data = await crud.update(body, search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
+        const [data] = await crud.update(body, search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await this._sendResponse(req, reply, 200, 'handler.crud.updateOne', { data });
     }
 
@@ -130,7 +130,7 @@ export class CrudHandler<T> {
         const search: Partial<T> = {
             [key]: value
         } as Partial<T>;
-        const data = await crud.del(search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
+        const [data] = await crud.del(search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await this._sendResponse(req, reply, 200, 'handler.crud.deleteOne', { data });
     }
 
