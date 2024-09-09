@@ -1,1 +1,1 @@
-export * from './whereClause.schema.ts';
+export * from './whereClause.schema.js';

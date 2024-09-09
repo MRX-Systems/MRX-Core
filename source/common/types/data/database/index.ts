@@ -1,2 +1,2 @@
-export * from './creator/index.ts';
-export * from './dynamicDatabaseOptions.data.ts';
+export * from './creator/index.js';
+export * from './dynamicDatabaseOptions.data.js';

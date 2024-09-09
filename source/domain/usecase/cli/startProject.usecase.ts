@@ -1,9 +1,9 @@
 import type { ChildProcess } from 'child_process';
 import { cwd, exit } from 'process';
 
-import type { AndesiteConfig } from '#/common/types/index.ts';
-import { AndesiteUserYml, EnvironmentUser } from '#/common/util/index.ts';
-import { execBundleCommand } from '#/domain/service/index.ts';
+import type { AndesiteConfig } from '#/common/types/index.js';
+import { AndesiteUserYml, EnvironmentUser } from '#/common/util/index.js';
+import { execBundleCommand } from '#/domain/service/index.js';
 
 /**
  * Start the project

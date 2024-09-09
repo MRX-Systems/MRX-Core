@@ -1,2 +1,2 @@
-export * from './cli/index.ts';
-export * from './crud.usecase.ts';
+export * from './cli/index.js';
+export * from './crud.usecase.js';

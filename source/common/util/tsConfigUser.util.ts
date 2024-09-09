@@ -1,5 +1,5 @@
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import { TsConfigFile } from '#/common/util/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import { TsConfigFile } from '#/common/util/index.js';
 
 /**
  * The TsConfigUserSingleton class has the responsibility to manage the tsconfig.json file for the user.

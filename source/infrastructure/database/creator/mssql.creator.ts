@@ -1,5 +1,5 @@
-import type { MSSQLDatabaseOptions } from '#/common/types/index.ts';
-import { AbstractDatabaseCreator } from './abstractDatabase.creator.ts';
+import type { MSSQLDatabaseOptions } from '#/common/types/index.js';
+import { AbstractDatabaseCreator } from './abstractDatabase.creator.js';
 
 /**
  * MSSQL Creator is a concrete creator for MSSQL Database (Factory Pattern)

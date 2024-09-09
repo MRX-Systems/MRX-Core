@@ -1,4 +1,4 @@
-import { AbstractRepository } from './abstract.repository.ts';
+import { AbstractRepository } from './abstract.repository.js';
 /**
  * The CrudRepository class. It's a repository for Crud Handler.
  *

@@ -1,8 +1,8 @@
 import type { Redis } from 'ioredis';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type { DragonFlyStoreOptions } from '#/common/types/index.ts';
-import { DragonFlyCreator, type AbstractStoreCreator } from './creator/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import type { DragonFlyStoreOptions } from '#/common/types/index.js';
+import { DragonFlyCreator, type AbstractStoreCreator } from './creator/index.js';
 
 /**
  * FactoryStoreSingleton class. (Singleton)

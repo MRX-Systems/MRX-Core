@@ -1,6 +1,6 @@
 import { File } from '@basalt-lab/basalt-helper';
 
-import type { PackageJson } from '#/common/types/index.ts';
+import type { PackageJson } from '#/common/types/index.js';
 
 /**
  * PackageJsonFile class is responsible for managing the package.json. (Singleton)

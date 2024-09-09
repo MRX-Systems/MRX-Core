@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 import type {
     AndesiteConfig,
-} from '#/common/types/index.ts';
+} from '#/common/types/index.js';
 
 /**
  * The esbuild user options. ({@link AndesiteConfig})

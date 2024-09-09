@@ -1,4 +1,4 @@
-import type { DynamicDatabaseOptions } from '../database/index.ts';
+import type { DynamicDatabaseOptions } from '../database/index.js';
 
 export interface CrudHandlerOptions<T> {
     /**

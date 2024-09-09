@@ -2,9 +2,9 @@ import { File } from '@basalt-lab/basalt-helper';
 import vine, { errors } from '@vinejs/vine';
 
 import andesiteConfig from '#/../template/andesiteConfig.json' with { type: 'json' };
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type { AndesiteConfig } from '#/common/types/index.ts';
-import { parseYml, stringifyToYml } from '#/common/util/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import type { AndesiteConfig } from '#/common/types/index.js';
+import { parseYml, stringifyToYml } from '#/common/util/index.js';
 
 /**
  * AndesiteUserYmlSingleton class to handle andesite-config.yml file. (Singleton)

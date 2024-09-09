@@ -1,11 +1,11 @@
 import { filterByKeyInclusion } from '@basalt-lab/basalt-helper';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type { CrudHandlerOptions, PaginationQueryOptions, SearchModel } from '#/common/types/index.ts';
-import { I18n, isJsonString } from '#/common/util/index.ts';
-import { crud } from '#/domain/usecase/index.ts';
-import { FactoryDatabase } from '#/infrastructure/database/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import type { CrudHandlerOptions, PaginationQueryOptions, SearchModel } from '#/common/types/index.js';
+import { I18n, isJsonString } from '#/common/util/index.js';
+import { crud } from '#/domain/usecase/index.js';
+import { FactoryDatabase } from '#/infrastructure/database/index.js';
 
 /**
  * The CRUD handler.

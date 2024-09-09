@@ -1,10 +1,10 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, HTTPMethods } from 'fastify';
 
-import { CoreError } from '#/common/error/core.error.ts';
-import { ErrorKeys } from '#/common/error/keys.error.ts';
-import type { AbstractCrudOptions } from '#/common/types/index.ts';
-import { CrudHandler } from '#/presentation/http/handler/index.ts';
-import { AbstractRouter } from './abstract.router.ts';
+import { CoreError } from '#/common/error/core.error.js';
+import { ErrorKeys } from '#/common/error/keys.error.js';
+import type { AbstractCrudOptions } from '#/common/types/index.js';
+import { CrudHandler } from '#/presentation/http/handler/index.js';
+import { AbstractRouter } from './abstract.router.js';
 
 /**
  * The abstract CRUD router.
