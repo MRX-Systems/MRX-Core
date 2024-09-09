@@ -1,9 +1,10 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, HTTPMethods } from 'fastify';
 
-import { CoreError } from '#/common/error/core.error.js';
-import { ErrorKeys } from '#/common/error/keys.error.js';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
 import type { AbstractCrudOptions } from '#/common/types/index.js';
+import { FactoryDatabase } from '#/infrastructure/database/index.js';
 import { CrudHandler } from '#/presentation/http/handler/index.js';
+import { dynamicDatabaseRegister } from '../middleware/dynamicDatabaseRegister.js';
 import { AbstractRouter } from './abstract.router.js';
 
 /**
@@ -17,7 +18,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
     /**
      * The CRUD configuration. ({@link AbstractCrudOptions})
      */
-    private readonly _options: AbstractCrudOptions<T>;
+    protected readonly _options: AbstractCrudOptions<T>;
 
     /**
      * The CRUD handler. ({@link CrudHandler})
@@ -38,24 +39,21 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
      *
      * @param options - The CRUD configuration. ({@link AbstractCrudOptions})
      *
-     * @throws ({@link CoreError}) - If the database name or dynamic database configuration is not set. ({@link ErrorKeys.SET_DATABASE_NAME_OR_DYNAMIC_DATABASE_CONFIG})
-     *
      * @typeParam T - The type of the data. (Is the table model (interface to represent the table))
      */
     protected constructor(options: AbstractCrudOptions<T>) {
         super(options.prefix);
         this._options = options;
 
-        if (!options.databaseName && !options.dynamicDatabaseConfig)
+        if (this._options.databaseName && !FactoryDatabase.has(this._options.databaseName))
             throw new CoreError({
-                messageKey: ErrorKeys.SET_DATABASE_NAME_OR_DYNAMIC_DATABASE_CONFIG
+                messageKey: ErrorKeys.DATABASE_NOT_REGISTERED,
+                code: 500
             });
 
         this._crudHandler = new CrudHandler<T>({
             keyInclusion: options.keyInclusion,
             table: options.table,
-            databaseName: options.databaseName,
-            dynamicDatabaseConfig: options.dynamicDatabaseConfig,
             primaryKey: options.primaryKey
         });
     }
@@ -63,6 +61,9 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
     /**
      * Initialize the operation selected by the user and the custom routes.
      *
+     * @throws ({@link CoreError}) If the database name is not specified in the header. ({@link ErrorKeys.DATABASE_NOT_SPECIFIED_IN_HEADER})
+     * @throws ({@link CoreError}) If the dynamic database configuration is not set. ({@link ErrorKeys.DYNAMIC_DATABASE_CONFIG_NOT_SET})
+     * 
      * @param fastify - The Fastify instance. ({@link FastifyInstance})
      */
     protected override _initRoutes(fastify: FastifyInstance): void {
@@ -80,18 +81,26 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
             count: { method: 'GET', url: '/count', handler: this._crudHandler.count.bind(this._crudHandler) },
         };
 
+        const preHandlerDynamicDatabase = this._options.databaseName
+            ? undefined
+            : dynamicDatabaseRegister(this._options.dynamicDatabaseConfig);
+
         Object.entries(this._options.operations).forEach(([operation, config]) => {
             if (config && operations[operation]) {
                 const { method, url, handler } = operations[operation];
+                const preHandlerConfig = Array.isArray(config.preHandler) ? config.preHandler : [config.preHandler];
+                const preHandlers = [preHandlerDynamicDatabase, ...preHandlerConfig].filter(handlerConf => handlerConf !== undefined);
+
                 fastify.route({
                     method: method as HTTPMethods,
                     url,
                     handler,
                     ...(config.schema && { schema: config.schema }),
-                    ...(config.preHandler && { preHandler: config.preHandler }),
+                    preHandler: preHandlers
                 });
             }
         });
+
         if (this._addRoutes)
             this._addRoutes(fastify);
     }

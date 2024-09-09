@@ -1,5 +1,3 @@
-import type { DynamicDatabaseOptions } from '../database/index.js';
-
 export interface CrudHandlerOptions<T> {
     /**
      * The table name.
@@ -9,14 +7,6 @@ export interface CrudHandlerOptions<T> {
      * The key inclusion is using for clean the request body or request query.
      */
     keyInclusion: readonly (keyof T)[];
-    /**
-     * The database name.
-     */
-    databaseName?: string | undefined;
-    /**
-     * The dynamic database configuration. ({@link DynamicDatabaseOptions})
-     */
-    dynamicDatabaseConfig?: DynamicDatabaseOptions | undefined;
     /**
      * The primary key for the table.
      * The first element is the key name and the second element is the key type.

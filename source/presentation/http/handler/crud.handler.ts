@@ -1,11 +1,9 @@
 import { filterByKeyInclusion } from '@basalt-lab/basalt-helper';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.js';
 import type { CrudHandlerOptions, PaginationQueryOptions, SearchModel } from '#/common/types/index.js';
 import { I18n, isJsonString } from '#/common/util/index.js';
 import { crud } from '#/domain/usecase/index.js';
-import { FactoryDatabase } from '#/infrastructure/database/index.js';
 
 /**
  * The CRUD handler.
@@ -34,7 +32,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async insert(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const body: T[] = Array.isArray(req.body) ? req.body : [req.body];
         const data = await crud.insert<T>(body, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await this._sendResponse(req, reply, 200, 'handler.crud.insert', { data, count: data.length });
@@ -47,7 +45,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async find(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const { query, pagination } = this._extractQueryAndPagination(req);
         const search = this._prepareSearchModel<T>(query);
         const data = await crud.find<T>(search, pagination, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
@@ -62,7 +60,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async findOne(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const key = this._options.primaryKey?.[0] ?? 'id';
         const value = (req.params as Record<string, unknown>)[key as string] as string;
         const search: Partial<T> = {
@@ -79,7 +77,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async update(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const body: Partial<T> = req.body as Partial<T>;
         const search = this._prepareSearchModel<T>(req.query as Record<string, unknown>);
         const data = await crud.update<T>(body, search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
@@ -93,7 +91,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async updateOne(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const key = this._options.primaryKey?.[0] ?? 'id';
         const value = (req.params as Record<string, unknown>)[key as string] as string;
         const body: Partial<T> = req.body as Partial<T>;
@@ -111,7 +109,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async delete(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const search = this._prepareSearchModel<T>(req.query as Record<string, unknown>);
         const data = await crud.del<T>(search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await this._sendResponse(req, reply, 200, 'handler.crud.delete', { data, count: data.length });
@@ -124,7 +122,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async deleteOne(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const key = this._options.primaryKey?.[0] ?? 'id';
         const value = (req.params as Record<string, unknown>)[key as string] as string;
         const search: Partial<T> = {
@@ -141,7 +139,7 @@ export class CrudHandler<T> {
      * @param reply - The Fastify reply. ({@link FastifyReply})
      */
     public async count(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-        const databaseName = await this._getAndRegisterDatabase(req);
+        const databaseName = req.headers.databaseName as string;
         const query = req.query as Record<string, unknown>;
         const search = this._prepareSearchModel<T>(query);
         const count = await crud.count<T>(search, this._options.table, databaseName, this._options.primaryKey) as number;
@@ -173,50 +171,6 @@ export class CrudHandler<T> {
      */
     private _createSearchEntry<T>(key: string, value: unknown): SearchModel<T> {
         return { [key]: isJsonString(value as string) ? JSON.parse(value as string) : value } as SearchModel<T>;
-    }
-
-    /**
-     * Get and register the database.
-     *
-     * @param req - The Fastify request. ({@link FastifyRequest})
-     *
-     * @returns The database name.
-     */
-    private async _getAndRegisterDatabase(req: FastifyRequest): Promise<string> {
-        const databaseName = this._getDatabaseName(req);
-        await this._registerDatabaseDynamic(databaseName);
-        return databaseName;
-    }
-
-    /**
-     * Register the dynamic database.
-     *
-     * @param databaseName - The database name.
-     */
-    private async _registerDatabaseDynamic(databaseName: string): Promise<void> {
-        if (this._options.dynamicDatabaseConfig && !FactoryDatabase.has(databaseName))
-            await FactoryDatabase.register(databaseName, this._options.dynamicDatabaseConfig.databaseType, {
-                ...this._options.dynamicDatabaseConfig.databaseOptions,
-                databaseName
-            });
-    }
-
-    /**
-     * Get the database name.
-     *
-     * @param req - The Fastify request. ({@link FastifyRequest})
-     *
-     * @throws ({@link CoreError}) - If the database name is not specified in the header. ({@link ErrorKeys.DATABASE_NOT_SPECIFIED_IN_HEADER})
-     *
-     * @returns The database name.
-     */
-    private _getDatabaseName(req: FastifyRequest): string {
-        const databaseName = this._options.databaseName ?? req.headers[this._options.dynamicDatabaseConfig?.headerKey ?? 'database-using'] as string;
-        if (!databaseName) throw new CoreError({
-            messageKey: ErrorKeys.DATABASE_NOT_SPECIFIED_IN_HEADER,
-            code: 400
-        });
-        return databaseName;
     }
 
     /**
@@ -253,7 +207,7 @@ export class CrudHandler<T> {
             ? I18n.translate(messageKey, req.headers['accept-language'], {
                 ...content,
                 table: this._options.table,
-                database: this._options.databaseName
+                database: req.headers.databaseName
             })
             : messageKey;
         await reply.send({
