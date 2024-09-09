@@ -1,6 +1,5 @@
 import {
     S,
-    withOptions,
     type ArraySchema,
     type BaseSchema,
     type BooleanSchema,
@@ -17,7 +16,7 @@ import {
     type TYPE,
 } from 'fluent-json-schema';
 
-export { S, withOptions };
+export { S };
 export type {
     ArraySchema, BaseSchema, BooleanSchema, ExtendedSchema,
     FluentSchemaError, IntegerSchema, JSONSchema, MixedSchema, NullSchema, NumberSchema,
