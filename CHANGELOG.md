@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.29.0](https://github.com/Andesite-Lab/Core/compare/v1.28.0...v1.29.0) (2024-09-09)
+
+
+### Features
+
+* export all fluent type ([a4df553](https://github.com/Andesite-Lab/Core/commit/a4df55338aa76d07dcc2b904da81b1ec883af268))
+
 ## [1.28.0](https://github.com/Andesite-Lab/Core/compare/v1.27.0...v1.28.0) (2024-08-30)
 
 
