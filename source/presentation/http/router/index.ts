@@ -1,2 +1,2 @@
-export * from './abstractCrud.router.ts';
-export * from './abstract.router.ts';
+export * from './abstractCrud.router.js';
+export * from './abstract.router.js';

@@ -1,13 +1,13 @@
 import type { ChildProcess } from 'child_process';
 import { exit } from 'process';
 
-import type { AndesiteConfig } from '#/common/types/index.ts';
+import type { AndesiteConfig } from '#/common/types/index.js';
 import {
     AndesiteUserYml,
     JestUser,
     PackageJsonUser,
     TsConfigPkg
-} from '#/common/util/index.ts';
+} from '#/common/util/index.js';
 import {
     cancel,
     EsbuildUser,
@@ -15,7 +15,7 @@ import {
     intro,
     outroBasedOnTime,
     spinner
-} from '#/domain/service/index.ts';
+} from '#/domain/service/index.js';
 
 /**
  * Build the project

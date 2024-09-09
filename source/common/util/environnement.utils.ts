@@ -1,5 +1,5 @@
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import { type SchemaTypes, vine } from '#/common/types/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import { type SchemaTypes, vine } from '#/common/types/index.js';
 
 import { File } from '@basalt-lab/basalt-helper';
 import { cwd, env } from 'process';

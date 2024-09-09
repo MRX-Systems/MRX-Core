@@ -1,6 +1,6 @@
 import { File } from '@basalt-lab/basalt-helper';
 
-import type { TsConfig } from '#/common/types/index.ts';
+import type { TsConfig } from '#/common/types/index.js';
 
 /**
  * The TsConfig class has the responsibility to manage the tsconfig.json file for the project.

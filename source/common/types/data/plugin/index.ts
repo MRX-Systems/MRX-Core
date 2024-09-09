@@ -1,4 +1,4 @@
-export * from './corsOptions.data.ts';
-export * from './formBodyOptions.data.ts';
-export * from './plugin.data.ts';
+export * from './corsOptions.data.js';
+export * from './formBodyOptions.data.js';
+export * from './plugin.data.js';
 

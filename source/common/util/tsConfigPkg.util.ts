@@ -1,6 +1,6 @@
 import tsConfig from '#/../template/tsconfig.json' with { type: 'json' };
-import type { AndesiteConfig, TsConfig } from '#/common/types/index.ts';
-import { TsConfigFile } from '#/common/util/index.ts';
+import type { AndesiteConfig, TsConfig } from '#/common/types/index.js';
+import { TsConfigFile } from '#/common/util/index.js';
 
 /**
  * The TsConfigPkgSingleton class has the responsibility to manage the tsconfig.json file for the package.

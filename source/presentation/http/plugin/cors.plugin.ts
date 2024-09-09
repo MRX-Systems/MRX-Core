@@ -1,7 +1,7 @@
 import cors from '@fastify/cors';
 import type { FastifyInstance } from 'fastify';
 
-import type { Plugin, CorsOptions } from '#/common/types/index.ts';
+import type { Plugin, CorsOptions } from '#/common/types/index.js';
 
 /**
  * The cors plugin implement the IPlugin interface ({@link Plugin})

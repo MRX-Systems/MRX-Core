@@ -1,7 +1,7 @@
 import { File } from '@basalt-lab/basalt-helper';
 
 import eslint from '#/../template/eslint.json' with { type: 'json' };
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
 
 /**
  * Eslint User class to handle .eslintrc file. (Singleton)

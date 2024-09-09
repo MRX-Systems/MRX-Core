@@ -3,9 +3,9 @@ import { cwd } from 'process';
 import api from '#/../template/packageJson/api.json' with { type: 'json' };
 import base from '#/../template/packageJson/base.json' with { type: 'json' };
 import script from '#/../template/packageJson/script.json' with { type: 'json' };
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type { PackageJson, ProjectInformation } from '#/common/types/index.ts';
-import { PackageJsonFile } from '#/common/util/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import type { PackageJson, ProjectInformation } from '#/common/types/index.js';
+import { PackageJsonFile } from '#/common/util/index.js';
 
 /**
  * The PackageJsonUserSingleton class is a singleton class that extends the PackageJson class.
