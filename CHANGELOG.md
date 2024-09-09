@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.29.2](https://github.com/Andesite-Lab/Core/compare/v1.29.1...v1.29.2) (2024-09-09)
+
+
+### Bug Fixes
+
+* remove withOptions function ([f946255](https://github.com/Andesite-Lab/Core/commit/f9462557b3ea60bafc649b6c2d757cf2906977d9))
+
 ## [1.29.1](https://github.com/Andesite-Lab/Core/compare/v1.29.0...v1.29.1) (2024-09-09)
 
 
