@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.29.1](https://github.com/Andesite-Lab/Core/compare/v1.29.0...v1.29.1) (2024-09-09)
+
+
+### Bug Fixes
+
+* correction export type ([eb7c619](https://github.com/Andesite-Lab/Core/commit/eb7c619d36e84aa61d6658f23f41477cde8326ba))
+
 ## [1.29.0](https://github.com/Andesite-Lab/Core/compare/v1.28.0...v1.29.0) (2024-09-09)
 
 
