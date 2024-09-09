@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.30.0](https://github.com/Andesite-Lab/Core/compare/v1.29.2...v1.30.0) (2024-09-09)
+
+
+### Features
+
+* add new middleware to register dynamic db & improve abstract crud ([fb8d236](https://github.com/Andesite-Lab/Core/commit/fb8d23693bff221c856598ee12f05fa60960601a))
+
+
+### Code Refactoring
+
+* change import extension to .js ([7424d39](https://github.com/Andesite-Lab/Core/commit/7424d396e44dbbdf5bde8b6d284c212498dd27fd))
+
+
+### Build System
+
+* update deps ([3d52704](https://github.com/Andesite-Lab/Core/commit/3d52704e7920f085da7802c2bf376aab652e26d5))
+
 ## [1.29.2](https://github.com/Andesite-Lab/Core/compare/v1.29.1...v1.29.2) (2024-09-09)
 
 
