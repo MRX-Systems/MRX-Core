@@ -8,7 +8,7 @@ import {
     isCancel
 } from '@clack/prompts';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
 
 /**
  * Interface for the options of the select prompt.

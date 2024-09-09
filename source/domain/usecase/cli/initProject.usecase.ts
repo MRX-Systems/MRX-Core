@@ -1,7 +1,7 @@
 import { exit } from 'process';
 
-import { CoreError } from '#/common/error/index.ts';
-import type { ProjectInformation } from '#/common/types/index.ts';
+import { CoreError } from '#/common/error/index.js';
+import type { ProjectInformation } from '#/common/types/index.js';
 import {
     AndesiteUserYml,
     EslintUser,
@@ -9,7 +9,7 @@ import {
     PackageJsonUser,
     TsConfigPkg,
     TsConfigUser
-} from '#/common/util/index.ts';
+} from '#/common/util/index.js';
 import {
     cancel,
     initAndesiteFolderStructure,
@@ -20,7 +20,7 @@ import {
     select,
     spinner,
     text
-} from '#/domain/service/index.ts';
+} from '#/domain/service/index.js';
 
 /**
  * Cancel the project initialization and stop the process.

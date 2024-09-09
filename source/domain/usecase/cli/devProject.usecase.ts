@@ -4,15 +4,15 @@ import { cwd, exit } from 'process';
 
 import type {
     AndesiteConfig
-} from '#/common/types/index.ts';
+} from '#/common/types/index.js';
 import {
     AndesiteUserYml,
     EnvironmentUser,
     JestUser,
     PackageJsonUser,
     TsConfigPkg
-} from '#/common/util/index.ts';
-import { EsbuildUser, execBundleCommand, initAndesiteFolderStructure } from '#/domain/service/index.ts';
+} from '#/common/util/index.js';
+import { EsbuildUser, execBundleCommand, initAndesiteFolderStructure } from '#/domain/service/index.js';
 
 /**
  * Reload the watch process.

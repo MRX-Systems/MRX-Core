@@ -1,1 +1,1 @@
-export * from './dragonFlyStoreOptions.data.ts';
+export * from './dragonFlyStoreOptions.data.js';

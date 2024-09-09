@@ -1,8 +1,8 @@
 import { exit } from 'process';
 
-import type { AndesiteConfig } from '#/common/types/index.ts';
-import { AndesiteUserYml, JestUser, PackageJsonUser, TsConfigPkg } from '#/common/util/index.ts';
-import { initAndesiteFolderStructure } from '#/domain/service/index.ts';
+import type { AndesiteConfig } from '#/common/types/index.js';
+import { AndesiteUserYml, JestUser, PackageJsonUser, TsConfigPkg } from '#/common/util/index.js';
+import { initAndesiteFolderStructure } from '#/domain/service/index.js';
 
 export async function prepareProject(): Promise<void> {
     try {

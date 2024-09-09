@@ -1,2 +1,2 @@
-export * from './andesiteConfig.data.ts';
-export * from './projectInformation.data.ts';
+export * from './andesiteConfig.data.js';
+export * from './projectInformation.data.js';

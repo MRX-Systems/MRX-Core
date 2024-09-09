@@ -1,6 +1,6 @@
 import type { Knex } from 'knex';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
 import type {
     ColumnsSelection,
     OptionalModel,
@@ -9,8 +9,8 @@ import type {
     SearchModel,
     WhereClause,
     WhereClauseFilter
-} from '#/common/types/index.ts';
-import { FactoryDatabase } from '#/infrastructure/database/index.ts';
+} from '#/common/types/index.js';
+import { FactoryDatabase } from '#/infrastructure/database/index.js';
 
 export abstract class AbstractRepository<T> {
     /**

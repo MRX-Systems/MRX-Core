@@ -1,7 +1,7 @@
-import type { WhereClause } from './data/index.ts';
+import type { WhereClause } from './data/index.js';
 
-export * from './data/index.ts';
-export * from './dependency/index.ts';
+export * from './data/index.js';
+export * from './dependency/index.js';
 
 /**
  * An object containing string values.

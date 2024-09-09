@@ -1,7 +1,7 @@
 import fastifySwagger, { type SwaggerOptions } from '@fastify/swagger';
 import type { FastifyInstance, FastifyRegisterOptions } from 'fastify';
 
-import type { Plugin } from '#/common/types/index.ts';
+import type { Plugin } from '#/common/types/index.js';
 
 /**
  * The Swagger plugin implement the IPlugin interface ({@link Plugin})

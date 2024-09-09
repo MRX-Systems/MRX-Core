@@ -1,6 +1,6 @@
 import { File } from '@basalt-lab/basalt-helper';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import { CoreError, ErrorKeys } from '#/common/error/index.js';
 
 /**
  * Initialize the entry point of the project.

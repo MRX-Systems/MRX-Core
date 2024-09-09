@@ -1,4 +1,4 @@
-import { PackageJsonFile } from '#/common/util/index.ts';
+import { PackageJsonFile } from '#/common/util/index.js';
 
 /**
  * The PackageJsonCoreSingleton class is a singleton class that extends the PackageJson class. (Singleton)
