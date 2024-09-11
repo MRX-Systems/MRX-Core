@@ -82,7 +82,10 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
         };
 
         const preHandlerDynamicDatabase = this._options.databaseName
-            ? undefined
+            ? (req: FastifyRequest, _: FastifyReply, next: () => void): void => {
+                req.headers.databaseName = this._options.databaseName;
+                next();
+            }
             : dynamicDatabaseRegister(this._options.dynamicDatabaseConfig);
 
         Object.entries(this._options.operations).forEach(([operation, config]) => {
