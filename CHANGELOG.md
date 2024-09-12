@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.31.0](https://github.com/Andesite-Lab/Core/compare/v1.30.1...v1.31.0) (2024-09-12)
+
+
+### Features
+
+* add specific option for each operations + default schema ([bdd343a](https://github.com/Andesite-Lab/Core/commit/bdd343aa38ddc9fa21f6a7dce120403150239b0c))
+* change visibility of _applyPagination to protected ([bfc25d7](https://github.com/Andesite-Lab/Core/commit/bfc25d755245b054750949dad9abd27a80f68d02))
+
 ## [1.30.1](https://github.com/Andesite-Lab/Core/compare/v1.30.0...v1.30.1) (2024-09-11)
 
 
