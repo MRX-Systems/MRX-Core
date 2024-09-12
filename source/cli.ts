@@ -4,7 +4,7 @@ import { argv } from 'process';
 import 'source-map-support/register.js';
 
 import { PackageJsonCore } from '#/common/util/index.js';
-import { initProject, prepareProject, buildProject, startProject, devProject } from '#/domain/usecase/index.js';
+import { buildProject, devProject, initProject, prepareProject, startProject } from '#/domain/usecase/index.js';
 
 const commander = new Command();
 
