@@ -1,5 +1,5 @@
 import type { DynamicDatabaseOptions } from '../database/index.js';
-import type { OperationOptions } from './operationOptions.data.js';
+import type { OperationsOptions } from './operationsOptions.data.js';
 
 /**
  * Interface for Abstract CRUD configuration.
@@ -23,18 +23,9 @@ export interface AbstractCrudOptions<T> {
     keyInclusion: readonly (keyof T)[];
 
     /**
-     * The operations configuration. ({@link OperationOptions})
+     * The operations configuration. ({@link OperationsOptions})
      */
-    operations: Partial<{
-        insert: Partial<OperationOptions>;
-        find: Partial<OperationOptions>;
-        findOne: Partial<OperationOptions>;
-        update: Partial<OperationOptions>;
-        updateOne: Partial<OperationOptions>;
-        delete: Partial<OperationOptions>;
-        deleteOne: Partial<OperationOptions>;
-        count: Partial<OperationOptions>;
-    }>;
+    operations: Partial<OperationsOptions<T>>;
 
     /**
      * The database name.
@@ -44,7 +35,7 @@ export interface AbstractCrudOptions<T> {
 
     /**
      * The dynamic database configuration if the database name is undefined.
-     * Allow to create a dynamic database based on the request header in the factory database.
+     * Allow to create a dynamic database based on the request header in the factory database. ({@link DynamicDatabaseOptions})
      */
     dynamicDatabaseConfig?: DynamicDatabaseOptions | undefined;
 
