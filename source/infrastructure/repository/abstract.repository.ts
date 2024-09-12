@@ -355,7 +355,7 @@ export abstract class AbstractRepository<T> {
      *
      * @returns The query applied with the pagination options. ({@link Knex.QueryBuilder})
      */
-    private _applyPagination(
+    protected _applyPagination(
         query: Knex.QueryBuilder,
         options?: PaginationQueryOptions & { first?: boolean }
     ): Knex.QueryBuilder {
