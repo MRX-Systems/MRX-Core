@@ -1,12 +1,12 @@
-import type { BaseOperationOptions } from './baseOperationOptions.data.ts';
-import type { CountOperationOptions } from './countOperationOptions.data.ts';
-import type { DeleteOneOperationOptions } from './deleteOneOperationOptions.data.ts';
-import type { DeleteOperationOptions } from './deleteOperationOptions.data.ts';
-import type { FindOneOperationOptions } from './findOneOperationOptions.data.ts';
-import type { FindOperationOptions } from './findOperationOptions.data.ts';
-import type { InsertOperationOptions } from './insertOperationOptions.data.ts';
-import type { UpdateOneOperationOptions } from './updateOneOperationOptions.data.ts';
-import type { UpdateOperationOptions } from './updateOperationOptions.data.ts';
+import type { BaseOperationOptions } from './baseOperationOptions.data.js';
+import type { CountOperationOptions } from './countOperationOptions.data.js';
+import type { DeleteOneOperationOptions } from './deleteOneOperationOptions.data.js';
+import type { DeleteOperationOptions } from './deleteOperationOptions.data.js';
+import type { FindOneOperationOptions } from './findOneOperationOptions.data.js';
+import type { FindOperationOptions } from './findOperationOptions.data.js';
+import type { InsertOperationOptions } from './insertOperationOptions.data.js';
+import type { UpdateOneOperationOptions } from './updateOneOperationOptions.data.js';
+import type { UpdateOperationOptions } from './updateOperationOptions.data.js';
 
 /**
  * Operations configuration.

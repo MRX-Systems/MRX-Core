@@ -1,5 +1,5 @@
 import type { DynamicDatabaseOptions } from '../database/index.js';
-import type { OperationsOptions } from './operationsOptions.data.ts';
+import type { OperationsOptions } from './operationsOptions.data.js';
 
 /**
  * Interface for Abstract CRUD configuration.

@@ -5,7 +5,7 @@ import { CoreError, ErrorKeys } from '#/common/error/index.js';
 import type { AbstractCrudOptions } from '#/common/types/index.js';
 import { FactoryDatabase } from '#/infrastructure/database/index.js';
 import { CrudHandler } from '#/presentation/http/handler/index.js';
-import { default200ResponseSchema } from '#/presentation/schema/index.ts';
+import { default200ResponseSchema } from '#/presentation/schema/index.js';
 import { dynamicDatabaseRegister } from '../middleware/dynamicDatabaseRegister.js';
 import { AbstractRouter } from './abstract.router.js';
 
