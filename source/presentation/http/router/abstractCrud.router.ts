@@ -1,9 +1,11 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest, HTTPMethods } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest, FastifySchema, HTTPMethods, RouteOptions } from 'fastify';
+import { S } from 'fluent-json-schema';
 
 import { CoreError, ErrorKeys } from '#/common/error/index.js';
 import type { AbstractCrudOptions } from '#/common/types/index.js';
 import { FactoryDatabase } from '#/infrastructure/database/index.js';
 import { CrudHandler } from '#/presentation/http/handler/index.js';
+import { default200ResponseSchema } from '#/presentation/schema/index.ts';
 import { dynamicDatabaseRegister } from '../middleware/dynamicDatabaseRegister.js';
 import { AbstractRouter } from './abstract.router.js';
 
@@ -59,27 +61,176 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
     }
 
     /**
+     * Build the CRUD routes options.
+     * 
+     * @returns The CRUD routes options. Record of({@link RouteOptions})
+     */
+    // eslint-disable-next-line max-lines-per-function
+    private _buildRoutesOptionsByOptions(): Record<string, RouteOptions> {
+        const primaryKey = (this._options.primaryKey && String(this._options.primaryKey[0])) ?? 'id';
+        const byOne = `/:${primaryKey}`;
+        const tags = [this._options.table];
+
+        return {
+            insert: {
+                method: 'POST',
+                url: '/',
+                handler: this._crudHandler.insert.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Insert`,
+                    description: `Insert a new ${this._options.table} or multiple ${this._options.table}`,
+                    body: (this._options.operations.insert?.inputSchema ?? S.object())
+                        .required(
+                            this._options.operations.insert?.required
+                                ? this._options.operations.insert.required as string[]
+                                : []
+                        ),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.insert', undefined,
+                            S.object()
+                                .prop('data', S.array()
+                                    .items(this._options.operations.insert?.outputSchema ?? S.object())
+                                )
+                                .prop('count', S.number())
+                        )
+                    }
+                },
+            },
+            find: {
+                method: 'GET',
+                url: '/',
+                handler: this._crudHandler.find.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Find`,
+                    description: `Find all ${this._options.table} or find ${this._options.table} by query`,
+                    querystring: (this._options.operations.find?.searchSchema ?? S.object())
+                        .prop('limit', S.string().pattern('^[0-9]+$'))
+                        .prop('offset', S.string().pattern('^[0-9]+$')),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.find', undefined, S.object()
+                            .prop('data', S.array().items(this._options.operations.find?.outputSchema ?? S.object()))
+                            .prop('count', S.number())
+                            .prop('total', S.number())
+                        )
+                    }
+                }
+            },
+            findOne: {
+                method: 'GET',
+                url: byOne,
+                handler: this._crudHandler.findOne.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Find One`,
+                    description: `Find one ${this._options.table} by ${primaryKey}`,
+                    params: S.object().prop(primaryKey, S.string().required()),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.findOne', undefined, S.object()
+                            .prop('data', this._options.operations.findOne?.outputSchema ?? S.object())
+                        )
+                    }
+                }
+            },
+            update: {
+                method: 'PATCH',
+                url: '/',
+                handler: this._crudHandler.update.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Update`,
+                    description: `Update all ${this._options.table} or multiple ${this._options.table} by query`,
+                    querystring: this._options.operations.update?.searchSchema ?? S.object(),
+                    body: this._options.operations.update?.inputSchema ?? S.object(),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.update', undefined, S.object()
+                            .prop('data', S.array().items(this._options.operations.update?.outputSchema ?? S.object()))
+                            .prop('count', S.number())
+                        )
+                    }
+                }
+            },
+            updateOne: {
+                method: 'PATCH',
+                url: byOne,
+                handler: this._crudHandler.updateOne.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Update One`,
+                    description: `Update one ${this._options.table} by ${primaryKey}`,
+                    params: S.object().prop(primaryKey, S.string().required()),
+                    body: this._options.operations.updateOne?.inputSchema ?? S.object(),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.updateOne', undefined, S.object()
+                            .prop('data', this._options.operations.updateOne?.outputSchema ?? S.object())
+                            .prop('count', S.number())
+                        )
+                    }
+                }
+            },
+            delete: {
+                method: 'DELETE',
+                url: '/',
+                handler: this._crudHandler.delete.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Delete`,
+                    description:`Delete all ${this._options.table} or multiple ${this._options.table} by query`,
+                    querystring: this._options.operations.delete?.searchSchema ?? S.object(),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.delete', undefined, S.object()
+                            .prop('data', S.array().items(this._options.operations.delete?.outputSchema ?? S.object()))
+                            .prop('count', S.number())
+                        )
+                    }
+                }
+            },
+            deleteOne: {
+                method: 'DELETE',
+                url: byOne,
+                handler: this._crudHandler.deleteOne.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Delete One`,
+                    description: `Delete one ${this._options.table} by ${primaryKey}`,
+                    params: S.object().prop(primaryKey, S.string().required()),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.deleteOne', undefined, S.object()
+                            .prop('data', this._options.operations.deleteOne?.outputSchema ?? S.object())
+                        )
+                    }
+                }
+            },
+            count: {
+                method: 'GET',
+                url: '/count',
+                handler: this._crudHandler.count.bind(this._crudHandler),
+                schema: {
+                    tags,
+                    summary: `${this._options.table} - Count`,
+                    description: `Count all ${this._options.table} or count ${this._options.table} by query`,
+                    querystring: this._options.operations.count?.searchSchema ?? S.object(),
+                    response: {
+                        200: default200ResponseSchema('handler.crud.count', undefined, S.object()
+                            .prop('count', S.number())
+                        )
+                    }
+                }
+            },
+        };
+    }
+
+    /**
      * Initialize the operation selected by the user and the custom routes.
      *
      * @throws ({@link CoreError}) If the database name is not specified in the header. ({@link ErrorKeys.DATABASE_NOT_SPECIFIED_IN_HEADER})
      * @throws ({@link CoreError}) If the dynamic database configuration is not set. ({@link ErrorKeys.DYNAMIC_DATABASE_CONFIG_NOT_SET})
-     * 
+     *
      * @param fastify - The Fastify instance. ({@link FastifyInstance})
      */
     protected override _initRoutes(fastify: FastifyInstance): void {
-        const primaryKey = (this._options.primaryKey && String(this._options.primaryKey[0])) ?? 'id';
-        const byOne = `/:${primaryKey}`;
-
-        const operations: Record<string, { method: string, url: string, handler: (req: FastifyRequest, reply: FastifyReply) => Promise<void> }> = {
-            insert: { method: 'POST', url: '/', handler: this._crudHandler.insert.bind(this._crudHandler) },
-            find: { method: 'GET', url: '/', handler: this._crudHandler.find.bind(this._crudHandler) },
-            findOne: { method: 'GET', url: byOne, handler: this._crudHandler.findOne.bind(this._crudHandler) },
-            update: { method: 'PATCH', url: '/', handler: this._crudHandler.update.bind(this._crudHandler) },
-            updateOne: { method: 'PATCH', url: byOne, handler: this._crudHandler.updateOne.bind(this._crudHandler) },
-            delete: { method: 'DELETE', url: '/', handler: this._crudHandler.delete.bind(this._crudHandler) },
-            deleteOne: { method: 'DELETE', url: byOne, handler: this._crudHandler.deleteOne.bind(this._crudHandler) },
-            count: { method: 'GET', url: '/count', handler: this._crudHandler.count.bind(this._crudHandler) },
-        };
+        const operations: Record<string, RouteOptions> = this._buildRoutesOptionsByOptions();
 
         const preHandlerDynamicDatabase = this._options.databaseName
             ? (req: FastifyRequest, _: FastifyReply, next: () => void): void => {
@@ -90,7 +241,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
 
         Object.entries(this._options.operations).forEach(([operation, config]) => {
             if (config && operations[operation]) {
-                const { method, url, handler } = operations[operation];
+                const { method, url, handler, schema } = operations[operation];
                 const preHandlerConfig = Array.isArray(config.preHandler) ? config.preHandler : [config.preHandler];
                 const preHandlers = [preHandlerDynamicDatabase, ...preHandlerConfig].filter(handlerConf => handlerConf !== undefined);
 
@@ -98,7 +249,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     method: method as HTTPMethods,
                     url,
                     handler,
-                    ...(config.schema && { schema: config.schema }),
+                    schema: schema as FastifySchema,
                     preHandler: preHandlers
                 });
             }
