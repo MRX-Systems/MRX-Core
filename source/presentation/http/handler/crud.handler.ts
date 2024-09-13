@@ -1,4 +1,4 @@
-import { filterByKeyInclusion } from '@basalt-lab/basalt-helper';
+import { filterByKeyExclusion, filterByKeyInclusion } from '@basalt-lab/basalt-helper';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
 import type { CrudHandlerOptions, PaginationQueryOptions, SearchModel } from '#/common/types/index.js';
@@ -182,7 +182,7 @@ export class CrudHandler<T> {
      */
     private _extractQueryAndPagination(req: FastifyRequest): { query: Record<string, unknown>, pagination: PaginationQueryOptions } {
         const pagination = filterByKeyInclusion<PaginationQueryOptions>(req.query as PaginationQueryOptions, ['limit', 'offset'], true);
-        const query = filterByKeyInclusion<Partial<T>>(req.query as Partial<T>, this._options.keyInclusion, true);
+        const query = filterByKeyExclusion<Record<string, unknown>>(req.query as Record<string, unknown>, ['limit', 'offset'], true);
         return { query, pagination };
     }
 

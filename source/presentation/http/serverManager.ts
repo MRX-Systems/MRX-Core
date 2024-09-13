@@ -12,7 +12,7 @@ import fastify, {
 import { type CoreError, ErrorKeys } from '#/common/error/index.js';
 import type { Hook, Plugin, ServerOptions, StartOptions } from '#/common/types/index.js';
 import { I18n } from '#/common/util/index.js';
-import { LanguageHook, LoggerHook } from '#/presentation/http/hook/index.js';
+import { LanguageHook, LoggerHook, QueryParseHook } from '#/presentation/http/hook/index.js';
 import type { AbstractRouter } from '#/presentation/http/router/index.js';
 
 /**
@@ -60,7 +60,7 @@ export class ServerManager {
             ajv: {
                 customOptions: {
                     $data: true,
-                    removeAdditional: true,
+                    removeAdditional: 'all',
                     allowUnionTypes: true,
                     coerceTypes: false,
                     allErrors: true,
@@ -72,6 +72,10 @@ export class ServerManager {
                     strictNumbers: true,
                     strictRequired: true,
                     strictSchema: true,
+                    code: {
+                        optimize: true,
+                        esm: true,
+                    }
                 },
                 plugins: [
                     ajvError.default,
@@ -268,5 +272,6 @@ export class ServerManager {
         if (this._options.logger)
             (new LoggerHook(this._options.logger)).configure(this._app);
         (new LanguageHook()).configure(this._app);
+        (new QueryParseHook()).configure(this._app);
     }
 }
