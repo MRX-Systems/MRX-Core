@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.33.0](https://github.com/Andesite-Lab/Core/compare/v1.32.0...v1.33.0) (2024-09-13)
+
+
+### Features
+
+* add K template + add table name in apply pagination method ([0c7f08f](https://github.com/Andesite-Lab/Core/commit/0c7f08f33cb01d392d09f34b2042007037d16df5))
+
 ## [1.32.0](https://github.com/Andesite-Lab/Core/compare/v1.31.0...v1.32.0) (2024-09-13)
 
 
