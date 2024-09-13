@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.32.0](https://github.com/Andesite-Lab/Core/compare/v1.31.0...v1.32.0) (2024-09-13)
+
+
+### Features
+
+* add hook pase query for validation + remove keyinclusion ([405fe41](https://github.com/Andesite-Lab/Core/commit/405fe411e6b06d5ce466128ba7ac29d0a88ee5b1))
+
 ## [1.31.0](https://github.com/Andesite-Lab/Core/compare/v1.30.1...v1.31.0) (2024-09-12)
 
 
