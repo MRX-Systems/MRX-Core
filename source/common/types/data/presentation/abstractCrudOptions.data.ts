@@ -18,11 +18,6 @@ export interface AbstractCrudOptions<T> {
     prefix: string;
 
     /**
-     * The key inclusion is used to clean the request body or the request query.
-     */
-    keyInclusion: readonly (keyof T)[];
-
-    /**
      * The operations configuration. ({@link OperationsOptions})
      */
     operations: Partial<OperationsOptions<T>>;

@@ -4,7 +4,9 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { Hook } from '#/common/types/index.js';
 
 /**
- * Logger Hook class implement the IHook interface ({@link Hook})
+ * Logger Hook class implement the Hook interface ({@link Hook})
+ *
+ * This hook is responsible for logging the request information.
  */
 export class LoggerHook implements Hook {
 

@@ -54,7 +54,6 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
             });
 
         this._crudHandler = new CrudHandler<T>({
-            keyInclusion: options.keyInclusion,
             table: options.table,
             primaryKey: options.primaryKey
         });
@@ -62,7 +61,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
 
     /**
      * Build the CRUD routes options.
-     * 
+     *
      * @returns The CRUD routes options. Record of({@link RouteOptions})
      */
     // eslint-disable-next-line max-lines-per-function
@@ -176,7 +175,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                 schema: {
                     tags,
                     summary: `${this._options.table} - Delete`,
-                    description:`Delete all ${this._options.table} or multiple ${this._options.table} by query`,
+                    description: `Delete all ${this._options.table} or multiple ${this._options.table} by query`,
                     querystring: this._options.operations.delete?.searchSchema ?? S.object(),
                     response: {
                         200: default200ResponseSchema('handler.crud.delete', undefined, S.object()

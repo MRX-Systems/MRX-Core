@@ -4,10 +4,6 @@ export interface CrudHandlerOptions<T> {
      */
     table: string;
     /**
-     * The key inclusion is using for clean the request body or request query.
-     */
-    keyInclusion: readonly (keyof T)[];
-    /**
      * The primary key for the table.
      * The first element is the key name and the second element is the key type.
      *
