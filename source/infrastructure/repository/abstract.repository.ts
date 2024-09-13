@@ -282,11 +282,11 @@ export abstract class AbstractRepository<T> {
      *
      * @returns The result of the query execution. ({@link OptionalModel})
      */
-    protected _handleResult(
-        result: OptionalModel<T> | OptionalModel<T>[],
+    protected _handleResult<K>(
+        result: OptionalModel<K> | OptionalModel<K>[],
         noResultKey: string,
         canThrow: boolean = false
-    ): OptionalModel<T> | OptionalModel<T>[] | void {
+    ): OptionalModel<K> | OptionalModel<K>[] | void {
         if (Array.isArray(result)) {
             if (result.length === 0 && canThrow)
                 this._throwNoResultError(noResultKey);
@@ -307,20 +307,20 @@ export abstract class AbstractRepository<T> {
      *
      * @returns The query applied with the search options. ({@link Knex.QueryBuilder})
      */
-    protected _applySearch(
+    protected _applySearch<K>(
         query: Knex.QueryBuilder,
-        search?: SearchModel<T> | SearchModel<T>[]
+        search?: SearchModel<K> | SearchModel<K>[]
     ): Knex.QueryBuilder {
         if (!search) return query;
 
         if (Array.isArray(search))
             return search.reduce((builder, data) =>
                 this._isComplexQuery(data)
-                    ? this._applyComplexQuery(builder, data as WhereClauseFilter<T>)
-                    : builder.orWhere(data as OptionalModel<T>), query);
+                    ? this._applyComplexQuery(builder, data as WhereClauseFilter<K>)
+                    : builder.orWhere(data as OptionalModel<K>), query);
         return this._isComplexQuery(search)
-            ? this._applyComplexQuery(query, search as WhereClauseFilter<T>)
-            : query.where(search as OptionalModel<T>);
+            ? this._applyComplexQuery(query, search as WhereClauseFilter<K>)
+            : query.where(search as OptionalModel<K>);
     }
 
     /**
@@ -335,15 +335,15 @@ export abstract class AbstractRepository<T> {
      *
      * @returns The result of the query execution. ({@link OptionalModel})
      */
-    protected _executeQuery(
+    protected _executeQuery<K>(
         query: Knex.QueryBuilder,
         noResultKey: string,
         options?: QueryOptions
-    ): Promise<OptionalModel<T>[] | OptionalModel<T> | void> {
+    ): Promise<OptionalModel<K>[] | OptionalModel<K> | void> {
         if (options?.transaction) query = query.transacting(options.transaction);
 
         return query
-            .then((result) => this._handleResult(result as OptionalModel<T>[] | OptionalModel<T>, noResultKey, options?.throwIfNoResult))
+            .then((result) => this._handleResult(result as OptionalModel<K>[] | OptionalModel<K>, noResultKey, options?.throwIfNoResult))
             .catch((error) => this._handleError(error, options?.throwIfQueryError));
     }
 
@@ -361,7 +361,7 @@ export abstract class AbstractRepository<T> {
     ): Knex.QueryBuilder {
         if (options?.first) query = query.first();
         if (options?.limit ?? options?.offset) {
-            query = query.orderBy(this._primaryKey[0] as string, 'asc');
+            query = query.orderBy(`${this._table}.${(this._primaryKey[0] as string)}`, 'asc');
             if (options?.limit) query = query.limit(options.limit);
             if (options?.offset) query = query.offset(options.offset);
         }
@@ -376,7 +376,7 @@ export abstract class AbstractRepository<T> {
      *
      * @returns The query applied with the complex query. ({@link Knex.QueryBuilder})
      */
-    private _applyComplexQuery(query: Knex.QueryBuilder, complexQuery: WhereClauseFilter<T>): Knex.QueryBuilder {
+    private _applyComplexQuery<K>(query: Knex.QueryBuilder, complexQuery: WhereClauseFilter<K>): Knex.QueryBuilder {
         Object.entries(complexQuery).forEach(([key, value]) => {
             const whereClause: WhereClause = value as WhereClause;
             if ('$in' in whereClause)
@@ -408,7 +408,7 @@ export abstract class AbstractRepository<T> {
      *
      * @returns A boolean value to determine if the data is a complex query or not
      */
-    private _isComplexQuery(data: SearchModel<T>): boolean {
+    private _isComplexQuery<K>(data: SearchModel<K>): boolean {
         const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte']);
         return Object.values(data).some(value =>
             value && typeof value === 'object' && Object.keys(value).every(key => validKeys.has(key))
