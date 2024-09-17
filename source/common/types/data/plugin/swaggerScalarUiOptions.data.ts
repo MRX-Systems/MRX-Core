@@ -42,5 +42,5 @@ export interface SwaggerScalarUiPluginOptions {
     /**
      * Fav icon for the SwaggerScalarUi
      */
-    favIcon: string;
+    favIcon?: string;
 }
