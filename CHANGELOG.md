@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.34.1](https://github.com/Andesite-Lab/Core/compare/v1.34.0...v1.34.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* set content optional to sendResponse function ([b06524b](https://github.com/Andesite-Lab/Core/commit/b06524b1f08bfac8a3bcf65723141703080baf0e))
+
 ## [1.34.0](https://github.com/Andesite-Lab/Core/compare/v1.33.0...v1.34.0) (2024-09-18)
 
 
