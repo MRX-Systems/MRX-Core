@@ -60,7 +60,7 @@ export async function sendResponse(
     options: {
         statusCode: number,
         messageKey: string,
-        content: Record<string, unknown>
+        content?: Record<string, unknown>
 }): Promise<void> {
     const isI18nInitialized = I18n.isI18nInitialized();
     const message = isI18nInitialized
@@ -69,6 +69,6 @@ export async function sendResponse(
     await reply.send({
         statusCode: options.statusCode,
         message,
-        content: options.content
+        ...(options.content && { content: options.content })
     });
 }
