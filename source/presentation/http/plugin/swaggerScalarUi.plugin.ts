@@ -1,46 +1,28 @@
 import scalar from '@scalar/fastify-api-reference';
 import type { FastifyInstance } from 'fastify';
 
-import type { Plugin } from '#/common/types/index.js';
-
-
-/**
- * The options for the SwaggerScalarUi plugin.
- */
-export interface ISwaggerScalarUiPluginOptions {
-    /**
-     * The path of the SwaggerScalarUi. (Default: '/swagger')
-     */
-    path?: string;
-    /**
-     * The theme of the SwaggerScalarUi. (Default: 'default')
-     */
-    theme?: 'default' | 'alternate' | 'moon' | 'purple' | 'solarized' | 'bluePlanet' | 'saturn' | 'kepler' | 'mars' | 'deepSpace';
-}
-
+import type { Plugin, SwaggerScalarUiPluginOptions } from '#/common/types/index.js';
 
 /**
  * The SwaggerScalarUi plugin implement the IPlugin interface ({@link Plugin})
  */
 export class SwaggerScalarUiPlugin implements Plugin {
-    /**
-     * The path of the SwaggerScalarUi.
-     */
-    private readonly _path: string;
-
-    /**
-     * The theme of the SwaggerScalarUi.
-     */
-    private readonly _theme: 'default' | 'alternate' | 'moon' | 'purple' | 'solarized' | 'bluePlanet' | 'saturn' | 'kepler' | 'mars' | 'deepSpace';
+    private readonly _options: SwaggerScalarUiPluginOptions;
 
     /**
      * Constructor of the SwaggerScalarUiPlugin.
      *
-     * @param options - The options for the SwaggerScalarUi. ({@link ISwaggerScalarUiPluginOptions})
+     * @param options - The options for the SwaggerScalarUi. ({@link SwaggerScalarUiPluginOptions})
      */
-    public constructor(options?: ISwaggerScalarUiPluginOptions) {
-        this._path = options?.path ?? '/swagger';
-        this._theme = options?.theme ?? 'default';
+    public constructor(options?: SwaggerScalarUiPluginOptions) {
+        this._options = {
+            path: options?.path ?? '/swagger',
+            theme: options?.theme ?? 'default',
+            metaData: options?.metaData ?? {},
+            customCss: options?.customCss ?? '',
+            searchHotKey: options?.searchHotKey ?? 'l',
+            favIcon: options?.favIcon ?? '',
+        };
     }
 
     /**
@@ -50,12 +32,14 @@ export class SwaggerScalarUiPlugin implements Plugin {
      * @param baseUrl - The base URL of the SwaggerScalarUi.
      */
     public async configure(app: FastifyInstance, baseUrl: string): Promise<void> {
-        const routePrefix = `${baseUrl}${this._path}`;
-        routePrefix.replace(/\/+/g, '/');
+        const routePrefix = `${baseUrl}${this._options.path}`.replace(/\/+/g, '/');
         await app.register(scalar, {
             routePrefix,
             configuration: {
-                theme: this._theme,
+                theme: this._options.theme,
+                metaData: this._options.metaData,
+                customCss: this._options.customCss,
+                searchHotKey: this._options.searchHotKey
             },
         });
     }

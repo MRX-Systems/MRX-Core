@@ -12,5 +12,6 @@ export * from '#/presentation/http/middleware/index.js';
 export * from '#/presentation/http/plugin/index.js';
 export * from '#/presentation/http/router/index.js';
 export * from '#/presentation/http/serverManager.js';
+export * from '#/presentation/http/util/index.js';
 export * from '#/presentation/schema/index.js';
 

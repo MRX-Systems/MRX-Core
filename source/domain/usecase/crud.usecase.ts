@@ -150,7 +150,6 @@ function del<T>(
     return crudRepository.delete(search);
 }
 
-
 /**
  * The count function. It counts data with equivalent data or conditionnaly in the table.
  *
