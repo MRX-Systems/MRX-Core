@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.34.0](https://github.com/Andesite-Lab/Core/compare/v1.33.0...v1.34.0) (2024-09-18)
+
+
+### Features
+
+* add option to scalar ui ([7fa1ec9](https://github.com/Andesite-Lab/Core/commit/7fa1ec9954c4f17d18694f183788de0a4e9c5d13))
+* add utils to presentation layer and update crud handler ([7d23bdb](https://github.com/Andesite-Lab/Core/commit/7d23bdb9a2e1b992959ee6916f628d31e53ebbb9))
+
+
+### Bug Fixes
+
+* check if object has no key and imrove type SearchModel ([1751b1f](https://github.com/Andesite-Lab/Core/commit/1751b1f04111af3d0db1cf050d0eee813f275ae8))
+
+
+### Styles
+
+* remove linebreak style ([2a84db9](https://github.com/Andesite-Lab/Core/commit/2a84db958b8d08d6bf8093da21b1e3caa5ed0d55))
+
 ## [1.33.0](https://github.com/Andesite-Lab/Core/compare/v1.32.0...v1.33.0) (2024-09-13)
 
 
