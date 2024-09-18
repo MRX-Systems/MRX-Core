@@ -238,7 +238,7 @@ export abstract class AbstractRepository<T> {
      * @returns The columns array. (string[])
      */
     protected _transformColumnObjectToArray<K>(columns?: ColumnsSelection<K>): string[] {
-        if (!columns) return ['*'];
+        if (!columns || Object.keys(columns).length === 0) return ['*'];
         return Object.entries(columns)
             .filter(([, value]) =>
                 (typeof value === 'boolean' && value) ||
@@ -290,12 +290,10 @@ export abstract class AbstractRepository<T> {
         if (Array.isArray(result)) {
             if (result.length === 0 && canThrow)
                 this._throwNoResultError(noResultKey);
-
             return result;
         }
         if (!result && canThrow)
             this._throwNoResultError(noResultKey);
-
         return result;
     }
 

@@ -24,7 +24,7 @@ export type WhereClauseFilter<T> = Partial<Record<keyof T, Partial<WhereClause>>
 /**
  * Defines a search model using either plain partials of the model T or a where clause filter for more dynamic querying.
  */
-export type SearchModel<T> = Partial<T> | WhereClauseFilter<T>;
+export type SearchModel<T> = Partial<T & Record<string, unknown>> | WhereClauseFilter<T & Record<string, unknown>>;
 
 /**
  * Represents a simpler, optional model where any or all properties of T can be undefined, useful for optional query parameters.
