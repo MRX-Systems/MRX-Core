@@ -1,13 +1,155 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, FastifySchema, HTTPMethods, RouteOptions } from 'fastify';
-import { S } from 'fluent-json-schema';
+import { S, type ObjectSchema } from 'fluent-json-schema';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.js';
-import type { AbstractCrudOptions } from '#/common/types/index.js';
-import { FactoryDatabase } from '#/infrastructure/database/index.js';
-import { CrudHandler } from '#/presentation/http/handler/index.js';
-import { default200ResponseSchema } from '#/presentation/schema/index.js';
-import { dynamicDatabaseRegister } from '../middleware/dynamicDatabaseRegister.js';
-import { AbstractRouter } from './abstract.router.js';
+import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import type {
+    DynamicDatabaseOptions,
+} from '#/common/types/index.ts';
+import { FactoryDatabase } from '#/infrastructure/database/index.ts';
+import { CrudHandler } from '#/presentation/http/handler/index.ts';
+import { default200ResponseSchema } from '#/presentation/schema/index.ts';
+import { dynamicDatabaseRegister } from '../middleware/dynamicDatabaseRegister.ts';
+import { AbstractRouter } from './abstract.router.ts';
+
+/**
+ * The operation configuration.
+ */
+export interface BaseOperationOptions {
+    /**
+     * The preHandler function for the operation.
+     * Can be a function or an array of functions. ({@link FastifyRequest}, {@link FastifyReply})
+     */
+    preHandler: ((request: FastifyRequest, reply: FastifyReply) => void)
+        | ((request: FastifyRequest, reply: FastifyReply, next: () => void) => void)
+        | ((request: FastifyRequest, reply: FastifyReply) => void)[]
+        | ((request: FastifyRequest, reply: FastifyReply, next: () => void) => void)[];
+}
+
+/**
+ * The count operation configuration.
+ */
+export interface CountOperationOptions {
+    searchSchema: ObjectSchema;
+}
+
+/**
+ * The delete one operation configuration.
+ */
+export interface DeleteOneOperationOptions {
+    outputSchema: ObjectSchema;
+}
+
+/**
+ * The delete operation configuration.
+ */
+export interface DeleteOperationOptions {
+    searchSchema: ObjectSchema;
+    outputSchema: ObjectSchema;
+}
+
+/**
+ * The find one operation configuration.
+ */
+export interface FindOneOperationOptions {
+    outputSchema: ObjectSchema;
+}
+
+/**
+ * The find operation configuration.
+ */
+export interface FindOperationOptions {
+    searchSchema: ObjectSchema;
+    outputSchema: ObjectSchema;
+}
+
+/**
+ * The insert operation configuration.
+ */
+export interface InsertOperationOptions<T> {
+    required: (keyof T)[];
+    inputSchema: ObjectSchema,
+    outputSchema: ObjectSchema
+}
+
+/**
+ * The update one operation configuration.
+ */
+export interface UpdateOneOperationOptions {
+    inputSchema: ObjectSchema,
+    outputSchema: ObjectSchema
+}
+
+/**
+ * The update operation configuration.
+ */
+export interface UpdateOperationOptions {
+    searchSchema: ObjectSchema;
+    inputSchema: ObjectSchema;
+    outputSchema: ObjectSchema
+}
+
+/**
+ * Operations configuration.
+ */
+export interface OperationsOptions<T> {
+    insert: Partial<BaseOperationOptions> & Partial<InsertOperationOptions<T>>;
+    find: Partial<BaseOperationOptions> & Partial<FindOperationOptions>;
+    findOne: Partial<BaseOperationOptions> & Partial<FindOneOperationOptions>;
+    update: Partial<BaseOperationOptions> & Partial<UpdateOperationOptions> ;
+    updateOne: Partial<BaseOperationOptions> & Partial<UpdateOneOperationOptions>;
+    delete: Partial<BaseOperationOptions> & Partial<DeleteOperationOptions>;
+    deleteOne: Partial<BaseOperationOptions> & Partial<DeleteOneOperationOptions>;
+    count: Partial<BaseOperationOptions> & Partial<CountOperationOptions>;
+}
+
+/**
+ * Interface for Abstract CRUD configuration.
+ *
+ * @typeParam T - The type of the data.
+ */
+export interface AbstractCrudOptions<T> {
+    /**
+     * The table name.
+     */
+    table: string;
+
+    /**
+     * The prefix for the CRUD routes.
+     */
+    prefix: string;
+
+    /**
+     * The operations configuration. ({@link OperationsOptions})
+     */
+    operations: Partial<OperationsOptions<T>>;
+
+    /**
+     * The database name.
+     * Set undefined for dynamic database name based on the request header. (database-using)
+     */
+    databaseName?: string | undefined;
+
+    /**
+     * The dynamic database configuration if the database name is undefined.
+     * Allow to create a dynamic database based on the request header in the factory database. ({@link DynamicDatabaseOptions})
+     */
+    dynamicDatabaseConfig?: DynamicDatabaseOptions | undefined;
+
+    /**
+     * The primary key for the table.
+     * The first element is the key name and the second element is the key type.
+     *
+     * Undefined uses the default primary key. (id, NUMBER)
+     *
+     * @typeParam T - The type of the data. (Is the table model (interface to represent the table))
+     *
+     * @example
+     *
+     * primaryKey: ['uuid', 'STRING']
+     */
+    primaryKey?: [keyof T, 'NUMBER' | 'STRING'] | undefined;
+}
+
 
 /**
  * The abstract CRUD router.

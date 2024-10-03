@@ -1,4 +1,5 @@
 import type { BasaltError } from '@basalt-lab/basalt-helper';
+import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
@@ -9,11 +10,47 @@ import fastify, {
     type FastifyRequest
 } from 'fastify';
 
-import { type CoreError, ErrorKeys } from '#/common/error/index.js';
-import type { Hook, Plugin, ServerOptions, StartOptions } from '#/common/types/index.js';
-import { I18n } from '#/common/util/index.js';
-import { LanguageHook, LoggerHook, QueryParseHook } from '#/presentation/http/hook/index.js';
-import type { AbstractRouter } from '#/presentation/http/router/index.js';
+import { type CoreError, ErrorKeys } from '#/common/error/index.ts';
+import type { Hook, Plugin } from '#/common/types/index.ts';
+import { I18n } from '#/common/util/index.ts';
+import { LanguageHook, LoggerHook, QueryParseHook } from '#/presentation/http/hook/index.ts';
+import type { AbstractRouter } from '#/presentation/http/router/index.ts';
+
+/**
+ * Interface is responsible for defining the options for starting the server.
+ */
+export interface StartOptions {
+    /**
+     * The port number for the server.
+     */
+    port: number;
+
+    /**
+     * The host for the server.
+     */
+    host: string;
+}
+
+/**
+ * Interface is responsible for defining the options for the server.
+ */
+export interface ServerOptions {
+
+    /**
+     * The base URL of the server. (Default: '/')
+     */
+    baseUrl: string;
+
+    /**
+     * Enable HTTP/2.
+     */
+    http2: boolean;
+
+    /**
+     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
+     */
+    logger: BasaltLogger | undefined;
+}
 
 /**
  * ServerManager class is responsible for managing the Fastify server instance. (Singleton Pattern)

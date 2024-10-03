@@ -21,13 +21,13 @@
     "moduleDetection": "force",
     "allowJs": true,
 
-    // Bundler mode
     "moduleResolution": "NodeNext",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "emitDeclarationOnly": true,
     "declaration": true,
     "outDir": "./build",                              /* Specify an output folder for all emitted files. */
+    "removeComments": false,
 
     "rootDir": "./source",                            /* Specify the root folder within your source files. */
     "baseUrl": "./source",

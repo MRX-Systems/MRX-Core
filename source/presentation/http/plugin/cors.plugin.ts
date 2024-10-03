@@ -1,7 +1,29 @@
 import cors from '@fastify/cors';
 import type { FastifyInstance } from 'fastify';
 
-import type { Plugin, CorsOptions } from '#/common/types/index.js';
+import type { Plugin } from '#/common/types/index.ts';
+
+/**
+ * The options for the CORS.
+ */
+export interface CorsOptions {
+    /**
+     * The origins for the CORS.
+     */
+    origins: string | string[];
+
+    /**
+     * Configures the Access-Control-Allow-Methods CORS header.
+     * Expects a comma-delimited string (ex: 'GET,PUT,POST') or an array (ex: ['GET', 'PUT', 'POST']).
+     */
+    methods?: string | string[];
+
+    /**
+     * Credentials flag for the CORS.
+     * Set to true to pass the header, otherwise it is omitted.
+     */
+    credentials?: boolean;
+}
 
 /**
  * The cors plugin implement the IPlugin interface ({@link Plugin})

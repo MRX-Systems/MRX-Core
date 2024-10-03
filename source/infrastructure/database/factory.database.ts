@@ -1,17 +1,15 @@
 import type { Knex } from 'knex';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.js';
-import type {
-    BetterSQLiteDatabaseOptions,
-    MSSQLDatabaseOptions,
-    PostgresDatabaseOptions
-} from '#/common/types/index.js';
+import { CoreError, ErrorKeys } from '#/common/error/index.ts';
 import {
     BetterSQLiteCreator,
     MSSQLCreator,
     PostgresCreator,
     type AbstractDatabaseCreator,
-} from '#/infrastructure/database/creator/index.js';
+    type BetterSQLiteDatabaseOptions,
+    type MSSQLDatabaseOptions,
+    type PostgresDatabaseOptions,
+} from '#/infrastructure/database/creator/index.ts';
 
 /**
  * FactoryDatabase class. (Singleton)
