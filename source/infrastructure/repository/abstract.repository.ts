@@ -34,12 +34,12 @@ export interface QueryOptions {
  */
 export interface PaginationQueryOptions {
     /**
-     * The limit of the query
+     * The limit of the query (default: 200)
      */
     limit?: number;
 
     /**
-     * The offset of the query
+     * The offset of the query (default: 0)
      */
     offset?: number;
 }
@@ -177,7 +177,11 @@ export abstract class AbstractRepository<T> {
             .select(this._transformColumnObjectToArray(columns));
 
         query = this._applySearch(query, search);
-        query = this._applyPagination(query, options);
+        query = this._applyPagination(query, {
+            limit: 200,
+            offset: 0,
+            ...options
+        });
 
         return this._executeQuery(query, ErrorKeys.DATABASE_MODEL_NOT_FOUND, options);
     }
