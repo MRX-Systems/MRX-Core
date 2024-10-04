@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.36.0](https://github.com/Andesite-Lab/Core/compare/v1.35.0...v1.36.0) (2024-10-04)
+
+
+### Features
+
+* add default limit ([0318110](https://github.com/Andesite-Lab/Core/commit/03181106d40c2c6d8420ef9fd432917157d5add2))
+
 ## [1.35.0](https://github.com/Andesite-Lab/Core/compare/v1.34.1...v1.35.0) (2024-10-04)
 
 
