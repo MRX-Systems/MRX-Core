@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.36.1](https://github.com/Andesite-Lab/Core/compare/v1.36.0...v1.36.1) (2024-10-04)
+
+
+### Bug Fixes
+
+* correction limit and set to 100 ([08104e7](https://github.com/Andesite-Lab/Core/commit/08104e7709dfaa0874984bcbf3dd54c5510b27bc))
+
 ## [1.36.0](https://github.com/Andesite-Lab/Core/compare/v1.35.0...v1.36.0) (2024-10-04)
 
 
