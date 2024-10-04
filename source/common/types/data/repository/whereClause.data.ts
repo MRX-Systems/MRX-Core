@@ -9,7 +9,7 @@ export interface WhereClause {
      * { id: { $in: ['1', '2'] } }
      * ```
      */
-    $in: string[] | number[];
+    $in?: string[] | number[];
     /**
      * Not in clause
      * @example
@@ -17,7 +17,7 @@ export interface WhereClause {
      * { id: { $nin: ['1', '2'] } }
      * ```
      */
-    $nin: string[] | number[];
+    $nin?: string[] | number[];
     /**
      * Equal clause
      * @example
@@ -25,7 +25,7 @@ export interface WhereClause {
      * { id: { $eq: '1' } }
      * ```
      */
-    $eq: string | number | boolean;
+    $eq?: string | number | boolean;
     /**
      * Not equal clause
      * @example
@@ -33,7 +33,7 @@ export interface WhereClause {
      * { id: { $neq: '1' } }
      * ```
      */
-    $neq: string | number | boolean;
+    $neq?: string | number | boolean;
     /**
      * Like clause
      * @example
@@ -41,7 +41,7 @@ export interface WhereClause {
      * { id: { $match: '1' } }
      * ```
      */
-    $match: string;
+    $match?: string;
     /**
      * Less than
      * @example
@@ -49,7 +49,7 @@ export interface WhereClause {
      * { id: { $lt: '3' } }
      * ```
      */
-    $lt: string | number;
+    $lt?: string | number;
     /**
      * Less than or equal
      * @example
@@ -57,7 +57,7 @@ export interface WhereClause {
      * { id: { $lte: '3' } }
      * ```
      */
-    $lte: string | number;
+    $lte?: string | number;
     /**
      * Greater than
      * @example
@@ -65,7 +65,7 @@ export interface WhereClause {
      * { id: { $gt: '3' } }
      * ```
      */
-    $gt: string | number;
+    $gt?: string | number;
     /**
      * Greater than or equal
      * @example
@@ -73,5 +73,5 @@ export interface WhereClause {
      * { id: { $gte: '3' } }
      * ```
      */
-    $gte: string | number;
+    $gte?: string | number;
 }

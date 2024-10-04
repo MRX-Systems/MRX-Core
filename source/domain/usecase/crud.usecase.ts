@@ -1,5 +1,5 @@
-import type { OptionalModel, PaginationQueryOptions, SearchModel } from '#/common/types/index.js';
-import { CrudRepository } from '#/infrastructure/repository/index.js';
+import type { OptionalModel, SearchModel } from '#/common/types/index.ts';
+import { CrudRepository, type PaginationQueryOptions } from '#/infrastructure/repository/index.ts';
 
 /**
  * The insert function. It inserts data into the table.

@@ -1,17 +1,54 @@
 import type { Knex } from 'knex';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.js';
+import { CoreError, ErrorKeys } from '#/common/error/index.ts';
 import type {
     ColumnsSelection,
     OptionalModel,
-    PaginationQueryOptions,
-    QueryOptions,
     SearchModel,
+    Transaction,
     WhereClause,
     WhereClauseFilter
-} from '#/common/types/index.js';
-import { FactoryDatabase } from '#/infrastructure/database/index.js';
+} from '#/common/types/index.ts';
+import { FactoryDatabase } from '#/infrastructure/database/index.ts';
 
+/**
+ * Interface Option query
+ */
+export interface QueryOptions {
+    /**
+     * If the query does not return any result, throw an error
+     */
+    throwIfNoResult?: boolean;
+    /**
+     * If the query can throw an error
+     */
+    throwIfQueryError?: boolean;
+    /**
+     * If the query is a transaction ({@link Transaction})
+     */
+    transaction?: Transaction;
+}
+
+/**
+ * Interface Pagination option query
+ */
+export interface PaginationQueryOptions {
+    /**
+     * The limit of the query
+     */
+    limit?: number;
+
+    /**
+     * The offset of the query
+     */
+    offset?: number;
+}
+
+/**
+ * Interface Abstract Repository
+ *
+ * @typeparam T - The type of the data. (Is the table model (interface to represent the table))
+ */
 export abstract class AbstractRepository<T> {
     /**
      * The table name.
@@ -108,7 +145,7 @@ export abstract class AbstractRepository<T> {
     public async insert(
         data: OptionalModel<T> | OptionalModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: QueryOptions
+        options?: Partial<QueryOptions>
     ): Promise<OptionalModel<T>[] | void> {
         return this._executeQuery(
             this._database(this._table)
@@ -134,7 +171,7 @@ export abstract class AbstractRepository<T> {
     public async find(
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: QueryOptions & PaginationQueryOptions & { first?: boolean }
+        options?: Partial<QueryOptions> & Partial<PaginationQueryOptions> & { first?: boolean }
     ): Promise<OptionalModel<T> | OptionalModel<T>[] | void> {
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns));
@@ -162,7 +199,7 @@ export abstract class AbstractRepository<T> {
         data: OptionalModel<T>,
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: QueryOptions
+        options?: Partial<QueryOptions>
     ): Promise<OptionalModel<T>[] | void> {
         return this._executeQuery(
             this._applySearch(
@@ -191,7 +228,7 @@ export abstract class AbstractRepository<T> {
     public async delete(
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: QueryOptions
+        options?: Partial<QueryOptions>
     ): Promise<OptionalModel<T>[] | void> {
         return this._executeQuery(
             this._applySearch(
@@ -217,7 +254,7 @@ export abstract class AbstractRepository<T> {
      */
     public async count(
         search?: SearchModel<T> | SearchModel<T>[],
-        options?: QueryOptions
+        options?: Partial<QueryOptions>
     ): Promise<number | void> {
         const query = this._applySearch(
             this._database(this._table)
@@ -336,7 +373,7 @@ export abstract class AbstractRepository<T> {
     protected _executeQuery<K>(
         query: Knex.QueryBuilder,
         noResultKey: string,
-        options?: QueryOptions
+        options?: Partial<QueryOptions>
     ): Promise<OptionalModel<K>[] | OptionalModel<K> | void> {
         if (options?.transaction) query = query.transacting(options.transaction);
 
@@ -355,7 +392,7 @@ export abstract class AbstractRepository<T> {
      */
     protected _applyPagination(
         query: Knex.QueryBuilder,
-        options?: PaginationQueryOptions & { first?: boolean }
+        options?: Partial<PaginationQueryOptions> & { first?: boolean }
     ): Knex.QueryBuilder {
         if (options?.first) query = query.first();
         if (options?.limit ?? options?.offset) {
@@ -408,7 +445,7 @@ export abstract class AbstractRepository<T> {
      */
     private _isComplexQuery<K>(data: SearchModel<K>): boolean {
         const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte']);
-        return Object.values(data).some(value =>
+        return Object.values(data).some((value: Record<string, unknown>) =>
             value && typeof value === 'object' && Object.keys(value).every(key => validKeys.has(key))
         );
     }

@@ -1,2 +1,2 @@
-export * from './abstract.repository.js';
-export * from './crud.repository.js';
+export * from './abstract.repository.ts';
+export * from './crud.repository.ts';

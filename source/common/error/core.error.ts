@@ -1,6 +1,25 @@
 import { randomUUID } from 'crypto';
 
-import type { CoreErrorOptions } from '#/common/types/index.js';
+/**
+ * Represents the options for the Core error.
+ */
+export interface CoreErrorOptions {
+    /**
+     * The error key.
+     */
+    messageKey: string;
+
+    /**
+     * The status code.
+     */
+    code?: number;
+
+    /**
+     * The error detail.
+     */
+    detail?: unknown;
+}
+
 
 /**
  * CoreError is a class that represents an error entity with a unique identifier.

@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify';
 
-import type { Hook } from '#/common/types/index.js';
+import type { Hook } from '#/common/types/index.ts';
 
 /**
  * Query Parse Hook class implement the Hook interface ({@link Hook})

@@ -1,5 +1,5 @@
-export * from './abstractDatabase.creator.js';
-export * from './betterSQLite.creator.js';
-export * from './mssql.creator.js';
-export * from './postgres.creator.js';
+export * from './abstractDatabase.creator.ts';
+export * from './betterSQLite.creator.ts';
+export * from './mssql.creator.ts';
+export * from './postgres.creator.ts';
 

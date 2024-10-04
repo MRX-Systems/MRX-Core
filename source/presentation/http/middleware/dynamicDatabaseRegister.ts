@@ -1,7 +1,7 @@
-import { CoreError } from '#/common/error/index.js';
-import { ErrorKeys } from '#/common/error/keys.error.js';
-import type { DynamicDatabaseOptions, FastifyRequest } from '#/common/types/index.js';
-import { FactoryDatabase } from '#/infrastructure/database/index.js';
+import { CoreError } from '#/common/error/index.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+import type { DynamicDatabaseOptions, FastifyRequest } from '#/common/types/index.ts';
+import { FactoryDatabase } from '#/infrastructure/database/index.ts';
 
 /**
  * Middleware to check if the user has the required permissions
