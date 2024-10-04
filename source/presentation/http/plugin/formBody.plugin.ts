@@ -2,7 +2,17 @@ import formBody from '@fastify/formbody';
 import type { FastifyInstance } from 'fastify';
 import { parse } from 'fast-querystring';
 
-import type { Plugin, FormBodyOptions } from '#/common/types/index.js';
+import type { Plugin } from '#/common/types/index.ts';
+
+/**
+ * The options for the FormBody.
+ */
+export interface FormBodyOptions {
+    /**
+     * The body limit for the FormBody. (default: 1048576)
+     */
+    bodyLimit?: number;
+}
 
 /**
  * The FormBody plugin implement the IPlugin interface ({@link Plugin})

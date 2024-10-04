@@ -1,1 +1,1 @@
-export * from './dynamicDatabaseRegister.js';
+export * from './dynamicDatabaseRegister.ts';

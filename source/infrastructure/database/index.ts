@@ -1,1 +1,1 @@
-export * from './factory.database.js';
+export * from './factory.database.ts';

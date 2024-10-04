@@ -1,5 +1,5 @@
-export * from './fastify.data.js';
-export * from './fluentJsonSchema.data.js';
-export * from './knexType.js';
-export * from './vineType.js';
+export * from './fastify.data.ts';
+export * from './fluentJsonSchema.data.ts';
+export * from './knexType.ts';
+export * from './vineType.ts';
 
