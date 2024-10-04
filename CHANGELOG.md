@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.35.0](https://github.com/Andesite-Lab/Core/compare/v1.34.1...v1.35.0) (2024-10-04)
+
+
+### Features
+
+* refacto, improvement, bun for build remove cli remove useless code ([f839724](https://github.com/Andesite-Lab/Core/commit/f839724028f8b8172ccca4c4891a34fadf89abfd))
+
+
+### Build System
+
+* update deps ([2a498d6](https://github.com/Andesite-Lab/Core/commit/2a498d6f3cf032b15812e8c3b660b6f729b3e429))
+
+
+### Continuous Integration
+
+* refacto to support bun ([40f77fc](https://github.com/Andesite-Lab/Core/commit/40f77fce322783c42bbde8deec01a9bb7733645a))
+
 ## [1.34.1](https://github.com/Andesite-Lab/Core/compare/v1.34.0...v1.34.1) (2024-09-18)
 
 
