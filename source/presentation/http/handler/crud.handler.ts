@@ -75,6 +75,8 @@ export class CrudHandler<T> {
     public async find(req: FastifyRequest, reply: FastifyReply): Promise<void> {
         const databaseName = req.headers.databaseName as string;
         const { query, pagination } = extractQueryAndPagination(req);
+        pagination.limit ??= 100;
+        pagination.offset ??= 0;
         const search = prepareSearchModel<T>(query);
         const data = await crud.find<T>(search, pagination, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
         const total = await crud.count<T>(undefined, this._options.table, databaseName, this._options.primaryKey) as number;

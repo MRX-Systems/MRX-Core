@@ -177,11 +177,7 @@ export abstract class AbstractRepository<T> {
             .select(this._transformColumnObjectToArray(columns));
 
         query = this._applySearch(query, search);
-        query = this._applyPagination(query, {
-            limit: 200,
-            offset: 0,
-            ...options
-        });
+        query = this._applyPagination(query, options);
 
         return this._executeQuery(query, ErrorKeys.DATABASE_MODEL_NOT_FOUND, options);
     }
