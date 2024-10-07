@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.36.2](https://github.com/Andesite-Lab/Core/compare/v1.36.1...v1.36.2) (2024-10-07)
+
+
+### Bug Fixes
+
+* correction name (because bun bundler has no keepName like esbuild) ([7488bea](https://github.com/Andesite-Lab/Core/commit/7488bea9b2d14bfcc19f2932d8bee15ca7c55a81))
+
 ## [1.36.1](https://github.com/Andesite-Lab/Core/compare/v1.36.0...v1.36.1) (2024-10-04)
 
 
