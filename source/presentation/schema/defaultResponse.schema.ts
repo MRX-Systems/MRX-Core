@@ -20,7 +20,11 @@ export function default200ResponseSchema(
         .prop('statusCode', S.number())
         .examples([200])
         .prop('message', S.string())
-        .examples([(message ? I18n.translate(message, 'en', interpolation) : '')]);
+        .examples([((): string => {
+            if (message) 
+                return I18n.isI18nInitialized() ? I18n.translate(message, 'en', interpolation) : '';
+            return '';
+        })()]);
     if (contentSchema)
         response = response.prop('content', contentSchema);
     return response;
