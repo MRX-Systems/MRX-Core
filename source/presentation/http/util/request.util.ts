@@ -25,11 +25,10 @@ export function createSearchEntry<T>(key: string, value: unknown): SearchModel<T
  *
  * @returns The array of search models. ({@link SearchModel}[])
  */
-export function prepareSearchModel<T>(data: Record<string, unknown>): SearchModel<T>[] {
-    return Object.entries(data).flatMap(([key, value]) =>
-        Array.isArray(value)
-            ? value.map(v => createSearchEntry(key, v))
-            : [createSearchEntry(key, value)]
+export function prepareSearchModel<T>(data: Partial<Record<string, unknown>> | Partial<Record<keyof T, unknown>>): SearchModel<T>[] {
+    return Object.entries(data).flatMap(([key, value]) => Array.isArray(value)
+        ? value.map((v) => createSearchEntry<T>(key, v))
+        : [createSearchEntry<T>(key, value)]
     );
 }
 
