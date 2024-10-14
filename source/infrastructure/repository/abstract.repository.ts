@@ -79,7 +79,7 @@ export abstract class AbstractRepository<T> {
      * @param table - The name of the table.
      * @param databaseName - The name of the database.
      * @param primaryKey - The primary key of the table (optional, default: ['id', 'NUMBER']).
-     * 
+     *
      * @throws ({@link CoreError}) - If the database is not found. ({@link ErrorKeys.DATABASE_NOT_REGISTERED})
      */
     protected constructor(
@@ -177,8 +177,6 @@ export abstract class AbstractRepository<T> {
 
         query = this._applySearch(query, search);
         query = this._applyPagination(query, options);
-
-        console.log(query.toSQL().toNative());
 
         return this._executeQuery(query, ErrorKeys.DATABASE_MODEL_NOT_FOUND, options);
     }
@@ -348,11 +346,11 @@ export abstract class AbstractRepository<T> {
         search?: SearchModel<K> | SearchModel<K>[]
     ): Knex.QueryBuilder {
         if (!search) return query;
-        if (Array.isArray(search)) 
+        if (Array.isArray(search))
             return search.reduce((builder, search) => this._hasComplexQuery(search)
                 ? this._buildSearchQuery(builder, search)
                 : query.orWhere(search as OptionalModel<K>), query);
-        
+
 
         return this._hasComplexQuery(search)
             ? this._buildSearchQuery(query, search)
@@ -406,10 +404,10 @@ export abstract class AbstractRepository<T> {
 
     /**
      * Builds and applies a complex query to the given query builder.
-     * 
+     *
      * This method iterates over each key-value pair in the `searchItem` object and applies the corresponding filter conditions
-     * to the SQL query. If the value associated with a key is a complex object (e.g., `{ $eq: 10, $in: [1, 2, 3] }`), 
-     * it applies operators such as `$in`, `$eq`, `$lt`, etc. to build a more sophisticated query. 
+     * to the SQL query. If the value associated with a key is a complex object (e.g., `{ $eq: 10, $in: [1, 2, 3] }`),
+     * it applies operators such as `$in`, `$eq`, `$lt`, etc. to build a more sophisticated query.
      * For a simple value, it applies a `WHERE` or `OR WHERE` condition depending on the context.
      *
      * Supported operators include:
@@ -421,61 +419,69 @@ export abstract class AbstractRepository<T> {
      * - `$lt`, `$lte`: less than or less than or equal to.
      * - `$gt`, `$gte`: greater than or greater than or equal to.
      *
-     * If the query starts with an OR clause (`orWhere`), the first condition is treated as such, 
+     * If the query starts with an OR clause (`orWhere`), the first condition is treated as such,
      * and subsequent conditions are chained with `AND` or `OR` accordingly.
      *
      * @typeparam K - The generic type representing the keys of the search model.
      *
      * @param query - The query object to which the complex query will be applied. ({@link Knex.QueryBuilder})
-     * @param searchItem - The object containing search criteria. Each key represents a column, 
+     * @param searchItem - The object containing search criteria. Each key represents a column,
      * and each value can be a simple condition or a complex condition (e.g., $eq, $in, $lt, etc.). ({@link SearchModel})
      *
      * @returns The updated query builder with the applied search conditions. ({@link Knex.QueryBuilder})
      */
     private _buildSearchQuery<K>(query: Knex.QueryBuilder, searchItem: SearchModel<K>): Knex.QueryBuilder {
         let firstIsOrQuery = true;
-    
+
         Object.entries(searchItem).forEach(([key, value]) => {
             if (this._isComplexQuery(value)) {
                 const whereClause: WhereClause = value as WhereClause;
                 if ('$in' in whereClause) {
-                    query = query.orWhereIn(key, whereClause.$in);
+                    query = firstIsOrQuery ? query.orWhereIn(key, whereClause.$in) : query.whereIn(key, whereClause.$in);
                     firstIsOrQuery = false;
                 }
                 if ('$nin' in whereClause) {
-                    query = query.orWhereNotIn(key, whereClause.$nin);
+                    query = firstIsOrQuery ? query.orWhereNotIn(key, whereClause.$nin) : query.whereNotIn(key, whereClause.$nin);
                     firstIsOrQuery = false;
                 }
                 if ('$eq' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, whereClause.$eq) : query.andWhere(key, whereClause.$eq);
+                    query = firstIsOrQuery ? query.orWhere(key, whereClause.$eq) : query.where(key, whereClause.$eq);
                     firstIsOrQuery = false;
                 }
                 if ('$neq' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereNot(key, whereClause.$neq) : query.andWhereNot(key, whereClause.$neq);
+                    query = firstIsOrQuery ? query.orWhereNot(key, whereClause.$neq) : query.whereNot(key, whereClause.$neq);
                     firstIsOrQuery = false;
                 }
                 if ('$match' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereLike(key, `%${whereClause.$match}%`) : query.andWhereLike(key, `%${whereClause.$match}%`);
+                    query = firstIsOrQuery ? query.orWhereLike(key, `%${whereClause.$match}%`) : query.whereLike(key, `%${whereClause.$match}%`);
                     firstIsOrQuery = false;
                 }
                 if ('$lt' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '<', whereClause.$lt) : query.andWhere(key, '<', whereClause.$lt);
+                    query = firstIsOrQuery ? query.orWhere(key, '<', whereClause.$lt) : query.where(key, '<', whereClause.$lt);
                     firstIsOrQuery = false;
                 }
                 if ('$lte' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '<=', whereClause.$lte) : query.andWhere(key, '<=', whereClause.$lte);
+                    query = firstIsOrQuery ? query.orWhere(key, '<=', whereClause.$lte) : query.where(key, '<=', whereClause.$lte);
                     firstIsOrQuery = false;
                 }
                 if ('$gt' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '>', whereClause.$gt) : query.andWhere(key, '>', whereClause.$gt);
+                    query = firstIsOrQuery ? query.orWhere(key, '>', whereClause.$gt) : query.where(key, '>', whereClause.$gt);
                     firstIsOrQuery = false;
                 }
                 if ('$gte' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '>=', whereClause.$gte) : query.andWhere(key, '>=', whereClause.$gte);
+                    query = firstIsOrQuery ? query.orWhere(key, '>=', whereClause.$gte) : query.where(key, '>=', whereClause.$gte);
+                    firstIsOrQuery = false;
+                }
+                if ('$isNotNull' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereNotNull(key) : query.whereNotNull(key);
+                    firstIsOrQuery = false;
+                }
+                if ('$isNull' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereNull(key) : query.whereNull(key);
                     firstIsOrQuery = false;
                 }
             } else {
-                query = firstIsOrQuery ? query.orWhere(key, value) : query.andWhere(key, value);
+                query = firstIsOrQuery ? query.orWhere(key, value) : query.where(key, value);
                 firstIsOrQuery = false;
             }
         });
@@ -483,14 +489,14 @@ export abstract class AbstractRepository<T> {
     }
 
     private _isComplexQuery(data: unknown): boolean {
-        const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte']);
+        const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
         return Boolean(data
             && typeof data === 'object'
             && !Array.isArray(data)
             && Object.keys(data).some(key => validKeys.has(key))
         );
     }
-    
+
     /**
      * Checks if the object has a property that is a complex query
      *

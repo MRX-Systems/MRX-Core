@@ -21,7 +21,7 @@ export function default200ResponseSchema(
         .examples([200])
         .prop('message', S.string())
         .examples([((): string => {
-            if (message) 
+            if (message)
                 return I18n.isI18nInitialized() ? I18n.translate(message, 'en', interpolation) : '';
             return '';
         })()]);

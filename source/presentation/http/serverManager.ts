@@ -99,7 +99,7 @@ export class ServerManager {
                     $data: true,
                     removeAdditional: 'all',
                     allowUnionTypes: true,
-                    coerceTypes: false,
+                    coerceTypes: true,
                     allErrors: true,
                     parseDate: true,
                     allowDate: true,

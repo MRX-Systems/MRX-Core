@@ -74,4 +74,20 @@ export interface WhereClause {
      * ```
      */
     $gte?: string | number | Date;
+    /**
+     * Not null
+     * @example
+     * ```typescript
+     * { id: { $notNull: true } }
+     * ```
+     */
+    $isNotNull: boolean;
+    /**
+     * Is null
+     * @example
+     * ```typescript
+     * { id: { $isNull: true } }
+     * ```
+     */
+    $isNull: boolean;
 }
