@@ -45,7 +45,7 @@ export class DragonFlyCreator extends AbstractStoreCreator {
      *
      * @param options - The options of the store ({@link DragonFlyStoreOptions})
      */
-    public constructor(options: Partial<DragonFlyStoreOptions>) {
+    public constructor(options: DragonFlyStoreOptions) {
         super({
             config: {
                 host: options.host ?? 'localhost',
