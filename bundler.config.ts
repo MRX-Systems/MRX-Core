@@ -10,7 +10,7 @@ await Bun.build({
     entrypoints: ['./source/lib.ts'],
     outdir: './build',
     format: 'esm',
-    minify: true,
+    minify: false,
     sourcemap: process.env.NODE_ENV === 'development' ? 'external' : 'none',
     target: 'node',
 });

@@ -24,6 +24,16 @@ export class QueryParseHook implements Hook {
                     } catch {
                         continue;
                     }
+                else if (Array.isArray(query[key]))
+                    query[key] = (query[key] as unknown[]).map((element: unknown): unknown => {
+                        if (typeof element === 'string' && element.startsWith('{'))
+                            try {
+                                return JSON.parse(element);
+                            } catch {
+                                return element;
+                            }
+                        return element;
+                    });
             done();
         });
     }
