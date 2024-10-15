@@ -1,5 +1,5 @@
 import scalar from '@scalar/fastify-api-reference';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyPluginCallback } from 'fastify';
 
 import type { Plugin } from '#/common/types/index.ts';
 
@@ -10,11 +10,11 @@ export interface SwaggerScalarUiPluginOptions {
     /**
      * The path of the SwaggerScalarUi. (Default: '/swagger')
      */
-    path?: string;
+    path?: string | undefined
     /**
      * The theme of the SwaggerScalarUi. (Default: 'default')
      */
-    theme?: 'default' | 'alternate' | 'moon' | 'purple' | 'solarized' | 'bluePlanet' | 'saturn' | 'kepler' | 'mars' | 'deepSpace';
+    theme?: 'default' | 'alternate' | 'moon' | 'purple' | 'solarized' | 'bluePlanet' | 'saturn' | 'kepler' | 'mars' | 'deepSpace' | undefined;
 
     /**
      * The meta data for the SwaggerScalarUi.
@@ -32,24 +32,28 @@ export interface SwaggerScalarUiPluginOptions {
          * Other meta data for the SwaggerScalarUi.
          */
         [key: string]: string,
-    };
+    } | undefined;
 
     /**
      * The custom CSS for the SwaggerScalarUi.
      */
-    customCss?: string;
+    customCss?: string | undefined;
 
     /**
      * The custom key used with CTRL/CMD to open the search modal
      */
-    searchHotKey?: string;
+    searchHotKey?: string | undefined;
 
     /**
      * Fav icon for the SwaggerScalarUi
      */
-    favIcon?: string;
+    favIcon?: string | undefined;
 }
 
+interface PluginOptions {
+    routePrefix: string;
+    configuration: SwaggerScalarUiPluginOptions;
+}
 
 /**
  * The SwaggerScalarUi plugin implement the IPlugin interface ({@link Plugin})
@@ -81,15 +85,15 @@ export class SwaggerScalarUiPlugin implements Plugin {
      */
     public async configure(app: FastifyInstance, baseUrl: string): Promise<void> {
         const routePrefix = `${baseUrl}${this._options.path}`.replace(/\/+/g, '/');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        await app.register(scalar, {
+        const pluginOptions: PluginOptions = {
             routePrefix,
             configuration: {
                 theme: this._options.theme,
                 metaData: this._options.metaData,
                 customCss: this._options.customCss,
                 searchHotKey: this._options.searchHotKey
-            },
-        });
+            }
+        };
+        await app.register(scalar as FastifyPluginCallback, pluginOptions);
     }
 }
