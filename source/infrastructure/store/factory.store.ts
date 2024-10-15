@@ -3,7 +3,6 @@ import type { Redis } from 'ioredis';
 import { CoreError, ErrorKeys } from '#/common/error/index.ts';
 import { DragonFlyCreator, type AbstractStoreCreator, type DragonFlyStoreOptions } from './creator/index.ts';
 
-
 /**
  * FactoryStoreSingleton class. (Singleton)
  */
@@ -49,7 +48,7 @@ class FactoryStoreSingleton {
     public register(
         name: string,
         type: 'redis',
-        options: Partial<DragonFlyStoreOptions>
+        options: DragonFlyStoreOptions
     ): void {
         if (this._store.has(name))
             throw new CoreError({

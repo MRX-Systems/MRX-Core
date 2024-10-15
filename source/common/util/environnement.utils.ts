@@ -3,9 +3,9 @@ import { type SchemaTypes, vine } from '#/common/types/index.ts';
 
 /**
  * Validate the environment variables based on the schema provided.
- * 
+ *
  * @param schema - The schema to validate the environment variables ({@link SchemaTypes})
- * 
+ *
  * @throws ({@link CoreError}) - If the environment variables are invalid based on the schema. ({@link ErrorKeys.INVALID_ENVIRONMENT})
  */
 export async function validateEnv(schema: SchemaTypes): Promise<void> {

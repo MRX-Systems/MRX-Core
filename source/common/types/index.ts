@@ -4,27 +4,18 @@ export * from './data/index.ts';
 export * from './dependency/index.ts';
 
 /**
- * An object containing string values.
- */
-export type ObjectString = Record<string, string>;
-/**
- * An object containing unknown values.
- */
-export type ObjectUnknown = Record<string, unknown>;
-/**
  * An object containing the values to interpolate into the translated string.
  */
-export type Interpolation = ObjectUnknown;
+export type Interpolation = Record<string, unknown>;
 
-/**
- * Represents a type for filtering or searching within queries. Each property can use a subset of available filter operations.
- */
-export type WhereClauseFilter<T> = Partial<Record<keyof T, Partial<WhereClause>>>;
 
 /**
  * Defines a search model using either plain partials of the model T or a where clause filter for more dynamic querying.
  */
-export type SearchModel<T> = Partial<T & Record<string, unknown>> | WhereClauseFilter<T & Record<string, unknown>>;
+export type SearchModel<T> = {
+    [P in keyof T]?: T[P] | Partial<WhereClause>;
+} & Record<string, string | number | boolean | Date | Partial<WhereClause>>;
+
 
 /**
  * Represents a simpler, optional model where any or all properties of T can be undefined, useful for optional query parameters.

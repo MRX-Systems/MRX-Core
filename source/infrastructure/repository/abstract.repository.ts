@@ -6,8 +6,7 @@ import type {
     OptionalModel,
     SearchModel,
     Transaction,
-    WhereClause,
-    WhereClauseFilter
+    WhereClause
 } from '#/common/types/index.ts';
 import { FactoryDatabase } from '#/infrastructure/database/index.ts';
 
@@ -45,17 +44,17 @@ export interface PaginationQueryOptions {
 }
 
 /**
- * Interface Abstract Repository
+ * Abstract Repository Interface
  *
- * @typeparam T - The type of the data. (Is the table model (interface to represent the table))
+ * @typeparam T - The data type representing the table model (interface representing the table schema).
  */
 export abstract class AbstractRepository<T> {
     /**
-     * The table name.
+     * The name of the table.
      */
     protected readonly _table: string;
     /**
-     * The database name.
+     * The name of the database.
      */
     protected readonly _databaseName: string;
     /**
@@ -63,25 +62,25 @@ export abstract class AbstractRepository<T> {
      */
     protected readonly _database: Knex;
     /**
-     * The primary key for the table.
-     * The first element is the key name and the second element is the key type.
+     * The primary key for the table. The first element is the key name, and the second element is the key type.
      *
-     * Undefined uses the default primary key. (id, NUMBER)
+     * If undefined, defaults to ['id', 'NUMBER'].
      *
-     * @typeParam T - The type of the data. (Is the table model (interface to represent the table))
+     * @typeParam T - The data type representing the table model.
      *
      * @example
-     *
      * primaryKey: ['uuid', 'STRING']
      */
     protected readonly _primaryKey: [keyof T, 'NUMBER' | 'STRING'];
 
     /**
-     * Creates an instance of the abstract repository. ({@link AbstractRepository})
+     * Constructs an instance of the abstract repository. ({@link AbstractRepository})
      *
      * @param table - The name of the table.
      * @param databaseName - The name of the database.
-     * @param primaryKey - The primary key of the table. (default: ['id', 'NUMBER'])
+     * @param primaryKey - The primary key of the table (optional, default: ['id', 'NUMBER']).
+     *
+     * @throws ({@link CoreError}) - If the database is not found. ({@link ErrorKeys.DATABASE_NOT_REGISTERED})
      */
     protected constructor(
         table: string,
@@ -95,7 +94,7 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
-     * Returns the name of the table.
+     * Gets the table name.
      *
      * @returns The name of the table.
      */
@@ -104,7 +103,7 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
-     * Returns the name of the database.
+     * Gets the database name.
      *
      * @returns The name of the database.
      */
@@ -113,7 +112,7 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
-     * Returns the primary key of the table.
+     * Gets the primary key of the table.
      *
      * @returns The primary key of the table. ([keyof T, 'NUMBER' | 'STRING'])
      */
@@ -122,7 +121,7 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
-     * Returns the database instance.
+     * Gets the database instance.
      *
      * @returns The database instance. ({@link Knex})
      */
@@ -145,7 +144,7 @@ export abstract class AbstractRepository<T> {
     public async insert(
         data: OptionalModel<T> | OptionalModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: Partial<QueryOptions>
+        options?: QueryOptions
     ): Promise<OptionalModel<T>[] | void> {
         return this._executeQuery(
             this._database(this._table)
@@ -171,7 +170,7 @@ export abstract class AbstractRepository<T> {
     public async find(
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: Partial<QueryOptions> & Partial<PaginationQueryOptions> & { first?: boolean }
+        options?: QueryOptions & PaginationQueryOptions & { first?: boolean }
     ): Promise<OptionalModel<T> | OptionalModel<T>[] | void> {
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns));
@@ -199,7 +198,7 @@ export abstract class AbstractRepository<T> {
         data: OptionalModel<T>,
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: Partial<QueryOptions>
+        options?: QueryOptions
     ): Promise<OptionalModel<T>[] | void> {
         return this._executeQuery(
             this._applySearch(
@@ -228,7 +227,7 @@ export abstract class AbstractRepository<T> {
     public async delete(
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
-        options?: Partial<QueryOptions>
+        options?: QueryOptions
     ): Promise<OptionalModel<T>[] | void> {
         return this._executeQuery(
             this._applySearch(
@@ -254,7 +253,7 @@ export abstract class AbstractRepository<T> {
      */
     public async count(
         search?: SearchModel<T> | SearchModel<T>[],
-        options?: Partial<QueryOptions>
+        options?: QueryOptions
     ): Promise<number | void> {
         const query = this._applySearch(
             this._database(this._table)
@@ -347,14 +346,14 @@ export abstract class AbstractRepository<T> {
         search?: SearchModel<K> | SearchModel<K>[]
     ): Knex.QueryBuilder {
         if (!search) return query;
-
         if (Array.isArray(search))
-            return search.reduce((builder, data) =>
-                this._isComplexQuery(data)
-                    ? this._applyComplexQuery(builder, data as WhereClauseFilter<K>)
-                    : builder.orWhere(data as OptionalModel<K>), query);
-        return this._isComplexQuery(search)
-            ? this._applyComplexQuery(query, search as WhereClauseFilter<K>)
+            return search.reduce((builder, search) => this._hasComplexQuery(search)
+                ? this._buildSearchQuery(builder, search)
+                : query.orWhere(search as OptionalModel<K>), query);
+
+
+        return this._hasComplexQuery(search)
+            ? this._buildSearchQuery(query, search)
             : query.where(search as OptionalModel<K>);
     }
 
@@ -373,7 +372,7 @@ export abstract class AbstractRepository<T> {
     protected _executeQuery<K>(
         query: Knex.QueryBuilder,
         noResultKey: string,
-        options?: Partial<QueryOptions>
+        options?: QueryOptions
     ): Promise<OptionalModel<K>[] | OptionalModel<K> | void> {
         if (options?.transaction) query = query.transacting(options.transaction);
 
@@ -392,7 +391,7 @@ export abstract class AbstractRepository<T> {
      */
     protected _applyPagination(
         query: Knex.QueryBuilder,
-        options?: Partial<PaginationQueryOptions> & { first?: boolean }
+        options?: PaginationQueryOptions & { first?: boolean }
     ): Knex.QueryBuilder {
         if (options?.first) query = query.first();
         if (options?.limit ?? options?.offset) {
@@ -404,50 +403,109 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
-     * Applies the complex query to the query
+     * Builds and applies a complex query to the given query builder.
      *
-     * @param query - The query to be applied with the complex query. ({@link Knex.QueryBuilder})
-     * @param complexQuery - The complex query to be applied to the query. ({@link WhereClauseFilter})
+     * This method iterates over each key-value pair in the `searchItem` object and applies the corresponding filter conditions
+     * to the SQL query. If the value associated with a key is a complex object (e.g., `{ $eq: 10, $in: [1, 2, 3] }`),
+     * it applies operators such as `$in`, `$eq`, `$lt`, etc. to build a more sophisticated query.
+     * For a simple value, it applies a `WHERE` or `OR WHERE` condition depending on the context.
      *
-     * @returns The query applied with the complex query. ({@link Knex.QueryBuilder})
+     * Supported operators include:
+     * - `$in`: equivalent to SQL `IN`.
+     * - `$nin`: equivalent to SQL `NOT IN`.
+     * - `$eq`: equivalent to SQL `=` (equality).
+     * - `$neq`: equivalent to SQL `<>` (not equal).
+     * - `$match`: partial matching, equivalent to SQL `LIKE`.
+     * - `$lt`, `$lte`: less than or less than or equal to.
+     * - `$gt`, `$gte`: greater than or greater than or equal to.
+     *
+     * If the query starts with an OR clause (`orWhere`), the first condition is treated as such,
+     * and subsequent conditions are chained with `AND` or `OR` accordingly.
+     *
+     * @typeparam K - The generic type representing the keys of the search model.
+     *
+     * @param query - The query object to which the complex query will be applied. ({@link Knex.QueryBuilder})
+     * @param searchItem - The object containing search criteria. Each key represents a column,
+     * and each value can be a simple condition or a complex condition (e.g., $eq, $in, $lt, etc.). ({@link SearchModel})
+     *
+     * @returns The updated query builder with the applied search conditions. ({@link Knex.QueryBuilder})
      */
-    private _applyComplexQuery<K>(query: Knex.QueryBuilder, complexQuery: WhereClauseFilter<K>): Knex.QueryBuilder {
-        Object.entries(complexQuery).forEach(([key, value]) => {
-            const whereClause: WhereClause = value as WhereClause;
-            if ('$in' in whereClause)
-                query = query.orWhereIn(key, whereClause.$in);
-            if ('$nin' in whereClause)
-                query = query.orWhereNotIn(key, whereClause.$nin);
-            if ('$eq' in whereClause)
-                query = query.andWhere(key, whereClause.$eq);
-            if ('$neq' in whereClause)
-                query = query.andWhereNot(key, whereClause.$neq);
-            if ('$match' in whereClause)
-                query = query.andWhereLike(key, `%${whereClause.$match}%`);
-            if ('$lt' in whereClause)
-                query = query.andWhere(key, '<', whereClause.$lt);
-            if ('$lte' in whereClause)
-                query = query.andWhere(key, '<=', whereClause.$lte);
-            if ('$gt' in whereClause)
-                query = query.andWhere(key, '>', whereClause.$gt);
-            if ('$gte' in whereClause)
-                query = query.andWhere(key, '>=', whereClause.$gte);
+    private _buildSearchQuery<K>(query: Knex.QueryBuilder, searchItem: SearchModel<K>): Knex.QueryBuilder {
+        let firstIsOrQuery = true;
+
+        Object.entries(searchItem).forEach(([key, value]) => {
+            if (this._isComplexQuery(value)) {
+                const whereClause: WhereClause = value as WhereClause;
+                if ('$in' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereIn(key, whereClause.$in) : query.whereIn(key, whereClause.$in);
+                    firstIsOrQuery = false;
+                }
+                if ('$nin' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereNotIn(key, whereClause.$nin) : query.whereNotIn(key, whereClause.$nin);
+                    firstIsOrQuery = false;
+                }
+                if ('$eq' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhere(key, whereClause.$eq) : query.where(key, whereClause.$eq);
+                    firstIsOrQuery = false;
+                }
+                if ('$neq' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereNot(key, whereClause.$neq) : query.whereNot(key, whereClause.$neq);
+                    firstIsOrQuery = false;
+                }
+                if ('$match' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereLike(key, `%${whereClause.$match}%`) : query.whereLike(key, `%${whereClause.$match}%`);
+                    firstIsOrQuery = false;
+                }
+                if ('$lt' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhere(key, '<', whereClause.$lt) : query.where(key, '<', whereClause.$lt);
+                    firstIsOrQuery = false;
+                }
+                if ('$lte' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhere(key, '<=', whereClause.$lte) : query.where(key, '<=', whereClause.$lte);
+                    firstIsOrQuery = false;
+                }
+                if ('$gt' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhere(key, '>', whereClause.$gt) : query.where(key, '>', whereClause.$gt);
+                    firstIsOrQuery = false;
+                }
+                if ('$gte' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhere(key, '>=', whereClause.$gte) : query.where(key, '>=', whereClause.$gte);
+                    firstIsOrQuery = false;
+                }
+                if ('$isNotNull' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereNotNull(key) : query.whereNotNull(key);
+                    firstIsOrQuery = false;
+                }
+                if ('$isNull' in whereClause) {
+                    query = firstIsOrQuery ? query.orWhereNull(key) : query.whereNull(key);
+                    firstIsOrQuery = false;
+                }
+            } else {
+                query = firstIsOrQuery ? query.orWhere(key, value) : query.where(key, value);
+                firstIsOrQuery = false;
+            }
         });
         return query;
     }
 
-    /**
-     * Checks if the data is a complex query or not
-     *
-     * @param data - The data to be checked if it is a complex query or not. ({@link SearchModel})
-     *
-     * @returns A boolean value to determine if the data is a complex query or not
-     */
-    private _isComplexQuery<K>(data: SearchModel<K>): boolean {
-        const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte']);
-        return Object.values(data).some((value: Record<string, unknown>) =>
-            value && typeof value === 'object' && Object.keys(value).every(key => validKeys.has(key))
+    private _isComplexQuery(data: unknown): boolean {
+        const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
+        return Boolean(data
+            && typeof data === 'object'
+            && !Array.isArray(data)
+            && Object.keys(data).some(key => validKeys.has(key))
         );
+    }
+
+    /**
+     * Checks if the object has a property that is a complex query
+     *
+     * @param data - The object to be checked if it has a complex query or not. ({@link SearchModel})
+     *
+     * @returns A boolean value to determine if the object has a complex query or not.
+     */
+    private _hasComplexQuery<K>(data: SearchModel<K>): boolean {
+        return Object.values(data).some(value => this._isComplexQuery(value));
     }
 
     /**
