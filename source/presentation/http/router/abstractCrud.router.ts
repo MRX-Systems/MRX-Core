@@ -7,8 +7,8 @@ import type {
 } from '#/common/types/index.ts';
 import { FactoryDatabase } from '#/infrastructure/database/index.ts';
 import { CrudHandler } from '#/presentation/http/handler/index.ts';
+import { dynamicDatabaseRegister } from '#/presentation/http/middleware/index.ts';
 import { default200ResponseSchema } from '#/presentation/schema/index.ts';
-import { dynamicDatabaseRegister } from '../middleware/dynamicDatabaseRegister.ts';
 import { AbstractRouter } from './abstract.router.ts';
 
 /**
