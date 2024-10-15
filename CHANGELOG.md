@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.37.0](https://github.com/Andesite-Lab/Core/compare/v1.36.2...v1.37.0) (2024-10-15)
+
+
+### Features
+
+* set coerce true, change whereclause schema, handle obj[] in req ([cec6c64](https://github.com/Andesite-Lab/Core/commit/cec6c64839a54733f380af1a81c3715df07dc25e))
+* update SearchModel, Whereclause, ApplySearch ... ([74cf19d](https://github.com/Andesite-Lab/Core/commit/74cf19dcff2c00f345ca8d48b8a0f5c2f9168672))
+
+
+### Bug Fixes
+
+* correction default response if i18n not init ([279d05f](https://github.com/Andesite-Lab/Core/commit/279d05fb430c0a45371409796da03b8b3328af65))
+* correction prepareSearchModel in request utils ([140dd5e](https://github.com/Andesite-Lab/Core/commit/140dd5e2a0fa363110cee4b0d42917d2ff65dac0))
+
+
+### Code Refactoring
+
+* little clean ([5a90cb7](https://github.com/Andesite-Lab/Core/commit/5a90cb78b60a0baae50ca6deae3510ae38b68ef2))
+
+
+### Build System
+
+* update deps && stop minify a package in back is useless ([71de55f](https://github.com/Andesite-Lab/Core/commit/71de55fac916f59fdb74f95a0942c08f16af52d4))
+
 ## [1.36.2](https://github.com/Andesite-Lab/Core/compare/v1.36.1...v1.36.2) (2024-10-07)
 
 

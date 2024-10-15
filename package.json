@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/package",
   "name": "@andesite-lab/andesite-core",
   "description": "Andesite - Core provides a set of tools to help you build a microservice",
-  "version": "1.36.2",
+  "version": "1.37.0",
   "type": "module",
   "main": "build/lib.js",
   "types": "build/lib.d.ts",
