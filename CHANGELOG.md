@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.38.0](https://github.com/Andesite-Lab/Core/compare/v1.37.1...v1.38.0) (2024-10-16)
+
+
+### Features
+
+* handle driver mssql error ([42414c9](https://github.com/Andesite-Lab/Core/commit/42414c919a58c685527992d29f80af6847a950e1))
+
 ## [1.37.1](https://github.com/Andesite-Lab/Core/compare/v1.37.0...v1.37.1) (2024-10-15)
 
 
