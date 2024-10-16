@@ -56,7 +56,7 @@ export class CrudHandler<T> {
         const data = await crud.insert<T>(body, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.insert',
-            statusCode: 200,
+            statusCode: 201,
             content: {
                 table: this._options.table,
                 databaseName,

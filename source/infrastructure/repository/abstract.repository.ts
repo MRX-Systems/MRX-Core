@@ -19,10 +19,6 @@ export interface QueryOptions {
      */
     throwIfNoResult?: boolean;
     /**
-     * If the query can throw an error
-     */
-    throwIfQueryError?: boolean;
-    /**
      * If the query is a transaction ({@link Transaction})
      */
     transaction?: Transaction;
@@ -42,6 +38,132 @@ export interface PaginationQueryOptions {
      */
     offset?: number;
 }
+
+const globalErrorCodes: Record<string, number> = {
+    [ErrorKeys.DATABASE_MODEL_NOT_CREATED]: 500,
+    [ErrorKeys.DATABASE_MODEL_NOT_UPDATED]: 500,
+    [ErrorKeys.DATABASE_MODEL_NOT_DELETED]: 500,
+    [ErrorKeys.DATABASE_MODEL_NOT_FOUND]: 404,
+};
+
+/**
+ * Mapping of MSSQL error codes to HTTP status codes and message keys.
+ * This table provides corresponding HTTP status codes and messages for common MSSQL errors,
+ * useful in reflecting these in a Web API or REST service.
+ */
+export const mssqlErrorCodes: Record<number, { statusCode: number, messageKey: string }> = {
+    /**
+     * Connection Errors
+     * - 4060: HTTP 403 Forbidden - Access to the requested resource, such as a database the user does not have access to, is denied.
+     * - 18452: HTTP 403 Forbidden - The user does not have the necessary rights to access the resource.
+     */
+    4060: {
+        statusCode: 403,
+        messageKey: ErrorKeys.DATABASE_ACCESS_DENIED
+    },
+    18452: {
+        statusCode: 403,
+        messageKey: ErrorKeys.DATABASE_AUTHORIZATION_FAILED
+    },
+    /**
+     * SQL Syntax Errors
+     * - 102: HTTP 400 Bad Request - The request sent to the server contains incorrect syntax.
+     * - 207: HTTP 400 Bad Request - Invalid request due to the use of a column that does not exist.
+     * - 208: HTTP 404 Not Found - The specified table or view was not found in the database.
+     * - 209: HTTP 400 Bad Request - Malformed request with ambiguous references in the column.
+     */
+    102: {
+        statusCode: 400,
+        messageKey: ErrorKeys.DATABASE_SYNTAX_ERROR
+    },
+    207: {
+        statusCode: 400,
+        messageKey: ErrorKeys.DATABASE_COLUMN_NOT_FOUND
+    },
+    208: {
+        statusCode: 404,
+        messageKey: ErrorKeys.DATABASE_TABLE_NOT_FOUND
+    },
+    209: {
+        statusCode: 400,
+        messageKey: ErrorKeys.DATABASE_AMBIGUOUS_COLUMN
+    },
+    /**
+     * Data Integrity Errors
+     * - 2627: HTTP 409 Conflict - The insert attempt failed because it would violate a uniqueness constraint (e.g., duplicate primary key).
+     * - 547: HTTP 409 Conflict - The action attempt failed because it would violate a foreign key constraint.
+     * - 2601: HTTP 409 Conflict - Conflict due to inserting duplicate data that does not comply with a unique index constraint.
+     */
+    2627: {
+        statusCode: 409,
+        messageKey: ErrorKeys.DATABASE_DUPLICATE_KEY
+    },
+    547: {
+        statusCode: 409,
+        messageKey: ErrorKeys.DATABASE_FOREIGN_KEY_VIOLATION
+    },
+    2601: {
+        statusCode: 409,
+        messageKey: ErrorKeys.DATABASE_UNIQUE_CONSTRAINT_VIOLATION
+    },
+    /**
+     * Transaction Management Errors
+     * - 1205: HTTP 409 Conflict - Conflict detected between multiple concurrent transactions, resulting in a deadlock.
+     * - 1222: HTTP 503 Service Unavailable - The requested resource is locked and thus temporarily inaccessible.
+     * - 3928: HTTP 500 Internal Server Error - Internal server error that led to the cancellation of the transaction.
+     */
+    1205: {
+        statusCode: 409,
+        messageKey: ErrorKeys.DATABASE_DEADLOCK_DETECTED
+    },
+    1222: {
+        statusCode: 503,
+        messageKey: ErrorKeys.DATABASE_RESOURCE_LOCK
+    },
+    3928: {
+        statusCode: 500,
+        messageKey: ErrorKeys.DATABASE_TRANSACTION_ABORTED
+    },
+    /**
+     * Performance and Resource Errors
+     * - 701: HTTP 503 Service Unavailable - The server cannot respond to the request due to insufficient system resources (memory).
+     * - 1105: HTTP 507 Insufficient Storage - The server cannot complete the request due to lack of disk space.
+     * - 8645: HTTP 504 Gateway Timeout - The request took too long to execute, resulting in a timeout.
+     */
+    701: {
+        statusCode: 503,
+        messageKey: ErrorKeys.DATABASE_INSUFFICIENT_MEMORY
+    },
+    1105: {
+        statusCode: 507,
+        messageKey: ErrorKeys.DATABASE_INSUFFICIENT_STORAGE
+    },
+    8645: {
+        statusCode: 504,
+        messageKey: ErrorKeys.DATABASE_QUERY_TIMEOUT
+    },
+    /**
+     * General Errors
+     * - 9002: HTTP 507 Insufficient Storage - The space for storing transactions is exhausted.
+     * - 8152: HTTP 400 Bad Request - The size of the data sent exceeds the limits defined by the database.
+     */
+    9002: {
+        statusCode: 507,
+        messageKey: ErrorKeys.DATABASE_TRANSACTION_LOG_FULL
+    },
+    8152: {
+        statusCode: 400,
+        messageKey: ErrorKeys.DATABASE_DATA_TOO_LARGE
+    },
+    /**
+     * Access or Security Errors
+     * - 229: HTTP 403 Forbidden - The user does not have the necessary permissions to access the resource.
+     */
+    229: {
+        statusCode: 403,
+        messageKey: ErrorKeys.DATABASE_PERMISSION_DENIED
+    }
+};
 
 /**
  * Abstract Repository Interface
@@ -136,7 +258,7 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to be selected in the query. ({@link ColumnsSelection})
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If the query not created and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_CREATED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
      * @returns The data inserted into the table. ({@link OptionalModel})
@@ -162,7 +284,7 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to be selected in the query. ({@link ColumnsSelection})
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If the no result is found and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_FOUND})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
      * @returns The data found based on the search options. ({@link OptionalModel})
@@ -189,7 +311,7 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to be selected in the query. ({@link ColumnsSelection})
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If no rows are updated and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_UPDATED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
      * @returns The data updated based on the search options. ({@link OptionalModel})
@@ -219,7 +341,7 @@ export abstract class AbstractRepository<T> {
      * @param columns - Columns to be selected in the query. ({@link ColumnsSelection})
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If no rows are deleted and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_DELETED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
      * @returns The data deleted based on the search options. ({@link OptionalModel})
@@ -253,17 +375,19 @@ export abstract class AbstractRepository<T> {
      */
     public async count(
         search?: SearchModel<T> | SearchModel<T>[],
-        options?: QueryOptions
+        options?: Pick<QueryOptions, 'transaction'>
     ): Promise<number | void> {
-        const query = this._applySearch(
+        let query = this._applySearch(
             this._database(this._table)
                 .count({ count: '*' }),
             search
         );
+        if (options?.transaction)
+            query = query.transacting(options.transaction);
 
         return query
             .then((result) => result[0]?.count as number ?? 0)
-            .catch((error) => this._handleError(error, options?.throwIfQueryError) === undefined ? 0 : 0);
+            .catch((error) => this._handleError(error) === undefined ? 0 : 0);
     }
 
     /**
@@ -287,49 +411,52 @@ export abstract class AbstractRepository<T> {
      * Handles the error thrown during query execution
      *
      * @param error - The error to be handled
-     * @param canThrow - A boolean value to determine if an error should be thrown
      *
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      */
-    protected _handleError(error: unknown, canThrow: boolean = true): undefined | void {
-        if (canThrow)
-            if (error instanceof CoreError)
-                throw error;
-            else
-                throw new CoreError({
-                    messageKey: ErrorKeys.DATABASE_QUERY_ERROR,
-                    detail: {
-                        table: this._table,
-                        database: this._databaseName,
-                        error
-                    }
-                });
-        return undefined;
+    protected _handleError(error: unknown): undefined | void {
+        if (error instanceof CoreError) {
+            throw error;
+        } else {
+            const number = (error as { number: number })?.number;
+            const statusCode = mssqlErrorCodes[number]?.statusCode ?? 500;
+            const messageKey = mssqlErrorCodes[number]?.messageKey ?? ErrorKeys.DATABASE_QUERY_ERROR;
+
+            throw new CoreError({
+                code: statusCode,
+                messageKey,
+                detail: {
+                    table: this._table,
+                    database: this._databaseName,
+                    ...(messageKey === ErrorKeys.DATABASE_QUERY_ERROR && { driver: { code: number } })
+                }
+            });
+        }
     }
 
     /**
      * Handles the result of the query execution
      *
      * @param result - The result of the query execution. ({@link OptionalModel})
-     * @param noResultKey - The key of the error message to be thrown when no result is found
-     * @param canThrow - A boolean value to determine if an error should be thrown when no result is found
+     * @param messageKey - The key of the error message to be thrown when no result is found
+     * @param throwIfNoResult - A boolean value to determine if an error should be thrown when no result is found
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link messageKey})
      *
      * @returns The result of the query execution. ({@link OptionalModel})
      */
     protected _handleResult<K>(
         result: OptionalModel<K> | OptionalModel<K>[],
-        noResultKey: string,
-        canThrow: boolean = false
+        messageKey: string,
+        throwIfNoResult: boolean = false
     ): OptionalModel<K> | OptionalModel<K>[] | void {
         if (Array.isArray(result)) {
-            if (result.length === 0 && canThrow)
-                this._throwNoResultError(noResultKey);
+            if (result.length === 0 && throwIfNoResult)
+                this._throwNoResultError(messageKey);
             return result;
         }
-        if (!result && canThrow)
-            this._throwNoResultError(noResultKey);
+        if (!result && throwIfNoResult)
+            this._throwNoResultError(messageKey);
         return result;
     }
 
@@ -361,10 +488,10 @@ export abstract class AbstractRepository<T> {
      * Executes the query and handles the result or error
      *
      * @param query - The query to be executed. ({@link Knex.QueryBuilder})
-     * @param noResultKey - The key of the error message to be thrown when no result is found
+     * @param messageKey - The key of the error message to be thrown when no result is found
      * @param options - The options to be applied to the query. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link messageKey})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
      * @returns The result of the query execution. ({@link OptionalModel})
@@ -378,7 +505,7 @@ export abstract class AbstractRepository<T> {
 
         return query
             .then((result) => this._handleResult(result as OptionalModel<K>[] | OptionalModel<K>, noResultKey, options?.throwIfNoResult))
-            .catch((error) => this._handleError(error, options?.throwIfQueryError));
+            .catch((error) => this._handleError(error));
     }
 
     /**
@@ -418,6 +545,7 @@ export abstract class AbstractRepository<T> {
      * - `$match`: partial matching, equivalent to SQL `LIKE`.
      * - `$lt`, `$lte`: less than or less than or equal to.
      * - `$gt`, `$gte`: greater than or greater than or equal to.
+     * - `$isNotNull`, `$isNull`: equivalent to SQL `IS NOT NULL` and `IS NULL`, respectively
      *
      * If the query starts with an OR clause (`orWhere`), the first condition is treated as such,
      * and subsequent conditions are chained with `AND` or `OR` accordingly.
@@ -432,7 +560,6 @@ export abstract class AbstractRepository<T> {
      */
     private _buildSearchQuery<K>(query: Knex.QueryBuilder, searchItem: SearchModel<K>): Knex.QueryBuilder {
         let firstIsOrQuery = true;
-
         Object.entries(searchItem).forEach(([key, value]) => {
             if (this._isComplexQuery(value)) {
                 const whereClause: WhereClause = value as WhereClause;
@@ -488,6 +615,13 @@ export abstract class AbstractRepository<T> {
         return query;
     }
 
+    /**
+     * Determines whether the provided data object contains a complex query.
+     * 
+     * @param data - The data to be checked, which can be of any type.
+     * 
+     * @returns Returns `true` if the data is an object and contains one or more valid query operators, otherwise returns `false`.
+     */
     private _isComplexQuery(data: unknown): boolean {
         const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
         return Boolean(data
@@ -511,13 +645,14 @@ export abstract class AbstractRepository<T> {
     /**
      * Throws an error when no result is found
      *
-     * @param noResultKey - The key of the error message to be thrown
+     * @param messageKey - The key of the error message to be thrown
      *
-     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link noResultKey})
+     * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link messageKey})
      */
-    private _throwNoResultError(noResultKey: string): void {
+    private _throwNoResultError(messageKey: string): void {
         throw new CoreError({
-            messageKey: noResultKey,
+            code: globalErrorCodes[messageKey] ?? 500,
+            messageKey,
             detail: { table: this._table, database: this._databaseName }
         });
     }

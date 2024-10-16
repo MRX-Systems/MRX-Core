@@ -27,7 +27,7 @@ function insert<T>(
         databaseName,
         primaryKey
     );
-    return model.insert(data);
+    return model.insert(data, {}, { throwIfNoResult: true });
 }
 
 /**
@@ -58,7 +58,7 @@ function find<T>(
         databaseName,
         primaryKey
     );
-    return crudRepository.find(search, {}, pagination) as Promise<OptionalModel<T>[] | void>;
+    return crudRepository.find(search, {}, { ...pagination, throwIfNoResult: true }) as Promise<OptionalModel<T>[] | void>;
 }
 
 /**
@@ -87,7 +87,7 @@ function findOne<T>(
         databaseName,
         primaryKey
     );
-    return crudRepository.find(search, {}, { first: true }) as Promise<OptionalModel<T> | void>;
+    return crudRepository.find(search, {}, { first: true, throwIfNoResult: true }) as Promise<OptionalModel<T> | void>;
 }
 
 /**
@@ -118,7 +118,7 @@ function update<T>(
         databaseName,
         primaryKey
     );
-    return crudRepository.update(data, search);
+    return crudRepository.update(data, search, {}, { throwIfNoResult: true });
 }
 
 /**
@@ -147,7 +147,7 @@ function del<T>(
         databaseName,
         primaryKey
     );
-    return crudRepository.delete(search);
+    return crudRepository.delete(search, {}, { throwIfNoResult: true });
 }
 
 /**
