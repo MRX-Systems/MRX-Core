@@ -288,7 +288,7 @@ export class ServerManager {
                     request.headers['accept-language'],
                     detail
                 ) : error.message,
-                ...e.code < 500 || process.env.NODE_ENV === 'development' ? { content: e.detail } : {}
+                content: e.detail
             });
         } else {
             await reply.status(500).send({
@@ -297,7 +297,7 @@ export class ServerManager {
                     ErrorKeys.INTERNAL_SERVER_ERROR,
                     request.headers['accept-language']
                 ) : ErrorKeys.INTERNAL_SERVER_ERROR,
-                content: error
+                content: error.message
             });
         }
     }
