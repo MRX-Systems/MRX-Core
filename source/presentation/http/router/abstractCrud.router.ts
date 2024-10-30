@@ -67,16 +67,16 @@ export interface FindOperationOptions {
  */
 export interface InsertOperationOptions<T> {
     required: (keyof T)[];
-    inputSchema: ObjectSchema,
-    outputSchema: ObjectSchema
+    inputSchema: ObjectSchema;
+    outputSchema: ObjectSchema;
 }
 
 /**
  * The update one operation configuration.
  */
 export interface UpdateOneOperationOptions {
-    inputSchema: ObjectSchema,
-    outputSchema: ObjectSchema
+    inputSchema: ObjectSchema;
+    outputSchema: ObjectSchema;
 }
 
 /**
@@ -85,7 +85,7 @@ export interface UpdateOneOperationOptions {
 export interface UpdateOperationOptions {
     searchSchema: ObjectSchema;
     inputSchema: ObjectSchema;
-    outputSchema: ObjectSchema
+    outputSchema: ObjectSchema;
 }
 
 /**
@@ -95,7 +95,7 @@ export interface OperationsOptions<T> {
     insert: Partial<BaseOperationOptions> & Partial<InsertOperationOptions<T>>;
     find: Partial<BaseOperationOptions> & Partial<FindOperationOptions>;
     findOne: Partial<BaseOperationOptions> & Partial<FindOneOperationOptions>;
-    update: Partial<BaseOperationOptions> & Partial<UpdateOperationOptions> ;
+    update: Partial<BaseOperationOptions> & Partial<UpdateOperationOptions>;
     updateOne: Partial<BaseOperationOptions> & Partial<UpdateOneOperationOptions>;
     delete: Partial<BaseOperationOptions> & Partial<DeleteOperationOptions>;
     deleteOne: Partial<BaseOperationOptions> & Partial<DeleteOneOperationOptions>;
