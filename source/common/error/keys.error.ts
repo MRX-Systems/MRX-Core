@@ -1,7 +1,7 @@
 /**
  * Error keys for the Core.
  */
-export const ErrorKeys = {
+export const    ErrorKeys = {
     I18N_NOT_INITIALIZED: 'error.core-api.i18n_not_initialized',
     I18N_ALREADY_INITIALIZED: 'error.core-api.i18n_already_initialized',
     INVALID_ENVIRONMENT: 'error.core-api.invalid_environment',
@@ -206,4 +206,64 @@ export const ErrorKeys = {
      * - error : The error message
      */
     DATABASE_PERMISSION_DENIED: 'error.core-api.database_permission_denied',
+    /**
+     * Interpolation :
+     * - name : The name of the storage
+     */
+    AZ_STORAGE_ALREADY_REGISTERED: 'error.core-api.azure_storage_already_registered',
+    /**
+     * Interpolation :
+     * - name : The name of the storage
+     */
+    AZ_STORAGE_NOT_REGISTERED: 'error.core-api.azure_storage_not_registered',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     */
+    AZ_STORAGE_LIST_CONTAINER_FAILED: 'error.core-api.azure_storage_list_container_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     */
+    AZ_STORAGE_CREATE_FAILED: 'error.core-api.azure_storage_create_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     */
+    AZ_STORAGE_DELETE_FAILED: 'error.core-api.azure_storage_delete_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     */
+    AZ_STORAGE_GET_CONTAINER_FAILED: 'error.core-api.azure_storage_get_container_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     * - blobName : The name of the blob
+     */
+    AZ_STORAGE_BLOB_UPLOAD_FAILED: 'error.core-api.azure_storage_blob_upload_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     * - blobName : The name of the blob
+     */
+    AZ_STORAGE_BLOB_DOWNLOAD_FAILED: 'error.core-api.azure_storage_blob_download_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     * - blobName : The name of the blob
+     */
+    AZ_STORAGE_BLOB_DELETE_FAILED: 'error.core-api.azure_storage_blob_delete_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
+     */
+    AZ_STORAGE_CONTAINER_LIST_FAILED: 'error.core-api.azure_storage_container_list_failed',
 };
