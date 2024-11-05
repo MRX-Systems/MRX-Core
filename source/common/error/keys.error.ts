@@ -264,6 +264,13 @@ export const    ErrorKeys = {
      * Interpolation :
      * - accountName : The name of account storage service in Azure
      * - containerName : The name of the container
+     * - blobName : The name of the blob
+     */
+    AZ_STORAGE_BLOB_GET_FAILED: 'error.core-api.azure_storage_blob_get_failed',
+    /**
+     * Interpolation :
+     * - accountName : The name of account storage service in Azure
+     * - containerName : The name of the container
      */
     AZ_STORAGE_CONTAINER_LIST_FAILED: 'error.core-api.azure_storage_container_list_failed',
 };

@@ -187,6 +187,66 @@ export class AzureContainerClient {
     }
 
     /**
+     * Gets the information of a blob from the storage service
+     *
+     * @param blobName - The name of the blob to get information from the storage service
+     *
+     * @throws ({@link CoreError}) - If the get operation failed. ({@link ErrorKeys.AZ_STORAGE_BLOB_GET_FAILED})
+     *
+     * @returns The options for the blob ({@link BlobOptions})
+     */
+    public async getBlobInfo(blobName: string): Promise<Omit<BlobOptions, 'blobStream'>> {
+        try {
+            const blobClient = this._containerClient.getBlobClient(blobName);
+            const blobProperties = await blobClient.getProperties();
+            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" properties retrieved from container ${this._containerClient.containerName}`);
+            return {
+                blobName,
+                blobSize: blobProperties.contentLength ?? 0,
+                blobMetadata: blobProperties.metadata
+            };
+        } catch (error) {
+            throw new CoreError({
+                messageKey: ErrorKeys.AZ_STORAGE_BLOB_GET_FAILED,
+                detail: {
+                    accountName: this._containerClient.accountName,
+                    containerName: this._containerClient.containerName,
+                    blobName,
+                    error
+                }
+            });
+        }
+    }
+
+    /**
+     * Checks if a blob exists in the storage service
+     *
+     * @param blobName - The name of the blob to check if it exists in the storage service
+     *
+     * @throws ({@link CoreError}) - If the check operation failed. ({@link ErrorKeys.AZ_STORAGE_BLOB_GET_FAILED})
+     *
+     * @returns A boolean indicating if the blob exists in the storage service
+     */
+    public async checkBlobExists(blobName: string): Promise<boolean> {
+        try {
+            const blobClient = this._containerClient.getBlobClient(blobName);
+            const exists = await blobClient.exists();
+            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" exists in container ${this._containerClient.containerName}`);
+            return exists;
+        } catch (error) {
+            throw new CoreError({
+                messageKey: ErrorKeys.AZ_STORAGE_BLOB_GET_FAILED,
+                detail: {
+                    accountName: this._containerClient.accountName,
+                    containerName: this._containerClient.containerName,
+                    blobName,
+                    error
+                }
+            });
+        }
+    }
+
+    /**
      * Lists all the blobs in a container
      *
      * @throws ({@link CoreError}) - If the list operation failed. ({@link ErrorKeys.STORAGE_LIST_FAILED})
