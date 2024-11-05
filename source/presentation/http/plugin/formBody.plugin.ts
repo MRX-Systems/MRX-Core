@@ -1,6 +1,6 @@
 import formBody from '@fastify/formbody';
-import type { FastifyInstance } from 'fastify';
 import { parse } from 'fast-querystring';
+import type { FastifyInstance } from 'fastify';
 
 import type { Plugin } from '#/common/types/index.ts';
 
@@ -15,7 +15,7 @@ export interface FormBodyOptions {
 }
 
 /**
- * The FormBody plugin implement the IPlugin interface ({@link Plugin})
+ * The FormBody plugin implement the Plugin interface ({@link Plugin})
  */
 export class FormBodyPlugin implements Plugin {
     /**

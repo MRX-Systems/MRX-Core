@@ -12,11 +12,11 @@ export interface DynamicDatabaseOptions {
     /**
      * The header key to get the database name. (default: 'database-using')
      */
-    headerKey?: string,
+    headerKey?: string;
     /**
      * The database type.
      */
-    databaseType: 'postgres' | 'better-sqlite' | 'mssql',
+    databaseType: 'postgres' | 'better-sqlite' | 'mssql';
     /**
      * The database options.
      */

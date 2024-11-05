@@ -10,7 +10,7 @@ export interface SwaggerScalarUiPluginOptions {
     /**
      * The path of the SwaggerScalarUi. (Default: '/swagger')
      */
-    path?: string | undefined
+    path?: string | undefined;
     /**
      * The theme of the SwaggerScalarUi. (Default: 'default')
      */
@@ -23,15 +23,15 @@ export interface SwaggerScalarUiPluginOptions {
         /**
          * The title of the SwaggerScalarUi.
          */
-        title?: string,
+        title?: string;
         /**
          * The description of the SwaggerScalarUi.
          */
-        description?: string,
+        description?: string;
         /**
          * Other meta data for the SwaggerScalarUi.
          */
-        [key: string]: string,
+        [key: string]: string;
     } | undefined;
 
     /**
