@@ -59,7 +59,7 @@ class AzureFactoryStorageSingleton {
     }
 
     /**
-     * Get the storage by name.
+     * Unregister an existing storage by name.
      *
      * @param name - The name of the storage
      *

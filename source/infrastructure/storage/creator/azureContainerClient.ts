@@ -59,7 +59,7 @@ export class AzureContainerClient {
             await this._containerClient.uploadBlockBlob(options.blobName, options.blobStream, options.blobSize, {
                 metadata: options.blobMetadata ?? {},
             });
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${options.blobName}" uploaded to container ${this._containerClient.containerName}`);
+            this._log?.info(`[Azure:${this._containerClient.accountName}:${this._containerClient.containerName}:(UploadBlob)] - Blob "${options.blobName}" uploaded`);
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_BLOB_UPLOAD_FAILED,
@@ -82,22 +82,7 @@ export class AzureContainerClient {
      */
     public async uploadBlobs(options: Readonly<BlobOptions>[]): Promise<void> {
         await Promise.all(options.map(async (option) => {
-            try {
-                await this._containerClient.uploadBlockBlob(option.blobName, option.blobStream, option.blobSize, {
-                    metadata: option.blobMetadata ?? {},
-                });
-                this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${option.blobName}" uploaded to container ${this._containerClient.containerName}`);
-            } catch (error) {
-                throw new CoreError({
-                    messageKey: ErrorKeys.AZ_STORAGE_BLOB_UPLOAD_FAILED,
-                    detail: {
-                        accountName: this._containerClient.accountName,
-                        containerName: this._containerClient.containerName,
-                        blobName: option.blobName,
-                        error
-                    }
-                });
-            }
+            await this.uploadBlob(option);
         }));
     }
 
@@ -114,7 +99,7 @@ export class AzureContainerClient {
         try {
             const blobClient = this._containerClient.getBlobClient(blobName);
             const blobDownloadResponse = await blobClient.download();
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" downloaded from container ${this._containerClient.containerName}`);
+            this._log?.info(`[Azure:${this._containerClient.accountName}:${this._containerClient.containerName}:(DownloadBlob)] - Blob "${blobName}" downloaded`);
             return {
                 blobName,
                 blobSize: blobDownloadResponse.contentLength ?? 0,
@@ -145,7 +130,7 @@ export class AzureContainerClient {
         try {
             const blobClient = this._containerClient.getBlobClient(blobName);
             await blobClient.deleteIfExists();
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" deleted from container ${this._containerClient.containerName}`);
+            this._log?.info(`[Azure:${this._containerClient.accountName}:${this._containerClient.containerName}:(DeleteBlob)] - Blob "${blobName}" deleted`);
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_BLOB_DELETE_FAILED,
@@ -168,21 +153,7 @@ export class AzureContainerClient {
      */
     public async deleteBlobs(blobNames: string[]): Promise<void> {
         await Promise.all(blobNames.map(async (blobName) => {
-            try {
-                const blobClient = this._containerClient.getBlobClient(blobName);
-                await blobClient.deleteIfExists();
-                this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" deleted from container ${this._containerClient.containerName}`);
-            } catch (error) {
-                throw new CoreError({
-                    messageKey: ErrorKeys.AZ_STORAGE_BLOB_DELETE_FAILED,
-                    detail: {
-                        accountName: this._containerClient.accountName,
-                        containerName: this._containerClient.containerName,
-                        blobName,
-                        error
-                    }
-                });
-            }
+            await this.deleteBlob(blobName);
         }));
     }
 
@@ -199,7 +170,7 @@ export class AzureContainerClient {
         try {
             const blobClient = this._containerClient.getBlobClient(blobName);
             const blobProperties = await blobClient.getProperties();
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" properties retrieved from container ${this._containerClient.containerName}`);
+            this._log?.info(`[Azure:${this._containerClient.accountName}:${this._containerClient.containerName}:(GetBlobInfo)] - Blob "${blobName}" information retrieved`);
             return {
                 blobName,
                 blobSize: blobProperties.contentLength ?? 0,
@@ -231,7 +202,7 @@ export class AzureContainerClient {
         try {
             const blobClient = this._containerClient.getBlobClient(blobName);
             const exists = await blobClient.exists();
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - Blob "${blobName}" exists in container ${this._containerClient.containerName}`);
+            this._log?.info(`[Azure:${this._containerClient.accountName}:${this._containerClient.containerName}:(CheckBlobExists)] - Blob "${blobName}" exists: ${exists}`);
             return exists;
         } catch (error) {
             throw new CoreError({
@@ -253,11 +224,11 @@ export class AzureContainerClient {
      *
      * @returns The list of blobs in the container
      */
-    public listBlobs(): Promise<string[]> {
+    public async listBlobs(): Promise<string[]> {
         try {
-            const blobs = Array.fromAsync(this._containerClient.listBlobsFlat());
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - List of blobs in container ${this._containerClient.containerName}`);
-            return blobs.then((blobs) => blobs.map((blob) => blob.name));
+            const blobs = await Array.fromAsync(this._containerClient.listBlobsFlat());
+            this._log?.info(`[Azure:${this._containerClient.accountName}] - List ${blobs.length} blobs in container ${this._containerClient.containerName}`);
+            return blobs.map((blob) => blob.name);
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_CONTAINER_LIST_FAILED,
@@ -270,18 +241,25 @@ export class AzureContainerClient {
         }
     }
 
-    public listBlobsDetails(): Promise<Omit<BlobOptions, 'blobStream'>[]> {
+    /**
+     * Lists all the blobs in a container with their details.
+     *
+     * @throws ({@link CoreError}) - If the list operation failed. ({@link ErrorKeys.STORAGE_LIST_FAILED})
+     *
+     * @returns The list of blobs in the container with their details ({@link BlobOptions})
+     */
+    public async listBlobsDetails(): Promise<Omit<BlobOptions, 'blobStream'>[]> {
         try {
-            const blobs = Array.fromAsync(this._containerClient.listBlobsFlat({
+            const blobs = await Array.fromAsync(this._containerClient.listBlobsFlat({
                 includeMetadata: true,
             }));
-            this._log?.info(`[Azure - ${this._containerClient.accountName}] - List of details blobs in container ${this._containerClient.containerName}`);
+            this._log?.info(`[Azure:${this._containerClient.accountName}] - List ${blobs.length} blobs details in container ${this._containerClient.containerName}`);
 
-            return blobs.then((blobs) => blobs.map((blob) => ({
+            return blobs.map((blob) => ({
                 blobName: blob.name,
                 blobSize: blob.properties.contentLength ?? 0,
                 blobMetadata: { ...blob.metadata }
-            })));
+            }));
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_CONTAINER_LIST_FAILED,

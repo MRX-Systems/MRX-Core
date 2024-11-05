@@ -47,11 +47,11 @@ export class AzureBlobServiceClientCreator {
      *
      * @returns The list of containers in the storage service
      */
-    public listContainers(): Promise<string[]> {
+    public async listContainers(): Promise<string[]> {
         try {
-            const containers = Array.fromAsync(this._blobServiceClient.listContainers());
-            this._log?.info(`[Azure - ${this._blobServiceClient.accountName}] - List of containers`);
-            return containers.then((containers) => containers.map((container) => container.name));
+            const containers = await Array.fromAsync(this._blobServiceClient.listContainers());
+            this._log?.info(`[Azure:${this._blobServiceClient.accountName}:(ListContainers)] - ${containers.length} containers found`);
+            return containers.map((container) => container.name);
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_LIST_CONTAINER_FAILED,
@@ -73,7 +73,7 @@ export class AzureBlobServiceClientCreator {
     public async createContainer(containerName: string): Promise<void> {
         try {
             await this._blobServiceClient.createContainer(containerName);
-            this._log?.info(`[Azure - ${this._blobServiceClient.accountName}] - Container "${containerName}" created`);
+            this._log?.info(`[Azure:${this._blobServiceClient.accountName}:(CreateContainer)] - Container "${containerName}" created`);
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_CREATE_FAILED,
@@ -96,7 +96,7 @@ export class AzureBlobServiceClientCreator {
     public async deleteContainer(containerName: string): Promise<void> {
         try {
             await this._blobServiceClient.deleteContainer(containerName);
-            this._log?.info(`[Azure - ${this._blobServiceClient.accountName}] - Container "${containerName}" deleted`);
+            this._log?.info(`[Azure:${this._blobServiceClient.accountName}:(DeleteContainer)] - Container "${containerName}" deleted`);
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.AZ_STORAGE_DELETE_FAILED,

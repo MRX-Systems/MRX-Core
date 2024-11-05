@@ -1,7 +1,7 @@
 /**
  * Error keys for the Core.
  */
-export const    ErrorKeys = {
+export const ErrorKeys = {
     I18N_NOT_INITIALIZED: 'error.core-api.i18n_not_initialized',
     I18N_ALREADY_INITIALIZED: 'error.core-api.i18n_already_initialized',
     INVALID_ENVIRONMENT: 'error.core-api.invalid_environment',
