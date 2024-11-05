@@ -4,7 +4,7 @@ import type { DynamicDatabaseOptions, FastifyRequest } from '#/common/types/inde
 import { FactoryDatabase } from '#/infrastructure/database/index.ts';
 
 /**
- * Middleware to check if the user has the required permissions
+ * Middleware to register a dynamic database.
  *
  * @param options - The options for the dynamic database register middleware.
  *

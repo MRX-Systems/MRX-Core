@@ -617,9 +617,9 @@ export abstract class AbstractRepository<T> {
 
     /**
      * Determines whether the provided data object contains a complex query.
-     * 
+     *
      * @param data - The data to be checked, which can be of any type.
-     * 
+     *
      * @returns Returns `true` if the data is an object and contains one or more valid query operators, otherwise returns `false`.
      */
     private _isComplexQuery(data: unknown): boolean {
