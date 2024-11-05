@@ -79,7 +79,7 @@ export class CrudHandler<T> {
         pagination.offset ??= 0;
         const search = prepareSearchModel<T>(query);
         const data = await crud.find<T>(search, pagination, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
-        const total = await crud.count<T>(undefined, this._options.table, databaseName, this._options.primaryKey) as number;
+        const total = await crud.count<T>(search, this._options.table, databaseName, this._options.primaryKey) as number;
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.find',
             statusCode: 200,
