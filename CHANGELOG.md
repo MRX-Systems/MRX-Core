@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.39.0](https://github.com/Andesite-Lab/Core/compare/v1.38.0...v1.39.0) (2024-11-05)
+
+
+### Features
+
+* add Azure Factory + BlobServiceClient + ContainerClient ([9c12ebb](https://github.com/Andesite-Lab/Core/commit/9c12ebb58d9f9a88371d2c7664e339b3fcdbdd84))
+* add checkBlobExist and getBlobInfo ([f14b038](https://github.com/Andesite-Lab/Core/commit/f14b038ac0bc54cbd31f9b95737f0ecdaa04e9f1))
+* add plugin MultipartPlugin ([4dadc2c](https://github.com/Andesite-Lab/Core/commit/4dadc2c46df82896210e773463252e17d1070351))
+* apply search to count total in find handler crud ([066af68](https://github.com/Andesite-Lab/Core/commit/066af68b552c2149bd462db87b98f110f68c9729))
+
+
+### Code Refactoring
+
+* clean whitespace + reorganise import ([c04de86](https://github.com/Andesite-Lab/Core/commit/c04de86edd826ab06ab1b6d890b566e13e0ea016))
+* little improvement log and code ([d410484](https://github.com/Andesite-Lab/Core/commit/d410484ade72ae851a3cc6ea39e00917d82bcd2f))
+
+
+### Build System
+
+* update deps + add azure storage package ([88b7060](https://github.com/Andesite-Lab/Core/commit/88b70606f990e9681e6edef4bdef2e2c0dc8e6bd))
+
+
+### Styles
+
+* add semicolon ([cc9e213](https://github.com/Andesite-Lab/Core/commit/cc9e213c006ee70e6bafb00b6164d40d825dfe9f))
+
 ## [1.38.0](https://github.com/Andesite-Lab/Core/compare/v1.37.1...v1.38.0) (2024-10-16)
 
 
