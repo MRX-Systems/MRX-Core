@@ -213,7 +213,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
      *
      * @returns The CRUD routes options. Record of({@link RouteOptions})
      */
-    // eslint-disable-next-line max-lines-per-function, complexity
+    // eslint-disable-next-line complexity
     private _buildRoutesOptionsByOptions(): Record<string, RouteOptions> {
         const primaryKey = (this._options.primaryKey && String(this._options.primaryKey[0])) ?? 'id';
         const byOne = `/:${primaryKey}`;
