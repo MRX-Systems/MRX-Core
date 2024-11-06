@@ -8,7 +8,6 @@ import type { Hook } from '#/common/types/index.ts';
  * This hook is responsible for parsing the language from the request headers.
  */
 export class LanguageHook implements Hook {
-
     /**
      * Configure the hook
      *

@@ -72,7 +72,7 @@ export abstract class AbstractStoreCreator {
     public get store(): Redis {
         if (!this._store)
             throw new CoreError({
-                messageKey: ErrorKeys.STORE_NOT_CONNECTED,
+                messageKey: ErrorKeys.STORE_NOT_CONNECTED
             });
         return this._store;
     }

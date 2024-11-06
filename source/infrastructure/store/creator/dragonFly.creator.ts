@@ -39,7 +39,6 @@ export interface DragonFlyStoreOptions {
  * DragonFly Creator is a concrete creator for DragonFly Store (Factory Pattern) extending ({@link AbstractStoreCreator})
  */
 export class DragonFlyCreator extends AbstractStoreCreator {
-
     /**
      * Constructor of the DragonFlyCreator class
      *
@@ -52,9 +51,9 @@ export class DragonFlyCreator extends AbstractStoreCreator {
                 port: options.port ?? 6379,
                 ...(options.password && { password: options.password }),
                 ...(options.username && { username: options.username }),
-                ...(options.tls && { tls: {} }),
+                ...(options.tls && { tls: {} })
             },
-            log: options.log,
+            log: options.log
         });
     }
 }

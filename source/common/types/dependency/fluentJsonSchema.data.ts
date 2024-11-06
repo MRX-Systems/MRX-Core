@@ -13,7 +13,7 @@ import {
     type ObjectSchema,
     type SchemaOptions,
     type StringSchema,
-    type TYPE,
+    type TYPE
 } from 'fluent-json-schema';
 
 export { S };

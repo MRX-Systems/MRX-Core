@@ -8,7 +8,7 @@ import {
     type AbstractDatabaseCreator,
     type BetterSQLiteDatabaseOptions,
     type MSSQLDatabaseOptions,
-    type PostgresDatabaseOptions,
+    type PostgresDatabaseOptions
 } from '#/infrastructure/database/creator/index.ts';
 
 /**

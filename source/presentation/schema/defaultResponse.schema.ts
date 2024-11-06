@@ -14,7 +14,7 @@ import { I18n } from '#/common/util/index.ts';
 export function default200ResponseSchema(
     message: string,
     interpolation?: Record<string, unknown>,
-    contentSchema?: JSONSchema,
+    contentSchema?: JSONSchema
 ): JSONSchema {
     let response = S.object()
         .prop('statusCode', S.number())

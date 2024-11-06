@@ -62,7 +62,7 @@ export class PostgresCreator extends AbstractDatabaseCreator {
                     port: options.port,
                     user: options.user,
                     password: options.password,
-                    database: options.databaseName,
+                    database: options.databaseName
                 },
                 pool: {
                     min: options.poolMin ?? 2,

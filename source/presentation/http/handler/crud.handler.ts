@@ -52,7 +52,7 @@ export class CrudHandler<T> {
      */
     public async insert(req: FastifyRequest, reply: FastifyReply): Promise<void> {
         const databaseName = req.headers.databaseName as string;
-        const body: T[] = Array.isArray(req.body) ? req.body : [req.body];
+        const body: T[] = Array.isArray(req.body) ? req.body as T[] : [req.body as T];
         const data = await crud.insert<T>(body, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.insert',

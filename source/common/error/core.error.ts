@@ -45,6 +45,7 @@ export class CoreError extends Error {
      * @readonly
      */
     private readonly _code: number;
+
     /**
      * The error detail.
      * @readonly

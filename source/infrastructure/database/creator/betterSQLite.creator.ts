@@ -34,10 +34,10 @@ export class BetterSQLiteCreator extends AbstractDatabaseCreator {
                 client: 'better-sqlite3',
                 debug: Boolean(options.log),
                 connection: {
-                    filename: options.filename,
-                },
+                    filename: options.filename
+                }
             },
-            log: options.log,
+            log: options.log
         });
     }
 }
