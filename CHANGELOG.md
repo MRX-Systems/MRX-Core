@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.39.1](https://github.com/Andesite-Lab/Core/compare/v1.39.0...v1.39.1) (2024-11-07)
+
+
+### Styles
+
+* correction eslint ([d9f15f2](https://github.com/Andesite-Lab/Core/commit/d9f15f27b2e9c6a82d186effa87821633e5dcac0))
+* fix core with new eslint ([82e0e6b](https://github.com/Andesite-Lab/Core/commit/82e0e6bd4941aed71ed09971c5913849b09bc231))
+* update eslint to new version ([7ec2f51](https://github.com/Andesite-Lab/Core/commit/7ec2f5147ca93424ac60be8cd534038c085be041))
+
 ## [1.39.0](https://github.com/Andesite-Lab/Core/compare/v1.38.0...v1.39.0) (2024-11-05)
 
 
