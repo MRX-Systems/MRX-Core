@@ -4,7 +4,7 @@ import type {
     FastifyReply,
     FastifyRequest,
     FastifySchema,
-    HookHandlerDoneFunction,
+    HookHandlerDoneFunction
 } from 'fastify';
 
 /**

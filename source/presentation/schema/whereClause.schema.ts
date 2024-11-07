@@ -11,4 +11,4 @@ export const WhereClauseSchema = S.object()
     .prop('$gt')
     .prop('$gte')
     .prop('$isNull')
-    .prop('$isNotNull')
+    .prop('$isNotNull');

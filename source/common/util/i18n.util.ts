@@ -16,7 +16,7 @@ let _i18n: i18n | undefined = undefined;
  *
  * @throws ({@link CoreError}) - If i18n is already initialized. ({@link ErrorKeys.I18N_ALREADY_INITIALIZED})
  */
-async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en'): Promise<void> {
+async function initI18n(resources: Readonly<Resource>, fallbackLng = 'en'): Promise<void> {
     if (_i18n && _i18n.isInitialized)
         throw new CoreError({
             messageKey: ErrorKeys.I18N_ALREADY_INITIALIZED
@@ -27,10 +27,10 @@ async function initI18n(resources: Readonly<Resource>, fallbackLng: string = 'en
         lng: 'en',
         fallbackLng,
         interpolation: {
-            escapeValue: false,
+            escapeValue: false
         },
         resources,
-        joinArrays: ' ',
+        joinArrays: ' '
     });
 }
 
@@ -67,7 +67,7 @@ function resetI18n(): void {
  *
  * @returns The translated string.
  */
-function translate(key: string, language: string = 'en', interpolation: Interpolation = {}): string {
+function translate(key: string, language = 'en', interpolation: Interpolation = {}): string {
     if (!(_i18n && _i18n.isInitialized))
         throw new CoreError({
             messageKey: ErrorKeys.I18N_NOT_INITIALIZED
@@ -83,5 +83,5 @@ export const I18n = {
     isI18nInitialized,
     initI18n,
     resetI18n,
-    translate,
+    translate
 };

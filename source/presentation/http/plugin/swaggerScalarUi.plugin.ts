@@ -73,7 +73,7 @@ export class SwaggerScalarUiPlugin implements Plugin {
             metaData: options?.metaData ?? {},
             customCss: options?.customCss ?? '',
             searchHotKey: options?.searchHotKey ?? 'l',
-            favIcon: options?.favIcon ?? '',
+            favIcon: options?.favIcon ?? ''
         };
     }
 

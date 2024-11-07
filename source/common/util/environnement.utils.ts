@@ -15,7 +15,7 @@ export async function validateEnv(schema: SchemaTypes): Promise<void> {
     } catch (error) {
         throw new CoreError({
             messageKey: ErrorKeys.INVALID_ENVIRONMENT,
-            detail: error,
+            detail: error
         });
     }
 }

@@ -57,7 +57,7 @@ export class AzureContainerClient {
     public async uploadBlob(options: Readonly<BlobOptions>): Promise<void> {
         try {
             await this._containerClient.uploadBlockBlob(options.blobName, options.blobStream, options.blobSize, {
-                metadata: options.blobMetadata ?? {},
+                metadata: options.blobMetadata ?? {}
             });
             this._log?.info(`[Azure:${this._containerClient.accountName}:${this._containerClient.containerName}:(UploadBlob)] - Blob "${options.blobName}" uploaded`);
         } catch (error) {
@@ -251,7 +251,7 @@ export class AzureContainerClient {
     public async listBlobsDetails(): Promise<Omit<BlobOptions, 'blobStream'>[]> {
         try {
             const blobs = await Array.fromAsync(this._containerClient.listBlobsFlat({
-                includeMetadata: true,
+                includeMetadata: true
             }));
             this._log?.info(`[Azure:${this._containerClient.accountName}] - List ${blobs.length} blobs details in container ${this._containerClient.containerName}`);
 

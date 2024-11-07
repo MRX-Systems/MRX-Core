@@ -89,7 +89,7 @@ export class ServerManager {
             ...options
         };
         this._app = fastify({
-            querystringParser: str => parse(str),
+            querystringParser: (str) => parse(str),
             logger: false,
             ignoreTrailingSlash: true,
             trustProxy: true,
@@ -111,14 +111,14 @@ export class ServerManager {
                     strictSchema: true,
                     code: {
                         optimize: true,
-                        esm: true,
+                        esm: true
                     }
                 },
                 plugins: [
                     ajvError.default,
                     ajvFormats.default
-                ],
-            },
+                ]
+            }
         });
         this._app.setErrorHandler(this._setErrorHandler.bind(this));
         this._addDefaultHooks();
@@ -166,7 +166,7 @@ export class ServerManager {
      * @param hooks - The hooks to add. ({@link Hook})
      */
     public async addHooks(hooks: Hook[]): Promise<void> {
-        await Promise.all(hooks.map(hook => hook.configure(this._app)));
+        await Promise.all(hooks.map((hook) => hook.configure(this._app)));
     }
 
     /**
@@ -184,7 +184,7 @@ export class ServerManager {
      * @param plugins - The plugins to add. ({@link Plugin})
      */
     public async addPlugins(plugins: Plugin[]): Promise<void> {
-        await Promise.all(plugins.map(plugin => plugin.configure(this._app, this._options.baseUrl)));
+        await Promise.all(plugins.map((plugin) => plugin.configure(this._app, this._options.baseUrl)));
     }
 
     /**
@@ -202,7 +202,7 @@ export class ServerManager {
      * @param routers - The routers to add. ({@link AbstractRouter})
      */
     public async addRouters(routers: AbstractRouter[]): Promise<void> {
-        await Promise.all(routers.map(router => router.configure(this._app, this._options.baseUrl)));
+        await Promise.all(routers.map((router) => router.configure(this._app, this._options.baseUrl)));
     }
 
     /**
@@ -240,31 +240,32 @@ export class ServerManager {
      */
     private async _handleValidationErrors(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         const rawAjvError = error.validation;
-        const sanitezedAjvError = rawAjvError?.map(e => {
+        const sanitezedAjvError = rawAjvError?.map((e) => {
             const keyword = `error.presentation.schema.${e.keyword}`;
             const { instancePath, params } = e;
             const { missingProperty } = params;
             if (instancePath === '' && params && missingProperty)
                 return {
                     property: missingProperty,
-                    message: I18n.isI18nInitialized() ? I18n.translate(keyword  , request.headers['accept-language'], {
-                        property: missingProperty
-                    }) : keyword,
+                    message: I18n.isI18nInitialized()
+                        ? I18n.translate(keyword, request.headers['accept-language'], { property: missingProperty })
+                        : keyword,
                     contraints: params
                 };
             return {
                 property: e.instancePath.slice(1),
-                message: I18n.isI18nInitialized() ? I18n.translate(keyword  , request.headers['accept-language'], {
-                    property: e.instancePath.slice(1),
-                }) : keyword,
+                message: I18n.isI18nInitialized()
+                    ? I18n.translate(keyword, request.headers['accept-language'], { property: e.instancePath.slice(1) })
+                    : keyword,
                 contraints: params
             };
         });
         await reply.status(400).send({
             statusCode: 400,
-            content: sanitezedAjvError,
+            content: sanitezedAjvError
         });
     }
+
     /**
      * Set the error handler.
      *
@@ -279,24 +280,28 @@ export class ServerManager {
             await this._handleValidationErrors(error, request, reply);
         } else if (error.name === 'CoreError' || error.name === 'BasaltError') {
             const e: CoreError | BasaltError = error as unknown as CoreError | BasaltError;
-            const code: number = e.code ?? 500;
+            const code: number = e.code;
             const detail: Record<string, unknown> = typeof e.detail === 'object' ? e.detail as Record<string, unknown> : {};
             await reply.status(code).send({
                 statusCode: error.code,
-                message: I18n.isI18nInitialized() ? I18n.translate(
-                    error.message,
-                    request.headers['accept-language'],
-                    detail
-                ) : error.message,
+                message: I18n.isI18nInitialized()
+                    ? I18n.translate(
+                        error.message,
+                        request.headers['accept-language'],
+                        detail
+                    )
+                    : error.message,
                 content: e.detail
             });
         } else {
             await reply.status(500).send({
                 statusCode: 500,
-                message: I18n.isI18nInitialized() ? I18n.translate(
-                    ErrorKeys.INTERNAL_SERVER_ERROR,
-                    request.headers['accept-language']
-                ) : ErrorKeys.INTERNAL_SERVER_ERROR,
+                message: I18n.isI18nInitialized()
+                    ? I18n.translate(
+                        ErrorKeys.INTERNAL_SERVER_ERROR,
+                        request.headers['accept-language']
+                    )
+                    : ErrorKeys.INTERNAL_SERVER_ERROR,
                 content: error.message
             });
         }

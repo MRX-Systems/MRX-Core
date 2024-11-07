@@ -43,7 +43,7 @@ const globalErrorCodes: Record<string, number> = {
     [ErrorKeys.DATABASE_MODEL_NOT_CREATED]: 500,
     [ErrorKeys.DATABASE_MODEL_NOT_UPDATED]: 500,
     [ErrorKeys.DATABASE_MODEL_NOT_DELETED]: 500,
-    [ErrorKeys.DATABASE_MODEL_NOT_FOUND]: 404,
+    [ErrorKeys.DATABASE_MODEL_NOT_FOUND]: 404
 };
 
 /**
@@ -175,14 +175,17 @@ export abstract class AbstractRepository<T> {
      * The name of the table.
      */
     protected readonly _table: string;
+
     /**
      * The name of the database.
      */
     protected readonly _databaseName: string;
+
     /**
      * The database instance. ({@link Knex})
      */
     protected readonly _database: Knex;
+
     /**
      * The primary key for the table. The first element is the key name, and the second element is the key type.
      *
@@ -387,7 +390,7 @@ export abstract class AbstractRepository<T> {
 
         return query
             .then((result) => result[0]?.count as number ?? 0)
-            .catch((error) => this._handleError(error) === undefined ? 0 : 0);
+            .catch((error: unknown) => (this._handleError(error) === undefined ? 0 : 0));
     }
 
     /**
@@ -400,11 +403,11 @@ export abstract class AbstractRepository<T> {
     protected _transformColumnObjectToArray<K>(columns?: ColumnsSelection<K>): string[] {
         if (!columns || Object.keys(columns).length === 0) return ['*'];
         return Object.entries(columns)
-            .filter(([, value]) =>
-                (typeof value === 'boolean' && value) ||
-                    (typeof value === 'string' && value.length > 0)
+            .filter(
+                ([, value]) => (typeof value === 'boolean' && value)
+                    || (typeof value === 'string' && value.length > 0)
             )
-            .map(([key, value]): string => typeof value === 'string' ? value : key);
+            .map(([key, value]): string => (typeof value === 'string' ? value : key));
     }
 
     /**
@@ -448,7 +451,7 @@ export abstract class AbstractRepository<T> {
     protected _handleResult<K>(
         result: OptionalModel<K> | OptionalModel<K>[],
         messageKey: string,
-        throwIfNoResult: boolean = false
+        throwIfNoResult = false
     ): OptionalModel<K> | OptionalModel<K>[] | void {
         if (Array.isArray(result)) {
             if (result.length === 0 && throwIfNoResult)
@@ -474,9 +477,11 @@ export abstract class AbstractRepository<T> {
     ): Knex.QueryBuilder {
         if (!search) return query;
         if (Array.isArray(search))
-            return search.reduce((builder, search) => this._hasComplexQuery(search)
-                ? this._buildSearchQuery(builder, search)
-                : query.orWhere(search as OptionalModel<K>), query);
+            return search.reduce(
+                (builder, search) => (this._hasComplexQuery(search)
+                    ? this._buildSearchQuery(builder, search)
+                    : query.orWhere(search as OptionalModel<K>)), query
+            );
 
 
         return this._hasComplexQuery(search)
@@ -505,7 +510,7 @@ export abstract class AbstractRepository<T> {
 
         return query
             .then((result) => this._handleResult(result as OptionalModel<K>[] | OptionalModel<K>, noResultKey, options?.throwIfNoResult))
-            .catch((error) => this._handleError(error));
+            .catch((error: unknown) => this._handleError(error));
     }
 
     /**
@@ -623,11 +628,12 @@ export abstract class AbstractRepository<T> {
      * @returns Returns `true` if the data is an object and contains one or more valid query operators, otherwise returns `false`.
      */
     private _isComplexQuery(data: unknown): boolean {
-        const validKeys: Set<string> = new Set(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
-        return Boolean(data
+        const validKeys = new Set<string>(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
+        return Boolean(
+            data
             && typeof data === 'object'
             && !Array.isArray(data)
-            && Object.keys(data).some(key => validKeys.has(key))
+            && Object.keys(data).some((key) => validKeys.has(key))
         );
     }
 
@@ -639,7 +645,7 @@ export abstract class AbstractRepository<T> {
      * @returns A boolean value to determine if the object has a complex query or not.
      */
     private _hasComplexQuery<K>(data: SearchModel<K>): boolean {
-        return Object.values(data).some(value => this._isComplexQuery(value));
+        return Object.values(data).some((value) => this._isComplexQuery(value));
     }
 
     /**

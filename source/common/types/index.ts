@@ -1,6 +1,6 @@
 import type { WhereClause } from './data/index.ts';
 
-export * from './data/index.ts';
+export type * from './data/index.ts';
 export * from './dependency/index.ts';
 
 /**

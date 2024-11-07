@@ -21,6 +21,6 @@ export interface DynamicDatabaseOptions {
      * The database options.
      */
     databaseOptions: Omit<PostgresDatabaseOptions, 'databaseName'>
-                    | Omit<BetterSQLiteDatabaseOptions, 'databaseName'>
-                    | Omit<MSSQLDatabaseOptions, 'databaseName'>;
+        | Omit<BetterSQLiteDatabaseOptions, 'databaseName'>
+        | Omit<MSSQLDatabaseOptions, 'databaseName'>;
 }

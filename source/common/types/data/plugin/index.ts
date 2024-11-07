@@ -1,1 +1,1 @@
-export * from './plugin.data.ts';
+export type * from './plugin.data.ts';
