@@ -8,7 +8,6 @@ import type { Hook } from '#/common/types/index.ts';
  * This hook is responsible for parsing the query string to JSON.
  */
 export class QueryParseHook implements Hook {
-
     /**
      * Configure the hook
      *

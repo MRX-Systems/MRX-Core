@@ -1,9 +1,16 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest, FastifySchema, HTTPMethods, RouteOptions } from 'fastify';
+import type {
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+    FastifySchema,
+    HTTPMethods,
+    RouteOptions
+} from 'fastify';
 import { S, type ObjectSchema } from 'fluent-json-schema';
 
 import { CoreError, ErrorKeys } from '#/common/error/index.ts';
 import type {
-    DynamicDatabaseOptions,
+    DynamicDatabaseOptions
 } from '#/common/types/index.ts';
 import { FactoryDatabase } from '#/infrastructure/database/index.ts';
 import { CrudHandler } from '#/presentation/http/handler/index.ts';
@@ -165,18 +172,18 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
     protected readonly _options: AbstractCrudOptions<T>;
 
     /**
-     * The CRUD handler. ({@link CrudHandler})
-     *
-     * @typeParam T - The type of the data. (Is the table model (interface to represent the table))
-     */
-    private readonly _crudHandler: CrudHandler<T>;
-
-    /**
      * Add custom routes to the router if needed.
      *
      * @param fastify - The Fastify instance. ({@link FastifyInstance})
      */
     protected _addRoutes: ((fastify: FastifyInstance) => void) | undefined;
+
+    /**
+     * The CRUD handler. ({@link CrudHandler})
+     *
+     * @typeParam T - The type of the data. (Is the table model (interface to represent the table))
+     */
+    private readonly _crudHandler: CrudHandler<T>;
 
     /**
      * The constructor for the abstract CRUD router. ({@link AbstractCrud})
@@ -206,7 +213,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
      *
      * @returns The CRUD routes options. Record of({@link RouteOptions})
      */
-    // eslint-disable-next-line max-lines-per-function
+    // eslint-disable-next-line complexity
     private _buildRoutesOptionsByOptions(): Record<string, RouteOptions> {
         const primaryKey = (this._options.primaryKey && String(this._options.primaryKey[0])) ?? 'id';
         const byOne = `/:${primaryKey}`;
@@ -228,15 +235,16 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                                 : []
                         ),
                     response: {
-                        200: default200ResponseSchema('handler.crud.insert', undefined,
-                            S.object()
-                                .prop('data', S.array()
-                                    .items(this._options.operations.insert?.outputSchema ?? S.object())
-                                )
-                                .prop('count', S.number())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.insert',
+                                undefined,
+                                S.object()
+                                    .prop('data', S.array().items(this._options.operations.insert?.outputSchema ?? S.object()))
+                                    .prop('count', S.number())
+                            )
                     }
-                },
+                }
             },
             find: {
                 method: 'GET',
@@ -250,11 +258,15 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                         .prop('limit', S.string().pattern('^[0-9]+$'))
                         .prop('offset', S.string().pattern('^[0-9]+$')),
                     response: {
-                        200: default200ResponseSchema('handler.crud.find', undefined, S.object()
-                            .prop('data', S.array().items(this._options.operations.find?.outputSchema ?? S.object()))
-                            .prop('count', S.number())
-                            .prop('total', S.number())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.find',
+                                undefined,
+                                S.object()
+                                    .prop('data', S.array().items(this._options.operations.find?.outputSchema ?? S.object()))
+                                    .prop('count', S.number())
+                                    .prop('total', S.number())
+                            )
                     }
                 }
             },
@@ -268,9 +280,13 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     description: `Find one ${this._options.table} by ${primaryKey}`,
                     params: S.object().prop(primaryKey, S.string().required()),
                     response: {
-                        200: default200ResponseSchema('handler.crud.findOne', undefined, S.object()
-                            .prop('data', this._options.operations.findOne?.outputSchema ?? S.object())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.findOne',
+                                undefined,
+                                S.object()
+                                    .prop('data', this._options.operations.findOne?.outputSchema ?? S.object())
+                            )
                     }
                 }
             },
@@ -285,10 +301,14 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     querystring: this._options.operations.update?.searchSchema ?? S.object(),
                     body: this._options.operations.update?.inputSchema ?? S.object(),
                     response: {
-                        200: default200ResponseSchema('handler.crud.update', undefined, S.object()
-                            .prop('data', S.array().items(this._options.operations.update?.outputSchema ?? S.object()))
-                            .prop('count', S.number())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.update',
+                                undefined,
+                                S.object()
+                                    .prop('data', S.array().items(this._options.operations.update?.outputSchema ?? S.object()))
+                                    .prop('count', S.number())
+                            )
                     }
                 }
             },
@@ -303,10 +323,14 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     params: S.object().prop(primaryKey, S.string().required()),
                     body: this._options.operations.updateOne?.inputSchema ?? S.object(),
                     response: {
-                        200: default200ResponseSchema('handler.crud.updateOne', undefined, S.object()
-                            .prop('data', this._options.operations.updateOne?.outputSchema ?? S.object())
-                            .prop('count', S.number())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.updateOne',
+                                undefined,
+                                S.object()
+                                    .prop('data', this._options.operations.updateOne?.outputSchema ?? S.object())
+                                    .prop('count', S.number())
+                            )
                     }
                 }
             },
@@ -320,10 +344,14 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     description: `Delete all ${this._options.table} or multiple ${this._options.table} by query`,
                     querystring: this._options.operations.delete?.searchSchema ?? S.object(),
                     response: {
-                        200: default200ResponseSchema('handler.crud.delete', undefined, S.object()
-                            .prop('data', S.array().items(this._options.operations.delete?.outputSchema ?? S.object()))
-                            .prop('count', S.number())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.delete',
+                                undefined,
+                                S.object()
+                                    .prop('data', S.array().items(this._options.operations.delete?.outputSchema ?? S.object()))
+                                    .prop('count', S.number())
+                            )
                     }
                 }
             },
@@ -337,9 +365,13 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     description: `Delete one ${this._options.table} by ${primaryKey}`,
                     params: S.object().prop(primaryKey, S.string().required()),
                     response: {
-                        200: default200ResponseSchema('handler.crud.deleteOne', undefined, S.object()
-                            .prop('data', this._options.operations.deleteOne?.outputSchema ?? S.object())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.deleteOne',
+                                undefined,
+                                S.object()
+                                    .prop('data', this._options.operations.deleteOne?.outputSchema ?? S.object())
+                            )
                     }
                 }
             },
@@ -353,12 +385,16 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
                     description: `Count all ${this._options.table} or count ${this._options.table} by query`,
                     querystring: this._options.operations.count?.searchSchema ?? S.object(),
                     response: {
-                        200: default200ResponseSchema('handler.crud.count', undefined, S.object()
-                            .prop('count', S.number())
-                        )
+                        200:
+                            default200ResponseSchema(
+                                'handler.crud.count',
+                                undefined,
+                                S.object()
+                                    .prop('count', S.number())
+                            )
                     }
                 }
-            },
+            }
         };
     }
 
@@ -384,7 +420,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
             if (config && operations[operation]) {
                 const { method, url, handler, schema } = operations[operation];
                 const preHandlerConfig = Array.isArray(config.preHandler) ? config.preHandler : [config.preHandler];
-                const preHandlers = [preHandlerDynamicDatabase, ...preHandlerConfig].filter(handlerConf => handlerConf !== undefined);
+                const preHandlers = [preHandlerDynamicDatabase, ...preHandlerConfig].filter((handlerConf) => handlerConf !== undefined);
 
                 fastify.route({
                     method: method as HTTPMethods,

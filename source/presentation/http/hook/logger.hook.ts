@@ -9,7 +9,6 @@ import type { Hook } from '#/common/types/index.ts';
  * This hook is responsible for logging the request information.
  */
 export class LoggerHook implements Hook {
-
     /**
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
      */
@@ -39,10 +38,9 @@ export class LoggerHook implements Hook {
                 method: request.method,
                 url: request.url,
                 statusCode: reply.statusCode,
-                createdAt: new Date(),
+                createdAt: new Date()
             });
             done(null, payload);
         });
     }
-
 }

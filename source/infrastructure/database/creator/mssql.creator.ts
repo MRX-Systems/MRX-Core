@@ -51,7 +51,6 @@ export interface MSSQLDatabaseOptions {
  * Inherit from the File class ({@link AbstractDatabaseCreator})
  */
 export class MSSQLCreator extends AbstractDatabaseCreator {
-
     /**
      * Constructor of the MSSQLCreator class
      *
@@ -70,7 +69,7 @@ export class MSSQLCreator extends AbstractDatabaseCreator {
                     password: options.password,
                     connectionTimeout: 20000,
                     options: {
-                        encrypt: options.encrypt ?? true,
+                        encrypt: options.encrypt ?? true
                     } as unknown as string
                 },
                 pool: {

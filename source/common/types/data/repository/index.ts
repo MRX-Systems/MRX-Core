@@ -1,1 +1,1 @@
-export * from './whereClause.data.ts';
+export type * from './whereClause.data.ts';

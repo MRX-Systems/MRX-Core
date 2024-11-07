@@ -12,10 +12,12 @@ export abstract class AbstractDatabaseCreator {
      * The database connection object ({@link Knex})
      */
     private _database: Knex | undefined;
+
     /**
      * The dialect of the database ({@link Dialect})
      */
     private readonly _dialect: Dialect;
+
     /**
      * /**
      * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
@@ -44,7 +46,7 @@ export abstract class AbstractDatabaseCreator {
         if (!this._database)
             return false;
         try {
-            await this._database?.raw('SELECT 1');
+            await this._database.raw('SELECT 1');
             return true;
         } catch {
             return false;
@@ -71,12 +73,12 @@ export abstract class AbstractDatabaseCreator {
                 },
                 warn: (message) => {
                     this._log?.warn(message);
-                },
+                }
             }
         });
         if (!(await this.isConnected()))
             throw new CoreError({
-                messageKey: ErrorKeys.DATABASE_NOT_CONNECTED,
+                messageKey: ErrorKeys.DATABASE_NOT_CONNECTED
             });
     }
 
@@ -98,7 +100,7 @@ export abstract class AbstractDatabaseCreator {
     public get database(): Knex {
         if (!this._database)
             throw new CoreError({
-                messageKey: ErrorKeys.DATABASE_NOT_CONNECTED,
+                messageKey: ErrorKeys.DATABASE_NOT_CONNECTED
             });
         return this._database;
     }

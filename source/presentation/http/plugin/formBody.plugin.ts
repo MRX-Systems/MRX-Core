@@ -40,7 +40,7 @@ export class FormBodyPlugin implements Plugin {
     public async configure(app: FastifyInstance): Promise<void> {
         await app.register(formBody, {
             parser: (str) => parse(str),
-            bodyLimit: this._options?.bodyLimit ?? 1048576,
+            bodyLimit: this._options?.bodyLimit ?? 1048576
         });
     }
 }

@@ -68,8 +68,8 @@ export class MultipartPlugin implements Plugin {
                 fileSize: this._options?.fileSize ?? 1000000,
                 files: this._options?.files ?? 1,
                 headerPairs: this._options?.headerPairs ?? 2000,
-                parts: this._options?.parts ?? 1000,
-            },
+                parts: this._options?.parts ?? 1000
+            }
         });
     }
 }

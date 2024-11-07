@@ -1,1 +1,1 @@
-export * from './dynamicDatabaseOptions.data.ts';
+export type * from './dynamicDatabaseOptions.data.ts';
