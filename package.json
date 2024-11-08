@@ -38,7 +38,7 @@
     "@fastify/helmet": "^12.0.1",
     "@fastify/multipart": "^9.0.1",
     "@fastify/swagger": "^9.2.0",
-    "@scalar/fastify-api-reference": "1.25.58",
+    "@scalar/fastify-api-reference": "1.25.60",
     "@vinejs/vine": "^2.1.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",
@@ -46,7 +46,7 @@
     "fastify": "^5.1.0",
     "fastify-print-routes": "^4.0.0",
     "fluent-json-schema": "^5.0.0",
-    "i18next": "^23.16.4",
+    "i18next": "^23.16.5",
     "ioredis": "^5.4.1",
     "knex": "^3.1.0"
   },
@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "typescript": "^5.6.3",
-    "@basalt-lab/basalt-helper": "^1.8.1",
-    "@basalt-lab/basalt-logger": "^1.9.1"
+    "@basalt-lab/basalt-helper": "^1.8.3",
+    "@basalt-lab/basalt-logger": "^1.9.3"
   }
 }
