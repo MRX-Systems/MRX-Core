@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.40.0](https://github.com/Andesite-Lab/Core/compare/v1.39.1...v1.40.0) (2024-11-08)
+
+
+### Features
+
+* Prepare Search Model makes "AND" requests ([8e7517a](https://github.com/Andesite-Lab/Core/commit/8e7517a19a0779b2100129a4a6f364f529e45f7d))
+* refacto match whereclause for date, and refacto complex queries ([469f252](https://github.com/Andesite-Lab/Core/commit/469f25297a0c4372c53954e64d39dbe83c2517d0))
+
+
+### Build System
+
+* correction npmignore ([0915871](https://github.com/Andesite-Lab/Core/commit/09158710241f8a9fa88690d745b93524e176a50d))
+* update deps ([b670d4f](https://github.com/Andesite-Lab/Core/commit/b670d4f261feb61fbc6feef21b161ffcb07835f9))
+
+
+### Styles
+
+* disabled rules eslint ([4a42ed2](https://github.com/Andesite-Lab/Core/commit/4a42ed22cc5d4fb9ee6ad0febcc7ff485cc7a442))
+
 ## [1.39.1](https://github.com/Andesite-Lab/Core/compare/v1.39.0...v1.39.1) (2024-11-07)
 
 
