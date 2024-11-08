@@ -478,15 +478,11 @@ export abstract class AbstractRepository<T> {
         if (!search) return query;
         if (Array.isArray(search))
             return search.reduce(
-                (builder, search) => (this._hasComplexQuery(search)
-                    ? this._buildSearchQuery(builder, search)
-                    : query.orWhere(search as OptionalModel<K>)), query
+                (builder, search) => this._buildSearchQuery(builder, search),
+                query
             );
 
-
-        return this._hasComplexQuery(search)
-            ? this._buildSearchQuery(query, search)
-            : query.where(search as OptionalModel<K>);
+        return this._buildSearchQuery(query, search);
     }
 
     /**
@@ -535,6 +531,17 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
+     * Checks if the given string is potentially a date
+     *
+     * @param date - The string to be checked if it is a date or not
+     *
+     * @returns A boolean value to determine if the string is a date or not
+     */
+    private _isDate(date: string): boolean {
+        return new Date(date).toString() !== 'Invalid Date';
+    }
+
+    /**
      * Builds and applies a complex query to the given query builder.
      *
      * This method iterates over each key-value pair in the `searchItem` object and applies the corresponding filter conditions
@@ -565,58 +572,90 @@ export abstract class AbstractRepository<T> {
      */
     private _buildSearchQuery<K>(query: Knex.QueryBuilder, searchItem: SearchModel<K>): Knex.QueryBuilder {
         let firstIsOrQuery = true;
-        Object.entries(searchItem).forEach(([key, value]) => {
+
+        type OperatorFunction = (query: Knex.QueryBuilder, key: string, value: unknown) => Knex.QueryBuilder;
+
+        const keysFunc: Record<keyof WhereClause, OperatorFunction> = {
+            $in: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhereIn(key, value as string[] | number[] | Date[])
+                    : query.whereIn(key, value as string[] | number[] | Date[])
+            ),
+            $nin: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhereNotIn(key, value as string[] | number[] | Date[])
+                    : query.whereNotIn(key, value as string[] | number[] | Date[])
+            ),
+            $eq: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhere(key, value as string | number | boolean | Date)
+                    : query.where(key, value as string | number | boolean | Date)
+            ),
+            $neq: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhereNot(key, value as string | number | boolean | Date)
+                    : query.whereNot(key, value as string | number | boolean | Date)
+            ),
+            $lt: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhere(key, '<', value as string | number | Date)
+                    : query.where(key, '<', value as string | number | Date)
+            ),
+            $lte: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhere(key, '<=', value as string | number | Date)
+                    : query.where(key, '<=', value as string | number | Date)
+            ),
+            $gt: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhere(key, '>', value as string | number | Date)
+                    : query.where(key, '>', value as string | number | Date)
+            ),
+            $gte: (query, key, value) => (
+                firstIsOrQuery
+                    ? query.orWhere(key, '>=', value as string | number | Date)
+                    : query.where(key, '>=', value as string | number | Date)
+            ),
+            $isNull: (query, key) => (
+                firstIsOrQuery
+                    ? query.orWhereNull(key)
+                    : query.whereNull(key)
+            ),
+            $isNotNull: (query, key) => (
+                firstIsOrQuery
+                    ? query.orWhereNotNull(key)
+                    : query.whereNotNull(key)
+            ),
+            $match: (query, key, value) => {
+                const likeValue = `%${value}%`;
+                if (this._isDate(value as string)) {
+                    const { client } = this._database.client.config;
+                    if (client === 'mssql')
+                        return query.whereRaw(`CONVERT(VARCHAR, ${key}, 23) LIKE ?`, [likeValue]);
+                    return query.whereRaw(`CAST(${key} AS VARCHAR) LIKE ?`, [likeValue]);
+                }
+                return firstIsOrQuery
+                    ? query.orWhereLike(key, likeValue)
+                    : query.whereLike(key, likeValue);
+            }
+        };
+
+        for (const [key, value] of Object.entries(searchItem))
             if (this._isComplexQuery(value)) {
-                const whereClause: WhereClause = value as WhereClause;
-                if ('$in' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereIn(key, whereClause.$in) : query.whereIn(key, whereClause.$in);
-                    firstIsOrQuery = false;
-                }
-                if ('$nin' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereNotIn(key, whereClause.$nin) : query.whereNotIn(key, whereClause.$nin);
-                    firstIsOrQuery = false;
-                }
-                if ('$eq' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, whereClause.$eq) : query.where(key, whereClause.$eq);
-                    firstIsOrQuery = false;
-                }
-                if ('$neq' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereNot(key, whereClause.$neq) : query.whereNot(key, whereClause.$neq);
-                    firstIsOrQuery = false;
-                }
-                if ('$match' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereLike(key, `%${whereClause.$match}%`) : query.whereLike(key, `%${whereClause.$match}%`);
-                    firstIsOrQuery = false;
-                }
-                if ('$lt' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '<', whereClause.$lt) : query.where(key, '<', whereClause.$lt);
-                    firstIsOrQuery = false;
-                }
-                if ('$lte' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '<=', whereClause.$lte) : query.where(key, '<=', whereClause.$lte);
-                    firstIsOrQuery = false;
-                }
-                if ('$gt' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '>', whereClause.$gt) : query.where(key, '>', whereClause.$gt);
-                    firstIsOrQuery = false;
-                }
-                if ('$gte' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhere(key, '>=', whereClause.$gte) : query.where(key, '>=', whereClause.$gte);
-                    firstIsOrQuery = false;
-                }
-                if ('$isNotNull' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereNotNull(key) : query.whereNotNull(key);
-                    firstIsOrQuery = false;
-                }
-                if ('$isNull' in whereClause) {
-                    query = firstIsOrQuery ? query.orWhereNull(key) : query.whereNull(key);
-                    firstIsOrQuery = false;
-                }
+                const whereClause = value as WhereClause;
+                for (const [operator, opValue] of Object.entries(whereClause))
+                    if (operator in keysFunc) {
+                        const func = keysFunc[operator as keyof WhereClause];
+                        query = func(query, key, opValue);
+                        firstIsOrQuery = false;
+                    }
             } else {
-                query = firstIsOrQuery ? query.orWhere(key, value) : query.where(key, value);
+                if (typeof value === 'object' && Object.keys(value).length === 0) continue;
+                query = firstIsOrQuery
+                    ? query.orWhere(key, value)
+                    : query.where(key, value);
                 firstIsOrQuery = false;
             }
-        });
         return query;
     }
 
@@ -635,17 +674,6 @@ export abstract class AbstractRepository<T> {
             && !Array.isArray(data)
             && Object.keys(data).some((key) => validKeys.has(key))
         );
-    }
-
-    /**
-     * Checks if the object has a property that is a complex query
-     *
-     * @param data - The object to be checked if it has a complex query or not. ({@link SearchModel})
-     *
-     * @returns A boolean value to determine if the object has a complex query or not.
-     */
-    private _hasComplexQuery<K>(data: SearchModel<K>): boolean {
-        return Object.values(data).some((value) => this._isComplexQuery(value));
     }
 
     /**
