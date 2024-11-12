@@ -1,21 +1,12 @@
-import type {
-    FastifyInstance,
-    FastifyReply,
-    FastifyRequest,
-    FastifySchema,
-    HTTPMethods,
-    RouteOptions
-} from 'fastify';
-import { S, type ObjectSchema } from 'fluent-json-schema';
-
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type {
-    DynamicDatabaseOptions
-} from '#/common/types/index.ts';
-import { FactoryDatabase } from '#/infrastructure/database/index.ts';
-import { CrudHandler } from '#/presentation/http/handler/index.ts';
-import { dynamicDatabaseRegister } from '#/presentation/http/middleware/index.ts';
-import { default200ResponseSchema } from '#/presentation/schema/index.ts';
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+import type { FastifyInstance, FastifyReply, FastifyRequest, FastifySchema, HTTPMethods, RouteOptions } from '#/common/lib/required/fastify/fastify.lib.ts';
+import { S, type ObjectSchema } from '#/common/lib/required/fluent-json-schema/fluent.lib.ts';
+import type { DynamicDatabaseOptions } from '#/common/type/data/infrastructure/dynamicDatabaseOptions.data.ts';
+import { FactoryDatabase } from '#/infrastructure/database/factory.database.ts';
+import { CrudHandler } from '#/presentation/http/handler/crud.handler.ts';
+import { dynamicDatabaseRegister } from '#/presentation/http/middleware/dynamicDatabaseRegister.ts';
+import { default200ResponseSchema } from '#/presentation/schema/defaultResponse.schema.ts';
 import { AbstractRouter } from './abstract.router.ts';
 
 /**

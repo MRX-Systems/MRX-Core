@@ -1,5 +1,6 @@
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import { AzureBlobServiceClientCreator, type AzureBlobServiceClientOptions } from '#/infrastructure/storage/creator/index.ts';
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+import { AzureBlobServiceClientCreator, type AzureBlobServiceClientOptions } from './creator/azureBlobServiceClient.creator.ts';
 
 /**
  * AzureFactoryStorageSingleton class. (Singleton)

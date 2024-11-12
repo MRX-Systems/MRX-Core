@@ -1,7 +1,7 @@
 import scalar from '@scalar/fastify-api-reference';
-import type { FastifyInstance, FastifyPluginCallback } from 'fastify';
 
-import type { Plugin } from '#/common/types/index.ts';
+import type { FastifyInstance, FastifyPluginCallback } from '#/common/lib/required/fastify/fastify.lib.ts';
+import type { Plugin } from '#/common/type/data/presentation/http/plugin.data.ts';
 
 /**
  * The options for the SwaggerScalarUi plugin.

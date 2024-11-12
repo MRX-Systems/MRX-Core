@@ -1,7 +1,8 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
-import { Redis, type RedisOptions } from 'ioredis';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+import { Redis, type RedisOptions } from '#/common/lib/optional/ioredis/ioredis.lib.ts';
 
 /**
  * Abstract Store class for Store Creator

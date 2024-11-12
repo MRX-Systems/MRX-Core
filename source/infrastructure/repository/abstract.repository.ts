@@ -1,14 +1,13 @@
 import type { Knex } from 'knex';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type {
-    ColumnsSelection,
-    OptionalModel,
-    SearchModel,
-    Transaction,
-    WhereClause
-} from '#/common/types/index.ts';
-import { FactoryDatabase } from '#/infrastructure/database/index.ts';
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+
+import type { Transaction } from '#/common/lib/optional/knex/knex.lib.ts';
+import type { ColumnsSelection } from '#/common/type/data/infrastructure/repository/columnsSelection.data.ts';
+import type { SearchModel } from '#/common/type/data/infrastructure/repository/searchModel.data.ts';
+import type { WhereClause } from '#/common/type/data/infrastructure/repository/whereClause.data.ts';
+import { FactoryDatabase } from '#/infrastructure/database/factory.database.ts';
 
 /**
  * Interface Option query
@@ -257,27 +256,27 @@ export abstract class AbstractRepository<T> {
     /**
      * Inserts the data into the table.
      *
-     * @param data - Data to be inserted. ({@link OptionalModel})
+     * @param data - Data to be inserted. ({@link Partial})
      * @param columns - Columns to be selected in the query. ({@link ColumnsSelection})
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
      *
      * @throws ({@link CoreError}) - If the query not created and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_CREATED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
-     * @returns The data inserted into the table. ({@link OptionalModel})
+     * @returns The data inserted into the table. ({@link Partial})
      */
     public async insert(
-        data: OptionalModel<T> | OptionalModel<T>[],
+        data: Partial<T> | Partial<T>[],
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
-    ): Promise<OptionalModel<T>[] | void> {
+    ): Promise<Partial<T>[] | void> {
         return this._executeQuery(
             this._database(this._table)
                 .insert(data)
                 .returning(this._transformColumnObjectToArray(columns)),
             ErrorKeys.DATABASE_MODEL_NOT_CREATED,
             options
-        ) as Promise<OptionalModel<T>[] | void>;
+        ) as Promise<Partial<T>[] | void>;
     }
 
     /**
@@ -290,13 +289,13 @@ export abstract class AbstractRepository<T> {
      * @throws ({@link CoreError}) - If the no result is found and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_FOUND})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
-     * @returns The data found based on the search options. ({@link OptionalModel})
+     * @returns The data found based on the search options. ({@link Partial})
      */
     public async find(
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
         options?: QueryOptions & PaginationQueryOptions & { first?: boolean }
-    ): Promise<OptionalModel<T> | OptionalModel<T>[] | void> {
+    ): Promise<Partial<T> | Partial<T>[] | void> {
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns));
 
@@ -309,7 +308,7 @@ export abstract class AbstractRepository<T> {
     /**
      * Updates the rows based on the search options.
      *
-     * @param data - Data to be updated. ({@link OptionalModel})
+     * @param data - Data to be updated. ({@link Partial})
      * @param search - Search options to be applied to the query. ({@link SearchModel})
      * @param columns - Columns to be selected in the query. ({@link ColumnsSelection})
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
@@ -317,14 +316,14 @@ export abstract class AbstractRepository<T> {
      * @throws ({@link CoreError}) - If no rows are updated and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_UPDATED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
-     * @returns The data updated based on the search options. ({@link OptionalModel})
+     * @returns The data updated based on the search options. ({@link Partial})
      */
     public async update(
-        data: OptionalModel<T>,
+        data: Partial<T>,
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
-    ): Promise<OptionalModel<T>[] | void> {
+    ): Promise<Partial<T>[] | void> {
         return this._executeQuery(
             this._applySearch(
                 this._database(this._table)
@@ -334,7 +333,7 @@ export abstract class AbstractRepository<T> {
             ),
             ErrorKeys.DATABASE_MODEL_NOT_UPDATED,
             options
-        ) as Promise<OptionalModel<T>[] | void>;
+        ) as Promise<Partial<T>[] | void>;
     }
 
     /**
@@ -347,13 +346,13 @@ export abstract class AbstractRepository<T> {
      * @throws ({@link CoreError}) - If no rows are deleted and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_DELETED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
-     * @returns The data deleted based on the search options. ({@link OptionalModel})
+     * @returns The data deleted based on the search options. ({@link Partial})
      */
     public async delete(
         search?: SearchModel<T> | SearchModel<T>[],
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
-    ): Promise<OptionalModel<T>[] | void> {
+    ): Promise<Partial<T>[] | void> {
         return this._executeQuery(
             this._applySearch(
                 this._database(this._table)
@@ -363,7 +362,7 @@ export abstract class AbstractRepository<T> {
             ),
             ErrorKeys.DATABASE_MODEL_NOT_DELETED,
             options
-        ) as Promise<OptionalModel<T>[] | void>;
+        ) as Promise<Partial<T>[] | void>;
     }
 
     /**
@@ -440,19 +439,19 @@ export abstract class AbstractRepository<T> {
     /**
      * Handles the result of the query execution
      *
-     * @param result - The result of the query execution. ({@link OptionalModel})
+     * @param result - The result of the query execution. ({@link Partial})
      * @param messageKey - The key of the error message to be thrown when no result is found
      * @param throwIfNoResult - A boolean value to determine if an error should be thrown when no result is found
      *
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link messageKey})
      *
-     * @returns The result of the query execution. ({@link OptionalModel})
+     * @returns The result of the query execution. ({@link Partial})
      */
     protected _handleResult<K>(
-        result: OptionalModel<K> | OptionalModel<K>[],
+        result: Partial<K> | Partial<K>[],
         messageKey: string,
         throwIfNoResult = false
-    ): OptionalModel<K> | OptionalModel<K>[] | void {
+    ): Partial<K> | Partial<K>[] | void {
         if (Array.isArray(result)) {
             if (result.length === 0 && throwIfNoResult)
                 this._throwNoResultError(messageKey);
@@ -495,17 +494,17 @@ export abstract class AbstractRepository<T> {
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred ({@link messageKey})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
      *
-     * @returns The result of the query execution. ({@link OptionalModel})
+     * @returns The result of the query execution. ({@link Partial})
      */
     protected _executeQuery<K>(
         query: Knex.QueryBuilder,
         noResultKey: string,
         options?: QueryOptions
-    ): Promise<OptionalModel<K>[] | OptionalModel<K> | void> {
+    ): Promise<Partial<K>[] | Partial<K> | void> {
         if (options?.transaction) query = query.transacting(options.transaction);
 
         return query
-            .then((result) => this._handleResult(result as OptionalModel<K>[] | OptionalModel<K>, noResultKey, options?.throwIfNoResult))
+            .then((result) => this._handleResult(result as Partial<K>[] | Partial<K>, noResultKey, options?.throwIfNoResult))
             .catch((error: unknown) => this._handleError(error));
     }
 

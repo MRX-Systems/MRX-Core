@@ -1,6 +1,7 @@
 import fastifyMultipart from '@fastify/multipart';
 
-import type { FastifyInstance, Plugin } from '#/common/types/index.ts';
+import type { FastifyInstance } from '#/common/lib/required/fastify/fastify.lib.ts';
+import type { Plugin } from '#/common/type/data/presentation/http/plugin.data.ts';
 
 /**
  * The options for the Multipart.
