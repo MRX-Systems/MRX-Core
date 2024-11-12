@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.40.1](https://github.com/Andesite-Lab/Core/compare/v1.40.0...v1.40.1) (2024-11-12)
+
+
+### Code Refactoring
+
+* remove intern barrel file and useless type ([f84024a](https://github.com/Andesite-Lab/Core/commit/f84024a429fc01c8ebccdcedbc7ca1dd1718bb73))
+
+
+### Build System
+
+* refactor build system with peerDeps, multi export and splitting ([20cb584](https://github.com/Andesite-Lab/Core/commit/20cb58486d9032fb214499668e81e4aa6e72ff0e))
+
 ## [1.40.0](https://github.com/Andesite-Lab/Core/compare/v1.39.1...v1.40.0) (2024-11-08)
 
 
