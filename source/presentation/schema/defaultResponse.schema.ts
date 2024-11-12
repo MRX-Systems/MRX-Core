@@ -1,6 +1,5 @@
-import { S, type JSONSchema } from 'fluent-json-schema';
-
-import { I18n } from '#/common/util/index.ts';
+import { S, type JSONSchema } from '#/common/lib/required/fluent-json-schema/fluent.lib.ts';
+import { I18n } from '#/common/util/i18n.util.ts';
 
 /**
  * Generates the schema of the default 200 response

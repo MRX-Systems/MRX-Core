@@ -1,0 +1,1 @@
+export type * from './interpolation.data.ts';

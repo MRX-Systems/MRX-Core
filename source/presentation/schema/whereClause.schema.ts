@@ -1,4 +1,4 @@
-import { S } from 'fluent-json-schema';
+import { S } from '#/common/lib/required/fluent-json-schema/fluent.lib.ts';
 
 export const WhereClauseSchema = S.object()
     .prop('$in', S.array())

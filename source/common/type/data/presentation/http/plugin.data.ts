@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from '#/common/lib/required/fastify/fastify.lib.ts';
 
 /**
  * The interface for implementing a plugin.

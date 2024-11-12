@@ -1,5 +1,6 @@
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
-import { type SchemaTypes, vine } from '#/common/types/index.ts';
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+import { type SchemaTypes, vine } from '#/common/lib/optional/vine/vine.ts';
 
 /**
  * Validate the environment variables based on the schema provided.
