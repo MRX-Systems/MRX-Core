@@ -1,14 +1,6 @@
-import type { Knex } from 'knex';
+import knex, { type Knex } from 'knex';
 
-/**
- * Migration type for Knex migration. ({@link Knex.Migration})
- */
-export type Migration = Knex.Migration;
-
-/**
- * Seed type for Knex seed. ({@link Knex.Seed})
- */
-export type Seed = Knex.Seed;
+export default knex;
 
 /**
  * Dialect of the database ({@link Knex.Config})

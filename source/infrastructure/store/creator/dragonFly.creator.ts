@@ -1,5 +1,5 @@
-
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
+
 import { AbstractStoreCreator } from './abstractStore.creator.ts';
 
 /**

@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
+import type { FastifyInstance, FastifyPluginAsync } from '#/common/lib/required/fastify/fastify.lib.ts';
 
 /**
  * AbstractRouter class is responsible for defining the structure of the routers.

@@ -3,18 +3,17 @@ import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import ajvError from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { parse } from 'fast-querystring';
-import fastify, {
-    type FastifyError,
-    type FastifyInstance,
-    type FastifyReply,
-    type FastifyRequest
-} from 'fastify';
 
-import { type CoreError, ErrorKeys } from '#/common/error/index.ts';
-import type { Hook, Plugin } from '#/common/types/index.ts';
-import { I18n } from '#/common/util/index.ts';
-import { LanguageHook, LoggerHook, QueryParseHook } from '#/presentation/http/hook/index.ts';
-import type { AbstractRouter } from '#/presentation/http/router/index.ts';
+import type { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
+import { fastify, type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from '#/common/lib/required/fastify/fastify.lib.ts';
+import type { Hook } from '#/common/type/data/presentation/http/hook.data.ts';
+import type { Plugin } from '#/common/type/data/presentation/http/plugin.data.ts';
+import { I18n } from '#/common/util/i18n.util.ts';
+import { LanguageHook } from './hook/language.hook.ts';
+import { LoggerHook } from './hook/logger.hook.ts';
+import { QueryParseHook } from './hook/queryParse.hook.ts';
+import type { AbstractRouter } from './router/abstract.router.ts';
 
 /**
  * Interface is responsible for defining the options for starting the server.

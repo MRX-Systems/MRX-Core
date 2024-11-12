@@ -1,8 +1,6 @@
-import type {
-    BetterSQLiteDatabaseOptions,
-    MSSQLDatabaseOptions,
-    PostgresDatabaseOptions
-} from '#/infrastructure/database/creator/index.ts';
+import type { BetterSQLiteDatabaseOptions } from '#/infrastructure/database/creator/betterSQLite.creator.ts';
+import type { MSSQLDatabaseOptions } from '#/infrastructure/database/creator/mssql.creator.ts';
+import type { PostgresDatabaseOptions } from '#/infrastructure/database/creator/postgres.creator.ts';
 
 /**
  * The dynamic database configuration if the database name is undefined.

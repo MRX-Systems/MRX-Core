@@ -1,8 +1,7 @@
-import type { FastifyReply, FastifyRequest } from 'fastify';
-
-import type { OptionalModel, SearchModel } from '#/common/types/index.ts';
-import { crud } from '#/domain/usecase/index.ts';
-import { extractQueryAndPagination, prepareSearchModel, sendResponse } from '#/presentation/http/util/index.ts';
+import type { FastifyReply, FastifyRequest } from '#/common/lib/required/fastify/fastify.lib.ts';
+import type { SearchModel } from '#/common/type/data/infrastructure/repository/searchModel.data.ts';
+import { crud } from '#/domain/usecase/crud.usecase.ts';
+import { extractQueryAndPagination, prepareSearchModel, sendResponse } from '#/presentation/http/util/request.util.ts';
 
 export interface CrudHandlerOptions<T> {
     /**
@@ -53,7 +52,7 @@ export class CrudHandler<T> {
     public async insert(req: FastifyRequest, reply: FastifyReply): Promise<void> {
         const databaseName = req.headers.databaseName as string;
         const body: T[] = Array.isArray(req.body) ? req.body as T[] : [req.body as T];
-        const data = await crud.insert<T>(body, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
+        const data = await crud.insert<T>(body, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.insert',
             statusCode: 201,
@@ -78,7 +77,7 @@ export class CrudHandler<T> {
         pagination.limit ??= 100;
         pagination.offset ??= 0;
         const search = prepareSearchModel<T>(query);
-        const data = await crud.find<T>(search, pagination, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
+        const data = await crud.find<T>(search, pagination, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         const total = await crud.count<T>(search, this._options.table, databaseName, this._options.primaryKey) as number;
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.find',
@@ -106,7 +105,7 @@ export class CrudHandler<T> {
         const search: SearchModel<T> = {
             [key]: value
         } as SearchModel<T>;
-        const data = await crud.findOne<T>(search, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>;
+        const data = await crud.findOne<T>(search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>;
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.findOne',
             statusCode: 200,
@@ -128,7 +127,7 @@ export class CrudHandler<T> {
         const databaseName = req.headers.databaseName as string;
         const body: Partial<T> = req.body as Partial<T>;
         const search = prepareSearchModel<T>(req.query as Record<string, unknown>);
-        const data = await crud.update<T>(body, search, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
+        const data = await crud.update<T>(body, search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.update',
             statusCode: 200,
@@ -155,7 +154,7 @@ export class CrudHandler<T> {
         const search: SearchModel<T> = {
             [key]: value
         } as SearchModel<T>;
-        const [data] = await crud.update(body, search, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
+        const [data] = await crud.update(body, search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.updateOne',
             statusCode: 200,
@@ -176,7 +175,7 @@ export class CrudHandler<T> {
     public async delete(req: FastifyRequest, reply: FastifyReply): Promise<void> {
         const databaseName = req.headers.databaseName as string;
         const search = prepareSearchModel<T>(req.query as Record<string, unknown>);
-        const data = await crud.del<T>(search, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
+        const data = await crud.del<T>(search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.delete',
             statusCode: 200,
@@ -202,7 +201,7 @@ export class CrudHandler<T> {
         const search: SearchModel<T> = {
             [key]: value
         } as SearchModel<T>;
-        const [data] = await crud.del(search, this._options.table, databaseName, this._options.primaryKey) as OptionalModel<T>[];
+        const [data] = await crud.del(search, this._options.table, databaseName, this._options.primaryKey) as Partial<T>[];
         await sendResponse(req, reply, {
             messageKey: 'handler.crud.deleteOne',
             statusCode: 200,

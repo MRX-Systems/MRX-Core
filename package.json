@@ -4,7 +4,7 @@
   "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "version": "1.40.0",
   "type": "module",
-  "types": "build/lib.d.ts",
+  "types": "build/index.d.ts",
   "exports": {
     ".": {
       "types": "./build/index.d.ts",

@@ -1,8 +1,8 @@
 import { filterByKeyExclusion, filterByKeyInclusion } from '@basalt-lab/basalt-helper';
-import type { FastifyReply, FastifyRequest } from 'fastify';
 
-import type { SearchModel } from '#/common/types/index.ts';
-import { I18n } from '#/common/util/index.ts';
+import type { FastifyReply, FastifyRequest } from '#/common/lib/required/fastify/fastify.lib.ts';
+import type { SearchModel } from '#/common/type/data/infrastructure/repository/searchModel.data.ts';
+import { I18n } from '#/common/util/i18n.util.ts';
 import type { PaginationQueryOptions } from '#/infrastructure/repository/index.ts';
 
 /**
@@ -73,6 +73,7 @@ export async function sendResponse(
     const message = isI18nInitialized
         ? I18n.translate(options.messageKey, req.headers['accept-language'], options.content)
         : options.messageKey;
+    reply.code(options.statusCode);
     await reply.send({
         statusCode: options.statusCode,
         message,

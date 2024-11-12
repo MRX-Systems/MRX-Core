@@ -1,7 +1,7 @@
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-import type { Hook } from '#/common/types/index.ts';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from '#/common/lib/required/fastify/fastify.lib.ts';
+import type { Hook } from '#/common/type/data/presentation/http/hook.data.ts';
 
 /**
  * Logger Hook class implement the Hook interface ({@link Hook})

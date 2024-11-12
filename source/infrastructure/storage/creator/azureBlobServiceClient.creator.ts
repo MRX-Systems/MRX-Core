@@ -1,7 +1,8 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 
-import { CoreError, ErrorKeys } from '#/common/error/index.ts';
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
 import { AzureContainerClient } from './azureContainerClient.ts';
 
 /**
