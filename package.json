@@ -108,7 +108,7 @@
     }
   },
   "scripts": {
-    "dev": "bun --watch source/lib.ts",
+    "dev": "bun --watch source/index.ts",
     "build": "NODE_ENV=production bun bundler.config.ts && tsc && tsc-alias",
     "start": "NODE_ENV=production bun build/index.js",
     "test": "bun test",
@@ -139,7 +139,7 @@
     "@fastify/helmet": "^12.0.1",
     "@fastify/multipart": "^9.0.1",
     "@fastify/swagger": "^9.2.0",
-    "@scalar/fastify-api-reference": "^1.25.61",
+    "@scalar/fastify-api-reference": "^1.25.63",
     "@vinejs/vine": "^2.1.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",

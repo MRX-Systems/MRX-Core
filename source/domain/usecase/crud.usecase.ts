@@ -1,3 +1,5 @@
+import { CoreError } from '#/common/error/core.error.ts';
+import { ErrorKeys } from '#/common/error/keys.error.ts';
 import type { SearchModel } from '#/common/type/data/infrastructure/repository/searchModel.data.ts';
 import type { PaginationQueryOptions } from '#/infrastructure/repository/abstract.repository.ts';
 import { CrudRepository } from '#/infrastructure/repository/crud.repository.ts';
@@ -148,6 +150,11 @@ function del<T>(
         databaseName,
         primaryKey
     );
+    if (!search || (Array.isArray(search) && search.length === 0))
+        throw new CoreError({
+            code: 400,
+            messageKey: ErrorKeys.CRUD_DELETE_NO_SEARCH
+        });
     return crudRepository.delete(search, {}, { throwIfNoResult: true });
 }
 
