@@ -274,5 +274,6 @@ export const ErrorKeys = {
      */
     AZ_STORAGE_CONTAINER_LIST_FAILED: 'error.core-api.azure_storage_container_list_failed',
 
-    CRUD_DELETE_NO_SEARCH: 'error.core-api.crud_delete_no_search'
+    CRUD_DELETE_NO_SEARCH: 'error.core-api.crud_delete_no_search',
+    CRUD_UPDATE_NO_SEARCH: 'error.core-api.crud_update_no_search'
 };

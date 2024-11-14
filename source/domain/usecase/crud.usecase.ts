@@ -121,6 +121,11 @@ function update<T>(
         databaseName,
         primaryKey
     );
+    if (!search || (Array.isArray(search) && search.length === 0))
+        throw new CoreError({
+            code: 400,
+            messageKey: ErrorKeys.CRUD_UPDATE_NO_SEARCH
+        });
     return crudRepository.update(data, search, {}, { throwIfNoResult: true });
 }
 
