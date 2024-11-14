@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.41.0](https://github.com/Andesite-Lab/Core/compare/v1.40.1...v1.41.0) (2024-11-14)
+
+
+### Features
+
+* add error when no search is send to delete (block delete all) ([980fd75](https://github.com/Andesite-Lab/Core/commit/980fd751e8adb0748c49ba988d00678598c443ae))
+* add error when no search is send to update (block update all) ([89d5649](https://github.com/Andesite-Lab/Core/commit/89d5649e172c591b55c01925624844577797d60a))
+
 ## [1.40.1](https://github.com/Andesite-Lab/Core/compare/v1.40.0...v1.40.1) (2024-11-12)
 
 
