@@ -37,19 +37,19 @@
       "require": "./build/common/lib/optional/vine/index.js"
     },
     "./fastify": {
-      "types": "./build/common/lib/optional/fastify/index.d.ts",
-      "import": "./build/common/lib/optional/fastify/index.js",
-      "require": "./build/common/lib/optional/fastify/index.js"
+      "types": "./build/common/lib/required/fastify/index.d.ts",
+      "import": "./build/common/lib/required/fastify/index.js",
+      "require": "./build/common/lib/required/fastify/index.js"
     },
     "./fluent": {
-      "types": "./build/common/lib/optional/fluent-json-schema/index.d.ts",
-      "import": "./build/common/lib/optional/fluent-json-schema/index.js",
-      "require": "./build/common/lib/optional/fluent-json-schema/index.js"
+      "types": "./build/common/lib/required/fluent-json-schema/index.d.ts",
+      "import": "./build/common/lib/required/fluent-json-schema/index.js",
+      "require": "./build/common/lib/required/fluent-json-schema/index.js"
     },
     "./i18n": {
-      "types": "./build/common/lib/optional/i18n/index.d.ts",
-      "import": "./build/common/lib/optional/i18n/index.js",
-      "require": "./build/common/lib/optional/i18n/index.js"
+      "types": "./build/common/lib/required/i18n/index.d.ts",
+      "import": "./build/common/lib/required/i18n/index.js",
+      "require": "./build/common/lib/required/i18n/index.js"
     },
     "./util": {
       "types": "./build/common/util/index.d.ts",
