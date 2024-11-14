@@ -96,7 +96,7 @@ export class ServerManager {
             ajv: {
                 customOptions: {
                     $data: true,
-                    removeAdditional: 'all',
+                    removeAdditional: false,
                     allowUnionTypes: true,
                     coerceTypes: true,
                     allErrors: true,
