@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.41.1](https://github.com/Andesite-Lab/Core/compare/v1.41.0...v1.41.1) (2024-11-14)
+
+
+### Bug Fixes
+
+* correction export in package json ([58d9545](https://github.com/Andesite-Lab/Core/commit/58d9545abd466f82899acbc57588133217879616))
+
 ## [1.41.0](https://github.com/Andesite-Lab/Core/compare/v1.40.1...v1.41.0) (2024-11-14)
 
 
