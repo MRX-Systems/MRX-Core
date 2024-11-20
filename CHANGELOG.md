@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.42.0](https://github.com/Andesite-Lab/Core/compare/v1.41.1...v1.42.0) (2024-11-20)
+
+
+### Features
+
+* add $q for search occurence in all column (like elastic) ([29432b2](https://github.com/Andesite-Lab/Core/commit/29432b262699d5e8bed1df59b8ff8050f6766549))
+
+
+### Build System
+
+* update dependecies ([1f0d04a](https://github.com/Andesite-Lab/Core/commit/1f0d04a3efd8b254d666633a57ebbfe1faeb79f6))
+
 ## [1.41.1](https://github.com/Andesite-Lab/Core/compare/v1.41.0...v1.41.1) (2024-11-14)
 
 
