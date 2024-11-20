@@ -5,4 +5,6 @@ import type { WhereClause } from './whereClause.data.ts';
  */
 export type SearchModel<T> = {
     [P in keyof T]?: T[P] | Partial<WhereClause>;
-} & Record<string, string | number | boolean | Date | Partial<WhereClause>>;
+}
+& Record<string, string | number | boolean | Date | Partial<WhereClause>>
+& { $q?: string; };
