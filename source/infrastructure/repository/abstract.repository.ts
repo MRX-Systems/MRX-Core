@@ -198,6 +198,11 @@ export abstract class AbstractRepository<T> {
     protected readonly _primaryKey: [keyof T, 'NUMBER' | 'STRING'];
 
     /**
+     * The columns of the table.
+     */
+    private _tableColumns: string[] = [];
+
+    /**
      * Constructs an instance of the abstract repository. ({@link AbstractRepository})
      *
      * @param table - The name of the table.
@@ -254,6 +259,15 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
+     * Gets the table columns.
+     *
+     * @returns The columns of the table. (string[])
+     */
+    public get tableColumns(): string[] {
+        return this._tableColumns;
+    }
+
+    /**
      * Inserts the data into the table.
      *
      * @param data - Data to be inserted. ({@link Partial})
@@ -262,6 +276,7 @@ export abstract class AbstractRepository<T> {
      *
      * @throws ({@link CoreError}) - If the query not created and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_CREATED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
      *
      * @returns The data inserted into the table. ({@link Partial})
      */
@@ -288,6 +303,7 @@ export abstract class AbstractRepository<T> {
      *
      * @throws ({@link CoreError}) - If the no result is found and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_FOUND})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
      *
      * @returns The data found based on the search options. ({@link Partial})
      */
@@ -296,9 +312,10 @@ export abstract class AbstractRepository<T> {
         columns?: ColumnsSelection<T>,
         options?: QueryOptions & PaginationQueryOptions & { first?: boolean }
     ): Promise<Partial<T> | Partial<T>[] | void> {
+        if (this._tableColumns.length === 0)
+            this._tableColumns = await this._introspectTableColumns() ?? [];
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns));
-
         query = this._applySearch(query, search);
         query = this._applyPagination(query, options);
 
@@ -315,6 +332,7 @@ export abstract class AbstractRepository<T> {
      *
      * @throws ({@link CoreError}) - If no rows are updated and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_UPDATED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
      *
      * @returns The data updated based on the search options. ({@link Partial})
      */
@@ -324,6 +342,8 @@ export abstract class AbstractRepository<T> {
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
     ): Promise<Partial<T>[] | void> {
+        if (this._tableColumns.length === 0)
+            this._tableColumns = await this._introspectTableColumns() ?? [];
         return this._executeQuery(
             this._applySearch(
                 this._database(this._table)
@@ -345,6 +365,7 @@ export abstract class AbstractRepository<T> {
      *
      * @throws ({@link CoreError}) - If no rows are deleted and an error occurred. ({@link ErrorKeys.DATABASE_MODEL_NOT_DELETED})
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
      *
      * @returns The data deleted based on the search options. ({@link Partial})
      */
@@ -353,6 +374,8 @@ export abstract class AbstractRepository<T> {
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
     ): Promise<Partial<T>[] | void> {
+        if (this._tableColumns.length === 0)
+            this._tableColumns = await this._introspectTableColumns() ?? [];
         return this._executeQuery(
             this._applySearch(
                 this._database(this._table)
@@ -372,6 +395,7 @@ export abstract class AbstractRepository<T> {
      * @param options - Query options to be applied to the query. ({@link QueryOptions})
      *
      * @throws ({@link CoreError}) - If the query can throw an error and an error occurred. ({@link ErrorKeys.DATABASE_QUERY_ERROR})
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
      *
      * @returns The number of rows affected by the query.
      */
@@ -379,6 +403,8 @@ export abstract class AbstractRepository<T> {
         search?: SearchModel<T> | SearchModel<T>[],
         options?: Pick<QueryOptions, 'transaction'>
     ): Promise<number | void> {
+        if (this._tableColumns.length === 0)
+            this._tableColumns = await this._introspectTableColumns() ?? [];
         let query = this._applySearch(
             this._database(this._table)
                 .count({ count: '*' }),
@@ -648,6 +674,12 @@ export abstract class AbstractRepository<T> {
                         query = func(query, key, opValue);
                         firstIsOrQuery = false;
                     }
+            } else if (key === '$q') {
+                for (const column of this._tableColumns)
+                    if (firstIsOrQuery)
+                        query.orWhere(column, 'like', `%${value as string}%`);
+                    else
+                        query.where(column, 'like', `%${value as string}%`);
             } else {
                 if (typeof value === 'object' && Object.keys(value).length === 0) continue;
                 query = firstIsOrQuery
@@ -688,5 +720,25 @@ export abstract class AbstractRepository<T> {
             messageKey,
             detail: { table: this._table, database: this._databaseName }
         });
+    }
+
+    /**
+     * Introspects the table columns
+     *
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
+     *
+     * @returns The table columns. (string[])
+     */
+    private _introspectTableColumns(): Promise<void | string[]> {
+        return this._database(this._table)
+            .columnInfo()
+            .then((columns) => Object.keys(columns))
+            .catch(() => {
+                throw new CoreError({
+                    code: 500,
+                    messageKey: ErrorKeys.DATABASE_TABLE_NOT_FOUND,
+                    detail: { table: this._table, database: this._databaseName }
+                });
+            });
     }
 }
