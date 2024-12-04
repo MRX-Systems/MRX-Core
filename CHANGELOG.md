@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.42.1](https://github.com/Andesite-Lab/Core/compare/v1.42.0...v1.42.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* remove 'e' from domain ... ([1a79fbf](https://github.com/Andesite-Lab/Core/commit/1a79fbf4377182d3f0cedcb8710d530afd02a6e4))
+
 ## [1.42.0](https://github.com/Andesite-Lab/Core/compare/v1.41.1...v1.42.0) (2024-11-20)
 
 
