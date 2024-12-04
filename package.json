@@ -57,9 +57,9 @@
       "require": "./build/common/util/index.js"
     },
     "./usecase": {
-      "types": "./build/domaine/usecase/index.d.ts",
-      "import": "./build/domaine/usecase/index.js",
-      "require": "./build/domaine/usecase/index.js"
+      "types": "./build/domain/usecase/index.d.ts",
+      "import": "./build/domain/usecase/index.js",
+      "require": "./build/domain/usecase/index.js"
     },
     "./database": {
       "types": "./build/infrastructure/database/index.d.ts",
