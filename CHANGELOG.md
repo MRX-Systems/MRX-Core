@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.0](https://github.com/Andesite-Lab/Core/compare/v1.42.1...v1.43.0) (2024-12-05)
+
+
+### Features
+
+* add introspection to protected ([91519ee](https://github.com/Andesite-Lab/Core/commit/91519ee06d8057e93fbb1fc0ef2b2546c6af1ef0))
+
 ## [1.42.1](https://github.com/Andesite-Lab/Core/compare/v1.42.0...v1.42.1) (2024-12-04)
 
 
