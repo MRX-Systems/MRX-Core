@@ -200,7 +200,7 @@ export abstract class AbstractRepository<T> {
     /**
      * The columns of the table.
      */
-    private _tableColumns: string[] = [];
+    protected _tableColumns: string[] = [];
 
     /**
      * Constructs an instance of the abstract repository. ({@link AbstractRepository})
@@ -312,8 +312,7 @@ export abstract class AbstractRepository<T> {
         columns?: ColumnsSelection<T>,
         options?: QueryOptions & PaginationQueryOptions & { first?: boolean }
     ): Promise<Partial<T> | Partial<T>[] | void> {
-        if (this._tableColumns.length === 0)
-            this._tableColumns = await this._introspectTableColumns() ?? [];
+        await this._introspectTableColumns();
         let query = this._database(this._table)
             .select(this._transformColumnObjectToArray(columns));
         query = this._applySearch(query, search);
@@ -342,8 +341,7 @@ export abstract class AbstractRepository<T> {
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
     ): Promise<Partial<T>[] | void> {
-        if (this._tableColumns.length === 0)
-            this._tableColumns = await this._introspectTableColumns() ?? [];
+        await this._introspectTableColumns();
         return this._executeQuery(
             this._applySearch(
                 this._database(this._table)
@@ -374,8 +372,7 @@ export abstract class AbstractRepository<T> {
         columns?: ColumnsSelection<T>,
         options?: QueryOptions
     ): Promise<Partial<T>[] | void> {
-        if (this._tableColumns.length === 0)
-            this._tableColumns = await this._introspectTableColumns() ?? [];
+        await this._introspectTableColumns();
         return this._executeQuery(
             this._applySearch(
                 this._database(this._table)
@@ -403,8 +400,7 @@ export abstract class AbstractRepository<T> {
         search?: SearchModel<T> | SearchModel<T>[],
         options?: Pick<QueryOptions, 'transaction'>
     ): Promise<number | void> {
-        if (this._tableColumns.length === 0)
-            this._tableColumns = await this._introspectTableColumns() ?? [];
+        await this._introspectTableColumns();
         let query = this._applySearch(
             this._database(this._table)
                 .count({ count: '*' }),
@@ -553,6 +549,26 @@ export abstract class AbstractRepository<T> {
             if (options?.offset) query = query.offset(options.offset);
         }
         return query;
+    }
+
+    /**
+     * Introspects the table columns
+     *
+     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
+     *
+     * @returns The table columns. (string[])
+     */
+    protected async _introspectTableColumns(): Promise<void> {
+        this._tableColumns = await this._database(this._table)
+            .columnInfo()
+            .then((columns) => Object.keys(columns))
+            .catch(() => {
+                throw new CoreError({
+                    code: 500,
+                    messageKey: ErrorKeys.DATABASE_TABLE_NOT_FOUND,
+                    detail: { table: this._table, database: this._databaseName }
+                });
+            });
     }
 
     /**
@@ -720,25 +736,5 @@ export abstract class AbstractRepository<T> {
             messageKey,
             detail: { table: this._table, database: this._databaseName }
         });
-    }
-
-    /**
-     * Introspects the table columns
-     *
-     * @throws ({@link CoreError}) - If the table is not found. ({@link ErrorKeys.DATABASE_TABLE_NOT_FOUND})
-     *
-     * @returns The table columns. (string[])
-     */
-    private _introspectTableColumns(): Promise<void | string[]> {
-        return this._database(this._table)
-            .columnInfo()
-            .then((columns) => Object.keys(columns))
-            .catch(() => {
-                throw new CoreError({
-                    code: 500,
-                    messageKey: ErrorKeys.DATABASE_TABLE_NOT_FOUND,
-                    detail: { table: this._table, database: this._databaseName }
-                });
-            });
     }
 }
