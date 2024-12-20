@@ -1,25 +1,40 @@
-.env
-.env.development.local
-.env.local
-.env.production.local
-.env.test.local
+# === Configuration and system files ===
 .github/
 .idea/
+.env*       # Includes .env, .env.local, etc.
 .nvmrc
 .vscode/
+
+# === Archives and build-related files ===
 *.tgz
 bun.lockb
+pnpm-lock.yaml
+tsconfig.tsbuildinfo
+
+# === Bundler configuration files ===
 bundler.config.ts
 CHANGELOG.md
+
+# === Documentation-related folders ===
 coverage/
 docs/
+
+# === Tool configuration files ===
 eslint.config.js
 jest.config.json
+
+# === Dependency-related folders and files ===
 node_modules/
 package-lock.json
+yarn.lock
+bun.lockb
 pnpm-lock.yaml
-README.md
+
+# === Project-specific folders ===
 source/
-tests/
+test/
+
+# === Core project files ===
+README.md
 tsconfig.json
-tsconfig.tsbuildinfo
+translate.json
