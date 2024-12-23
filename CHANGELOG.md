@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.43.2
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v1.43.1...v1.43.2)
+
 ## v1.43.1
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v1.43.0...v1.43.1)
