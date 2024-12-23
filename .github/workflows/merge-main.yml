@@ -1,0 +1,237 @@
+name: Create stable release
+run-name: Create stable Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    if: contains(github.event.head_commit.message, 'Merge branch')
+    name: Check Lint of the code (try to auto-fix if possible)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          ssh-key: ${{ secrets.ANDESITE_SSH }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Run Lint and try to auto-fix if possible
+        run: |
+          bun run lint || bun run fix-lint && bun run lint
+          if [ $? -ne 0 ]; then
+            echo "Linting failed even after auto-fix. Exiting..."
+            exit 1
+          fi
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.ANDESITE_GPG }}" | gpg --batch --import
+          git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
+          git config --local commit.gpgsign true
+          git config --local tag.gpgsign true
+
+      - name: Commit Changes
+        id: commit_changes
+        run: |
+          git config --local user.email "necrelox@proton.me"
+          git config --local user.name "github-actions"
+          if git diff --name-only | grep -E '\.(js|ts|jsx|tsx|css|scss|json|md|yml|yaml)$'; then
+            git add .
+            git commit -m "style(🎨): Auto-fix lint issues"
+          else
+            echo "No lint-related changes to commit."
+          fi
+
+      - name: Push changes
+        run: |
+          git push origin HEAD:main
+
+  test:
+    if: contains(github.event.head_commit.message, 'Merge branch')
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          ssh-key: ${{ secrets.ANDESITE_SSH }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Check if build
+        run: bun run build
+
+      - name: Run tests
+        run: bun run test
+
+  stable:
+    if: contains(github.event.head_commit.message, 'Merge branch')
+    name: Create Stable Release
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          ssh-key: ${{ secrets.ANDESITE_SSH }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Fetch tags
+        run: git fetch --tags --prune
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.ANDESITE_GPG }}" | gpg --batch --import
+          git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
+          git config --local commit.gpgsign true
+          git config --local tag.gpgsign true
+
+      - name: Configure git
+        run: |
+          git config --local user.email "necrelox@proton.me"
+          git config --local user.name "github-actions"
+
+      - name: Generate Changelog and bump version
+        run: bunx changelogen@latest --bump --release
+
+      - name: Sign the tag manually
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "Signing tag: $LATEST_TAG"
+          git tag -s "$LATEST_TAG" -m "Signed Stable Release $LATEST_TAG" --force
+
+      - name: Push generated tag
+        run: git push origin --tags HEAD:main --force
+
+      - name: Verify tag signature
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          git tag -v "$LATEST_TAG"
+
+      - name: Extract Changelog additions
+        id: changelog_diff
+        run: |
+          PREV_MAIN=$(git log -1 --pretty=%P | awk '{print $1}')
+          git diff ${PREV_MAIN} HEAD --unified=0 CHANGELOG.md | grep '^+' | grep -v '++' | sed 's/^+//' > temp.md
+          echo "Changelog additions between previous main and current main:"
+          cat temp.md
+
+      - name: Extract the latest tag
+        id: get_latest_tag
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "Latest tag: $LATEST_TAG"
+          echo "tag_name=$LATEST_TAG" >> $GITHUB_ENV
+
+      - name: Create Stable Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Using tag: ${{ env.tag_name }}"
+          sleep 3
+          gh release create "${{ env.tag_name }}" \
+            --title "Stable Release ${{ env.tag_name }}" \
+            --notes "$(cat temp.md)"
+
+      - name: Rebase develop branch to main
+        run: |
+          git checkout develop
+          git rebase main
+          git push origin develop
+
+  doc:
+    if: contains(github.event.head_commit.message, 'Merge branch')
+    name: Doc
+    runs-on: ubuntu-latest
+    needs: stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          ssh-key: ${{ secrets.ANDESITE_SSH }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Generate Docs
+        run: npm run docs
+
+      - name: Upload Coverage
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.BASALT_TOKEN }}
+          publish_dir: ./docs
+
+  publish:
+    if: contains(github.event.head_commit.message, 'Merge branch')
+    name: Publish Stable Release
+    runs-on: ubuntu-latest
+    needs: stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          ssh-key: ${{ secrets.ANDESITE_SSH }}
+
+      - name: Pull latest changes from main
+        run: |
+          git checkout develop
+          git pull origin main --ff-only
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build the project
+        run: bun run build
+
+      - name: Publish the project
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

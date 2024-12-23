@@ -280,17 +280,17 @@ export class ServerManager {
         } else if (error.name === 'CoreError' || error.name === 'BasaltError') {
             const e: CoreError | BasaltError = error as unknown as CoreError | BasaltError;
             const code: number = e.code;
-            const detail: Record<string, unknown> = typeof e.detail === 'object' ? e.detail as Record<string, unknown> : {};
+            const cause: Record<string, unknown> = typeof e.cause === 'object' ? e.cause as Record<string, unknown> : {};
             await reply.status(code).send({
                 statusCode: error.code,
                 message: I18n.isI18nInitialized()
                     ? I18n.translate(
                         error.message,
                         request.headers['accept-language'],
-                        detail
+                        cause
                     )
                     : error.message,
-                content: e.detail
+                content: e.cause
             });
         } else {
             await reply.status(500).send({
