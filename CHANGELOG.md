@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.43.1
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v1.43.0...v1.43.1)
+
+### 📦 Build
+
+- **📦:** Update npm ignore ([a206d361](https://github.com/Andesite-Lab/Core/commit/a206d361))
+- **📦:** Bump node version to 23.5 and update dependencies ([5bbf8d3b](https://github.com/Andesite-Lab/Core/commit/5bbf8d3b))
+
+### 🤖 CI
+
+- **🤖:** Add workflow Pull Request Checker ([25140075](https://github.com/Andesite-Lab/Core/commit/25140075))
+- **🤖:** Add workflow merge dev and main ([c9b7d092](https://github.com/Andesite-Lab/Core/commit/c9b7d092))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## [1.43.0](https://github.com/Andesite-Lab/Core/compare/v1.42.1...v1.43.0) (2024-12-05)
 
 
