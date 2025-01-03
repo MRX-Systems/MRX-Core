@@ -1,16 +1,12 @@
 import { TSchema, Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'bun:test';
+import { beforeAll, beforeEach, describe, expect, test } from 'bun:test';
 
 import { TypeBoxConfig } from '../../../source/common/config/typebox.config.ts';
 
 describe('TypeBoxConfig', () => {
     beforeAll(() => {
         TypeBoxConfig.init();
-
-        TypeBoxConfig.on('register', (message: string) => {
-            console.log(message);
-        });
     });
     describe('init', () => {
         test('should set the default error function [ArrayContains]', () => {
@@ -539,13 +535,15 @@ describe('TypeBoxConfig', () => {
 
     describe('registerFormat', () => {
         beforeEach(() => {
+            if (TypeBoxConfig.hasFormat('email'))
+                TypeBoxConfig.unregisterFormat('email');
+        });
+
+        test('should add a new format with default message', () => {
             TypeBoxConfig.registerFormat('email', (value: string): boolean => {
                 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 return emailRegex.test(value);
             });
-        });
-
-        test('should add a new format with default message', () => {
             const schema: TSchema = Type.Object({
                 email: Type.String({ format: 'email' })
             });
@@ -553,7 +551,6 @@ describe('TypeBoxConfig', () => {
         });
 
         test('should add a new format with custom message', () => {
-            TypeBoxConfig.unregisterFormat('email');
             TypeBoxConfig.registerFormat('email', (value: string): boolean => {
                 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 return emailRegex.test(value);
@@ -565,23 +562,25 @@ describe('TypeBoxConfig', () => {
         });
 
         test('should throw an error if the format already exists', () => {
+            TypeBoxConfig.registerFormat('email', (value: string): boolean => {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                return emailRegex.test(value);
+            });
             expect(() => TypeBoxConfig.registerFormat('email', (): boolean => true)).toThrow('error.core.validation.format.already_exists');
-        });
-
-        afterEach(() => {
-            TypeBoxConfig.unregisterFormat('email');
         });
     });
 
     describe('unregisterFormat', () => {
         beforeEach(() => {
+            if (TypeBoxConfig.hasFormat('email'))
+                TypeBoxConfig.unregisterFormat('email');
+        });
+
+        test('should remove a format', () => {
             TypeBoxConfig.registerFormat('email', (value: string): boolean => {
                 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 return emailRegex.test(value);
             });
-        });
-
-        test('should remove a format', () => {
             TypeBoxConfig.unregisterFormat('email');
             const schema: TSchema = Type.Object({
                 email: Type.String({ format: 'email' })
@@ -591,21 +590,18 @@ describe('TypeBoxConfig', () => {
         });
 
         test('should throw an error if the format does not exist', () => {
-            TypeBoxConfig.unregisterFormat('email');
             expect(() => TypeBoxConfig.unregisterFormat('email')).toThrow('error.core.validation.format.does_not_exist');
         });
     });
 
     describe('formats', () => {
-        beforeAll(() => {
+        test('should return all registered formats', () => {
             TypeBoxConfig.registerFormat('email', (value: string): boolean => {
                 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 return emailRegex.test(value);
             });
-        });
-        test('should return all registered formats', () => {
-            console.log(TypeBoxConfig.formats);
             expect(TypeBoxConfig.formats).toContain('email');
+            TypeBoxConfig.unregisterFormat('email');
         });
     });
 });

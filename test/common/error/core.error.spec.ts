@@ -6,7 +6,7 @@ describe('CoreError', () => {
     describe('constructor', () => {
         test('should create a new CoreError instance with specific properties when valid options are provided', () => {
             const coreErrorOptions: CoreErrorOptions<{ foo: string }> = {
-                key: ['error.core.exemple', 400],
+                key: ['error.core.exemple', 500],
                 cause: { foo: 'exemple' },
             };
             const coreError: CoreError<{ foo: string }> = new CoreError(coreErrorOptions);

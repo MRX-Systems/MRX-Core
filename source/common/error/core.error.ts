@@ -83,7 +83,7 @@ export class CoreError<T = unknown> extends Error {
      */
     public constructor(CoreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
         super(CoreErrorOptions?.key?.[0] || 'error.unknown');
-        super.name = 'CoretError';
+        super.name = 'CoreError';
         this.cause = CoreErrorOptions?.cause;
         this._code = CoreErrorOptions?.key?.[1] || 500;
         if (Error.captureStackTrace) {
