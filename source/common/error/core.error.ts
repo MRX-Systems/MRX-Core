@@ -3,74 +3,103 @@ import { randomUUID } from 'crypto';
 /**
  * Represents the options for the Core error.
  */
-export interface CoreErrorOptions {
+export interface CoreErrorOptions<T = unknown> {
     /**
      * The error key.
      */
-    messageKey: string;
-
+    key?: [string, number] | undefined;
     /**
-     * The status code.
+     * The cause of the error.
      */
-    code?: number;
-
-    /**
-     * The error detail.
-     */
-    detail?: unknown;
+    cause?: T;
 }
 
-
 /**
- * CoreError is a class that represents an error entity with a unique identifier.
+ * Core error class that extends the ({@link Error}) class and provides additional properties. (uuidError, date, code, fileName, line, column)
  *
- * Inherit from the File class ({@link Error})
+ * @typeparam T - The type of the cause of the error.
+ *
+ * @example
+ * The following example demonstrates how to throw a new instance of the Core error.
+ * ```typescript
+ * try {
+ *   throw new CoreError();
+ * } catch (error) {
+ *  console.log(error instanceof CoreError); // true
+ *  console.log(error instanceof Error); // true
+ *  // u can access to uuidError, date, code, fileName, line, column, message, name, stack, cause
+ * }
+ * ```
+ * @example
+ * The following example demonstrates how to create a new instance of the Core error with provided type for the cause.
+ * ```typescript
+ * const coreError: CoreError<{ foo: 'bar' }> = new CoreError({
+ *     key: 'error.unknown',
+ *     cause: {
+ *         foo: 'bar',
+ *     },
+ * });
+ * console.log(coreError.cause); // { foo: 'bar' } if you make ctrl + space after cause. you will see the properties of the cause
+ * ```
  */
-export class CoreError extends Error {
+export class CoreError<T = unknown> extends Error {
+    public override readonly cause: T | undefined;
+
     /**
      * The unique identifier of the error.
      * This identifier is used to track the error in the logs.
-     * @readonly
      */
     private readonly _uuidError: string = randomUUID();
 
     /**
      * The date when the error was created.
-     * @readonly
      */
     private readonly _date: Date = new Date();
 
     /**
-     * The error code.
-     * @readonly
+     * The error code. (HTTP status code)
      */
     private readonly _code: number;
 
     /**
-     * The error detail.
-     * @readonly
+     * The fileName where the error occurred (if available).
      */
-    private readonly _detail: unknown;
+    private readonly _fileName: string = '';
 
     /**
-     * Creates a new instance of the ErrorEntity class.
-     *
-     * @param CoreErrorOptions - The options to create the error entity. ({@link CoreErrorOptions})
+     * The line number where the error occurred (if available).
      */
-    public constructor(CoreErrorOptions: Readonly<CoreErrorOptions>) {
-        super();
-        this._code = CoreErrorOptions.code ?? 500;
-        this.message = CoreErrorOptions.messageKey;
-        this._detail = CoreErrorOptions.detail;
-        this.name = 'CoreError';
-        if (Error.captureStackTrace)
+    private readonly _line: number = 0;
+
+    /**
+     * The column number where the error occurred (if available).
+     */
+    private readonly _column: number = 0;
+
+    /**
+     * Creates a new instance of the Core error.
+     *
+     * @param CoreErrorOptions - The options for the Core error. ({@link CoreErrorOptions})
+     */
+    public constructor(CoreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
+        super(CoreErrorOptions?.key?.[0] || 'error.unknown');
+        super.name = 'CoretError';
+        this.cause = CoreErrorOptions?.cause;
+        this._code = CoreErrorOptions?.key?.[1] || 500;
+        if (Error.captureStackTrace) {
             Error.captureStackTrace(this, this.constructor);
+            const stackLine = this.stack?.split('\n')[1]?.trim();
+            const match = stackLine?.match(/:(\d+):(\d+)\)$/);
+            this._fileName = stackLine?.split('(')[1]?.split(':')[0] || '';
+            if (match) {
+                this._line = match[1] ? parseInt(match[1], 10) : 0;
+                this._column = match[2] ? parseInt(match[2], 10) : 0;
+            }
+        }
     }
 
     /**
      * Gets the unique identifier of the error.
-     * @readonly
-     * @returns The unique identifier of the error.
      */
     public get uuidError(): string {
         return this._uuidError;
@@ -78,28 +107,36 @@ export class CoreError extends Error {
 
     /**
      * Gets the date when the error was created.
-     * @readonly
-     * @returns The date when the error was created.
      */
     public get date(): Date {
         return this._date;
     }
 
     /**
-     * Gets the error code.
-     * @readonly
-     * @returns The error code.
+     * Gets the fileName where the error occurred (if available).
      */
-    public get code(): number {
-        return this._code;
+    public get fileName(): string {
+        return this._fileName;
     }
 
     /**
-     * Gets the error detail.
-     * @readonly
-     * @returns The error detail.
+     * Gets the line number where the error occurred (if available).
      */
-    public get detail(): unknown {
-        return this._detail;
+    public get line(): number {
+        return this._line;
+    }
+
+    /**
+     * Gets the column number where the error occurred (if available).
+     */
+    public get column(): number {
+        return this._column;
+    }
+
+    /**
+     * Gets the error code.
+     */
+    public get code(): number {
+        return this._code;
     }
 }
