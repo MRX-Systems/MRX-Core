@@ -1,0 +1,128 @@
+{
+  "error": {
+    "core": {
+      "invalid_environment": "유효하지 않은 환경",
+      "validation": {
+        "array": {
+          "contains": "최소한 하나의 일치하는 값을 포함하는 배열이 예상되었습니다",
+          "is_array": "값은 배열이어야하지만 {{type}}가 되었습니다",
+          "max_contains": "최대 {{max}}개의 일치하는 값을 포함하는 배열이 예상되었습니다",
+          "max_items": "배열 길이가 {{max}} 이하이어야하지만 {{length}}가 되었습니다",
+          "min_contains": "최소 {{min}}개의 일치하는 값을 포함하는 배열이 예상되었습니다",
+          "min_items": "배열 길이가 {{min}} 이상이어야하지만 {{length}}가 되었습니다",
+          "unique_items": "배열 요소는 고유해야합니다"
+        },
+        "async_iterator": {
+          "is_async_iterator": "값은 비동기 반복자 여야하지만 {{type}}가 되었습니다"
+        },
+        "bigint": {
+          "exclusive_maximum": "bigint는 {{maximum}}보다 작아야하지만 {{value}}가 되었습니다",
+          "exclusive_minimum": "bigint는 {{minimum}}보다 커야하지만 {{value}}가 되었습니다",
+          "is_bigint": "값은 bigint 여야하지만 {{type}}가 되었습니다",
+          "maximum": "bigint는 {{maximum}} 이하이어야하지만 {{value}}가 되었습니다",
+          "minimum": "bigint는 {{minimum}} 이상이어야하지만 {{value}}가 되었습니다",
+          "multiple_of": "bigint는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+        },
+        "boolean": {
+          "is_boolean": "값은 부울 값이어야하지만 {{type}}가 되었습니다"
+        },
+        "date": {
+          "exclusive_maximum_timestamp": "날짜 타임 스탬프는 {{maximum}}보다 작아야하지만 {{value}}가 되었습니다",
+          "exclusive_minimum_timestamp": "날짜 타임 스탬프는 {{minimum}}보다 커야하지만 {{value}}가 되었습니다",
+          "is_date": "값은 날짜 여야하지만 {{type}}가 되었습니다",
+          "maximum_timestamp": "날짜 타임 스탬프는 {{maximum}}보다 작거나 같아야하지만 {{value}}가 되었습니다",
+          "minimum_timestamp": "날짜 타임 스탬프는 {{minimum}}보다 크거나 같아야하지만 {{value}}가 되었습니다",
+          "multiple_of_timestamp": "날짜 타임 스탬프는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+        },
+        "default": "알 수없는 오류 유형",
+        "format": {
+          "already_exists": "포맷 '{{format}}'이 이미 존재합니다",
+          "does_not_exist": "포맷 '{{format}}'이 존재하지 않습니다"
+        },
+        "function": {
+          "is_function": "값은 함수 여야하지만 {{type}}가 되었습니다"
+        },
+        "integer": {
+          "exclusive_maximum": "정수는 {{maximum}}보다 작아야하지만 {{value}}가 되었습니다",
+          "exclusive_minimum": "정수는 {{minimum}}보다 커야하지만 {{value}}가 되었습니다",
+          "is_integer": "값은 정수 여야하지만 {{type}}가 되었습니다",
+          "maximum": "정수는 {{maximum}} 이하이어야하지만 {{value}}가 되었습니다",
+          "minimum": "정수는 {{minimum}} 이상이어야하지만 {{value}}가 되었습니다",
+          "multiple_of": "정수는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+        },
+        "intersect": {
+          "is_intersect": "모든 값이 일치하는 것으로 예상되었습니다",
+          "unevaluated_properties": "평가되지 않은 속성이 발견되었습니다: {{props}}"
+        },
+        "iterator": {
+          "is_iterator": "값은 반복자 여야하지만 {{type}}가 되었습니다"
+        },
+        "kind": {
+          "is_kind": "값은 {{kind}} 여야하지만 {{type}}가 되었습니다"
+        },
+        "literal": {
+          "is_literal": "값은 리터럴이어야하지만 {{type}}가 되었습니다"
+        },
+        "never": {
+          "is_never": "값은 결코가 되어야하지만 {{type}}가 되었습니다"
+        },
+        "not": {
+          "not_match": "값이 일치하지 않아야합니다"
+        },
+        "null": {
+          "is_null": "값은 null이어야하지만 {{type}}가 되었습니다"
+        },
+        "number": {
+          "exclusive_maximum": "숫자는 {{maximum}}보다 작아야하지만 {{value}}가 되었습니다",
+          "exclusive_minimum": "숫자는 {{minimum}}보다 커야하지만 {{value}}가 되었습니다",
+          "is_number": "값은 숫자 여야하지만 {{type}}가 되었습니다",
+          "maximum": "숫자는 {{maximum}} 이하이어야하지만 {{value}}가 되었습니다",
+          "minimum": "숫자는 {{minimum}} 이상이어야하지만 {{value}}가 되었습니다",
+          "multiple_of": "숫자는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+        },
+        "object": {
+          "additional_properties": "추가 속성이 발견되었습니다: {{props}}",
+          "is_object": "값은 객체 여야하지만 {{type}}가 되었습니다",
+          "max_properties": "객체는 최대 {{maximum}}개의 속성을 가질 수 있지만 {{value}}가 되었습니다",
+          "min_properties": "객체는 최소 {{minimum}}개의 속성을 가질 수 있지만 {{value}}가 되었습니다",
+          "required_property": "필수 속성이 누락되었습니다: {{key}}"
+        },
+        "promise": {
+          "is_promise": "값은 프로미스 여야하지만 {{type}}가 되었습니다"
+        },
+        "regexp": {
+          "not_match": "문자열이 정규 표현식 {{pattern}}과 일치해야하지만 {{value}}가 되었습니다"
+        },
+        "string": {
+          "format": "문자열이 형식 {{format}}이어야하지만 {{value}}가 되었습니다",
+          "format_unknown": "알 수없는 문자열 형식 {{format}}",
+          "is_string": "값은 문자열이어야하지만 {{type}}가 되었습니다",
+          "max_length": "문자열 길이는 {{maximum}} 이하이어야하지만 {{value}}가 되었습니다",
+          "min_length": "문자열 길이는 {{minimum}} 이상이어야하지만 {{value}}가 되었습니다",
+          "pattern": "문자열이 패턴 {{pattern}}과 일치하는 것으로 예상되었습니다"
+        },
+        "symbol": {
+          "is_symbol": "값은 심볼이어야하지만 {{type}}가 되었습니다"
+        },
+        "tuple": {
+          "is_tuple": "값은 튜플이어야하지만 {{type}}가 되었습니다",
+          "length": "튜플의 길이는 {{length}}이어야하지만 {{value}}가 되었습니다"
+        },
+        "uint8array": {
+          "is_uint8array": "값은 Uint8Array 여야하지만 {{type}}가 되었습니다",
+          "max_byte_length": "Uint8Array의 바이트 길이는 {{maximum}} 이하이어야하지만 {{value}}가 되었습니다",
+          "min_byte_length": "Uint8Array의 바이트 길이는 {{minimum}} 이상이어야하지만 {{value}}가 되었습니다"
+        },
+        "undefined": {
+          "is_undefined": "값은 정의되지 않아야하지만 {{type}}가 되었습니다"
+        },
+        "union": {
+          "is_union": "값은 {{types}} 중 하나 여야하지만 {{type}}가 되었습니다"
+        },
+        "void": {
+          "is_void": "값은 void 여야하지만 {{type}}가 되었습니다"
+        }
+      }
+    }
+  }
+}

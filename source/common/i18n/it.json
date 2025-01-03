@@ -1,0 +1,128 @@
+{
+  "error": {
+    "core": {
+      "invalid_environment": "Ambiente non valido",
+      "validation": {
+        "array": {
+          "contains": "Era previsto che l'array contenesse almeno un valore corrispondente",
+          "is_array": "Era previsto che il valore fosse un array ma {{type}}",
+          "max_contains": "Era previsto che l'array non contenesse più di {{max}} valori corrispondenti",
+          "max_items": "Era previsto che la lunghezza dell'array fosse minore o uguale a {{max}} ma {{length}}",
+          "min_contains": "Era previsto che l'array contenesse almeno {{min}} valori corrispondenti",
+          "min_items": "Era previsto che la lunghezza dell'array fosse maggiore o uguale a {{min}} ma {{length}}",
+          "unique_items": "Era previsto che gli elementi dell'array fossero univoci"
+        },
+        "async_iterator": {
+          "is_async_iterator": "Era previsto che il valore fosse un iteratore asincrono ma {{type}}"
+        },
+        "bigint": {
+          "exclusive_maximum": "Era previsto che bigint fosse minore di {{maximum}} ma {{value}}",
+          "exclusive_minimum": "Era previsto che bigint fosse maggiore di {{minimum}} ma {{value}}",
+          "is_bigint": "Era previsto che il valore fosse un bigint ma {{type}}",
+          "maximum": "Era previsto che bigint fosse minore o uguale a {{maximum}} ma {{value}}",
+          "minimum": "Era previsto che bigint fosse maggiore o uguale a {{minimum}} ma {{value}}",
+          "multiple_of": "Era previsto che bigint fosse un multiplo di {{multiple}} ma {{value}}"
+        },
+        "boolean": {
+          "is_boolean": "Era previsto che il valore fosse un booleano ma {{type}}"
+        },
+        "date": {
+          "exclusive_maximum_timestamp": "Era previsto che il timestamp della data fosse minore di {{maximum}} ma {{value}}",
+          "exclusive_minimum_timestamp": "Era previsto che il timestamp della data fosse maggiore di {{minimum}} ma {{value}}",
+          "is_date": "Era previsto che il valore fosse una data ma {{type}}",
+          "maximum_timestamp": "Era previsto che il timestamp della data fosse minore o uguale a {{maximum}} ma {{value}}",
+          "minimum_timestamp": "Era previsto che il timestamp della data fosse maggiore o uguale a {{minimum}} ma {{value}}",
+          "multiple_of_timestamp": "Era previsto che il timestamp della data fosse un multiplo di {{multiple}} ma {{value}}"
+        },
+        "default": "Tipo di errore sconosciuto",
+        "format": {
+          "already_exists": "Il formato '{{format}}' esiste già",
+          "does_not_exist": "Il formato '{{format}}' non esiste"
+        },
+        "function": {
+          "is_function": "Era previsto che il valore fosse una funzione ma {{type}}"
+        },
+        "integer": {
+          "exclusive_maximum": "Era previsto che l'intero fosse minore di {{maximum}} ma {{value}}",
+          "exclusive_minimum": "Era previsto che l'intero fosse maggiore di {{minimum}} ma {{value}}",
+          "is_integer": "Era previsto che il valore fosse un intero ma {{type}}",
+          "maximum": "Era previsto che l'intero fosse minore o uguale a {{maximum}} ma {{value}}",
+          "minimum": "Era previsto che l'intero fosse maggiore o uguale a {{minimum}} ma {{value}}",
+          "multiple_of": "Era previsto che l'intero fosse un multiplo di {{multiple}} ma {{value}}"
+        },
+        "intersect": {
+          "is_intersect": "Era previsto che tutti i valori corrispondessero",
+          "unevaluated_properties": "Proprietà non valutate trovate: {{props}}"
+        },
+        "iterator": {
+          "is_iterator": "Era previsto che il valore fosse un iteratore ma {{type}}"
+        },
+        "kind": {
+          "is_kind": "Era previsto che il valore fosse del tipo {{kind}} ma {{type}}"
+        },
+        "literal": {
+          "is_literal": "Era previsto che il valore fosse un letterale ma {{type}}"
+        },
+        "never": {
+          "is_never": "Era previsto che il valore fosse mai ma {{type}}"
+        },
+        "not": {
+          "not_match": "Il valore non dovrebbe corrispondere"
+        },
+        "null": {
+          "is_null": "Era previsto che il valore fosse nullo ma {{type}}"
+        },
+        "number": {
+          "exclusive_maximum": "Era previsto che il numero fosse minore di {{maximum}} ma {{value}}",
+          "exclusive_minimum": "Era previsto che il numero fosse maggiore di {{minimum}} ma {{value}}",
+          "is_number": "Era previsto che il valore fosse un numero ma {{type}}",
+          "maximum": "Era previsto che il numero fosse minore o uguale a {{maximum}} ma {{value}}",
+          "minimum": "Era previsto che il numero fosse maggiore o uguale a {{minimum}} ma {{value}}",
+          "multiple_of": "Era previsto che il numero fosse un multiplo di {{multiple}} ma {{value}}"
+        },
+        "object": {
+          "additional_properties": "Proprietà aggiuntive trovate: {{props}}",
+          "is_object": "Era previsto che il valore fosse un oggetto ma {{type}}",
+          "max_properties": "Era previsto che l'oggetto avesse al massimo {{maximum}} proprietà ma {{value}}",
+          "min_properties": "Era previsto che l'oggetto avesse almeno {{minimum}} proprietà ma {{value}}",
+          "required_property": "Proprietà richiesta mancante: {{key}}"
+        },
+        "promise": {
+          "is_promise": "Era previsto che il valore fosse una promessa ma {{type}}"
+        },
+        "regexp": {
+          "not_match": "Era previsto che la stringa corrispondesse all'espressione regolare {{pattern}} ma {{value}}"
+        },
+        "string": {
+          "format": "Era previsto che la stringa fosse nel formato {{format}} ma {{value}}",
+          "format_unknown": "Formato stringa sconosciuto {{format}}",
+          "is_string": "Era previsto che il valore fosse una stringa ma {{type}}",
+          "max_length": "Era previsto che la lunghezza della stringa fosse minore o uguale a {{maximum}} ma {{value}}",
+          "min_length": "Era previsto che la lunghezza della stringa fosse maggiore o uguale a {{minimum}} ma {{value}}",
+          "pattern": "Era previsto che la stringa corrispondesse al modello {{pattern}} ma {{value}}"
+        },
+        "symbol": {
+          "is_symbol": "Era previsto che il valore fosse un simbolo ma {{type}}"
+        },
+        "tuple": {
+          "is_tuple": "Era previsto che il valore fosse una tupla ma {{type}}",
+          "length": "Era previsto che la tupla avesse lunghezza {{length}} ma {{value}}"
+        },
+        "uint8array": {
+          "is_uint8array": "Era previsto che il valore fosse un Uint8Array ma {{type}}",
+          "max_byte_length": "Era previsto che Uint8Array avesse una lunghezza in byte minore o uguale a {{maximum}} ma {{value}}",
+          "min_byte_length": "Era previsto che Uint8Array avesse una lunghezza in byte maggiore o uguale a {{minimum}} ma {{value}}"
+        },
+        "undefined": {
+          "is_undefined": "Era previsto che il valore fosse indefinito ma {{type}}"
+        },
+        "union": {
+          "is_union": "Era previsto che il valore fosse uno dei {{types}} ma {{type}}"
+        },
+        "void": {
+          "is_void": "Era previsto che il valore fosse vuoto ma {{type}}"
+        }
+      }
+    }
+  }
+}
