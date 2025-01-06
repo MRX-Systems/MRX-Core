@@ -1,34 +1,24 @@
-/**
- * Common
- */
-export * from '#/common/error/index.ts';
-export * from '#/common/lib/optional/ioredis/index.ts';
-export type * from '#/common/lib/optional/knex/index.ts';
-export * from '#/common/lib/optional/vine/index.ts';
-export * from '#/common/lib/required/fastify/index.ts';
-export * from '#/common/lib/required/fluent-json-schema/index.ts';
-export * from '#/common/lib/required/i18n/index.ts';
-export type * from '#/common/type/data/index.ts';
-export * from '#/common/util/index.ts';
+//                  Common Layer                    //
+// Config Sub-Layer
+export * from './common/config/typebox.config.ts';
 
-/**
- * Domain
- */
-export * from '#/domain/usecase/index.ts';
+// Error Sub-Layer
+export * from './common/error/core.error.ts';
+export * from './common/error/key/config.error.ts';
+export * from './common/error/key/util.error.ts';
 
-/**
- * Infrastructure
- */
-export * from '#/infrastructure/database/creator/index.ts';
-export * from '#/infrastructure/database/index.ts';
-export * from '#/infrastructure/repository/index.ts';
-export * from '#/infrastructure/storage/creator/index.ts';
-export * from '#/infrastructure/storage/index.ts';
-export * from '#/infrastructure/store/creator/index.ts';
-export * from '#/infrastructure/store/index.ts';
+// I18n Sub-Layer
+import ar from './common/i18n/ar.json' with { type: 'json' };
+import de from './common/i18n/de.json' with { type: 'json' };
+import en from './common/i18n/en.json' with { type: 'json' };
+import es from './common/i18n/es.json' with { type: 'json' };
+import fr from './common/i18n/fr.json' with { type: 'json' };
+import it from './common/i18n/it.json' with { type: 'json' };
+import ja from './common/i18n/ja.json' with { type: 'json' };
+import ko from './common/i18n/ko.json' with { type: 'json' };
+export { ar, de, en, es, fr, it, ja, ko };
 
-/**
- * Presentation
- */
-export * from '#/presentation/http/index.ts';
-export * from '#/presentation/schema/index.ts';
+// Util Sub-Layer
+export * from './common/util/color.util.ts';
+export * from './common/util/other.util.ts';
+// ------------------------------------------------ //

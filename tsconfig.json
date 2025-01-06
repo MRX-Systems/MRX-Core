@@ -60,6 +60,6 @@
     "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
 
     /* Completeness */
-    "skipLibCheck": true    
+    "skipLibCheck": true
   }
 }
