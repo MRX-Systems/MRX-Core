@@ -1,4 +1,4 @@
-import { TSchema, Type } from '@sinclair/typebox';
+import { type TSchema, Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import { beforeAll, beforeEach, describe, expect, test } from 'bun:test';
 
