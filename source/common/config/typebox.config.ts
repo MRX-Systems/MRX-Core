@@ -464,7 +464,7 @@ class TypeBoxConfigSingleton extends EventEmitter {
      */
     private _defaultErrorFunction(error: ErrorFunctionParameter): string {
         if (error.schema.message)
-            return (error.schema.message as string);
+            return error.schema.message as string;
         if (error.errorType === ValueErrorType.StringFormat)
             return this._handleStringFormatError(error);
         return this._defaultErrorTypeAndMessage[error.errorType];
