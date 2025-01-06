@@ -14,6 +14,9 @@ export interface CoreErrorOptions<T = unknown> {
     cause?: T;
 }
 
+const DEFAULT_ERROR_MESSAGE = 'error.unknown';
+const DEFAULT_ERROR_CODE = 500;
+
 /**
  * Core error class that extends the ({@link Error}) class and provides additional properties. (uuidError, date, code, fileName, line, column)
  *
@@ -79,13 +82,13 @@ export class CoreError<T = unknown> extends Error {
     /**
      * Creates a new instance of the Core error.
      *
-     * @param CoreErrorOptions - The options for the Core error. ({@link CoreErrorOptions})
+     * @param coreErrorOptions - The options for the Core error. ({@link coreErrorOptions})
      */
-    public constructor(CoreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
-        super(CoreErrorOptions?.key?.[0] || 'error.unknown');
+    public constructor(coreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
+        super(coreErrorOptions?.key?.[0] || DEFAULT_ERROR_MESSAGE);
         super.name = 'CoreError';
-        this.cause = CoreErrorOptions?.cause;
-        this._code = CoreErrorOptions?.key?.[1] || 500;
+        this.cause = coreErrorOptions?.cause;
+        this._code = coreErrorOptions?.key?.[1] || DEFAULT_ERROR_CODE;
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, this.constructor);
             const stackLine = this.stack?.split('\n')[1]?.trim();
