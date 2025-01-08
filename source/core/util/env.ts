@@ -10,7 +10,7 @@ import { UTIL_KEY_ERROR } from '#/error/key/utilKeyError';
  * @param schema - The schema to validate the environment variables ({@link TSchema})
  * @param env - The environment variables to validate. (default: `process.env`)
  *
- * @throws ({@link CoreError}) - If the environment variables are invalid based on the schema. ({@link UTIL_KEY_ERROR.INVALID_ENVIRONMENT})
+ * @throws ({@link CoreError}) - If the environment variables are invalid based on the schema. ({@link UTIL_KEY_ERROR}.INVALID_ENVIRONMENT)
  */
 export function validateEnv(schema: TSchema, env: Record<string, unknown> = process.env): void {
     try {
