@@ -1,65 +1,49 @@
 {
-  "include": [
-    "source/**/*.ts",
-    "template/**/*.json"
-  ],
   "typedocOptions": {
     "entryPoints": [
       "source/**/*.ts"
     ],
     "exclude": [
-      "./**/index.ts",
-      "cli.ts"
+      "./**/index.ts"
     ],
     "out": "docs"
   },
   "compilerOptions": {
-    "types": ["@types/node"],
+    // Enable latest features
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
-    "module": "NodeNext",
+    "module": "ESNext",
     "moduleDetection": "force",
+    "jsx": "react-jsx",
     "allowJs": true,
+    "resolveJsonModule": true,
 
-    "moduleResolution": "NodeNext",
+    "outDir": "./build",
+    "paths": {
+      "#/*": ["./source/*"]
+    },
+
+    // Bundler mode
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "outDir": "./build",                              /* Specify an output folder for all emitted files. */
-    "removeComments": false,
+    "noEmit": true,
+    // "removeComments": true,
 
-    "rootDir": "./source",                            /* Specify the root folder within your source files. */
-    "baseUrl": "./source",
-    "paths": {
-      "#/*": ["./*"]
-    },
-    "resolveJsonModule": true,                        /* Enable importing .json files. */
-    "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
+    // Best practices
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
 
-
-    /* Type Checking */
-    "strict": true,                                   /* Enable all strict type-checking options. */
-    "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
-    "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
-    "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
-    "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
-    "strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
-    "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
-    "useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
-    "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
-    "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
-    "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
-    "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
-    "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
-    "noFallthroughCasesInSwitch": true,               /* Enable error reporting for fallthrough cases in switch statements. */
-    "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
-    "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
-    "noPropertyAccessFromIndexSignature": false,      /* Enforces using indexed accessors for keys declared using an indexed type. */
-    "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
-    "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
-
-    /* Completeness */
-    "skipLibCheck": true
+    // Some flags
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   }
 }

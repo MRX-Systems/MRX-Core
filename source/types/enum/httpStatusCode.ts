@@ -1,7 +1,7 @@
 /**
- * HTTP Status Code Enum
+ * HTTP Status Code
  */
-export const HTTP_STATUS_CODE_ENUM: Record<string, number> = {
+export const HTTP_STATUS_CODE: Record<string, number> = {
     OK: 200,
     CREATED: 201,
     ACCEPTED: 202,

@@ -1,10 +1,9 @@
-/* eslint-disable new-cap */
 import { FormatRegistry } from '@sinclair/typebox';
 import { SetErrorFunction, ValueErrorType, type ErrorFunctionParameter } from '@sinclair/typebox/errors';
 import EventEmitter from 'node:events';
 
-import { CoreError } from '#/common/error/core.error.ts';
-import { CONFIG_ERRORS } from '#/common/error/key/config.error.ts';
+import { CoreError } from '#/error/coreError';
+import { CONFIG_KEY_ERROR } from '#/error/key/configKeyError';
 
 /**
  * Singleton class to manage TypeBox configuration, including custom formats, error messages, and event handling.
@@ -366,7 +365,7 @@ class TypeBoxConfigSingleton extends EventEmitter {
     /**
      * Retrieves the singleton instance of the class.
      *
-     * @returns The single instance of the configuration class. ({@link TypeBoxConfigSingleton}) 
+     * @returns The single instance of the configuration class. ({@link TypeBoxConfigSingleton})
      */
     public static get instance(): TypeBoxConfigSingleton {
         if (!TypeBoxConfigSingleton._instance)
@@ -388,12 +387,12 @@ class TypeBoxConfigSingleton extends EventEmitter {
      * @param format - A function that validates the format.
      * @param messageKey - The key for the error message associated with this format.
      *
-     * @throws ({@link CoreError}) If the format is already registered. (FORMAT_ALREADY_EXISTS in {@link CONFIG_ERRORS})
+     * @throws ({@link CoreError}) If the format is already registered. ({@link CONFIG_KEY_ERROR}.FORMAT_ALREADY_EXISTS)
      */
     public registerFormat(name: string, format: (value: string) => boolean, messageKey?: string): void {
         if (FormatRegistry.Has(name))
             throw new CoreError({
-                key: CONFIG_ERRORS.FORMAT_ALREADY_EXISTS,
+                key: CONFIG_KEY_ERROR.FORMAT_ALREADY_EXISTS,
                 cause: { name }
             });
         FormatRegistry.Set(name, format);
@@ -407,12 +406,12 @@ class TypeBoxConfigSingleton extends EventEmitter {
      *
      * @param name - The name of the format to remove.
      *
-     * @throws ({@link CoreError}) If the format does not exist. (FORMAT_DOES_NOT_EXIST in {@link CONFIG_ERRORS})
+     * @throws ({@link CoreError}) If the format does not exist. ({@link CONFIG_KEY_ERROR}.FORMAT_DOES_NOT_EXIST)
      */
     public unregisterFormat(name: string): void {
         if (!FormatRegistry.Has(name))
             throw new CoreError({
-                key: CONFIG_ERRORS.FORMAT_DOES_NOT_EXIST,
+                key: CONFIG_KEY_ERROR.FORMAT_DOES_NOT_EXIST,
                 cause: { name }
             });
         FormatRegistry.Delete(name);
@@ -451,7 +450,7 @@ class TypeBoxConfigSingleton extends EventEmitter {
      */
     private _handleStringFormatError(error: ErrorFunctionParameter): string {
         if (error.schema.format && this._errorFormatAndMessage[error.schema.format])
-            return this._errorFormatAndMessage[error.schema.format] as string;
+            return this._errorFormatAndMessage[error.schema.format];
         return this._defaultErrorTypeAndMessage[ValueErrorType.StringFormat];
     }
 

@@ -1,24 +1,30 @@
-//                  Common Layer                    //
-// Config Sub-Layer
-export * from './common/config/typebox.config.ts';
+// Export utils
+export * from './core/util/env';
+export * from './core/util/json';
+export * from './core/util/typebox';
 
-// Error Sub-Layer
-export * from './common/error/core.error.ts';
-export * from './common/error/key/config.error.ts';
-export * from './common/error/key/util.error.ts';
+// Exports of error classes
+export * from './error/coreError';
+export * from './error/key/configKeyError';
 
-// I18n Sub-Layer
-import ar from './common/i18n/ar.json' with { type: 'json' };
-import de from './common/i18n/de.json' with { type: 'json' };
-import en from './common/i18n/en.json' with { type: 'json' };
-import es from './common/i18n/es.json' with { type: 'json' };
-import fr from './common/i18n/fr.json' with { type: 'json' };
-import it from './common/i18n/it.json' with { type: 'json' };
-import ja from './common/i18n/ja.json' with { type: 'json' };
-import ko from './common/i18n/ko.json' with { type: 'json' };
-export { ar, de, en, es, fr, it, ja, ko };
+// Exports of i18n translation files
+import arLocale from './i18n/ar.json' with { type: 'json' };
+import deLocale from './i18n/de.json' with { type: 'json' };
+import enLocale from './i18n/en.json' with { type: 'json' };
+import esLocale from './i18n/es.json' with { type: 'json' };
+import frLocale from './i18n/fr.json' with { type: 'json' };
+import itLocale from './i18n/it.json' with { type: 'json' };
+import jaLocale from './i18n/ja.json' with { type: 'json' };
+import koLocale from './i18n/ko.json' with { type: 'json' };
+export const ar = arLocale;
+export const de = deLocale;
+export const en = enLocale;
+export const es = esLocale;
+export const fr = frLocale;
+export const it = itLocale;
+export const ja = jaLocale;
+export const ko = koLocale;
 
-// Util Sub-Layer
-export * from './common/util/color.util.ts';
-export * from './common/util/other.util.ts';
-// ------------------------------------------------ //
+// Exports of TypeScript types
+export type * from './types/enum/color';
+export type * from './types/enum/httpStatusCode';

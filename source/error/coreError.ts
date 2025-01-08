@@ -17,6 +17,7 @@ export interface CoreErrorOptions<T = unknown> {
 const DEFAULT_ERROR_MESSAGE = 'error.unknown';
 const DEFAULT_ERROR_CODE = 500;
 
+
 /**
  * Core error class that extends the ({@link Error}) class and provides additional properties. (uuidError, date, code, fileName, line, column)
  *
@@ -82,7 +83,7 @@ export class CoreError<T = unknown> extends Error {
     /**
      * Creates a new instance of the Core error.
      *
-     * @param coreErrorOptions - The options for the Core error. ({@link coreErrorOptions})
+     * @param coreErrorOptions - The options for the Core error. ({@link CoreErrorOptions})
      */
     public constructor(coreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
         super(coreErrorOptions?.key?.[0] || DEFAULT_ERROR_MESSAGE);

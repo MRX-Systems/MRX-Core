@@ -6,41 +6,17 @@
   "type": "module",
   "types": "build/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./build/index.d.ts",
-      "import": "./build/index.js",
-      "require": "./build/index.js"
-    },
-    "./config": {
-      "types": "./build/common/config/index.d.ts",
-      "import": "./build/common/config/index.js",
-      "require": "./build/common/config/index.js"
-    },
-    "./error": {
-      "types": "./build/common/error/index.d.ts",
-      "import": "./build/common/error/index.js",
-      "require": "./build/common/error/index.js"
-    },
-    "./error/key": {
-      "types": "./build/common/error/key/index.d.ts",
-      "import": "./build/common/error/key/index.js",
-      "require": "./build/common/error/key/index.js"
-    },
-    "./i18n": {
-      "types": "./build/common/i18n/index.d.ts",
-      "import": "./build/common/i18n/index.js",
-      "require": "./build/common/i18n/index.js"
-    },
-    "./util": {
-      "types": "./build/common/util/index.d.ts",
-      "import": "./build/common/util/index.js",
-      "require": "./build/common/util/index.js"
-    }
+    "./util": "./build/core/util/index.js",
+    "./error": "./build/error/index.js",
+    "./error/key": "./build/error/key/index.js",
+    "./i18n": "./build/i18n/index.js",
+    "./types": "./build/types/index.js",
+    ".": "./build/index.js"
   },
   "scripts": {
     "dev": "bun --watch source/index.ts",
-    "build": "NODE_ENV=production bun bundler.config.ts && tsc && tsc-alias",
-    "start": "NODE_ENV=production bun build/index.js",
+    "build": "bun bundler.ts",
+    "start": "bun build/index.js",
     "test": "bun test --coverage",
     "docs": "typedoc",
     "fix-lint": "eslint --fix ./source",
@@ -67,23 +43,20 @@
     "@eslint/js": "^9.17.0",
     "@sinclair/typebox": "^0.34.13",
     "@stylistic/eslint-plugin": "^2.12.1",
-    "@types/bun": "^1.1.14",
+    "@types/bun": "^1.1.15",
     "@types/node": "^22.10.5",
+    "bun-plugin-dts": "^0.3.0",
     "eslint-plugin-tsdoc": "^0.4.0",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
-    "tsc-alias": "^1.8.10",
     "typedoc": "^0.27.6",
-    "typescript-eslint": "^8.19.0"
+    "typescript-eslint": "^8.19.1"
   },
   "peerDependencies": {
     "@sinclair/typebox": "^0.34.13",
     "typescript": "^5.7.2"
   },
   "peerDependenciesMeta": {
-    "typescript": {
-      "optional": false
-    },
     "@sinclair/typebox": {
       "optional": true
     }

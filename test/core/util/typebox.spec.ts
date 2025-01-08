@@ -2,14 +2,13 @@ import { type TSchema, Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import { beforeAll, beforeEach, describe, expect, test } from 'bun:test';
 
-import { TypeBoxConfig } from '../../../source/common/config/typebox.config.ts';
+import { TypeBoxConfig } from '#/core/util/typebox';
 
 describe('TypeBoxConfig', () => {
     beforeAll(() => {
         TypeBoxConfig.init();
     });
     describe('init', () => {
-
         describe('Array', () => {
             test('should set the default error function [ArrayContains]', () => {
                 const schema: TSchema = Type.Object({
@@ -19,17 +18,17 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { array: ['aa', 'bb', 'cc'] })).toThrow('error.core.validation.array.contains');
             });
-    
+
             test('should set the default error function [ArrayMaxContains]', () => {
                 const schema: TSchema = Type.Object({
                     array: Type.Array(Type.String(), {
                         contains: Type.Literal('zz'),
-                        maxContains: 2,
+                        maxContains: 2
                     })
                 });
                 expect(() => Value.Assert(schema, { array: ['zz', 'zz', 'zz'] })).toThrow('error.core.validation.array.max_contains');
             });
-    
+
             test('should set the default error function [ArrayMaxItems]', () => {
                 const schema: TSchema = Type.Object({
                     array: Type.Array(Type.String(), {
@@ -38,7 +37,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { array: ['aa', 'bb', 'cc'] })).toThrow('error.core.validation.array.max_items');
             });
-    
+
             test('should set the default error function [ArrayMinContains]', () => {
                 const schema: TSchema = Type.Object({
                     array: Type.Array(Type.String(), {
@@ -48,7 +47,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { array: ['zz'] })).toThrow('error.core.validation.array.min_contains');
             });
-    
+
             test('should set the default error function [ArrayMinItems]', () => {
                 const schema: TSchema = Type.Object({
                     array: Type.Array(Type.String(), {
@@ -57,7 +56,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { array: ['aa'] })).toThrow('error.core.validation.array.min_items');
             });
-    
+
             test('should set the default error function [ArrayUniqueItems]', () => {
                 const schema: TSchema = Type.Object({
                     array: Type.Array(Type.String(), {
@@ -66,7 +65,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { array: ['aa', 'aa'] })).toThrow('error.core.validation.array.unique_items');
             });
-    
+
             test('should set the default error function [Array]', () => {
                 const schema: TSchema = Type.Object({
                     array: Type.Array(Type.String())
@@ -93,7 +92,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { bigint: 10n })).toThrow('error.core.validation.bigint.exclusive_maximum');
             });
-    
+
             test('should set the default error function [BigIntExclusiveMinimum]', () => {
                 const schema: TSchema = Type.Object({
                     bigint: Type.BigInt({
@@ -102,7 +101,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { bigint: 10n })).toThrow('error.core.validation.bigint.exclusive_minimum');
             });
-    
+
             test('should set the default error function [BigIntMaximum]', () => {
                 const schema: TSchema = Type.Object({
                     bigint: Type.BigInt({
@@ -111,7 +110,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { bigint: 11n })).toThrow('error.core.validation.bigint.maximum');
             });
-    
+
             test('should set the default error function [BigIntMinimum]', () => {
                 const schema: TSchema = Type.Object({
                     bigint: Type.BigInt({
@@ -120,7 +119,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { bigint: 9n })).toThrow('error.core.validation.bigint.minimum');
             });
-    
+
             test('should set the default error function [BigIntMultipleOf]', () => {
                 const schema: TSchema = Type.Object({
                     bigint: Type.BigInt({
@@ -129,7 +128,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { bigint: 11n })).toThrow('error.core.validation.bigint.multiple_of');
             });
-    
+
             test('should set the default error function [BigInt]', () => {
                 const schema: TSchema = Type.Object({
                     bigint: Type.BigInt()
@@ -156,7 +155,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { date: new Date('2021-01-01T00:00:00Z') })).toThrow('error.core.validation.date.exclusive_minimum_timestamp');
             });
-    
+
             test('should set the default error function [DateExclusiveMaximumTimestamp]', () => {
                 const schema: TSchema = Type.Object({
                     date: Type.Date({
@@ -165,7 +164,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { date: new Date('2023-01-01T00:00:00Z') })).toThrow('error.core.validation.date.exclusive_maximum_timestamp');
             });
-    
+
             test('should set the default error function [DateMinimumTimestamp]', () => {
                 const schema: TSchema = Type.Object({
                     date: Type.Date({
@@ -174,7 +173,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { date: new Date('2021-01-01T00:00:00Z') })).toThrow('error.core.validation.date.minimum_timestamp');
             });
-    
+
             test('should set the default error function [DateMaximumTimestamp]', () => {
                 const schema: TSchema = Type.Object({
                     date: Type.Date({
@@ -183,7 +182,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { date: new Date('2023-01-01T00:00:00Z') })).toThrow('error.core.validation.date.maximum_timestamp');
             });
-    
+
             test.todo('should set the default error function [DateMultipleOfTimestamp]', () => {
                 const schema: TSchema = Type.Object({
                     date: Type.Date({
@@ -192,7 +191,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { date: new Date('2022-03-01T00:00:01Z') })).toThrow('error.core.validation.date.multiple_of_timestamp');
             });
-    
+
             test('should set the default error function [Date]', () => {
                 const schema: TSchema = Type.Object({
                     date: Type.Date()
@@ -222,7 +221,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { integer: 10 })).toThrow('error.core.validation.integer.exclusive_maximum');
             });
-    
+
             test('should set the default error function [IntegerExclusiveMinimum]', () => {
                 const schema: TSchema = Type.Object({
                     integer: Type.Integer({
@@ -231,7 +230,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { integer: 10 })).toThrow('error.core.validation.integer.exclusive_minimum');
             });
-    
+
             test('should set the default error function [IntegerMaximum]', () => {
                 const schema: TSchema = Type.Object({
                     integer: Type.Integer({
@@ -240,7 +239,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { integer: 11 })).toThrow('error.core.validation.integer.maximum');
             });
-    
+
             test('should set the default error function [IntegerMinimum]', () => {
                 const schema: TSchema = Type.Object({
                     integer: Type.Integer({
@@ -249,7 +248,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { integer: 9 })).toThrow('error.core.validation.integer.minimum');
             });
-    
+
             test('should set the default error function [IntegerMultipleOf]', () => {
                 const schema: TSchema = Type.Object({
                     integer: Type.Integer({
@@ -258,7 +257,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { integer: 11 })).toThrow('error.core.validation.integer.multiple_of');
             });
-    
+
             test('should set the default error function [Integer]', () => {
                 const schema: TSchema = Type.Object({
                     integer: Type.Integer()
@@ -272,25 +271,25 @@ describe('TypeBoxConfig', () => {
                 const schema: TSchema = Type.Object({
                     intersect: Type.Intersect([
                         Type.Object({
-                            a: Type.String(),
+                            a: Type.String()
                         }),
                         Type.Object({
-                            b: Type.String(),
-                        }),
+                            b: Type.String()
+                        })
                     ], { unevaluatedProperties: false })
                 });
                 expect(() => Value.Assert(schema, { intersect: { a: 'a', b: 'b', c: 'c' } })).toThrow('error.core.validation.intersect.unevaluated_properties');
             });
-    
+
             test('should set the default error function [Intersect]', () => {
                 const schema: TSchema = Type.Object({
                     intersect: Type.Intersect([
                         Type.Object({
-                            a: Type.String(),
+                            a: Type.String()
                         }),
                         Type.Object({
-                            b: Type.String(),
-                        }),
+                            b: Type.String()
+                        })
                     ])
                 });
                 const error = [...Value.Errors(schema, { intersect: {} })];
@@ -353,7 +352,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { number: 10 })).toThrow('error.core.validation.number.exclusive_maximum');
             });
-    
+
             test('should set the default error function [NumberExclusiveMinimum]', () => {
                 const schema: TSchema = Type.Object({
                     number: Type.Number({
@@ -362,7 +361,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { number: 10 })).toThrow('error.core.validation.number.exclusive_minimum');
             });
-    
+
             test('should set the default error function [NumberMaximum]', () => {
                 const schema: TSchema = Type.Object({
                     number: Type.Number({
@@ -371,7 +370,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { number: 11 })).toThrow('error.core.validation.number.maximum');
             });
-    
+
             test('should set the default error function [NumberMinimum]', () => {
                 const schema: TSchema = Type.Object({
                     number: Type.Number({
@@ -380,7 +379,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { number: 9 })).toThrow('error.core.validation.number.minimum');
             });
-    
+
             test('should set the default error function [NumberMultipleOf]', () => {
                 const schema: TSchema = Type.Object({
                     number: Type.Number({
@@ -389,7 +388,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { number: 11 })).toThrow('error.core.validation.number.multiple_of');
             });
-    
+
             test('should set the default error function [Number]', () => {
                 const schema: TSchema = Type.Object({
                     number: Type.Number()
@@ -405,35 +404,35 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { object: 'az' })).toThrow('error.core.validation.object.is_object');
             });
-    
+
             test('should set the default error function [ObjectAdditionalProperties]', () => {
                 const schema: TSchema = Type.Object({
                     object: Type.Object({
-                        a: Type.String(),
+                        a: Type.String()
                     }, { additionalProperties: false })
                 });
                 expect(() => Value.Assert(schema, { object: { a: 'a', b: 'b' } })).toThrow('error.core.validation.object.additional_properties');
             });
-    
+
             test('should set the default error function [ObjectMaxProperties]', () => {
                 const schema: TSchema = Type.Object({
                     object: Type.Object({}, { maxProperties: 2 })
                 });
                 expect(() => Value.Assert(schema, { object: { a: 'a', b: 'b', c: 'c' } })).toThrow('error.core.validation.object.max_properties');
             });
-    
+
             test('should set the default error function [ObjectMinProperties]', () => {
                 const schema: TSchema = Type.Object({
                     object: Type.Object({}, { minProperties: 2 })
                 });
                 expect(() => Value.Assert(schema, { object: { a: 'a' } })).toThrow('error.core.validation.object.min_properties');
             });
-    
+
             test('should set the default error function [ObjectRequiredProperty]', () => {
                 const schema: TSchema = Type.Object({
                     object: Type.Object({
                         a: Type.String(),
-                        b: Type.String(),
+                        b: Type.String()
                     }, { required: ['a', 'b'] })
                 });
                 expect(() => Value.Assert(schema, { object: { a: 'a' } })).toThrow('error.core.validation.object.required_property');
@@ -467,7 +466,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { string: 'az' })).toThrow('error.core.validation.string.format_unknown');
             });
-    
+
             test('should set the default error function [StringFormat]', () => {
                 const schema: TSchema = Type.Object({
                     string: Type.String({
@@ -476,7 +475,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { string: 'az' })).toThrow('error.core.validation.string.format');
             });
-    
+
             test('should set the default error function [StringMaxLength]', () => {
                 const schema: TSchema = Type.Object({
                     string: Type.String({
@@ -485,7 +484,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { string: 'aaa' })).toThrow('error.core.validation.string.max_length');
             });
-    
+
             test('should set the default error function [StringMinLength]', () => {
                 const schema: TSchema = Type.Object({
                     string: Type.String({
@@ -494,7 +493,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { string: 'a' })).toThrow('error.core.validation.string.min_length');
             });
-    
+
             test('should set the default error function [StringPattern]', () => {
                 const schema: TSchema = Type.Object({
                     string: Type.String({
@@ -503,7 +502,7 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { string: '123' })).toThrow('error.core.validation.string.pattern');
             });
-    
+
             test('should set the default error function [String]', () => {
                 const schema: TSchema = Type.Object({
                     string: Type.String()
@@ -526,7 +525,7 @@ describe('TypeBoxConfig', () => {
                 const schema: TSchema = Type.Tuple([Type.String()]);
                 expect(() => Value.Assert(schema, ['a', 'b'])).toThrow('error.core.validation.tuple.length');
             });
-    
+
             test('should set the default error function [Tuple]', () => {
                 const schema: TSchema = Type.Tuple([Type.String(), Type.String()]);
                 expect(() => Value.Assert(schema, 'az')).toThrow('error.core.validation.tuple.is_tuple');
@@ -540,14 +539,14 @@ describe('TypeBoxConfig', () => {
                 });
                 expect(() => Value.Assert(schema, { uint8Array: new Uint8Array(3) })).toThrow('error.core.validation.uint8array.max_byte_length');
             });
-    
+
             test('should set the default error function [Uint8ArrayMinByteLength]', () => {
                 const schema: TSchema = Type.Object({
                     uint8Array: Type.Uint8Array({ minByteLength: 2 })
                 });
                 expect(() => Value.Assert(schema, { uint8Array: new Uint8Array(1) })).toThrow('error.core.validation.uint8array.min_byte_length');
             });
-    
+
             test('should set the default error function [Uint8Array]', () => {
                 const schema: TSchema = Type.Object({
                     uint8Array: Type.Uint8Array()
