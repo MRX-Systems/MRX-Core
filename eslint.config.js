@@ -130,7 +130,8 @@ export default [
             'prefer-object-has-own': 'error',
             'prefer-object-spread': 'error',
             'require-await': 'error',
-            'object-curly-spacing': ['error', 'always']
+            'object-curly-spacing': ['error', 'always'],
+            'new-cap': 'off',
         }
     },
     {
@@ -184,7 +185,8 @@ export default [
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-            '@typescript-eslint/no-dynamic-delete': 'off'
+            '@typescript-eslint/no-dynamic-delete': 'off',
+            '@typescript-eslint/no-confusing-void-expression': 'off'
         }
     }
 ];

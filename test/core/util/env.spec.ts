@@ -1,8 +1,8 @@
-import { TSchema, Type } from '@sinclair/typebox';
+import { type TSchema, Type } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 
-import { CoreError } from '../../../source/common/error/core.error.ts';
-import { validateEnv } from '../../../source/common/util/environnement.util.ts';
+import { validateEnv } from '#/core/util/env';
+import { CoreError } from '#/error/coreError.ts';
 
 describe('validateEnv', () => {
     test('should throw an error if the environment variables are invalid based on the schema', () => {
