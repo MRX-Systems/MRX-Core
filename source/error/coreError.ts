@@ -6,8 +6,9 @@ import { randomUUID } from 'crypto';
 export interface CoreErrorOptions<T = unknown> {
     /**
      * The error key.
+     * @defaultValue ['error.unknown', 500]
      */
-    key?: [string, number] | undefined;
+    key?: readonly [string, number] | undefined;
     /**
      * The cause of the error.
      */
