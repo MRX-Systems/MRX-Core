@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import knex, { type Knex } from 'knex';
 
-import { Repository } from '#/core/repository/abstractRepository';
+import { Repository } from '#/core/repository/repository';
 import { CoreError } from '#/error';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
 import { EVENT_TABLE, Table } from './table';
@@ -342,10 +342,14 @@ export class MSSQL extends EventEmitter {
      * Retrieves a repository for a specific table.
      *
      * @param tableName - The name of the table to retrieve the repository for.
-     * @returns The repository for the specified table.
      *
      * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED})
      * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND})
+     *
+     * @typeParam T - The repository to retrieve extends {@link Repository}.
+     * @typeParam K - The type of of the model for the repository.
+     *
+     * @returns The repository for the specified table.
      */
     public getRepository<T extends Repository<K>, K>(tableName: string): T {
         if (!this._isConnected)

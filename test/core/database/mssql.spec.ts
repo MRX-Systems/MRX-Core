@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { describe, expect, test } from 'bun:test';
 
-import { Repository } from '#/core/repository/abstractRepository';
+import { Repository } from '#/core/repository/repository';
 import { EVENT_MSSQL, type MssqlEventLog } from '#/core/database/mssql';
 import { EVENT_TABLE } from '#/core/database/table';
 
