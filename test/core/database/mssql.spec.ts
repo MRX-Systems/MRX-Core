@@ -2,8 +2,9 @@
 import { describe, expect, test } from 'bun:test';
 
 import { Repository } from '#/core/repository/repository';
-import { EVENT_MSSQL, type MssqlEventLog } from '#/core/database/mssql';
-import { EVENT_TABLE } from '#/core/database/table';
+import { EVENT_MSSQL } from '#/types/constant/eventMssql';
+import { EVENT_TABLE } from '#/types/constant/eventTable';
+import type { MssqlEventLog } from '#/types/data/mssqlEventLog';
 
 const options = {
     databaseName: process.env.MSSQL_DATABASE ?? '',

@@ -4,15 +4,10 @@ import knex, { type Knex } from 'knex';
 import { Repository } from '#/core/repository/repository';
 import { CoreError } from '#/error';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
-import { EVENT_TABLE, Table } from './table';
-
-/**
- * These events are emitted by the `MSSQL` class to provide logging.
- */
-export const EVENT_MSSQL = {
-    /** Emitted for general log messages. */
-    LOG: 'log'
-} as const;
+import { EVENT_MSSQL } from '#/types/constant/eventMssql';
+import { EVENT_TABLE } from '#/types/constant/eventTable';
+import type { MssqlEventLog } from '#/types/data/mssqlEventLog';
+import { Table } from './table';
 
 /**
  * Options to configure the MSSQL database connection.
@@ -90,56 +85,12 @@ export interface MSSQLDatabaseOptions {
 }
 
 /**
- * Interface for log events emitted by the `MSSQL` class.
- * Used to capture detailed information about database queries.
- *
- * @example
- * ```typescript
- * const mssql = new MSSQL(options);
- * mssql.on(EVENT_MSSQL.LOG, (log: MssqlEventLog) => {
- *     console.log(log);
- * });
- * ```
- */
-export interface MssqlEventLog {
-    /**
-     * The name of the database where the query was executed.
-     */
-    database: string;
-
-    /**
-     * A list of tables affected by the query.
-     */
-    tables: string[];
-
-    /**
-     * A unique identifier for the executed query.
-     */
-    queryUuid: string;
-
-    /**
-     * The method used in the query (e.g., `SELECT`, `INSERT`, `UPDATE`, `DELETE`).
-     */
-    method: string;
-
-    /**
-     * The raw SQL query string.
-     */
-    sql: string;
-
-    /**
-     * The parameters or bindings used in the query.
-     */
-    bindings: unknown[];
-}
-
-/**
  * The `MSSQL` class manages the connection and operations with an **MSSQL** database.
  * It supports event emission by extending the {@link EventEmitter} class.
  *
  * When an instance of `MSSQL` is created, it can be configured using {@link MSSQLDatabaseOptions}.
  * The connection to the database is established using the {@link MSSQL.connect} method, which performs introspection
- * to retrieve information about tables, columns, and primary keys.
+ * to retrieve information about tables, columns(fields), and primary keys.
  *
  * Once the connection is established, objects of type {@link Table} and {@link AbstractRepository} are automatically
  * generated for each table, allowing for seamless database operations. You can also provide a custom repository implementation
@@ -277,7 +228,7 @@ export class MSSQL extends EventEmitter {
     /**
      * Establishes a connection to the MSSQL database.
      *
-     * If the connection is successful, introspection is performed to retrieve information about tables, columns, and primary keys.
+     * If the connection is successful, introspection is performed to retrieve information about tables, columns(fields), and primary keys.
      *
      * @throws ({@link CoreError}) Thrown if an error occurs during the connection process. ({@link DATABASE_KEY_ERROR.MSSQL_CONNECTION_ERROR})
      */
@@ -414,12 +365,12 @@ export class MSSQL extends EventEmitter {
     }
 
     /**
-     * Introspects the database to retrieve information about tables, columns, and primary keys.
+     * Introspects the database to retrieve information about tables, columns(fields), and primary keys.
      */
     private async _introspectDatabase(): Promise<void> {
         interface RawColumns {
             tableName: string,
-            columns: string,
+            fields: string,
             primaryKeyColumn: string,
             primaryKeyType: string
         }
@@ -427,7 +378,7 @@ export class MSSQL extends EventEmitter {
         const result: RawColumns[] = await this._db
             .from({ c: 'information_schema.columns' })
             .select('c.table_name as tableName')
-            .select(this._db.raw('STRING_AGG(c.column_name, \',\') AS columns'))
+            .select(this._db.raw('STRING_AGG(c.column_name, \',\') AS fields'))
             .select('pk.primaryKeyColumn as primaryKeyColumn')
             .select('pk.primaryKeyType as primaryKeyType')
             .leftJoin(
@@ -452,17 +403,17 @@ export class MSSQL extends EventEmitter {
             )
             .groupBy('c.table_name', 'pk.primaryKeyColumn', 'pk.primaryKeyType');
 
-        const columnsByTable = result.reduce((acc, { tableName, columns, primaryKeyColumn, primaryKeyType }) => {
+        const fieldsByTable = result.reduce((acc, { tableName, fields, primaryKeyColumn, primaryKeyType }) => {
             const primaryKeyTypeTs = primaryKeyType === 'int' ? 'NUMBER' : 'STRING';
             acc.set(tableName, {
-                columns: columns.split(','),
+                fields: fields.split(','),
                 primaryKey: [primaryKeyColumn, primaryKeyTypeTs]
             });
             return acc;
-        }, new Map<string, { columns: string[], primaryKey: [string, 'NUMBER' | 'STRING'] }>());
+        }, new Map<string, { fields: string[], primaryKey: [string, 'NUMBER' | 'STRING'] }>());
 
-        columnsByTable.forEach((desc, tableName) => {
-            const table = new Table(this._databaseName, tableName, desc.columns, desc.primaryKey);
+        fieldsByTable.forEach((desc, tableName) => {
+            const table = new Table(this._databaseName, tableName, desc.fields, desc.primaryKey);
             this._tables.set(tableName, table);
             this._repositories.set(tableName, new Repository(this._db, table));
         });
