@@ -302,7 +302,7 @@ export class MSSQL extends EventEmitter {
      *
      * @returns The repository for the specified table.
      */
-    public getRepository<T extends Repository<K>, K>(tableName: string): T {
+    public getRepository<K, T extends Repository<K> = Repository<K>>(tableName: string): T {
         if (!this._isConnected)
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED
