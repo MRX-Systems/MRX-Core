@@ -3,6 +3,10 @@ export * from './core/util/env';
 export * from './core/util/json';
 export * from './core/util/typebox';
 
+// Export database
+export * from './core/database/mssql';
+export * from './core/database/table';
+
 // Exports of error classes
 export * from './error/coreError';
 export * from './error/key/configKeyError';

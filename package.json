@@ -7,6 +7,7 @@
   "types": "build/index.d.ts",
   "exports": {
     "./util": "./build/core/util/index.js",
+    "./database": "./build/core/database/index.js",
     "./error": "./build/error/index.js",
     "./error/key": "./build/error/key/index.js",
     "./i18n": "./build/i18n/index.js",

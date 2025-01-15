@@ -103,7 +103,7 @@ export interface MSSQLDatabaseOptions {
  * - Customization of repositories for specific use cases.
  * - Integration of table-specific events to track operations (e.g., `SELECTED`, `CREATED`, `UPDATED`, `DELETED`).
  *
- * ### Usage Example:
+ * ### Overview:
  * @example
  * ```typescript
  * const options: MSSQLDatabaseOptions = {
