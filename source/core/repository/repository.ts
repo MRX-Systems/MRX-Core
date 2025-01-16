@@ -506,12 +506,6 @@ export class Repository<T> {
     ): void {
         type OperatorFunction = (query: Knex.QueryBuilder, key: string, value: unknown) => void;
         const keysFunc: Record<keyof WhereClause, OperatorFunction> = {
-            $in: (query, key, value) => {
-                query.whereIn(key, value as string[] | number[] | Date[]);
-            },
-            $nin: (query, key, value) => {
-                query.whereNotIn(key, value as string[] | number[] | Date[]);
-            },
             $eq: (query, key, value) => {
                 query.where(key, value as string | number | boolean | Date);
             },
@@ -530,13 +524,19 @@ export class Repository<T> {
             $gte: (query, key, value) => {
                 query.where(key, '>=', value as string | number | Date);
             },
-            $isNull: (query, key) => {
-                query.whereNull(key);
+            $in: (query, key, value) => {
+                query.whereIn(key, value as string[] | number[] | Date[]);
             },
-            $isNotNull: (query, key) => {
-                query.whereNotNull(key);
+            $nin: (query, key, value) => {
+                query.whereNotIn(key, value as string[] | number[] | Date[]);
             },
-            $match: (query, key, value) => {
+            $between: (query, key, value) => {
+                query.whereBetween(key, value as [string | number | Date, string | number | Date]);
+            },
+            $nbetween: (query, key, value) => {
+                query.whereNotBetween(key, value as [string | number | Date, string | number | Date]);
+            },
+            $like: (query, key, value) => {
                 const likeValue = `%${value}%`;
                 if (typeof value === 'string' && new Date(value).toString() !== 'Invalid Date') {
                     const { client } = this._knex.client.config;
@@ -545,6 +545,23 @@ export class Repository<T> {
                 } else {
                     query.whereLike(key, likeValue);
                 }
+            },
+            $nlike: (query, key, value) => {
+                const likeValue = `%${value}%`;
+                if (typeof value === 'string' && new Date(value).toString() !== 'Invalid Date') {
+                    const { client } = this._knex.client.config;
+                    if (client === 'mssql')
+                        query.whereRaw(`CONVERT(VARCHAR, ${key}, 23) NOT LIKE ?`, [likeValue]);
+                } else {
+                    query.whereRaw(`${key} NOT LIKE ?`, [likeValue]);
+                }
+            },
+
+            $isNull: (query, key) => {
+                query.whereNull(key);
+            },
+            $isNotNull: (query, key) => {
+                query.whereNotNull(key);
             }
         };
         const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<K>): void => {
@@ -592,7 +609,22 @@ export class Repository<T> {
      * ```
      */
     private _isComplexQuery(data: unknown): boolean {
-        const validKeys = new Set<string>(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
+        const validKeys = new Set<string>([
+            '$eq',
+            '$neq',
+            '$lt',
+            '$lte',
+            '$gt',
+            '$gte',
+            '$in',
+            '$nin',
+            '$between',
+            '$nbetween',
+            '$like',
+            '$nlike',
+            '$isNull',
+            '$isNotNull'
+        ]);
         return Boolean(
             data
             && typeof data === 'object'

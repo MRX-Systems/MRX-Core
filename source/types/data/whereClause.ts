@@ -3,22 +3,6 @@
  */
 export interface WhereClause {
     /**
-     * In clause
-     * @example
-     * ```typescript
-     * { id: { $in: ['1', '2'] } }
-     * ```
-     */
-    $in?: string[] | number[] | Date[];
-    /**
-     * Not in clause
-     * @example
-     * ```typescript
-     * { id: { $nin: ['1', '2'] } }
-     * ```
-     */
-    $nin?: string[] | number[] | Date[];
-    /**
      * Equal clause
      * @example
      * ```typescript
@@ -26,6 +10,7 @@ export interface WhereClause {
      * ```
      */
     $eq?: string | number | boolean | Date;
+
     /**
      * Not equal clause
      * @example
@@ -34,14 +19,7 @@ export interface WhereClause {
      * ```
      */
     $neq?: string | number | boolean | Date;
-    /**
-     * Like clause
-     * @example
-     * ```typescript
-     * { id: { $match: '1' } }
-     * ```
-     */
-    $match?: string;
+
     /**
      * Less than
      * @example
@@ -50,6 +28,7 @@ export interface WhereClause {
      * ```
      */
     $lt?: string | number | Date;
+
     /**
      * Less than or equal
      * @example
@@ -58,6 +37,7 @@ export interface WhereClause {
      * ```
      */
     $lte?: string | number | Date;
+
     /**
      * Greater than
      * @example
@@ -66,6 +46,7 @@ export interface WhereClause {
      * ```
      */
     $gt?: string | number | Date;
+
     /**
      * Greater than or equal
      * @example
@@ -74,14 +55,61 @@ export interface WhereClause {
      * ```
      */
     $gte?: string | number | Date;
+
     /**
-     * Not null
+     * In clause
      * @example
      * ```typescript
-     * { id: { $notNull: true } }
+     * { id: { $in: ['1', '2'] } }
      * ```
      */
-    $isNotNull: boolean;
+    $in?: string[] | number[] | Date[];
+
+    /**
+     * Not in clause
+     * @example
+     * ```typescript
+     * { id: { $nin: ['1', '2'] } }
+     * ```
+     */
+    $nin?: string[] | number[] | Date[];
+
+    /**
+     * Between clause
+     * @example
+     * ```typescript
+     * { id: { $between: ['1', '2'] } }
+     * ```
+     */
+    $between?: [string | number | Date, string | number | Date];
+
+    /**
+     * Not between clause
+     * @example
+     * ```typescript
+     * { id: { $nbetween: ['1', '2'] } }
+     * ```
+     */
+    $nbetween?: [string | number | Date, string | number | Date];
+
+    /**
+     * Like clause
+     * @example
+     * ```typescript
+     * { id: { $like: '1' } }
+     * ```
+     */
+    $like?: string;
+
+    /**
+     * Not like clause
+     * @example
+     * ```typescript
+     * { id: { $nlike: '1' } }
+     * ```
+     */
+    $nlike?: string;
+
     /**
      * Is null
      * @example
@@ -90,4 +118,13 @@ export interface WhereClause {
      * ```
      */
     $isNull: boolean;
+
+    /**
+     * Not null
+     * @example
+     * ```typescript
+     * { id: { $notNull: true } }
+     * ```
+     */
+    $isNotNull: boolean;
 }
