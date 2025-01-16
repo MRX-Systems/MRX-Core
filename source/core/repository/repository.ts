@@ -137,7 +137,7 @@ export class Repository<T> {
      * stream.on('data', (user) => console.log(user));
      * ```
      */
-    public findStream<K = T>(options?: QueryOptionsExtendStream<K>): StreamWithAsyncIterable<K> {
+    public findStream<K = T>(options?: QueryOptionsExtendStream<K>): StreamWithAsyncIterable<K[]> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -149,11 +149,12 @@ export class Repository<T> {
         ];
         query.orderBy(orderBy[0], orderBy[1]);
 
-        const kStream: StreamWithAsyncIterable<K> = query.stream({
-            highWaterMark: options?.highWaterMark ?? 1
-        });
+        const kStream: StreamWithAsyncIterable<K> = query.stream();
 
-        const passThrough = new PassThrough({ objectMode: true });
+        const passThrough = new PassThrough({
+            objectMode: true,
+            ...options?.transform && { transform: options.transform }
+        });
 
         kStream.on('error', (error: unknown) => {
             const code = (error as { number: number })?.number || 0;
