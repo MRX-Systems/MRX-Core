@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import { describe, expect, test } from 'bun:test';
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import knex from 'knex';
 
 import { Repository } from '#/core/repository/repository';
 import { EVENT_MSSQL } from '#/types/constant/eventMssql';
@@ -17,9 +18,28 @@ const options = {
     poolMax: 10
 };
 
-const testTable = process.env.MSSQL_EXAMPLE_TABLE ?? '';
+const testTable = 'unit_test_mssql';
+
+const knexInstance = knex({
+    client: 'mssql',
+    connection: {
+        database: options.databaseName,
+        host: options.host,
+        port: options.port,
+        user: options.user,
+        password: options.password,
+        options: { encrypt: true }
+    }
+});
 
 describe('MSSQL', () => {
+    beforeAll(async () => {
+        await knexInstance.schema.createTable(testTable, (table) => {
+            table.increments('id').primary();
+            table.string('name');
+        });
+    });
+
     describe('constructor', () => {
         test('should create a new instance', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
@@ -203,5 +223,10 @@ describe('MSSQL', () => {
                 await mssql.db(testTable).select('*').from(testTable);
             });
         });
+    });
+
+    afterAll(async () => {
+        await knexInstance.schema.dropTable(testTable);
+        await knexInstance.destroy();
     });
 });
