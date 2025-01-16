@@ -124,6 +124,35 @@
           }
         }
       },
+      "database": {
+        "mssql": {
+          "connection_error": "データベース接続エラー",
+          "database_access_denied": "データベースアクセスが拒否されました",
+          "database_ambiguous_column": "曖昧な列",
+          "database_authorization_failed": "データベース認証に失敗しました",
+          "database_cannot_update_identity_column": "アイデンティティ列を更新できません",
+          "database_column_not_found": "列が見つかりません",
+          "database_data_too_large": "データが大きすぎます",
+          "database_deadlock_detected": "デッドロックが検出されました",
+          "database_duplicate_key": "重複キー",
+          "database_foreign_key_violation": "外部キー違反",
+          "database_identity_insert_not_allowed": "アイデンティティの挿入は許可されていません",
+          "database_insufficient_memory": "メモリが不足しています",
+          "database_insufficient_storage": "ストレージが不足しています",
+          "database_permission_denied": "許可が拒否されました",
+          "database_query_timeout": "クエリタイムアウト",
+          "database_resource_locked": "リソースがロックされています",
+          "database_syntax_error": "データベース構文エラー",
+          "database_transaction_aborted": "トランザクションが中止されました",
+          "database_transaction_log_full": "トランザクションログがいっぱいです",
+          "database_unique_constraint_violation": "一意制約違反",
+          "disconnect_error": "データベース切断エラー",
+          "no_result": "結果なし",
+          "not_connected": "データベースに接続されていません",
+          "query_error": "クエリエラー",
+          "table_not_found": "テーブルが見つかりません"
+        }
+      },
       "util": {
         "invalid_environment": "無効な環境"
       }

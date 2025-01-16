@@ -124,6 +124,35 @@
           }
         }
       },
+      "database": {
+        "mssql": {
+          "connection_error": "Database connection error",
+          "database_access_denied": "Database access denied",
+          "database_ambiguous_column": "Ambiguous column",
+          "database_authorization_failed": "Database authorization failed",
+          "database_cannot_update_identity_column": "Cannot update identity column",
+          "database_column_not_found": "Column not found",
+          "database_data_too_large": "Data too large",
+          "database_deadlock_detected": "Deadlock detected",
+          "database_duplicate_key": "Duplicate key",
+          "database_foreign_key_violation": "Foreign key violation",
+          "database_identity_insert_not_allowed": "Identity insert not allowed",
+          "database_insufficient_memory": "Insufficient memory",
+          "database_insufficient_storage": "Insufficient storage",
+          "database_permission_denied": "Permission denied",
+          "database_query_timeout": "Query timeout",
+          "database_resource_locked": "Resource locked",
+          "database_syntax_error": "Database syntax error",
+          "database_transaction_aborted": "Transaction aborted",
+          "database_transaction_log_full": "Transaction log full",
+          "database_unique_constraint_violation": "Unique constraint violation",
+          "disconnect_error": "Database disconnect error",
+          "no_result": "No result",
+          "not_connected": "Not connected to database",
+          "query_error": "Query error",
+          "table_not_found": "Table not found"
+        }
+      },
       "util": {
         "invalid_environment": "Invalid environment"
       }

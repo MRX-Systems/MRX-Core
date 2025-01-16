@@ -124,6 +124,35 @@
           }
         }
       },
+      "database": {
+        "mssql": {
+          "connection_error": "데이터베이스 연결 오류",
+          "database_access_denied": "데이터베이스 액세스 거부됨",
+          "database_ambiguous_column": "애매한 열",
+          "database_authorization_failed": "데이터베이스 인증 실패",
+          "database_cannot_update_identity_column": "아이덴티티 열을 업데이트할 수 없습니다",
+          "database_column_not_found": "열을 찾을 수 없음",
+          "database_data_too_large": "데이터가 너무 큽니다",
+          "database_deadlock_detected": "교착 상태 감지됨",
+          "database_duplicate_key": "중복 키",
+          "database_foreign_key_violation": "외래 키 위반",
+          "database_identity_insert_not_allowed": "아이덴티티 삽입이 허용되지 않습니다",
+          "database_insufficient_memory": "메모리가 부족합니다",
+          "database_insufficient_storage": "저장 공간이 부족합니다",
+          "database_permission_denied": "허가가 거부되었습니다",
+          "database_query_timeout": "쿼리 시간 초과",
+          "database_resource_locked": "리소스가 잠겨 있음",
+          "database_syntax_error": "데이터베이스 구문 오류",
+          "database_transaction_aborted": "트랜잭션이 중단되었습니다",
+          "database_transaction_log_full": "트랜잭션 로그가 가득 찼습니다",
+          "database_unique_constraint_violation": "고유 제약 위반",
+          "disconnect_error": "데이터베이스 연결 해제 오류",
+          "no_result": "결과 없음",
+          "not_connected": "데이터베이스에 연결되지 않음",
+          "query_error": "쿼리 오류",
+          "table_not_found": "테이블을 찾을 수 없음"
+        }
+      },
       "util": {
         "invalid_environment": "유효하지 않은 환경"
       }

@@ -124,6 +124,35 @@
           }
         }
       },
+      "database": {
+        "mssql": {
+          "connection_error": "Fehler bei der Verbindung zur Datenbank",
+          "database_access_denied": "Datenbankzugriff verweigert",
+          "database_ambiguous_column": "Mehrdeutige Spalte",
+          "database_authorization_failed": "Datenbankautorisierung fehlgeschlagen",
+          "database_cannot_update_identity_column": "Identitätsspalte kann nicht aktualisiert werden",
+          "database_column_not_found": "Spalte nicht gefunden",
+          "database_data_too_large": "Daten zu groß",
+          "database_deadlock_detected": "Deadlock erkannt",
+          "database_duplicate_key": "Doppelter Schlüssel",
+          "database_foreign_key_violation": "Verletzung des Fremdschlüssels",
+          "database_identity_insert_not_allowed": "Identitätseinfügung nicht erlaubt",
+          "database_insufficient_memory": "Nicht genügend Speicher",
+          "database_insufficient_storage": "Nicht genügend Speicherplatz",
+          "database_permission_denied": "Berechtigung verweigert",
+          "database_query_timeout": "Abfragezeitüberschreitung",
+          "database_resource_locked": "Ressource gesperrt",
+          "database_syntax_error": "Syntaxfehler in der Datenbank",
+          "database_transaction_aborted": "Transaktion abgebrochen",
+          "database_transaction_log_full": "Transaktionsprotokoll voll",
+          "database_unique_constraint_violation": "Verletzung der eindeutigen Einschränkung",
+          "disconnect_error": "Fehler beim Trennen der Verbindung zur Datenbank",
+          "no_result": "Kein Ergebnis",
+          "not_connected": "Nicht mit der Datenbank verbunden",
+          "query_error": "Abfragefehler",
+          "table_not_found": "Tabelle nicht gefunden"
+        }
+      },
       "util": {
         "invalid_environment": "Ungültige Umgebung"
       }

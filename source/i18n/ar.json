@@ -124,6 +124,35 @@
           }
         }
       },
+      "database": {
+        "mssql": {
+          "connection_error": "خطأ في الاتصال بقاعدة البيانات",
+          "database_access_denied": "تم رفض الوصول إلى قاعدة البيانات",
+          "database_ambiguous_column": "عمود غامض",
+          "database_authorization_failed": "فشلت المصادقة على قاعدة البيانات",
+          "database_cannot_update_identity_column": "لا يمكن تحديث عمود الهوية",
+          "database_column_not_found": "لم يتم العثور على العمود",
+          "database_data_too_large": "البيانات كبيرة جدًا",
+          "database_deadlock_detected": "تم اكتشاف تعليق",
+          "database_duplicate_key": "مفتاح مكرر",
+          "database_foreign_key_violation": "انتهاك مفتاح خارجي",
+          "database_identity_insert_not_allowed": "لا يُسمح بإدراج الهوية",
+          "database_insufficient_memory": "ذاكرة غير كافية",
+          "database_insufficient_storage": "تخزين غير كافي",
+          "database_permission_denied": "تم رفض الإذن",
+          "database_query_timeout": "انتهت صلاحية الاستعلام",
+          "database_resource_locked": "المورد مقفل",
+          "database_syntax_error": "خطأ في بناء الجملة",
+          "database_transaction_aborted": "تم إحباط المعاملة",
+          "database_transaction_log_full": "سجل المعاملات ممتلئ",
+          "database_unique_constraint_violation": "انتهاك القيد الفريد",
+          "disconnect_error": "خطأ في فصل الاتصال بقاعدة البيانات",
+          "no_result": "لا توجد نتائج",
+          "not_connected": "لم يتم الاتصال بقاعدة البيانات",
+          "query_error": "خطأ في الاستعلام",
+          "table_not_found": "لم يتم العثور على الجدول"
+        }
+      },
       "util": {
         "invalid_environment": "بيئة غير صالحة"
       }

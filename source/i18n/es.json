@@ -124,6 +124,35 @@
           }
         }
       },
+      "database": {
+        "mssql": {
+          "connection_error": "Error de conexión a la base de datos",
+          "database_access_denied": "Acceso a la base de datos denegado",
+          "database_ambiguous_column": "Columna ambigua",
+          "database_authorization_failed": "Error de autorización de la base de datos",
+          "database_cannot_update_identity_column": "No se puede actualizar la columna de identidad",
+          "database_column_not_found": "Columna no encontrada",
+          "database_data_too_large": "Datos demasiado grandes",
+          "database_deadlock_detected": "Bloqueo detectado",
+          "database_duplicate_key": "Clave duplicada",
+          "database_foreign_key_violation": "Violación de clave foránea",
+          "database_identity_insert_not_allowed": "Inserción de identidad no permitida",
+          "database_insufficient_memory": "Memoria insuficiente",
+          "database_insufficient_storage": "Almacenamiento insuficiente",
+          "database_permission_denied": "Permiso denegado",
+          "database_query_timeout": "Tiempo de espera de consulta",
+          "database_resource_locked": "Recurso bloqueado",
+          "database_syntax_error": "Error de sintaxis de la base de datos",
+          "database_transaction_aborted": "Transacción abortada",
+          "database_transaction_log_full": "Registro de transacciones lleno",
+          "database_unique_constraint_violation": "Violación de la restricción única",
+          "disconnect_error": "Error al desconectar de la base de datos",
+          "no_result": "Sin resultados",
+          "not_connected": "No conectado a la base de datos",
+          "query_error": "Error de consulta",
+          "table_not_found": "Tabla no encontrada"
+        }
+      },
       "util": {
         "invalid_environment": "Entorno inválido"
       }
