@@ -137,7 +137,7 @@ export class Repository<T> {
      * stream.on('data', (user) => console.log(user));
      * ```
      */
-    public findStream<K = T>(options?: QueryOptionsExtendStream<K>): StreamWithAsyncIterable<K[]> {
+    public findStream<K extends T = NoInfer<T>>(options?: QueryOptionsExtendStream<K>): StreamWithAsyncIterable<K[]> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -233,7 +233,7 @@ export class Repository<T> {
      * ...
      * ```
      */
-    public async find<K = T>(options?: QueryOptionsExtendPagination<K>): Promise<K[]> {
+    public async find<K extends T = NoInfer<T>>(options?: QueryOptionsExtendPagination<K>): Promise<K[]> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -285,7 +285,7 @@ export class Repository<T> {
      * });
      * ```
      */
-    public async findOne<K = T>(options?: QueryOptions<K>): Promise<K> {
+    public async findOne<K extends T = NoInfer<T>>(options?: QueryOptions<K>): Promise<K> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -328,7 +328,7 @@ export class Repository<T> {
      * console.log(count);
      * ```
      */
-    public async count<K = T>(options?: QueryOptions<K>): Promise<number> {
+    public async count<K extends T = NoInfer<T>>(options?: QueryOptions<K>): Promise<number> {
         const query = this._knex(this._table.name)
             .count({ count: '*' });
         if (options?.advancedSearch)
@@ -363,8 +363,8 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async insert<K = T>(
-        data: K | K[],
+    public async insert<K extends T = NoInfer<T>>(
+        data: Partial<K> | Partial<K>[],
         options?: Omit<QueryOptions<K>, 'advancedSearch' | 'orderBy'>
     ): Promise<K[]> {
         const query = this._knex(this._table.name)
@@ -399,7 +399,10 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async update<K = T>(data: Partial<K>, options?: Omit<QueryOptions<K>, 'orderBy'>): Promise<K[]> {
+    public async update<K extends T = NoInfer<T>>(
+        data: Partial<K>,
+        options: Omit<QueryOptions<K>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<K>, 'advancedSearch'>>
+    ): Promise<K[]> {
         const query = this._knex(this._table.name)
             .update(data)
             .returning(this._transformFieldSelectionToArray(options?.selectedFields));
@@ -432,7 +435,7 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async delete<K = T>(options?: Omit<QueryOptions<K>, 'orderBy'>): Promise<K[]> {
+    public async delete<K extends T = NoInfer<T>>(options?: Omit<QueryOptions<K>, 'orderBy'>): Promise<K[]> {
         const query = this._knex(this._table.name)
             .delete()
             .returning(this._transformFieldSelectionToArray(options?.selectedFields));
@@ -556,12 +559,11 @@ export class Repository<T> {
                     query.whereRaw(`${key} NOT LIKE ?`, [likeValue]);
                 }
             },
-
-            $isNull: (query, key) => {
-                query.whereNull(key);
-            },
-            $isNotNull: (query, key) => {
-                query.whereNotNull(key);
+            $isNull: (query, key, value) => {
+                if (value)
+                    query.whereNull(key);
+                else
+                    query.whereNotNull(key);
             }
         };
         const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<K>): void => {
@@ -622,8 +624,7 @@ export class Repository<T> {
             '$nbetween',
             '$like',
             '$nlike',
-            '$isNull',
-            '$isNotNull'
+            '$isNull'
         ]);
         return Boolean(
             data
@@ -671,6 +672,8 @@ export class Repository<T> {
                 });
             return result;
         } catch (error) {
+            if (error instanceof CoreError)
+                throw error;
             const code = (error as { number: number })?.number || 0;
             throw new CoreError({
                 key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,

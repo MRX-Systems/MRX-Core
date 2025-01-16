@@ -118,13 +118,4 @@ export interface WhereClause {
      * ```
      */
     $isNull: boolean;
-
-    /**
-     * Not null
-     * @example
-     * ```typescript
-     * { id: { $notNull: true } }
-     * ```
-     */
-    $isNotNull: boolean;
 }

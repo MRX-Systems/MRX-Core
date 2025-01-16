@@ -25,5 +25,7 @@ export const DATABASE_KEY_ERROR = {
     MSSQL_DATABASE_QUERY_TIMEOUT: ['error.core.database.mssql.database_query_timeout', 408],
     MSSQL_DATABASE_TRANSACTION_LOG_FULL: ['error.core.database.mssql.database_transaction_log_full', 500],
     MSSQL_DATABASE_DATA_TOO_LARGE: ['error.core.database.mssql.database_data_too_large', 413],
-    MSSQL_DATABASE_PERMISSION_DENIED: ['error.core.database.mssql.database_permission_denied', 403]
+    MSSQL_DATABASE_PERMISSION_DENIED: ['error.core.database.mssql.database_permission_denied', 403],
+    MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED: ['error.core.database.mssql.database_identity_insert_not_allowed', 400],
+    MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN: ['error.core.database.mssql.database_cannot_update_identity_column', 400]
 } as const;
