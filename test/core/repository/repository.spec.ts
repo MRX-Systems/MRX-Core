@@ -33,7 +33,7 @@ const knexInstance = knex({
 const table = new Table(
     options.databaseName,
     testTable,
-    ['id', 'name', 'number', 'date', 'boolean'],
+    ['id', 'name', 'age', 'birth', 'n'],
     ['id', 'NUMBER']
 );
 
