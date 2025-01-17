@@ -56,6 +56,18 @@ describe('MSSQL', () => {
             expect(mssql.isConnected).toBe(true);
         });
 
+        test('should add listener on all tables when pulse is true', async () => {
+            const { MSSQL } = await import('#/core/database/mssql');
+            const mssql = new MSSQL({ ...options, pulse: true });
+            await mssql.connect();
+
+            mssql.table(testTable)
+                .on(EVENT_TABLE.SELECTED, (res) => {
+                    expect(res).toBeDefined();
+                });
+            await mssql.db(testTable).select('*').from(testTable);
+        });
+
         test('should throw an error when the connection fails', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL({ ...options, host: 'foo' });

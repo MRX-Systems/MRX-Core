@@ -181,12 +181,18 @@ export class MSSQL extends EventEmitter {
     private readonly _db: Knex;
 
     /**
+     * Indicates whether to add basic event listeners for all tables.
+     */
+    private readonly _pulse: boolean;
+
+    /**
      * Create a new instance of `MSSQL` with the specified options.
      * @param options - The configuration options for the MSSQL database connection. ({@link MSSQLDatabaseOptions})
      */
     public constructor(options: MSSQLDatabaseOptions) {
         super();
         this._databaseName = options.databaseName;
+        this._pulse = options.pulse ?? false;
         this._db = knex({
             client: 'mssql',
             debug: options.debug ?? true,
@@ -236,7 +242,8 @@ export class MSSQL extends EventEmitter {
         try {
             await this._introspectDatabase();
             this._isConnected = true;
-            this._addEventKnex();
+            if (this._pulse)
+                this._addEventKnex();
         } catch (error) {
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_CONNECTION_ERROR,
