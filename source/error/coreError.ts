@@ -6,8 +6,9 @@ import { randomUUID } from 'crypto';
 export interface CoreErrorOptions<T = unknown> {
     /**
      * The error key.
+     * @defaultValue ['error.unknown', 500]
      */
-    key?: [string, number] | undefined;
+    key?: readonly [string, number] | undefined;
     /**
      * The cause of the error.
      */
@@ -21,7 +22,7 @@ const DEFAULT_ERROR_CODE = 500;
 /**
  * Core error class that extends the ({@link Error}) class and provides additional properties. (uuidError, date, code, fileName, line, column)
  *
- * @typeparam T - The type of the cause of the error.
+ * @typeParam T - The type of the cause of the error.
  *
  * @example
  * The following example demonstrates how to throw a new instance of the Core error.

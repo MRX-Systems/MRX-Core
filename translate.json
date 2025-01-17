@@ -11,738 +11,996 @@
   ],
   "error": {
     "core": {
-      "invalid_environment": {
-        "lang:ar": "بيئة غير صالحة",
-        "lang:de": "Ungültige Umgebung",
-        "lang:en": "Invalid environment",
-        "lang:es": "Entorno inválido",
-        "lang:fr": "Environnement invalide",
-        "lang:it": "Ambiente non valido",
-        "lang:ja": "無効な環境",
-        "lang:ko": "유효하지 않은 환경"
-      },
-      "validation": {
-        "array": {
-          "contains": {
-            "lang:ar": "من المتوقع أن يحتوي الجدول على قيمة واحدة على الأقل تتطابق",
-            "lang:de": "Es wurde er wartet, dass das Array mindestens einen passenden Wert enthält",
-            "lang:en": "Expected array to contain at least one matching value",
-            "lang:es": "Se esperaba que la matriz contuviera al menos un valor coincidente",
-            "lang:fr": "Le tableau doit contenir au moins une valeur correspondante",
-            "lang:it": "Era previsto che l'array contenesse almeno un valore corrispondente",
-            "lang:ja": "少なくとも一致する値を含む配列が期待されていました",
-            "lang:ko": "최소한 하나의 일치하는 값을 포함하는 배열이 예상되었습니다"
+      "config": {
+        "validation": {
+          "array": {
+            "contains": {
+              "lang:ar": "من المتوقع أن يحتوي الجدول على قيمة واحدة على الأقل تتطابق",
+              "lang:de": "Es wurde er wartet, dass das Array mindestens einen passenden Wert enthält",
+              "lang:en": "Expected array to contain at least one matching value",
+              "lang:es": "Se esperaba que la matriz contuviera al menos un valor coincidente",
+              "lang:fr": "Le tableau doit contenir au moins une valeur correspondante",
+              "lang:it": "Era previsto che l'array contenesse almeno un valore corrispondente",
+              "lang:ja": "少なくとも一致する値を含む配列が期待されていました",
+              "lang:ko": "최소한 하나의 일치하는 값을 포함하는 배열이 예상되었습니다"
+            },
+            "is_array": {
+              "lang:ar": "من المتوقع أن يكون القيمة جدولًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Array ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be an array but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera una matriz pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un tableau mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un array ma {{type}}",
+              "lang:ja": "値は配列であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 배열이어야하지만 {{type}}가 되었습니다"
+            },
+            "max_contains": {
+              "lang:ar": "من المتوقع أن يحتوي الجدول على لا أكثر من {{max}} قيمة تتطابق",
+              "lang:de": "Es wurde er wartet, dass das Array nicht mehr als {{max}} passende Werte enthält",
+              "lang:en": "Expected array to contain no more than {{max}} matching values",
+              "lang:es": "Se esperaba que la matriz no contuviera más de {{max}} valores coincidentes",
+              "lang:fr": "Le tableau doit contenir au maximum {{max}} valeurs correspondantes",
+              "lang:it": "Era previsto che l'array non contenesse più di {{max}} valori corrispondenti",
+              "lang:ja": "最大で{{max}}個の一致する値を含む配列が期待されていました",
+              "lang:ko": "최대 {{max}}개의 일치하는 값을 포함하는 배열이 예상되었습니다"
+            },
+            "max_items": {
+              "lang:ar": "من المتوقع أن يكون طول الجدول أقل أو يساوي {{max}} ولكن تم الحصول على {{length}}",
+              "lang:de": "Es wurde er wartet, dass die Arraylänge kleiner oder gleich {{max}} ist, aber {{length}} erhalten wurde",
+              "lang:en": "Expected array length to be less or equal to {{max}} but got {{length}}",
+              "lang:es": "Se esperaba que la longitud de la matriz fuera menor o igual a {{max}} pero obtuvo {{length}}",
+              "lang:fr": "La longueur du tableau doit être inférieure ou égale à {{max}} mais a obtenu {{length}}",
+              "lang:it": "Era previsto che la lunghezza dell'array fosse minore o uguale a {{max}} ma {{length}}",
+              "lang:ja": "配列の長さは{{max}}以下であることが期待されましたが、{{length}}が得られました",
+              "lang:ko": "배열 길이가 {{max}} 이하이어야하지만 {{length}}가 되었습니다"
+            },
+            "min_contains": {
+              "lang:ar": "من المتوقع أن يحتوي الجدول على ما لا يقل عن {{min}} قيمة تتطابق",
+              "lang:de": "Es wurde er wartet, dass das Array mindestens {{min}} passende Werte enthält",
+              "lang:en": "Expected array to contain at least {{min}} matching values",
+              "lang:es": "Se esperaba que la matriz contuviera al menos {{min}} valores coincidentes",
+              "lang:fr": "Le tableau doit contenir au moins {{min}} valeurs correspondantes",
+              "lang:it": "Era previsto che l'array contenesse almeno {{min}} valori corrispondenti",
+              "lang:ja": "{{min}}個以上の一致する値を含む配列が期待されていました",
+              "lang:ko": "최소 {{min}}개의 일치하는 값을 포함하는 배열이 예상되었습니다"
+            },
+            "min_items": {
+              "lang:ar": "من المتوقع أن يكون طول الجدول أكثر أو يساوي {{min}} ولكن تم الحصول على {{length}}",
+              "lang:de": "Es wurde er wartet, dass die Arraylänge größer oder gleich {{min}} ist, aber {{length}} erhalten wurde",
+              "lang:en": "Expected array length to be more or equal to {{min}} but got {{length}}",
+              "lang:es": "Se esperaba que la longitud de la matriz fuera mayor o igual a {{min}} pero obtuvo {{length}}",
+              "lang:fr": "La longueur du tableau doit être supérieure ou égale à {{min}} mais a obtenu {{length}}",
+              "lang:it": "Era previsto che la lunghezza dell'array fosse maggiore o uguale a {{min}} ma {{length}}",
+              "lang:ja": "配列の長さは{{min}}以上であることが期待されましたが、{{length}}が得られました",
+              "lang:ko": "배열 길이가 {{min}} 이상이어야하지만 {{length}}가 되었습니다"
+            },
+            "unique_items": {
+              "lang:ar": "من المتوقع أن تكون عناصر الجدول فريدة",
+              "lang:de": "Es wurde er wartet, dass die Arrayelemente eindeutig sind",
+              "lang:en": "Expected array elements to be unique",
+              "lang:es": "Se esperaba que los elementos de la matriz fueran únicos",
+              "lang:fr": "Les éléments du tableau doivent être uniques",
+              "lang:it": "Era previsto che gli elementi dell'array fossero univoci",
+              "lang:ja": "配列要素は一意であることが期待されました",
+              "lang:ko": "배열 요소는 고유해야합니다"
+            }
           },
-          "is_array": {
-            "lang:ar": "من المتوقع أن يكون القيمة جدولًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Array ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be an array but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera una matriz pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un tableau mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un array ma {{type}}",
-            "lang:ja": "値は配列であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 배열이어야하지만 {{type}}가 되었습니다"
+          "async_iterator": {
+            "is_async_iterator": {
+              "lang:ar": "من المتوقع أن تكون القيمة مكررة غير متزامنة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein asynchroner Iterator ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be an async iterator but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un iterador asincrónico pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un itérateur asynchrone mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un iteratore asincrono ma {{type}}",
+              "lang:ja": "値は非同期イテレータであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 비동기 반복자 여야하지만 {{type}}가 되었습니다"
+            }
           },
-          "max_contains": {
-            "lang:ar": "من المتوقع أن يحتوي الجدول على لا أكثر من {{max}} قيمة تتطابق",
-            "lang:de": "Es wurde er wartet, dass das Array nicht mehr als {{max}} passende Werte enthält",
-            "lang:en": "Expected array to contain no more than {{max}} matching values",
-            "lang:es": "Se esperaba que la matriz no contuviera más de {{max}} valores coincidentes",
-            "lang:fr": "Le tableau doit contenir au maximum {{max}} valeurs correspondantes",
-            "lang:it": "Era previsto che l'array non contenesse più di {{max}} valori corrispondenti",
-            "lang:ja": "最大で{{max}}個の一致する値を含む配列が期待されていました",
-            "lang:ko": "최대 {{max}}개의 일치하는 값을 포함하는 배열이 예상되었습니다"
+          "bigint": {
+            "exclusive_maximum": {
+              "lang:ar": "من المتوقع أن يكون bigint أقل من {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass bigint kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected bigint to be less than {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que bigint fuera menor que {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le bigint doit être inférieur à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che bigint fosse minore di {{max}} ma {{value}}",
+              "lang:ja": "bigintは{{max}}未満であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "bigint는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
+            },
+            "exclusive_minimum": {
+              "lang:ar": "من المتوقع أن يكون bigint أكثر من {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass bigint größer als {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected bigint to be more than {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que bigint fuera mayor que {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le bigint doit être supérieur à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che bigint fosse maggiore di {{min}} ma {{value}}",
+              "lang:ja": "bigintは{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+              "lang:ko": "bigint는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
+            },
+            "is_bigint": {
+              "lang:ar": "من المتوقع أن يكون القيمة bigint ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein bigint ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a bigint but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un bigint pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un bigint mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un bigint ma {{type}}",
+              "lang:ja": "値はbigintであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 bigint 여야하지만 {{type}}가 되었습니다"
+            },
+            "maximum": {
+              "lang:ar": "من المتوقع أن يكون bigint أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass bigint kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected bigint to be less or equal to {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que bigint fuera menor o igual a {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le bigint doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che bigint fosse minore o uguale a {{max}} ma {{value}}",
+              "lang:ja": "bigintは{{max}}以下であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "bigint는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+            },
+            "minimum": {
+              "lang:ar": "من المتوقع أن يكون bigint أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass bigint größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected bigint to be more or equal to {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que bigint fuera mayor o igual a {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le bigint doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che bigint fosse maggiore o uguale a {{min}} ma {{value}}",
+              "lang:ja": "bigintは{{min}}以上であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "bigint는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+            },
+            "multiple_of": {
+              "lang:ar": "من المتوقع أن يكون bigint مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass bigint ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected bigint to be a multiple of {{multiple}} but got {{value}}",
+              "lang:es": "Se esperaba que bigint fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
+              "lang:fr": "Le bigint doit être un multiple de {{multiple}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che bigint fosse un multiplo di {{multiple}} ma {{value}}",
+              "lang:ja": "bigintは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "bigint는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+            }
           },
-          "max_items": {
-            "lang:ar": "من المتوقع أن يكون طول الجدول أقل أو يساوي {{max}} ولكن تم الحصول على {{length}}",
-            "lang:de": "Es wurde er wartet, dass die Arraylänge kleiner oder gleich {{max}} ist, aber {{length}} erhalten wurde",
-            "lang:en": "Expected array length to be less or equal to {{max}} but got {{length}}",
-            "lang:es": "Se esperaba que la longitud de la matriz fuera menor o igual a {{max}} pero obtuvo {{length}}",
-            "lang:fr": "La longueur du tableau doit être inférieure ou égale à {{max}} mais a obtenu {{length}}",
-            "lang:it": "Era previsto che la lunghezza dell'array fosse minore o uguale a {{max}} ma {{length}}",
-            "lang:ja": "配列の長さは{{max}}以下であることが期待されましたが、{{length}}が得られました",
-            "lang:ko": "배열 길이가 {{max}} 이하이어야하지만 {{length}}가 되었습니다"
+          "boolean": {
+            "is_boolean": {
+              "lang:ar": "من المتوقع أن تكون القيمة قيمة منطقية ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein boolescher Wert ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a boolean but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un booleano pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un booléen mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un booleano ma {{type}}",
+              "lang:ja": "値はブール値であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 부울 값이어야하지만 {{type}}가 되었습니다"
+            }
           },
-          "min_contains": {
-            "lang:ar": "من المتوقع أن يحتوي الجدول على ما لا يقل عن {{min}} قيمة تتطابق",
-            "lang:de": "Es wurde er wartet, dass das Array mindestens {{min}} passende Werte enthält",
-            "lang:en": "Expected array to contain at least {{min}} matching values",
-            "lang:es": "Se esperaba que la matriz contuviera al menos {{min}} valores coincidentes",
-            "lang:fr": "Le tableau doit contenir au moins {{min}} valeurs correspondantes",
-            "lang:it": "Era previsto che l'array contenesse almeno {{min}} valori corrispondenti",
-            "lang:ja": "{{min}}個以上の一致する値を含む配列が期待されていました",
-            "lang:ko": "최소 {{min}}개의 일치하는 값을 포함하는 배열이 예상되었습니다"
+          "date": {
+            "exclusive_maximum_timestamp": {
+              "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أقل من {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Datumstimestamp kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Date timestamp to be less than {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera menor que {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le timestamp de la date doit être inférieur à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il timestamp della data fosse minore di {{max}} ma {{value}}",
+              "lang:ja": "日付のタイムスタンプは{{max}}未満であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "날짜 타임 스탬프는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
+            },
+            "exclusive_minimum_timestamp": {
+              "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أكبر من {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Datumstimestamp größer als {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Date timestamp to be greater than {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera mayor que {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le timestamp de la date doit être supérieur à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il timestamp della data fosse maggiore di {{min}} ma {{value}}",
+              "lang:ja": "日付のタイムスタンプは{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+              "lang:ko": "날짜 타임 스탬프는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
+            },
+            "is_date": {
+              "lang:ar": "من المتوقع أن تكون القيمة تاريخًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Datum ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a Date but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera una fecha pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être une date mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse una data ma {{type}}",
+              "lang:ja": "値は日付であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 날짜 여야하지만 {{type}}가 되었습니다"
+            },
+            "maximum_timestamp": {
+              "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Datumst timestamp kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Date timestamp to be less or equal to {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera menor o igual a {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le timestamp de la date doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il timestamp della data fosse minore o uguale a {{max}} ma {{value}}",
+              "lang:ja": "日付のタイムスタンプは{{max}}以下であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "날짜 타임 스탬프는 {{max}}보다 작거나 같아야하지만 {{value}}가 되었습니다"
+            },
+            "minimum_timestamp": {
+              "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أكبر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Datumst timestamp größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Date timestamp to be greater or equal to {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera mayor o igual a {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le timestamp de la date doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il timestamp della data fosse maggiore o uguale a {{min}} ma {{value}}",
+              "lang:ja": "日付のタイムスタンプは{{min}}以上であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "날짜 타임 스탬프는 {{min}}보다 크거나 같아야하지만 {{value}}가 되었습니다"
+            },
+            "multiple_of_timestamp": {
+              "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Datumst timestamp ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Date timestamp to be a multiple of {{multiple}} but got {{value}}",
+              "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
+              "lang:fr": "Le timestamp de la date doit être un multiple de {{multiple}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il timestamp della data fosse un multiplo di {{multiple}} ma {{value}}",
+              "lang:ja": "日付のタイムスタンプは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "날짜 타임 스탬프는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+            }
           },
-          "min_items": {
-            "lang:ar": "من المتوقع أن يكون طول الجدول أكثر أو يساوي {{min}} ولكن تم الحصول على {{length}}",
-            "lang:de": "Es wurde er wartet, dass die Arraylänge größer oder gleich {{min}} ist, aber {{length}} erhalten wurde",
-            "lang:en": "Expected array length to be more or equal to {{min}} but got {{length}}",
-            "lang:es": "Se esperaba que la longitud de la matriz fuera mayor o igual a {{min}} pero obtuvo {{length}}",
-            "lang:fr": "La longueur du tableau doit être supérieure ou égale à {{min}} mais a obtenu {{length}}",
-            "lang:it": "Era previsto che la lunghezza dell'array fosse maggiore o uguale a {{min}} ma {{length}}",
-            "lang:ja": "配列の長さは{{min}}以上であることが期待されましたが、{{length}}が得られました",
-            "lang:ko": "배열 길이가 {{min}} 이상이어야하지만 {{length}}가 되었습니다"
+          "default": {
+            "lang:ar": "نوع الخطأ غير معروف",
+            "lang:de": "Unbekannter Fehler",
+            "lang:en": "Unknown error type",
+            "lang:es": "Tipo de error desconocido",
+            "lang:fr": "Type d'erreur inconnu",
+            "lang:it": "Tipo di errore sconosciuto",
+            "lang:ja": "不明なエラータイプ",
+            "lang:ko": "알 수없는 오류 유형"
           },
-          "unique_items": {
-            "lang:ar": "من المتوقع أن تكون عناصر الجدول فريدة",
-            "lang:de": "Es wurde er wartet, dass die Arrayelemente eindeutig sind",
-            "lang:en": "Expected array elements to be unique",
-            "lang:es": "Se esperaba que los elementos de la matriz fueran únicos",
-            "lang:fr": "Les éléments du tableau doivent être uniques",
-            "lang:it": "Era previsto che gli elementi dell'array fossero univoci",
-            "lang:ja": "配列要素は一意であることが期待されました",
-            "lang:ko": "배열 요소는 고유해야합니다"
-          }
-        },
-        "async_iterator": {
-          "is_async_iterator": {
-            "lang:ar": "من المتوقع أن تكون القيمة مكررة غير متزامنة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein asynchroner Iterator ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be an async iterator but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un iterador asincrónico pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un itérateur asynchrone mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un iteratore asincrono ma {{type}}",
-            "lang:ja": "値は非同期イテレータであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 비동기 반복자 여야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "bigint": {
-          "exclusive_maximum": {
-            "lang:ar": "من المتوقع أن يكون bigint أقل من {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass bigint kleiner als {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected bigint to be less than {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que bigint fuera menor que {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le bigint doit être inférieur à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che bigint fosse minore di {{max}} ma {{value}}",
-            "lang:ja": "bigintは{{max}}未満であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "bigint는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
-          },
-          "exclusive_minimum": {
-            "lang:ar": "من المتوقع أن يكون bigint أكثر من {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass bigint größer als {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected bigint to be more than {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que bigint fuera mayor que {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le bigint doit être supérieur à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che bigint fosse maggiore di {{min}} ma {{value}}",
-            "lang:ja": "bigintは{{min}}より大きいことが期待されましたが、{{value}}が得られました",
-            "lang:ko": "bigint는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
-          },
-          "is_bigint": {
-            "lang:ar": "من المتوقع أن يكون القيمة bigint ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein bigint ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a bigint but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un bigint pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un bigint mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un bigint ma {{type}}",
-            "lang:ja": "値はbigintであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 bigint 여야하지만 {{type}}가 되었습니다"
-          },
-          "maximum": {
-            "lang:ar": "من المتوقع أن يكون bigint أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass bigint kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected bigint to be less or equal to {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que bigint fuera menor o igual a {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le bigint doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che bigint fosse minore o uguale a {{max}} ma {{value}}",
-            "lang:ja": "bigintは{{max}}以下であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "bigint는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
-          },
-          "minimum": {
-            "lang:ar": "من المتوقع أن يكون bigint أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass bigint größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected bigint to be more or equal to {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que bigint fuera mayor o igual a {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le bigint doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che bigint fosse maggiore o uguale a {{min}} ma {{value}}",
-            "lang:ja": "bigintは{{min}}以上であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "bigint는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
-          },
-          "multiple_of": {
-            "lang:ar": "من المتوقع أن يكون bigint مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass bigint ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected bigint to be a multiple of {{multiple}} but got {{value}}",
-            "lang:es": "Se esperaba que bigint fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
-            "lang:fr": "Le bigint doit être un multiple de {{multiple}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che bigint fosse un multiplo di {{multiple}} ma {{value}}",
-            "lang:ja": "bigintは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "bigint는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
-          }
-        },
-        "boolean": {
-          "is_boolean": {
-            "lang:ar": "من المتوقع أن تكون القيمة قيمة منطقية ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein boolescher Wert ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a boolean but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un booleano pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un booléen mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un booleano ma {{type}}",
-            "lang:ja": "値はブール値であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 부울 값이어야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "date": {
-          "exclusive_maximum_timestamp": {
-            "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أقل من {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Datumstimestamp kleiner als {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Date timestamp to be less than {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera menor que {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le timestamp de la date doit être inférieur à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il timestamp della data fosse minore di {{max}} ma {{value}}",
-            "lang:ja": "日付のタイムスタンプは{{max}}未満であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "날짜 타임 스탬프는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
-          },
-          "exclusive_minimum_timestamp": {
-            "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أكبر من {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Datumstimestamp größer als {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Date timestamp to be greater than {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera mayor que {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le timestamp de la date doit être supérieur à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il timestamp della data fosse maggiore di {{min}} ma {{value}}",
-            "lang:ja": "日付のタイムスタンプは{{min}}より大きいことが期待されましたが、{{value}}が得られました",
-            "lang:ko": "날짜 타임 스탬프는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
-          },
-          "is_date": {
-            "lang:ar": "من المتوقع أن تكون القيمة تاريخًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Datum ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a Date but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera una fecha pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être une date mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse una data ma {{type}}",
-            "lang:ja": "値は日付であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 날짜 여야하지만 {{type}}가 되었습니다"
-          },
-          "maximum_timestamp": {
-            "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Datumst timestamp kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Date timestamp to be less or equal to {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera menor o igual a {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le timestamp de la date doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il timestamp della data fosse minore o uguale a {{max}} ma {{value}}",
-            "lang:ja": "日付のタイムスタンプは{{max}}以下であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "날짜 타임 스탬프는 {{max}}보다 작거나 같아야하지만 {{value}}가 되었습니다"
-          },
-          "minimum_timestamp": {
-            "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ أكبر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Datumst timestamp größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Date timestamp to be greater or equal to {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera mayor o igual a {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le timestamp de la date doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il timestamp della data fosse maggiore o uguale a {{min}} ma {{value}}",
-            "lang:ja": "日付のタイムスタンプは{{min}}以上であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "날짜 타임 스탬프는 {{min}}보다 크거나 같아야하지만 {{value}}가 되었습니다"
-          },
-          "multiple_of_timestamp": {
-            "lang:ar": "من المتوقع أن يكون الطابع الزمني للتاريخ مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Datumst timestamp ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Date timestamp to be a multiple of {{multiple}} but got {{value}}",
-            "lang:es": "Se esperaba que la marca de tiempo de la fecha fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
-            "lang:fr": "Le timestamp de la date doit être un multiple de {{multiple}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il timestamp della data fosse un multiplo di {{multiple}} ma {{value}}",
-            "lang:ja": "日付のタイムスタンプは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "날짜 타임 스탬프는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
-          }
-        },
-        "default": {
-          "lang:ar": "نوع الخطأ غير معروف",
-          "lang:de": "Unbekannter Fehler",
-          "lang:en": "Unknown error type",
-          "lang:es": "Tipo de error desconocido",
-          "lang:fr": "Type d'erreur inconnu",
-          "lang:it": "Tipo di errore sconosciuto",
-          "lang:ja": "不明なエラータイプ",
-          "lang:ko": "알 수없는 오류 유형"
-        },
-        "format": {
-          "already_exists": {
-            "lang:ar": "التنسيق '{{format}}' موجود بالفعل",
-            "lang:de": "Das Format '{{format}}' existiert bereits",
-            "lang:en": "Format '{{format}}' already exists",
-            "lang:es": "El formato '{{format}}' ya existe",
-            "lang:fr": "Le format '{{format}}' existe déjà",
-            "lang:it": "Il formato '{{format}}' esiste già",
-            "lang:ja": "フォーマット'{{format}}'はすでに存在します",
-            "lang:ko": "포맷 '{{format}}'이 이미 존재합니다"
-          },
-          "does_not_exist": {
-            "lang:ar": "التنسيق '{{format}}' غير موجود",
-            "lang:de": "Das Format '{{format}}' existiert nicht",
-            "lang:en": "Format '{{format}}' does not exist",
-            "lang:es": "El formato '{{format}}' no existe",
-            "lang:fr": "Le format '{{format}}' n'existe pas",
-            "lang:it": "Il formato '{{format}}' non esiste",
-            "lang:ja": "フォーマット'{{format}}'は存在しません",
-            "lang:ko": "포맷 '{{format}}'이 존재하지 않습니다"
-          }
-        },
-        "function": {
-          "is_function": {
-            "lang:ar": "من المتوقع أن تكون القيمة وظيفة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert eine Funktion ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a function but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera una función pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être une fonction mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse una funzione ma {{type}}",
-            "lang:ja": "値は関数であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 함수 여야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "integer": {
-          "exclusive_maximum": {
-            "lang:ar": "من المتوقع أن يكون العدد الصحيح أقل من {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Integer kleiner als {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected integer to be less than {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que el entero fuera menor que {{max}} pero obtuvo {{value}}",
-            "lang:fr": "L'entier doit être inférieur à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'intero fosse minore di {{max}} ma {{value}}",
-            "lang:ja": "整数は{{max}}未満であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "정수는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
-          },
-          "exclusive_minimum": {
-            "lang:ar": "من المتوقع أن يكون العدد الصحيح أكثر من {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Integer größer als {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected integer to be greater than {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que el entero fuera mayor que {{min}} pero obtuvo {{value}}",
-            "lang:fr": "L'entier doit être supérieur à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'intero fosse maggiore di {{min}} ma {{value}}",
-            "lang:ja": "整数は{{min}}より大きいことが期待されましたが、{{value}}が得られました",
-            "lang:ko": "정수는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
-          },
-          "is_integer": {
-            "lang:ar": "من المتوقع أن يكون القيمة عددًا صحيحًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Integer ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be an integer but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un entero pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un entier mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un intero ma {{type}}",
-            "lang:ja": "値は整数であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 정수 여야하지만 {{type}}가 되었습니다"
-          },
-          "maximum": {
-            "lang:ar": "من المتوقع أن يكون العدد الصحيح أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Integer kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected integer to be less or equal to {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que el entero fuera menor o igual a {{max}} pero obtuvo {{value}}",
-            "lang:fr": "L'entier doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'intero fosse minore o uguale a {{max}} ma {{value}}",
-            "lang:ja": "整数は{{max}}以下であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "정수는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
-          },
-          "minimum": {
-            "lang:ar": "من المتوقع أن يكون العدد الصحيح أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Integer größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected integer to be greater or equal to {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que el entero fuera mayor o igual a {{min}} pero obtuvo {{value}}",
-            "lang:fr": "L'entier doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'intero fosse maggiore o uguale a {{min}} ma {{value}}",
-            "lang:ja": "整数は{{min}}以上であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "정수는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
-          },
-          "multiple_of": {
-            "lang:ar": "من المتوقع أن يكون العدد الصحيح مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der Integer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected integer to be a multiple of {{multiple}} but got {{value}}",
-            "lang:es": "Se esperaba que el entero fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
-            "lang:fr": "L'entier doit être un multiple de {{multiple}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'intero fosse un multiplo di {{multiple}} ma {{value}}",
-            "lang:ja": "整数は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "정수는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
-          }
-        },
-        "intersect": {
-          "is_intersect": {
-            "lang:ar": "من المتوقع أن تتطابق جميع القيم",
-            "lang:de": "Es wurde er wartet, dass alle Werte übereinstimmen",
-            "lang:en": "Expected all values to match",
-            "lang:es": "Se esperaba que todos los valores coincidieran",
-            "lang:fr": "Toutes les valeurs doivent correspondre",
-            "lang:it": "Era previsto che tutti i valori corrispondessero",
-            "lang:ja": "すべての値が一致することが期待されました",
-            "lang:ko": "모든 값이 일치하는 것으로 예상되었습니다"
-          },
-          "unevaluated_properties": {
-            "lang:ar": "تم العثور على خصائص غير مقدرة: {{props}}",
-            "lang:de": "Nicht ausgewertete Eigenschaften gefunden: {{props}}",
-            "lang:en": "Unevaluated properties found: {{props}}",
-            "lang:es": "Se encontraron propiedades no evaluadas: {{props}}",
-            "lang:fr": "Propriétés non évaluées trouvées: {{props}}",
-            "lang:it": "Proprietà non valutate trovate: {{props}}",
-            "lang:ja": "評価されていないプロパティが見つかりました: {{props}}",
-            "lang:ko": "평가되지 않은 속성이 발견되었습니다: {{props}}"
-          }
-        },
-        "iterator": {
-          "is_iterator": {
-            "lang:ar": "من المتوقع أن تكون القيمة مكررة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Iterator ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be an iterator but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un iterador pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un itérateur mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un iteratore ma {{type}}",
-            "lang:ja": "値はイテレータであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 반복자 여야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "kind": {
-          "is_kind": {
-            "lang:ar": "من المتوقع أن تكون القيمة نوع {{kind}} ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert Art {{kind}} ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be kind {{kind}} but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera de tipo {{kind}} pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être de type {{kind}} mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse del tipo {{kind}} ma {{type}}",
-            "lang:ja": "値は{{kind}}であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 {{kind}} 여야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "literal": {
-          "is_literal": {
-            "lang:ar": "من المتوقع أن تكون القيمة حرفية ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Literal ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a literal but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un literal pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un littéral mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un letterale ma {{type}}",
-            "lang:ja": "値はリテラルであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 리터럴이어야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "never": {
-          "is_never": {
-            "lang:ar": "من المتوقع أن تكون القيمة أبدًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert nie ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be never but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera nunca pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être jamais mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse mai ma {{type}}",
-            "lang:ja": "値は決してないことが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 결코가 되어야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "not": {
-          "not_match": {
-            "lang:ar": "القيمة لا يجب أن تتطابق",
-            "lang:de": "Der Wert sollte nicht übereinstimmen",
-            "lang:en": "Value should not match",
-            "lang:es": "El valor no debe coincidir",
-            "lang:fr": "La valeur ne doit pas correspondre",
-            "lang:it": "Il valore non dovrebbe corrispondere",
-            "lang:ja": "値は一致してはいけません",
-            "lang:ko": "값이 일치하지 않아야합니다"
-          }
-        },
-        "null": {
-          "is_null": {
-            "lang:ar": "من المتوقع أن تكون القيمة فارغة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert null ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be null but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera nulo pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être nulle mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse nullo ma {{type}}",
-            "lang:ja": "値はnullであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 null이어야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "number": {
-          "exclusive_maximum": {
-            "lang:ar": "من المتوقع أن يكون العدد أقل من {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass die Nummer kleiner als {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected number to be less than {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que el número fuera menor que {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le nombre doit être inférieur à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il numero fosse minore di {{max}} ma {{value}}",
-            "lang:ja": "数値は{{max}}未満であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "숫자는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
-          },
-          "exclusive_minimum": {
-            "lang:ar": "من المتوقع أن يكون العدد أكثر من {{min}} ولكن تم الحص",
-            "lang:de": "Es wurde er wartet, dass die Nummer größer als {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected number to be greater than {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que el número fuera mayor que {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le nombre doit être supérieur à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il numero fosse maggiore di {{min}} ma {{value}}",
-            "lang:ja": "数値は{{min}}より大きいことが期待されましたが、{{value}}が得られました",
-            "lang:ko": "숫자는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
-          },
-          "is_number": {
-            "lang:ar": "من المتوقع أن تكون القيمة رقمية ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert eine Nummer ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a number but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un número pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un nombre mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un numero ma {{type}}",
-            "lang:ja": "値は数値であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 숫자 여야하지만 {{type}}가 되었습니다"
-          },
-          "maximum": {
-            "lang:ar": "من المتوقع أن يكون العدد أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass die Nummer kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected number to be less or equal to {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que el número fuera menor o igual a {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le nombre doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il numero fosse minore o uguale a {{max}} ma {{value}}",
-            "lang:ja": "数値は{{max}}以下であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "숫자는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
-          },
-          "minimum": {
-            "lang:ar": "من المتوقع أن يكون العدد أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass die Nummer größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected number to be greater or equal to {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que el número fuera mayor o igual a {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le nombre doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il numero fosse maggiore o uguale a {{min}} ma {{value}}",
-            "lang:ja": "数値は{{min}}以上であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "숫자는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
-          },
-          "multiple_of": {
-            "lang:ar": "من المتوقع أن يكون العدد مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass die Nummer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected number to be a multiple of {{multiple}} but got {{value}}",
-            "lang:es": "Se esperaba que el número fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
-            "lang:fr": "Le nombre doit être un multiple de {{multiple}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che il numero fosse un multiplo di {{multiple}} ma {{value}}",
-            "lang:ja": "数値は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "숫자는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
-          }
-        },
-        "object": {
-          "additional_properties": {
-            "lang:ar": "تم العثور على خصائص إضافية: {{props}}",
-            "lang:de": "Zusätzliche Eigenschaften gefunden: {{props}}",
-            "lang:en": "Additional properties found: {{props}}",
-            "lang:es": "Se encontraron propiedades adicionales: {{props}}",
-            "lang:fr": "Propriétés supplémentaires trouvées: {{props}}",
-            "lang:it": "Proprietà aggiuntive trovate: {{props}}",
-            "lang:ja": "追加のプロパティが見つかりました: {{props}}",
-            "lang:ko": "추가 속성이 발견되었습니다: {{props}}"
-          },
-          "is_object": {
-            "lang:ar": "من المتوقع أن تكون القيمة كائنًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Objekt ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be an object but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un objeto pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un objet mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un oggetto ma {{type}}",
-            "lang:ja": "値はオブジェクトであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 객체 여야하지만 {{type}}가 되었습니다"
-          },
-          "max_properties": {
-            "lang:ar": "من المتوقع أن يحتوي الكائن على ما يصل إلى {{max}} خصائص ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass das Objekt höchstens {{max}} Eigenschaften hat, aber {{value}} erhalten wurde",
-            "lang:en": "Expected object to have at most {{max}} properties but got {{value}}",
-            "lang:es": "Se esperaba que el objeto tuviera como máximo {{max}} propiedades pero obtuvo {{value}}",
-            "lang:fr": "L'objet doit avoir au plus {{max}} propriétés mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'oggetto avesse al massimo {{max}} proprietà ma {{value}}",
-            "lang:ja": "オブジェクトは最大で{{max}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
-            "lang:ko": "객체는 최대 {{max}}개의 속성을 가질 수 있지만 {{value}}가 되었습니다"
-          },
-          "min_properties": {
-            "lang:ar": "من المتوقع أن يحتوي الكائن على الأقل {{min}} خصائص ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass das Objekt mindestens {{min}} Eigenschaften hat, aber {{value}} erhalten wurde",
-            "lang:en": "Expected object to have at least {{min}} properties but got {{value}}",
-            "lang:es": "Se esperaba que el objeto tuviera al menos {{min}} propiedades pero obtuvo {{value}}",
-            "lang:fr": "L'objet doit avoir au moins {{min}} propriétés mais a obtenu {{value}}",
-            "lang:it": "Era previsto che l'oggetto avesse almeno {{min}} proprietà ma {{value}}",
-            "lang:ja": "オブジェクトは少なくとも{{min}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
-            "lang:ko": "객체는 최소 {{min}}개의 속성을 가질 수 있지만 {{value}}가 되었습니다"
-          },
-          "required_property": {
-            "lang:ar": "الخصائص المطلوبة مفقودة: {{key}}",
-            "lang:de": "Fehlende erforderliche Eigenschaft: {{key}}",
-            "lang:en": "Missing required property: {{key}}",
-            "lang:es": "Propiedad requerida faltante: {{key}}",
-            "lang:fr": "Propriété requise manquante: {{key}}",
-            "lang:it": "Proprietà richiesta mancante: {{key}}",
-            "lang:ja": "必要なプロパティが見つかりません: {{key}}",
-            "lang:ko": "필수 속성이 누락되었습니다: {{key}}"
-          }
-        },
-        "promise": {
-          "is_promise": {
-            "lang:ar": "من المتوقع أن تكون القيمة وعدًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Versprechen ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a promise but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera una promesa pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être une promesse mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse una promessa ma {{type}}",
-            "lang:ja": "値はプロミスであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 프로미스 여야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "regexp": {
-          "not_match": {
-            "lang:ar": "من المتوقع أن تتطابق السلسلة مع التعبير العادي {{pattern}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der String dem regulären Ausdruck {{pattern}} entspricht, aber {{value}} erhalten wurde",
-            "lang:en": "Expected string to match regular expression {{pattern}} but got {{value}}",
-            "lang:es": "Se esperaba que la cadena coincidiera con la expresión regular {{pattern}} pero obtuvo {{value}}",
-            "lang:fr": "La chaîne doit correspondre à l'expression régulière {{pattern}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che la stringa corrispondesse all'espressione regolare {{pattern}} ma {{value}}",
-            "lang:ja": "文字列は正規表現{{pattern}}に一致することが期待されましたが、{{value}}が得られました",
-            "lang:ko": "문자열이 정규 표현식 {{pattern}}과 일치해야하지만 {{value}}가 되었습니다"
-          }
-        },
-        "string": {
           "format": {
-            "lang:ar": "من المتوقع أن تكون السلسلة بتنسيق {{format}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der String im Format {{format}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected string to be in format {{format}} but got {{value}}",
-            "lang:es": "Se esperaba que la cadena estuviera en formato {{format}} pero obtuvo {{value}}",
-            "lang:fr": "La chaîne doit être au format {{format}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che la stringa fosse nel formato {{format}} ma {{value}}",
-            "lang:ja": "文字列は形式{{format}}であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "문자열이 형식 {{format}}이어야하지만 {{value}}가 되었습니다"
+            "already_exists": {
+              "lang:ar": "التنسيق '{{format}}' موجود بالفعل",
+              "lang:de": "Das Format '{{format}}' existiert bereits",
+              "lang:en": "Format '{{format}}' already exists",
+              "lang:es": "El formato '{{format}}' ya existe",
+              "lang:fr": "Le format '{{format}}' existe déjà",
+              "lang:it": "Il formato '{{format}}' esiste già",
+              "lang:ja": "フォーマット'{{format}}'はすでに存在します",
+              "lang:ko": "포맷 '{{format}}'이 이미 존재합니다"
+            },
+            "does_not_exist": {
+              "lang:ar": "التنسيق '{{format}}' غير موجود",
+              "lang:de": "Das Format '{{format}}' existiert nicht",
+              "lang:en": "Format '{{format}}' does not exist",
+              "lang:es": "El formato '{{format}}' no existe",
+              "lang:fr": "Le format '{{format}}' n'existe pas",
+              "lang:it": "Il formato '{{format}}' non esiste",
+              "lang:ja": "フォーマット'{{format}}'は存在しません",
+              "lang:ko": "포맷 '{{format}}'이 존재하지 않습니다"
+            }
           },
-          "format_unknown": {
-            "lang:ar": "تنسيق سلسلة غير معروف {{format}}",
-            "lang:de": "Unbekanntes String-Format {{format}}",
-            "lang:en": "Unknown string format {{format}}",
-            "lang:es": "Formato de cadena desconocido {{format}}",
-            "lang:fr": "Format de chaîne inconnu {{format}}",
-            "lang:it": "Formato stringa sconosciuto {{format}}",
-            "lang:ja": "不明な文字列形式{{format}}",
-            "lang:ko": "알 수없는 문자열 형식 {{format}}"
+          "function": {
+            "is_function": {
+              "lang:ar": "من المتوقع أن تكون القيمة وظيفة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert eine Funktion ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a function but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera una función pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être une fonction mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse una funzione ma {{type}}",
+              "lang:ja": "値は関数であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 함수 여야하지만 {{type}}가 되었습니다"
+            }
           },
-          "is_string": {
-            "lang:ar": "من المتوقع أن تكون القيمة سلسلة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein String ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a string but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera una cadena de texto pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être une chaîne de caractères mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse una stringa ma {{type}}",
-            "lang:ja": "値は文字列であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 문자열이어야하지만 {{type}}가 되었습니다"
+          "integer": {
+            "exclusive_maximum": {
+              "lang:ar": "من المتوقع أن يكون العدد الصحيح أقل من {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Integer kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected integer to be less than {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que el entero fuera menor que {{max}} pero obtuvo {{value}}",
+              "lang:fr": "L'entier doit être inférieur à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'intero fosse minore di {{max}} ma {{value}}",
+              "lang:ja": "整数は{{max}}未満であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "정수는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
+            },
+            "exclusive_minimum": {
+              "lang:ar": "من المتوقع أن يكون العدد الصحيح أكثر من {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Integer größer als {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected integer to be greater than {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que el entero fuera mayor que {{min}} pero obtuvo {{value}}",
+              "lang:fr": "L'entier doit être supérieur à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'intero fosse maggiore di {{min}} ma {{value}}",
+              "lang:ja": "整数は{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+              "lang:ko": "정수는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
+            },
+            "is_integer": {
+              "lang:ar": "من المتوقع أن يكون القيمة عددًا صحيحًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Integer ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be an integer but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un entero pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un entier mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un intero ma {{type}}",
+              "lang:ja": "値は整数であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 정수 여야하지만 {{type}}가 되었습니다"
+            },
+            "maximum": {
+              "lang:ar": "من المتوقع أن يكون العدد الصحيح أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Integer kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected integer to be less or equal to {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que el entero fuera menor o igual a {{max}} pero obtuvo {{value}}",
+              "lang:fr": "L'entier doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'intero fosse minore o uguale a {{max}} ma {{value}}",
+              "lang:ja": "整数は{{max}}以下であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "정수는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+            },
+            "minimum": {
+              "lang:ar": "من المتوقع أن يكون العدد الصحيح أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Integer größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected integer to be greater or equal to {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que el entero fuera mayor o igual a {{min}} pero obtuvo {{value}}",
+              "lang:fr": "L'entier doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'intero fosse maggiore o uguale a {{min}} ma {{value}}",
+              "lang:ja": "整数は{{min}}以上であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "정수는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+            },
+            "multiple_of": {
+              "lang:ar": "من المتوقع أن يكون العدد الصحيح مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der Integer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected integer to be a multiple of {{multiple}} but got {{value}}",
+              "lang:es": "Se esperaba que el entero fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
+              "lang:fr": "L'entier doit être un multiple de {{multiple}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'intero fosse un multiplo di {{multiple}} ma {{value}}",
+              "lang:ja": "整数は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "정수는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+            }
           },
-          "max_length": {
-            "lang:ar": "من المتوقع أن يكون طول السلسلة أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass die String-Länge kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected string length less or equal to {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que la longitud de la cadena fuera menor o igual a {{max}} pero obtuvo {{value}}",
-            "lang:fr": "La longueur de la chaîne doit être inférieure ou égale à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che la lunghezza della stringa fosse minore o uguale a {{max}} ma {{value}}",
-            "lang:ja": "文字列の長さは{{max}}以下であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "문자열 길이는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+          "intersect": {
+            "is_intersect": {
+              "lang:ar": "من المتوقع أن تتطابق جميع القيم",
+              "lang:de": "Es wurde er wartet, dass alle Werte übereinstimmen",
+              "lang:en": "Expected all values to match",
+              "lang:es": "Se esperaba que todos los valores coincidieran",
+              "lang:fr": "Toutes les valeurs doivent correspondre",
+              "lang:it": "Era previsto che tutti i valori corrispondessero",
+              "lang:ja": "すべての値が一致することが期待されました",
+              "lang:ko": "모든 값이 일치하는 것으로 예상되었습니다"
+            },
+            "unevaluated_properties": {
+              "lang:ar": "تم العثور على خصائص غير مقدرة: {{props}}",
+              "lang:de": "Nicht ausgewertete Eigenschaften gefunden: {{props}}",
+              "lang:en": "Unevaluated properties found: {{props}}",
+              "lang:es": "Se encontraron propiedades no evaluadas: {{props}}",
+              "lang:fr": "Propriétés non évaluées trouvées: {{props}}",
+              "lang:it": "Proprietà non valutate trovate: {{props}}",
+              "lang:ja": "評価されていないプロパティが見つかりました: {{props}}",
+              "lang:ko": "평가되지 않은 속성이 발견되었습니다: {{props}}"
+            }
           },
-          "min_length": {
-            "lang:ar": "من المتوقع أن يكون طول السلسلة أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass die String-Länge größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
-            "lang:en": "Expected string length greater or equal to {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que la longitud de la cadena fuera mayor o igual a {{min}} pero obtuvo {{value}}",
-            "lang:fr": "La longueur de la chaîne doit être supérieure ou égale à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che la lunghezza della stringa fosse maggiore o uguale a {{min}} ma {{value}}",
-            "lang:ja": "文字列の長さは{{min}}以上であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "문자열 길이는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+          "iterator": {
+            "is_iterator": {
+              "lang:ar": "من المتوقع أن تكون القيمة مكررة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Iterator ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be an iterator but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un iterador pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un itérateur mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un iteratore ma {{type}}",
+              "lang:ja": "値はイテレータであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 반복자 여야하지만 {{type}}가 되었습니다"
+            }
           },
-          "pattern": {
-            "lang:ar": "من المتوقع أن تتطابق السلسلة مع النمط {{pattern}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass der String dem Muster {{pattern}} entspricht, aber {{value}} erhalten wurde",
-            "lang:en": "Expected string to match pattern {{pattern}} but got {{value}}",
-            "lang:es": "Se esperaba que la cadena coincidiera con el patrón {{pattern}} pero obtuvo {{value}}",
-            "lang:fr": "La chaîne doit correspondre au modèle {{pattern}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che la stringa corrispondesse al modello {{pattern}} ma {{value}}",
-            "lang:ja": "文字列はパターン{{pattern}}に一致することが期待されましたが、{{value}}が得られました",
-            "lang:ko": "문자열이 패턴 {{pattern}}과 일치하는 것으로 예상되었습니다"
+          "kind": {
+            "is_kind": {
+              "lang:ar": "من المتوقع أن تكون القيمة نوع {{kind}} ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert Art {{kind}} ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be kind {{kind}} but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera de tipo {{kind}} pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être de type {{kind}} mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse del tipo {{kind}} ma {{type}}",
+              "lang:ja": "値は{{kind}}であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 {{kind}} 여야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "literal": {
+            "is_literal": {
+              "lang:ar": "من المتوقع أن تكون القيمة حرفية ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Literal ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a literal but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un literal pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un littéral mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un letterale ma {{type}}",
+              "lang:ja": "値はリテラルであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 리터럴이어야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "never": {
+            "is_never": {
+              "lang:ar": "من المتوقع أن تكون القيمة أبدًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert nie ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be never but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera nunca pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être jamais mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse mai ma {{type}}",
+              "lang:ja": "値は決してないことが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 결코가 되어야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "not": {
+            "not_match": {
+              "lang:ar": "القيمة لا يجب أن تتطابق",
+              "lang:de": "Der Wert sollte nicht übereinstimmen",
+              "lang:en": "Value should not match",
+              "lang:es": "El valor no debe coincidir",
+              "lang:fr": "La valeur ne doit pas correspondre",
+              "lang:it": "Il valore non dovrebbe corrispondere",
+              "lang:ja": "値は一致してはいけません",
+              "lang:ko": "값이 일치하지 않아야합니다"
+            }
+          },
+          "null": {
+            "is_null": {
+              "lang:ar": "من المتوقع أن تكون القيمة فارغة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert null ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be null but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera nulo pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être nulle mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse nullo ma {{type}}",
+              "lang:ja": "値はnullであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 null이어야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "number": {
+            "exclusive_maximum": {
+              "lang:ar": "من المتوقع أن يكون العدد أقل من {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass die Nummer kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected number to be less than {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que el número fuera menor que {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le nombre doit être inférieur à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il numero fosse minore di {{max}} ma {{value}}",
+              "lang:ja": "数値は{{max}}未満であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "숫자는 {{max}}보다 작아야하지만 {{value}}가 되었습니다"
+            },
+            "exclusive_minimum": {
+              "lang:ar": "من المتوقع أن يكون العدد أكثر من {{min}} ولكن تم الحص",
+              "lang:de": "Es wurde er wartet, dass die Nummer größer als {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected number to be greater than {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que el número fuera mayor que {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le nombre doit être supérieur à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il numero fosse maggiore di {{min}} ma {{value}}",
+              "lang:ja": "数値は{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+              "lang:ko": "숫자는 {{min}}보다 커야하지만 {{value}}가 되었습니다"
+            },
+            "is_number": {
+              "lang:ar": "من المتوقع أن تكون القيمة رقمية ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert eine Nummer ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a number but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un número pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un nombre mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un numero ma {{type}}",
+              "lang:ja": "値は数値であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 숫자 여야하지만 {{type}}가 되었습니다"
+            },
+            "maximum": {
+              "lang:ar": "من المتوقع أن يكون العدد أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass die Nummer kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected number to be less or equal to {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que el número fuera menor o igual a {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le nombre doit être inférieur ou égal à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il numero fosse minore o uguale a {{max}} ma {{value}}",
+              "lang:ja": "数値は{{max}}以下であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "숫자는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+            },
+            "minimum": {
+              "lang:ar": "من المتوقع أن يكون العدد أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass die Nummer größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected number to be greater or equal to {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que el número fuera mayor o igual a {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le nombre doit être supérieur ou égal à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il numero fosse maggiore o uguale a {{min}} ma {{value}}",
+              "lang:ja": "数値は{{min}}以上であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "숫자는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+            },
+            "multiple_of": {
+              "lang:ar": "من المتوقع أن يكون العدد مضاعفًا لـ {{multiple}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass die Nummer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected number to be a multiple of {{multiple}} but got {{value}}",
+              "lang:es": "Se esperaba que el número fuera un múltiplo de {{multiple}} pero obtuvo {{value}}",
+              "lang:fr": "Le nombre doit être un multiple de {{multiple}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che il numero fosse un multiplo di {{multiple}} ma {{value}}",
+              "lang:ja": "数値は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "숫자는 {{multiple}}의 배수 여야하지만 {{value}}가 되었습니다"
+            }
+          },
+          "object": {
+            "additional_properties": {
+              "lang:ar": "تم العثور على خصائص إضافية: {{props}}",
+              "lang:de": "Zusätzliche Eigenschaften gefunden: {{props}}",
+              "lang:en": "Additional properties found: {{props}}",
+              "lang:es": "Se encontraron propiedades adicionales: {{props}}",
+              "lang:fr": "Propriétés supplémentaires trouvées: {{props}}",
+              "lang:it": "Proprietà aggiuntive trovate: {{props}}",
+              "lang:ja": "追加のプロパティが見つかりました: {{props}}",
+              "lang:ko": "추가 속성이 발견되었습니다: {{props}}"
+            },
+            "is_object": {
+              "lang:ar": "من المتوقع أن تكون القيمة كائنًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Objekt ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be an object but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un objeto pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un objet mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un oggetto ma {{type}}",
+              "lang:ja": "値はオブジェクトであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 객체 여야하지만 {{type}}가 되었습니다"
+            },
+            "max_properties": {
+              "lang:ar": "من المتوقع أن يحتوي الكائن على ما يصل إلى {{max}} خصائص ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass das Objekt höchstens {{max}} Eigenschaften hat, aber {{value}} erhalten wurde",
+              "lang:en": "Expected object to have at most {{max}} properties but got {{value}}",
+              "lang:es": "Se esperaba que el objeto tuviera como máximo {{max}} propiedades pero obtuvo {{value}}",
+              "lang:fr": "L'objet doit avoir au plus {{max}} propriétés mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'oggetto avesse al massimo {{max}} proprietà ma {{value}}",
+              "lang:ja": "オブジェクトは最大で{{max}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
+              "lang:ko": "객체는 최대 {{max}}개의 속성을 가질 수 있지만 {{value}}가 되었습니다"
+            },
+            "min_properties": {
+              "lang:ar": "من المتوقع أن يحتوي الكائن على الأقل {{min}} خصائص ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass das Objekt mindestens {{min}} Eigenschaften hat, aber {{value}} erhalten wurde",
+              "lang:en": "Expected object to have at least {{min}} properties but got {{value}}",
+              "lang:es": "Se esperaba que el objeto tuviera al menos {{min}} propiedades pero obtuvo {{value}}",
+              "lang:fr": "L'objet doit avoir au moins {{min}} propriétés mais a obtenu {{value}}",
+              "lang:it": "Era previsto che l'oggetto avesse almeno {{min}} proprietà ma {{value}}",
+              "lang:ja": "オブジェクトは少なくとも{{min}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
+              "lang:ko": "객체는 최소 {{min}}개의 속성을 가질 수 있지만 {{value}}가 되었습니다"
+            },
+            "required_property": {
+              "lang:ar": "الخصائص المطلوبة مفقودة: {{key}}",
+              "lang:de": "Fehlende erforderliche Eigenschaft: {{key}}",
+              "lang:en": "Missing required property: {{key}}",
+              "lang:es": "Propiedad requerida faltante: {{key}}",
+              "lang:fr": "Propriété requise manquante: {{key}}",
+              "lang:it": "Proprietà richiesta mancante: {{key}}",
+              "lang:ja": "必要なプロパティが見つかりません: {{key}}",
+              "lang:ko": "필수 속성이 누락되었습니다: {{key}}"
+            }
+          },
+          "promise": {
+            "is_promise": {
+              "lang:ar": "من المتوقع أن تكون القيمة وعدًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Versprechen ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a promise but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera una promesa pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être une promesse mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse una promessa ma {{type}}",
+              "lang:ja": "値はプロミスであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 프로미스 여야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "regexp": {
+            "not_match": {
+              "lang:ar": "من المتوقع أن تتطابق السلسلة مع التعبير العادي {{pattern}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der String dem regulären Ausdruck {{pattern}} entspricht, aber {{value}} erhalten wurde",
+              "lang:en": "Expected string to match regular expression {{pattern}} but got {{value}}",
+              "lang:es": "Se esperaba que la cadena coincidiera con la expresión regular {{pattern}} pero obtuvo {{value}}",
+              "lang:fr": "La chaîne doit correspondre à l'expression régulière {{pattern}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che la stringa corrispondesse all'espressione regolare {{pattern}} ma {{value}}",
+              "lang:ja": "文字列は正規表現{{pattern}}に一致することが期待されましたが、{{value}}が得られました",
+              "lang:ko": "문자열이 정규 표현식 {{pattern}}과 일치해야하지만 {{value}}가 되었습니다"
+            }
+          },
+          "string": {
+            "format": {
+              "lang:ar": "من المتوقع أن تكون السلسلة بتنسيق {{format}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der String im Format {{format}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected string to be in format {{format}} but got {{value}}",
+              "lang:es": "Se esperaba que la cadena estuviera en formato {{format}} pero obtuvo {{value}}",
+              "lang:fr": "La chaîne doit être au format {{format}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che la stringa fosse nel formato {{format}} ma {{value}}",
+              "lang:ja": "文字列は形式{{format}}であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "문자열이 형식 {{format}}이어야하지만 {{value}}가 되었습니다"
+            },
+            "format_unknown": {
+              "lang:ar": "تنسيق سلسلة غير معروف {{format}}",
+              "lang:de": "Unbekanntes String-Format {{format}}",
+              "lang:en": "Unknown string format {{format}}",
+              "lang:es": "Formato de cadena desconocido {{format}}",
+              "lang:fr": "Format de chaîne inconnu {{format}}",
+              "lang:it": "Formato stringa sconosciuto {{format}}",
+              "lang:ja": "不明な文字列形式{{format}}",
+              "lang:ko": "알 수없는 문자열 형식 {{format}}"
+            },
+            "is_string": {
+              "lang:ar": "من المتوقع أن تكون القيمة سلسلة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein String ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a string but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera una cadena de texto pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être une chaîne de caractères mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse una stringa ma {{type}}",
+              "lang:ja": "値は文字列であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 문자열이어야하지만 {{type}}가 되었습니다"
+            },
+            "max_length": {
+              "lang:ar": "من المتوقع أن يكون طول السلسلة أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass die String-Länge kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected string length less or equal to {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que la longitud de la cadena fuera menor o igual a {{max}} pero obtuvo {{value}}",
+              "lang:fr": "La longueur de la chaîne doit être inférieure ou égale à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che la lunghezza della stringa fosse minore o uguale a {{max}} ma {{value}}",
+              "lang:ja": "文字列の長さは{{max}}以下であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "문자열 길이는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+            },
+            "min_length": {
+              "lang:ar": "من المتوقع أن يكون طول السلسلة أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass die String-Länge größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+              "lang:en": "Expected string length greater or equal to {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que la longitud de la cadena fuera mayor o igual a {{min}} pero obtuvo {{value}}",
+              "lang:fr": "La longueur de la chaîne doit être supérieure ou égale à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che la lunghezza della stringa fosse maggiore o uguale a {{min}} ma {{value}}",
+              "lang:ja": "文字列の長さは{{min}}以上であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "문자열 길이는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+            },
+            "pattern": {
+              "lang:ar": "من المتوقع أن تتطابق السلسلة مع النمط {{pattern}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass der String dem Muster {{pattern}} entspricht, aber {{value}} erhalten wurde",
+              "lang:en": "Expected string to match pattern {{pattern}} but got {{value}}",
+              "lang:es": "Se esperaba que la cadena coincidiera con el patrón {{pattern}} pero obtuvo {{value}}",
+              "lang:fr": "La chaîne doit correspondre au modèle {{pattern}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che la stringa corrispondesse al modello {{pattern}} ma {{value}}",
+              "lang:ja": "文字列はパターン{{pattern}}に一致することが期待されましたが、{{value}}が得られました",
+              "lang:ko": "문자열이 패턴 {{pattern}}과 일치하는 것으로 예상되었습니다"
+            }
+          },
+          "symbol": {
+            "is_symbol": {
+              "lang:ar": "من المتوقع أن تكون القيمة رمزًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Symbol ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a symbol but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un símbolo pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un symbole mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un simbolo ma {{type}}",
+              "lang:ja": "値はシンボルであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 심볼이어야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "tuple": {
+            "is_tuple": {
+              "lang:ar": "من المتوقع أن تكون القيمة قرادًا ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Tupel ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a tuple but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera una tupla pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un tuple mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse una tupla ma {{type}}",
+              "lang:ja": "値はタプルであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 튜플이어야하지만 {{type}}가 되었습니다"
+            },
+            "length": {
+              "lang:ar": "من المتوقع أن يكون القراد طوله {{length}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass das Tupel die Länge {{length}} hat, aber {{value}} erhalten wurde",
+              "lang:en": "Expected tuple to have length {{length}} but got {{value}}",
+              "lang:es": "Se esperaba que la tupla tuviera una longitud de {{length}} pero obtuvo {{value}}",
+              "lang:fr": "Le tuple doit avoir une longueur de {{length}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che la tupla avesse lunghezza {{length}} ma {{value}}",
+              "lang:ja": "タプルの長さは{{length}}であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "튜플의 길이는 {{length}}이어야하지만 {{value}}가 되었습니다"
+            }
+          },
+          "uint8array": {
+            "is_uint8array": {
+              "lang:ar": "من المتوقع أن تكون القيمة Uint8Array ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert ein Uint8Array ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be a Uint8Array but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera un Uint8Array pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être un Uint8Array mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse un Uint8Array ma {{type}}",
+              "lang:ja": "値はUint8Arrayであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 Uint8Array 여야하지만 {{type}}가 되었습니다"
+            },
+            "max_byte_length": {
+              "lang:ar": "من المتوقع أن يكون طول Uint8Array في البايت أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass Uint8Array eine Byte-Länge kleiner oder gleich {{max}} hat, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Uint8Array to have byte length less or equal to {{max}} but got {{value}}",
+              "lang:es": "Se esperaba que Uint8Array tuviera una longitud de bytes menor o igual a {{max}} pero obtuvo {{value}}",
+              "lang:fr": "Le Uint8Array doit avoir une longueur en octets inférieure ou égale à {{max}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che Uint8Array avesse una lunghezza in byte minore o uguale a {{max}} ma {{value}}",
+              "lang:ja": "Uint8Arrayのバイト長は{{max}}以下であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "Uint8Array의 바이트 길이는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+            },
+            "min_byte_length": {
+              "lang:ar": "من المتوقع أن يكون طول Uint8Array في البايت أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
+              "lang:de": "Es wurde er wartet, dass Uint8Array eine Byte-Länge größer oder gleich {{min}} hat, aber {{value}} erhalten wurde",
+              "lang:en": "Expected Uint8Array to have byte length greater or equal to {{min}} but got {{value}}",
+              "lang:es": "Se esperaba que Uint8Array tuviera una longitud de bytes mayor o igual a {{min}} pero obtuvo {{value}}",
+              "lang:fr": "Le Uint8Array doit avoir une longueur en octets supérieure ou égale à {{min}} mais a obtenu {{value}}",
+              "lang:it": "Era previsto che Uint8Array avesse una lunghezza in byte maggiore o uguale a {{min}} ma {{value}}",
+              "lang:ja": "Uint8Arrayのバイト長は{{min}}以上であることが期待されましたが、{{value}}が得られました",
+              "lang:ko": "Uint8Array의 바이트 길이는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+            }
+          },
+          "undefined": {
+            "is_undefined": {
+              "lang:ar": "من المتوقع أن تكون القيمة غير محددة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert undefiniert ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be undefined but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera indefinido pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être indéfinie mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse indefinito ma {{type}}",
+              "lang:ja": "値は未定義であることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 정의되지 않아야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "union": {
+            "is_union": {
+              "lang:ar": "من المتوقع أن تكون القيمة واحدة من {{types}} ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert einer der {{types}} ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be one of {{types}} but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera uno de {{types}} pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être l'un des {{types}} mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse uno dei {{types}} ma {{type}}",
+              "lang:ja": "値は{{types}}の1つであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 {{types}} 중 하나 여야하지만 {{type}}가 되었습니다"
+            }
+          },
+          "void": {
+            "is_void": {
+              "lang:ar": "من المتوقع أن تكون القيمة فارغة ولكن تم الحصول على {{type}}",
+              "lang:de": "Es wurde er wartet, dass der Wert leer ist, aber {{type}} erhalten wurde",
+              "lang:en": "Expected value to be void but got {{type}}",
+              "lang:es": "Se esperaba que el valor fuera vacío pero obtuvo {{type}}",
+              "lang:fr": "La valeur doit être vide mais a obtenu {{type}}",
+              "lang:it": "Era previsto che il valore fosse vuoto ma {{type}}",
+              "lang:ja": "値はvoidであることが期待されましたが、{{type}}が得られました",
+              "lang:ko": "값은 void 여야하지만 {{type}}가 되었습니다"
+            }
           }
-        },
-        "symbol": {
-          "is_symbol": {
-            "lang:ar": "من المتوقع أن تكون القيمة رمزًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Symbol ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a symbol but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un símbolo pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un symbole mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un simbolo ma {{type}}",
-            "lang:ja": "値はシンボルであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 심볼이어야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "tuple": {
-          "is_tuple": {
-            "lang:ar": "من المتوقع أن تكون القيمة قرادًا ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Tupel ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a tuple but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera una tupla pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un tuple mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse una tupla ma {{type}}",
-            "lang:ja": "値はタプルであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 튜플이어야하지만 {{type}}가 되었습니다"
+        }
+      },
+      "database": {
+        "mssql": {
+          "connection_error": {
+            "lang:ar": "خطأ في الاتصال بقاعدة البيانات",
+            "lang:de": "Fehler bei der Verbindung zur Datenbank",
+            "lang:en": "Database connection error",
+            "lang:es": "Error de conexión a la base de datos",
+            "lang:fr": "Erreur de connexion à la base de données",
+            "lang:it": "Errore di connessione al database",
+            "lang:ja": "データベース接続エラー",
+            "lang:ko": "데이터베이스 연결 오류"
           },
-          "length": {
-            "lang:ar": "من المتوقع أن يكون القراد طوله {{length}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass das Tupel die Länge {{length}} hat, aber {{value}} erhalten wurde",
-            "lang:en": "Expected tuple to have length {{length}} but got {{value}}",
-            "lang:es": "Se esperaba que la tupla tuviera una longitud de {{length}} pero obtuvo {{value}}",
-            "lang:fr": "Le tuple doit avoir une longueur de {{length}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che la tupla avesse lunghezza {{length}} ma {{value}}",
-            "lang:ja": "タプルの長さは{{length}}であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "튜플의 길이는 {{length}}이어야하지만 {{value}}가 되었습니다"
-          }
-        },
-        "uint8array": {
-          "is_uint8array": {
-            "lang:ar": "من المتوقع أن تكون القيمة Uint8Array ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert ein Uint8Array ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be a Uint8Array but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera un Uint8Array pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être un Uint8Array mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse un Uint8Array ma {{type}}",
-            "lang:ja": "値はUint8Arrayであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 Uint8Array 여야하지만 {{type}}가 되었습니다"
+          "database_access_denied": {
+            "lang:ar": "تم رفض الوصول إلى قاعدة البيانات",
+            "lang:de": "Datenbankzugriff verweigert",
+            "lang:en": "Database access denied",
+            "lang:es": "Acceso a la base de datos denegado",
+            "lang:fr": "Accès à la base de données refusé",
+            "lang:it": "Accesso al database negato",
+            "lang:ja": "データベースアクセスが拒否されました",
+            "lang:ko": "데이터베이스 액세스 거부됨"
           },
-          "max_byte_length": {
-            "lang:ar": "من المتوقع أن يكون طول Uint8Array في البايت أقل أو يساوي {{max}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass Uint8Array eine Byte-Länge kleiner oder gleich {{max}} hat, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Uint8Array to have byte length less or equal to {{max}} but got {{value}}",
-            "lang:es": "Se esperaba que Uint8Array tuviera una longitud de bytes menor o igual a {{max}} pero obtuvo {{value}}",
-            "lang:fr": "Le Uint8Array doit avoir une longueur en octets inférieure ou égale à {{max}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che Uint8Array avesse una lunghezza in byte minore o uguale a {{max}} ma {{value}}",
-            "lang:ja": "Uint8Arrayのバイト長は{{max}}以下であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "Uint8Array의 바이트 길이는 {{max}} 이하이어야하지만 {{value}}가 되었습니다"
+          "database_ambiguous_column": {
+            "lang:ar": "عمود غامض",
+            "lang:de": "Mehrdeutige Spalte",
+            "lang:en": "Ambiguous column",
+            "lang:es": "Columna ambigua",
+            "lang:fr": "Colonne ambiguë",
+            "lang:it": "Colonna ambigua",
+            "lang:ja": "曖昧な列",
+            "lang:ko": "애매한 열"
           },
-          "min_byte_length": {
-            "lang:ar": "من المتوقع أن يكون طول Uint8Array في البايت أكثر أو يساوي {{min}} ولكن تم الحصول على {{value}}",
-            "lang:de": "Es wurde er wartet, dass Uint8Array eine Byte-Länge größer oder gleich {{min}} hat, aber {{value}} erhalten wurde",
-            "lang:en": "Expected Uint8Array to have byte length greater or equal to {{min}} but got {{value}}",
-            "lang:es": "Se esperaba que Uint8Array tuviera una longitud de bytes mayor o igual a {{min}} pero obtuvo {{value}}",
-            "lang:fr": "Le Uint8Array doit avoir une longueur en octets supérieure ou égale à {{min}} mais a obtenu {{value}}",
-            "lang:it": "Era previsto che Uint8Array avesse una lunghezza in byte maggiore o uguale a {{min}} ma {{value}}",
-            "lang:ja": "Uint8Arrayのバイト長は{{min}}以上であることが期待されましたが、{{value}}が得られました",
-            "lang:ko": "Uint8Array의 바이트 길이는 {{min}} 이상이어야하지만 {{value}}가 되었습니다"
+          "database_authorization_failed": {
+            "lang:ar": "فشلت المصادقة على قاعدة البيانات",
+            "lang:de": "Datenbankautorisierung fehlgeschlagen",
+            "lang:en": "Database authorization failed",
+            "lang:es": "Error de autorización de la base de datos",
+            "lang:fr": "Échec de l'autorisation de la base de données",
+            "lang:it": "Autorizzazione al database non riuscita",
+            "lang:ja": "データベース認証に失敗しました",
+            "lang:ko": "데이터베이스 인증 실패"
+          },
+          "database_cannot_update_identity_column": {
+            "lang:ar": "لا يمكن تحديث عمود الهوية",
+            "lang:de": "Identitätsspalte kann nicht aktualisiert werden",
+            "lang:en": "Cannot update identity column",
+            "lang:es": "No se puede actualizar la columna de identidad",
+            "lang:fr": "Impossible de mettre à jour la colonne d'identité",
+            "lang:it": "Impossibile aggiornare la colonna di identità",
+            "lang:ja": "アイデンティティ列を更新できません",
+            "lang:ko": "아이덴티티 열을 업데이트할 수 없습니다"
+          },
+          "database_column_not_found": {
+            "lang:ar": "لم يتم العثور على العمود",
+            "lang:de": "Spalte nicht gefunden",
+            "lang:en": "Column not found",
+            "lang:es": "Columna no encontrada",
+            "lang:fr": "Colonne non trouvée",
+            "lang:it": "Colonna non trovata",
+            "lang:ja": "列が見つかりません",
+            "lang:ko": "열을 찾을 수 없음"
+          },
+          "database_data_too_large": {
+            "lang:ar": "البيانات كبيرة جدًا",
+            "lang:de": "Daten zu groß",
+            "lang:en": "Data too large",
+            "lang:es": "Datos demasiado grandes",
+            "lang:fr": "Données trop volumineuses",
+            "lang:it": "Dati troppo grandi",
+            "lang:ja": "データが大きすぎます",
+            "lang:ko": "데이터가 너무 큽니다"
+          },
+          "database_deadlock_detected": {
+            "lang:ar": "تم اكتشاف تعليق",
+            "lang:de": "Deadlock erkannt",
+            "lang:en": "Deadlock detected",
+            "lang:es": "Bloqueo detectado",
+            "lang:fr": "Deadlock détecté",
+            "lang:it": "Rilevato un deadlock",
+            "lang:ja": "デッドロックが検出されました",
+            "lang:ko": "교착 상태 감지됨"
+          },
+          "database_duplicate_key": {
+            "lang:ar": "مفتاح مكرر",
+            "lang:de": "Doppelter Schlüssel",
+            "lang:en": "Duplicate key",
+            "lang:es": "Clave duplicada",
+            "lang:fr": "Clé en double",
+            "lang:it": "Chiave duplicata",
+            "lang:ja": "重複キー",
+            "lang:ko": "중복 키"
+          },
+          "database_foreign_key_violation": {
+            "lang:ar": "انتهاك مفتاح خارجي",
+            "lang:de": "Verletzung des Fremdschlüssels",
+            "lang:en": "Foreign key violation",
+            "lang:es": "Violación de clave foránea",
+            "lang:fr": "Violation de clé étrangère",
+            "lang:it": "Violazione della chiave esterna",
+            "lang:ja": "外部キー違反",
+            "lang:ko": "외래 키 위반"
+          },
+          "database_identity_insert_not_allowed": {
+            "lang:ar": "لا يُسمح بإدراج الهوية",
+            "lang:de": "Identitätseinfügung nicht erlaubt",
+            "lang:en": "Identity insert not allowed",
+            "lang:es": "Inserción de identidad no permitida",
+            "lang:fr": "Insertion d'identité non autorisée",
+            "lang:it": "Inserimento di identità non consentito",
+            "lang:ja": "アイデンティティの挿入は許可されていません",
+            "lang:ko": "아이덴티티 삽입이 허용되지 않습니다"
+          },
+          "database_insufficient_memory": {
+            "lang:ar": "ذاكرة غير كافية",
+            "lang:de": "Nicht genügend Speicher",
+            "lang:en": "Insufficient memory",
+            "lang:es": "Memoria insuficiente",
+            "lang:fr": "Mémoire insuffisante",
+            "lang:it": "Memoria insufficiente",
+            "lang:ja": "メモリが不足しています",
+            "lang:ko": "메모리가 부족합니다"
+          },
+          "database_insufficient_storage": {
+            "lang:ar": "تخزين غير كافي",
+            "lang:de": "Nicht genügend Speicherplatz",
+            "lang:en": "Insufficient storage",
+            "lang:es": "Almacenamiento insuficiente",
+            "lang:fr": "Stockage insuffisant",
+            "lang:it": "Memoria insufficiente",
+            "lang:ja": "ストレージが不足しています",
+            "lang:ko": "저장 공간이 부족합니다"
+          },
+          "database_permission_denied": {
+            "lang:ar": "تم رفض الإذن",
+            "lang:de": "Berechtigung verweigert",
+            "lang:en": "Permission denied",
+            "lang:es": "Permiso denegado",
+            "lang:fr": "Autorisation refusée",
+            "lang:it": "Permesso negato",
+            "lang:ja": "許可が拒否されました",
+            "lang:ko": "허가가 거부되었습니다"
+          },
+          "database_query_timeout": {
+            "lang:ar": "انتهت صلاحية الاستعلام",
+            "lang:de": "Abfragezeitüberschreitung",
+            "lang:en": "Query timeout",
+            "lang:es": "Tiempo de espera de consulta",
+            "lang:fr": "Délai d'attente de la requête",
+            "lang:it": "Timeout della query",
+            "lang:ja": "クエリタイムアウト",
+            "lang:ko": "쿼리 시간 초과"
+          },
+          "database_resource_locked": {
+            "lang:ar": "المورد مقفل",
+            "lang:de": "Ressource gesperrt",
+            "lang:en": "Resource locked",
+            "lang:es": "Recurso bloqueado",
+            "lang:fr": "Ressource verrouillée",
+            "lang:it": "Risorsa bloccata",
+            "lang:ja": "リソースがロックされています",
+            "lang:ko": "리소스가 잠겨 있음"
+          },
+          "database_syntax_error": {
+            "lang:ar": "خطأ في بناء الجملة",
+            "lang:de": "Syntaxfehler in der Datenbank",
+            "lang:en": "Database syntax error",
+            "lang:es": "Error de sintaxis de la base de datos",
+            "lang:fr": "Erreur de syntaxe de la base de données",
+            "lang:it": "Errore di sintassi del database",
+            "lang:ja": "データベース構文エラー",
+            "lang:ko": "데이터베이스 구문 오류"
+          },
+          "database_transaction_aborted": {
+            "lang:ar": "تم إحباط المعاملة",
+            "lang:de": "Transaktion abgebrochen",
+            "lang:en": "Transaction aborted",
+            "lang:es": "Transacción abortada",
+            "lang:fr": "Transaction avortée",
+            "lang:it": "Transazione annullata",
+            "lang:ja": "トランザクションが中止されました",
+            "lang:ko": "트랜잭션이 중단되었습니다"
+          },
+          "database_transaction_log_full": {
+            "lang:ar": "سجل المعاملات ممتلئ",
+            "lang:de": "Transaktionsprotokoll voll",
+            "lang:en": "Transaction log full",
+            "lang:es": "Registro de transacciones lleno",
+            "lang:fr": "Journal des transactions plein",
+            "lang:it": "Log delle transazioni pieno",
+            "lang:ja": "トランザクションログがいっぱいです",
+            "lang:ko": "트랜잭션 로그가 가득 찼습니다"
+          },
+          "database_unique_constraint_violation": {
+            "lang:ar": "انتهاك القيد الفريد",
+            "lang:de": "Verletzung der eindeutigen Einschränkung",
+            "lang:en": "Unique constraint violation",
+            "lang:es": "Violación de la restricción única",
+            "lang:fr": "Violation de contrainte unique",
+            "lang:it": "Violazione del vincolo univoco",
+            "lang:ja": "一意制約違反",
+            "lang:ko": "고유 제약 위반"
+          },
+          "disconnect_error": {
+            "lang:ar": "خطأ في فصل الاتصال بقاعدة البيانات",
+            "lang:de": "Fehler beim Trennen der Verbindung zur Datenbank",
+            "lang:en": "Database disconnect error",
+            "lang:es": "Error al desconectar de la base de datos",
+            "lang:fr": "Erreur de déconnexion de la base de données",
+            "lang:it": "Errore di disconnessione dal database",
+            "lang:ja": "データベース切断エラー",
+            "lang:ko": "데이터베이스 연결 해제 오류"
+          },
+          "no_result": {
+            "lang:ar": "لا توجد نتائج",
+            "lang:de": "Kein Ergebnis",
+            "lang:en": "No result",
+            "lang:es": "Sin resultados",
+            "lang:fr": "Pas de résultat",
+            "lang:it": "Nessun risultato",
+            "lang:ja": "結果なし",
+            "lang:ko": "결과 없음"
+          },
+          "not_connected": {
+            "lang:ar": "لم يتم الاتصال بقاعدة البيانات",
+            "lang:de": "Nicht mit der Datenbank verbunden",
+            "lang:en": "Not connected to database",
+            "lang:es": "No conectado a la base de datos",
+            "lang:fr": "Non connecté à la base de données",
+            "lang:it": "Non connesso al database",
+            "lang:ja": "データベースに接続されていません",
+            "lang:ko": "데이터베이스에 연결되지 않음"
+          },
+          "query_error": {
+            "lang:ar": "خطأ في الاستعلام",
+            "lang:de": "Abfragefehler",
+            "lang:en": "Query error",
+            "lang:es": "Error de consulta",
+            "lang:fr": "Erreur de requête",
+            "lang:it": "Errore di query",
+            "lang:ja": "クエリエラー",
+            "lang:ko": "쿼리 오류"
+          },
+          "table_not_found": {
+            "lang:ar": "لم يتم العثور على الجدول",
+            "lang:de": "Tabelle nicht gefunden",
+            "lang:en": "Table not found",
+            "lang:es": "Tabla no encontrada",
+            "lang:fr": "Table non trouvée",
+            "lang:it": "Tabella non trovata",
+            "lang:ja": "テーブルが見つかりません",
+            "lang:ko": "테이블을 찾을 수 없음"
           }
-        },
-        "undefined": {
-          "is_undefined": {
-            "lang:ar": "من المتوقع أن تكون القيمة غير محددة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert undefiniert ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be undefined but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera indefinido pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être indéfinie mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse indefinito ma {{type}}",
-            "lang:ja": "値は未定義であることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 정의되지 않아야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "union": {
-          "is_union": {
-            "lang:ar": "من المتوقع أن تكون القيمة واحدة من {{types}} ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert einer der {{types}} ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be one of {{types}} but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera uno de {{types}} pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être l'un des {{types}} mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse uno dei {{types}} ma {{type}}",
-            "lang:ja": "値は{{types}}の1つであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 {{types}} 중 하나 여야하지만 {{type}}가 되었습니다"
-          }
-        },
-        "void": {
-          "is_void": {
-            "lang:ar": "من المتوقع أن تكون القيمة فارغة ولكن تم الحصول على {{type}}",
-            "lang:de": "Es wurde er wartet, dass der Wert leer ist, aber {{type}} erhalten wurde",
-            "lang:en": "Expected value to be void but got {{type}}",
-            "lang:es": "Se esperaba que el valor fuera vacío pero obtuvo {{type}}",
-            "lang:fr": "La valeur doit être vide mais a obtenu {{type}}",
-            "lang:it": "Era previsto che il valore fosse vuoto ma {{type}}",
-            "lang:ja": "値はvoidであることが期待されましたが、{{type}}が得られました",
-            "lang:ko": "값은 void 여야하지만 {{type}}가 되었습니다"
-          }
+        }
+      },
+      "util": {
+        "invalid_environment": {
+          "lang:ar": "بيئة غير صالحة",
+          "lang:de": "Ungültige Umgebung",
+          "lang:en": "Invalid environment",
+          "lang:es": "Entorno inválido",
+          "lang:fr": "Environnement invalide",
+          "lang:it": "Ambiente non valido",
+          "lang:ja": "無効な環境",
+          "lang:ko": "유효하지 않은 환경"
         }
       }
     }

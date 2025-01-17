@@ -1,7 +1,15 @@
 // Export utils
 export * from './core/util/env';
 export * from './core/util/json';
+export * from './core/util/stream';
 export * from './core/util/typebox';
+
+// Export database
+export * from './core/database/mssql';
+export * from './core/database/table';
+
+// Export repository
+export * from './core/repository/repository';
 
 // Exports of error classes
 export * from './error/coreError';
@@ -26,5 +34,20 @@ export const ja = jaLocale;
 export const ko = koLocale;
 
 // Exports of TypeScript types
+export type * from './types/constant/eventMssql';
+export type * from './types/constant/eventTable';
+export type * from './types/constant/mssqlErrorCode';
+
+export type * from './types/data/advancedSearch';
+export type * from './types/data/fieldSelection';
+export type * from './types/data/mssqlEventLog';
+export type * from './types/data/queryOptions';
+export type * from './types/data/queryOptionsExtendPagination';
+export type * from './types/data/queryOptionsExtendStream';
+export type * from './types/data/streamWithAsyncIterable';
+export type * from './types/data/transaction';
+export type * from './types/data/whereClause';
+
 export type * from './types/enum/color';
 export type * from './types/enum/httpStatusCode';
+

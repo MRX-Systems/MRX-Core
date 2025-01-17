@@ -12,6 +12,8 @@ await Bun.build({
     root: './source',
     entrypoints: [
         './source/core/util/index.ts',
+        './source/core/database/index.ts',
+        './source/core/repository/index.ts',
 
         './source/error/index.ts',
         './source/error/key/index.ts',

@@ -1,127 +1,160 @@
 {
   "error": {
     "core": {
-      "invalid_environment": "Ungültige Umgebung",
-      "validation": {
-        "array": {
-          "contains": "Es wurde er wartet, dass das Array mindestens einen passenden Wert enthält",
-          "is_array": "Es wurde er wartet, dass der Wert ein Array ist, aber {{type}} erhalten wurde",
-          "max_contains": "Es wurde er wartet, dass das Array nicht mehr als {{max}} passende Werte enthält",
-          "max_items": "Es wurde er wartet, dass die Arraylänge kleiner oder gleich {{max}} ist, aber {{length}} erhalten wurde",
-          "min_contains": "Es wurde er wartet, dass das Array mindestens {{min}} passende Werte enthält",
-          "min_items": "Es wurde er wartet, dass die Arraylänge größer oder gleich {{min}} ist, aber {{length}} erhalten wurde",
-          "unique_items": "Es wurde er wartet, dass die Arrayelemente eindeutig sind"
-        },
-        "async_iterator": {
-          "is_async_iterator": "Es wurde er wartet, dass der Wert ein asynchroner Iterator ist, aber {{type}} erhalten wurde"
-        },
-        "bigint": {
-          "exclusive_maximum": "Es wurde er wartet, dass bigint kleiner als {{maximum}} ist, aber {{value}} erhalten wurde",
-          "exclusive_minimum": "Es wurde er wartet, dass bigint größer als {{minimum}} ist, aber {{value}} erhalten wurde",
-          "is_bigint": "Es wurde er wartet, dass der Wert ein bigint ist, aber {{type}} erhalten wurde",
-          "maximum": "Es wurde er wartet, dass bigint kleiner oder gleich {{maximum}} ist, aber {{value}} erhalten wurde",
-          "minimum": "Es wurde er wartet, dass bigint größer oder gleich {{minimum}} ist, aber {{value}} erhalten wurde",
-          "multiple_of": "Es wurde er wartet, dass bigint ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
-        },
-        "boolean": {
-          "is_boolean": "Es wurde er wartet, dass der Wert ein boolescher Wert ist, aber {{type}} erhalten wurde"
-        },
-        "date": {
-          "exclusive_maximum_timestamp": "Es wurde er wartet, dass der Datumstimestamp kleiner als {{maximum}} ist, aber {{value}} erhalten wurde",
-          "exclusive_minimum_timestamp": "Es wurde er wartet, dass der Datumstimestamp größer als {{minimum}} ist, aber {{value}} erhalten wurde",
-          "is_date": "Es wurde er wartet, dass der Wert ein Datum ist, aber {{type}} erhalten wurde",
-          "maximum_timestamp": "Es wurde er wartet, dass der Datumst timestamp kleiner oder gleich {{maximum}} ist, aber {{value}} erhalten wurde",
-          "minimum_timestamp": "Es wurde er wartet, dass der Datumst timestamp größer oder gleich {{minimum}} ist, aber {{value}} erhalten wurde",
-          "multiple_of_timestamp": "Es wurde er wartet, dass der Datumst timestamp ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
-        },
-        "default": "Unbekannter Fehler",
-        "format": {
-          "already_exists": "Das Format '{{format}}' existiert bereits",
-          "does_not_exist": "Das Format '{{format}}' existiert nicht"
-        },
-        "function": {
-          "is_function": "Es wurde er wartet, dass der Wert eine Funktion ist, aber {{type}} erhalten wurde"
-        },
-        "integer": {
-          "exclusive_maximum": "Es wurde er wartet, dass der Integer kleiner als {{maximum}} ist, aber {{value}} erhalten wurde",
-          "exclusive_minimum": "Es wurde er wartet, dass der Integer größer als {{minimum}} ist, aber {{value}} erhalten wurde",
-          "is_integer": "Es wurde er wartet, dass der Wert ein Integer ist, aber {{type}} erhalten wurde",
-          "maximum": "Es wurde er wartet, dass der Integer kleiner oder gleich {{maximum}} ist, aber {{value}} erhalten wurde",
-          "minimum": "Es wurde er wartet, dass der Integer größer oder gleich {{minimum}} ist, aber {{value}} erhalten wurde",
-          "multiple_of": "Es wurde er wartet, dass der Integer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
-        },
-        "intersect": {
-          "is_intersect": "Es wurde er wartet, dass alle Werte übereinstimmen",
-          "unevaluated_properties": "Nicht ausgewertete Eigenschaften gefunden: {{props}}"
-        },
-        "iterator": {
-          "is_iterator": "Es wurde er wartet, dass der Wert ein Iterator ist, aber {{type}} erhalten wurde"
-        },
-        "kind": {
-          "is_kind": "Es wurde er wartet, dass der Wert Art {{kind}} ist, aber {{type}} erhalten wurde"
-        },
-        "literal": {
-          "is_literal": "Es wurde er wartet, dass der Wert ein Literal ist, aber {{type}} erhalten wurde"
-        },
-        "never": {
-          "is_never": "Es wurde er wartet, dass der Wert nie ist, aber {{type}} erhalten wurde"
-        },
-        "not": {
-          "not_match": "Der Wert sollte nicht übereinstimmen"
-        },
-        "null": {
-          "is_null": "Es wurde er wartet, dass der Wert null ist, aber {{type}} erhalten wurde"
-        },
-        "number": {
-          "exclusive_maximum": "Es wurde er wartet, dass die Nummer kleiner als {{maximum}} ist, aber {{value}} erhalten wurde",
-          "exclusive_minimum": "Es wurde er wartet, dass die Nummer größer als {{minimum}} ist, aber {{value}} erhalten wurde",
-          "is_number": "Es wurde er wartet, dass der Wert eine Nummer ist, aber {{type}} erhalten wurde",
-          "maximum": "Es wurde er wartet, dass die Nummer kleiner oder gleich {{maximum}} ist, aber {{value}} erhalten wurde",
-          "minimum": "Es wurde er wartet, dass die Nummer größer oder gleich {{minimum}} ist, aber {{value}} erhalten wurde",
-          "multiple_of": "Es wurde er wartet, dass die Nummer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
-        },
-        "object": {
-          "additional_properties": "Zusätzliche Eigenschaften gefunden: {{props}}",
-          "is_object": "Es wurde er wartet, dass der Wert ein Objekt ist, aber {{type}} erhalten wurde",
-          "max_properties": "Es wurde er wartet, dass das Objekt höchstens {{maximum}} Eigenschaften hat, aber {{value}} erhalten wurde",
-          "min_properties": "Es wurde er wartet, dass das Objekt mindestens {{minimum}} Eigenschaften hat, aber {{value}} erhalten wurde",
-          "required_property": "Fehlende erforderliche Eigenschaft: {{key}}"
-        },
-        "promise": {
-          "is_promise": "Es wurde er wartet, dass der Wert ein Versprechen ist, aber {{type}} erhalten wurde"
-        },
-        "regexp": {
-          "not_match": "Es wurde er wartet, dass der String dem regulären Ausdruck {{pattern}} entspricht, aber {{value}} erhalten wurde"
-        },
-        "string": {
-          "format": "Es wurde er wartet, dass der String im Format {{format}} ist, aber {{value}} erhalten wurde",
-          "format_unknown": "Unbekanntes String-Format {{format}}",
-          "is_string": "Es wurde er wartet, dass der Wert ein String ist, aber {{type}} erhalten wurde",
-          "max_length": "Es wurde er wartet, dass die String-Länge kleiner oder gleich {{maximum}} ist, aber {{value}} erhalten wurde",
-          "min_length": "Es wurde er wartet, dass die String-Länge größer oder gleich {{minimum}} ist, aber {{value}} erhalten wurde",
-          "pattern": "Es wurde er wartet, dass der String dem Muster {{pattern}} entspricht, aber {{value}} erhalten wurde"
-        },
-        "symbol": {
-          "is_symbol": "Es wurde er wartet, dass der Wert ein Symbol ist, aber {{type}} erhalten wurde"
-        },
-        "tuple": {
-          "is_tuple": "Es wurde er wartet, dass der Wert ein Tupel ist, aber {{type}} erhalten wurde",
-          "length": "Es wurde er wartet, dass das Tupel die Länge {{length}} hat, aber {{value}} erhalten wurde"
-        },
-        "uint8array": {
-          "is_uint8array": "Es wurde er wartet, dass der Wert ein Uint8Array ist, aber {{type}} erhalten wurde",
-          "max_byte_length": "Es wurde er wartet, dass Uint8Array eine Byte-Länge kleiner oder gleich {{maximum}} hat, aber {{value}} erhalten wurde",
-          "min_byte_length": "Es wurde er wartet, dass Uint8Array eine Byte-Länge größer oder gleich {{minimum}} hat, aber {{value}} erhalten wurde"
-        },
-        "undefined": {
-          "is_undefined": "Es wurde er wartet, dass der Wert undefiniert ist, aber {{type}} erhalten wurde"
-        },
-        "union": {
-          "is_union": "Es wurde er wartet, dass der Wert einer der {{types}} ist, aber {{type}} erhalten wurde"
-        },
-        "void": {
-          "is_void": "Es wurde er wartet, dass der Wert leer ist, aber {{type}} erhalten wurde"
+      "config": {
+        "validation": {
+          "array": {
+            "contains": "Es wurde er wartet, dass das Array mindestens einen passenden Wert enthält",
+            "is_array": "Es wurde er wartet, dass der Wert ein Array ist, aber {{type}} erhalten wurde",
+            "max_contains": "Es wurde er wartet, dass das Array nicht mehr als {{max}} passende Werte enthält",
+            "max_items": "Es wurde er wartet, dass die Arraylänge kleiner oder gleich {{max}} ist, aber {{length}} erhalten wurde",
+            "min_contains": "Es wurde er wartet, dass das Array mindestens {{min}} passende Werte enthält",
+            "min_items": "Es wurde er wartet, dass die Arraylänge größer oder gleich {{min}} ist, aber {{length}} erhalten wurde",
+            "unique_items": "Es wurde er wartet, dass die Arrayelemente eindeutig sind"
+          },
+          "async_iterator": {
+            "is_async_iterator": "Es wurde er wartet, dass der Wert ein asynchroner Iterator ist, aber {{type}} erhalten wurde"
+          },
+          "bigint": {
+            "exclusive_maximum": "Es wurde er wartet, dass bigint kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+            "exclusive_minimum": "Es wurde er wartet, dass bigint größer als {{min}} ist, aber {{value}} erhalten wurde",
+            "is_bigint": "Es wurde er wartet, dass der Wert ein bigint ist, aber {{type}} erhalten wurde",
+            "maximum": "Es wurde er wartet, dass bigint kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+            "minimum": "Es wurde er wartet, dass bigint größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+            "multiple_of": "Es wurde er wartet, dass bigint ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
+          },
+          "boolean": {
+            "is_boolean": "Es wurde er wartet, dass der Wert ein boolescher Wert ist, aber {{type}} erhalten wurde"
+          },
+          "date": {
+            "exclusive_maximum_timestamp": "Es wurde er wartet, dass der Datumstimestamp kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+            "exclusive_minimum_timestamp": "Es wurde er wartet, dass der Datumstimestamp größer als {{min}} ist, aber {{value}} erhalten wurde",
+            "is_date": "Es wurde er wartet, dass der Wert ein Datum ist, aber {{type}} erhalten wurde",
+            "maximum_timestamp": "Es wurde er wartet, dass der Datumst timestamp kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+            "minimum_timestamp": "Es wurde er wartet, dass der Datumst timestamp größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+            "multiple_of_timestamp": "Es wurde er wartet, dass der Datumst timestamp ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
+          },
+          "default": "Unbekannter Fehler",
+          "format": {
+            "already_exists": "Das Format '{{format}}' existiert bereits",
+            "does_not_exist": "Das Format '{{format}}' existiert nicht"
+          },
+          "function": {
+            "is_function": "Es wurde er wartet, dass der Wert eine Funktion ist, aber {{type}} erhalten wurde"
+          },
+          "integer": {
+            "exclusive_maximum": "Es wurde er wartet, dass der Integer kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+            "exclusive_minimum": "Es wurde er wartet, dass der Integer größer als {{min}} ist, aber {{value}} erhalten wurde",
+            "is_integer": "Es wurde er wartet, dass der Wert ein Integer ist, aber {{type}} erhalten wurde",
+            "maximum": "Es wurde er wartet, dass der Integer kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+            "minimum": "Es wurde er wartet, dass der Integer größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+            "multiple_of": "Es wurde er wartet, dass der Integer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
+          },
+          "intersect": {
+            "is_intersect": "Es wurde er wartet, dass alle Werte übereinstimmen",
+            "unevaluated_properties": "Nicht ausgewertete Eigenschaften gefunden: {{props}}"
+          },
+          "iterator": {
+            "is_iterator": "Es wurde er wartet, dass der Wert ein Iterator ist, aber {{type}} erhalten wurde"
+          },
+          "kind": {
+            "is_kind": "Es wurde er wartet, dass der Wert Art {{kind}} ist, aber {{type}} erhalten wurde"
+          },
+          "literal": {
+            "is_literal": "Es wurde er wartet, dass der Wert ein Literal ist, aber {{type}} erhalten wurde"
+          },
+          "never": {
+            "is_never": "Es wurde er wartet, dass der Wert nie ist, aber {{type}} erhalten wurde"
+          },
+          "not": {
+            "not_match": "Der Wert sollte nicht übereinstimmen"
+          },
+          "null": {
+            "is_null": "Es wurde er wartet, dass der Wert null ist, aber {{type}} erhalten wurde"
+          },
+          "number": {
+            "exclusive_maximum": "Es wurde er wartet, dass die Nummer kleiner als {{max}} ist, aber {{value}} erhalten wurde",
+            "exclusive_minimum": "Es wurde er wartet, dass die Nummer größer als {{min}} ist, aber {{value}} erhalten wurde",
+            "is_number": "Es wurde er wartet, dass der Wert eine Nummer ist, aber {{type}} erhalten wurde",
+            "maximum": "Es wurde er wartet, dass die Nummer kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+            "minimum": "Es wurde er wartet, dass die Nummer größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+            "multiple_of": "Es wurde er wartet, dass die Nummer ein Vielfaches von {{multiple}} ist, aber {{value}} erhalten wurde"
+          },
+          "object": {
+            "additional_properties": "Zusätzliche Eigenschaften gefunden: {{props}}",
+            "is_object": "Es wurde er wartet, dass der Wert ein Objekt ist, aber {{type}} erhalten wurde",
+            "max_properties": "Es wurde er wartet, dass das Objekt höchstens {{max}} Eigenschaften hat, aber {{value}} erhalten wurde",
+            "min_properties": "Es wurde er wartet, dass das Objekt mindestens {{min}} Eigenschaften hat, aber {{value}} erhalten wurde",
+            "required_property": "Fehlende erforderliche Eigenschaft: {{key}}"
+          },
+          "promise": {
+            "is_promise": "Es wurde er wartet, dass der Wert ein Versprechen ist, aber {{type}} erhalten wurde"
+          },
+          "regexp": {
+            "not_match": "Es wurde er wartet, dass der String dem regulären Ausdruck {{pattern}} entspricht, aber {{value}} erhalten wurde"
+          },
+          "string": {
+            "format": "Es wurde er wartet, dass der String im Format {{format}} ist, aber {{value}} erhalten wurde",
+            "format_unknown": "Unbekanntes String-Format {{format}}",
+            "is_string": "Es wurde er wartet, dass der Wert ein String ist, aber {{type}} erhalten wurde",
+            "max_length": "Es wurde er wartet, dass die String-Länge kleiner oder gleich {{max}} ist, aber {{value}} erhalten wurde",
+            "min_length": "Es wurde er wartet, dass die String-Länge größer oder gleich {{min}} ist, aber {{value}} erhalten wurde",
+            "pattern": "Es wurde er wartet, dass der String dem Muster {{pattern}} entspricht, aber {{value}} erhalten wurde"
+          },
+          "symbol": {
+            "is_symbol": "Es wurde er wartet, dass der Wert ein Symbol ist, aber {{type}} erhalten wurde"
+          },
+          "tuple": {
+            "is_tuple": "Es wurde er wartet, dass der Wert ein Tupel ist, aber {{type}} erhalten wurde",
+            "length": "Es wurde er wartet, dass das Tupel die Länge {{length}} hat, aber {{value}} erhalten wurde"
+          },
+          "uint8array": {
+            "is_uint8array": "Es wurde er wartet, dass der Wert ein Uint8Array ist, aber {{type}} erhalten wurde",
+            "max_byte_length": "Es wurde er wartet, dass Uint8Array eine Byte-Länge kleiner oder gleich {{max}} hat, aber {{value}} erhalten wurde",
+            "min_byte_length": "Es wurde er wartet, dass Uint8Array eine Byte-Länge größer oder gleich {{min}} hat, aber {{value}} erhalten wurde"
+          },
+          "undefined": {
+            "is_undefined": "Es wurde er wartet, dass der Wert undefiniert ist, aber {{type}} erhalten wurde"
+          },
+          "union": {
+            "is_union": "Es wurde er wartet, dass der Wert einer der {{types}} ist, aber {{type}} erhalten wurde"
+          },
+          "void": {
+            "is_void": "Es wurde er wartet, dass der Wert leer ist, aber {{type}} erhalten wurde"
+          }
         }
+      },
+      "database": {
+        "mssql": {
+          "connection_error": "Fehler bei der Verbindung zur Datenbank",
+          "database_access_denied": "Datenbankzugriff verweigert",
+          "database_ambiguous_column": "Mehrdeutige Spalte",
+          "database_authorization_failed": "Datenbankautorisierung fehlgeschlagen",
+          "database_cannot_update_identity_column": "Identitätsspalte kann nicht aktualisiert werden",
+          "database_column_not_found": "Spalte nicht gefunden",
+          "database_data_too_large": "Daten zu groß",
+          "database_deadlock_detected": "Deadlock erkannt",
+          "database_duplicate_key": "Doppelter Schlüssel",
+          "database_foreign_key_violation": "Verletzung des Fremdschlüssels",
+          "database_identity_insert_not_allowed": "Identitätseinfügung nicht erlaubt",
+          "database_insufficient_memory": "Nicht genügend Speicher",
+          "database_insufficient_storage": "Nicht genügend Speicherplatz",
+          "database_permission_denied": "Berechtigung verweigert",
+          "database_query_timeout": "Abfragezeitüberschreitung",
+          "database_resource_locked": "Ressource gesperrt",
+          "database_syntax_error": "Syntaxfehler in der Datenbank",
+          "database_transaction_aborted": "Transaktion abgebrochen",
+          "database_transaction_log_full": "Transaktionsprotokoll voll",
+          "database_unique_constraint_violation": "Verletzung der eindeutigen Einschränkung",
+          "disconnect_error": "Fehler beim Trennen der Verbindung zur Datenbank",
+          "no_result": "Kein Ergebnis",
+          "not_connected": "Nicht mit der Datenbank verbunden",
+          "query_error": "Abfragefehler",
+          "table_not_found": "Tabelle nicht gefunden"
+        }
+      },
+      "util": {
+        "invalid_environment": "Ungültige Umgebung"
       }
     }
   }

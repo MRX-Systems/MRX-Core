@@ -1,127 +1,160 @@
 {
   "error": {
     "core": {
-      "invalid_environment": "Invalid environment",
-      "validation": {
-        "array": {
-          "contains": "Expected array to contain at least one matching value",
-          "is_array": "Expected value to be an array but got {{type}}",
-          "max_contains": "Expected array to contain no more than {{max}} matching values",
-          "max_items": "Expected array length to be less or equal to {{max}} but got {{length}}",
-          "min_contains": "Expected array to contain at least {{min}} matching values",
-          "min_items": "Expected array length to be more or equal to {{min}} but got {{length}}",
-          "unique_items": "Expected array elements to be unique"
-        },
-        "async_iterator": {
-          "is_async_iterator": "Expected value to be an async iterator but got {{type}}"
-        },
-        "bigint": {
-          "exclusive_maximum": "Expected bigint to be less than {{maximum}} but got {{value}}",
-          "exclusive_minimum": "Expected bigint to be more than {{minimum}} but got {{value}}",
-          "is_bigint": "Expected value to be a bigint but got {{type}}",
-          "maximum": "Expected bigint to be less or equal to {{maximum}} but got {{value}}",
-          "minimum": "Expected bigint to be more or equal to {{minimum}} but got {{value}}",
-          "multiple_of": "Expected bigint to be a multiple of {{multiple}} but got {{value}}"
-        },
-        "boolean": {
-          "is_boolean": "Expected value to be a boolean but got {{type}}"
-        },
-        "date": {
-          "exclusive_maximum_timestamp": "Expected Date timestamp to be less than {{maximum}} but got {{value}}",
-          "exclusive_minimum_timestamp": "Expected Date timestamp to be greater than {{minimum}} but got {{value}}",
-          "is_date": "Expected value to be a Date but got {{type}}",
-          "maximum_timestamp": "Expected Date timestamp to be less or equal to {{maximum}} but got {{value}}",
-          "minimum_timestamp": "Expected Date timestamp to be greater or equal to {{minimum}} but got {{value}}",
-          "multiple_of_timestamp": "Expected Date timestamp to be a multiple of {{multiple}} but got {{value}}"
-        },
-        "default": "Unknown error type",
-        "format": {
-          "already_exists": "Format '{{format}}' already exists",
-          "does_not_exist": "Format '{{format}}' does not exist"
-        },
-        "function": {
-          "is_function": "Expected value to be a function but got {{type}}"
-        },
-        "integer": {
-          "exclusive_maximum": "Expected integer to be less than {{maximum}} but got {{value}}",
-          "exclusive_minimum": "Expected integer to be greater than {{minimum}} but got {{value}}",
-          "is_integer": "Expected value to be an integer but got {{type}}",
-          "maximum": "Expected integer to be less or equal to {{maximum}} but got {{value}}",
-          "minimum": "Expected integer to be greater or equal to {{minimum}} but got {{value}}",
-          "multiple_of": "Expected integer to be a multiple of {{multiple}} but got {{value}}"
-        },
-        "intersect": {
-          "is_intersect": "Expected all values to match",
-          "unevaluated_properties": "Unevaluated properties found: {{props}}"
-        },
-        "iterator": {
-          "is_iterator": "Expected value to be an iterator but got {{type}}"
-        },
-        "kind": {
-          "is_kind": "Expected value to be kind {{kind}} but got {{type}}"
-        },
-        "literal": {
-          "is_literal": "Expected value to be a literal but got {{type}}"
-        },
-        "never": {
-          "is_never": "Expected value to be never but got {{type}}"
-        },
-        "not": {
-          "not_match": "Value should not match"
-        },
-        "null": {
-          "is_null": "Expected value to be null but got {{type}}"
-        },
-        "number": {
-          "exclusive_maximum": "Expected number to be less than {{maximum}} but got {{value}}",
-          "exclusive_minimum": "Expected number to be greater than {{minimum}} but got {{value}}",
-          "is_number": "Expected value to be a number but got {{type}}",
-          "maximum": "Expected number to be less or equal to {{maximum}} but got {{value}}",
-          "minimum": "Expected number to be greater or equal to {{minimum}} but got {{value}}",
-          "multiple_of": "Expected number to be a multiple of {{multiple}} but got {{value}}"
-        },
-        "object": {
-          "additional_properties": "Additional properties found: {{props}}",
-          "is_object": "Expected value to be an object but got {{type}}",
-          "max_properties": "Expected object to have at most {{maximum}} properties but got {{value}}",
-          "min_properties": "Expected object to have at least {{minimum}} properties but got {{value}}",
-          "required_property": "Missing required property: {{key}}"
-        },
-        "promise": {
-          "is_promise": "Expected value to be a promise but got {{type}}"
-        },
-        "regexp": {
-          "not_match": "Expected string to match regular expression {{pattern}} but got {{value}}"
-        },
-        "string": {
-          "format": "Expected string to be in format {{format}} but got {{value}}",
-          "format_unknown": "Unknown string format {{format}}",
-          "is_string": "Expected value to be a string but got {{type}}",
-          "max_length": "Expected string length less or equal to {{maximum}} but got {{value}}",
-          "min_length": "Expected string length greater or equal to {{minimum}} but got {{value}}",
-          "pattern": "Expected string to match pattern {{pattern}} but got {{value}}"
-        },
-        "symbol": {
-          "is_symbol": "Expected value to be a symbol but got {{type}}"
-        },
-        "tuple": {
-          "is_tuple": "Expected value to be a tuple but got {{type}}",
-          "length": "Expected tuple to have length {{length}} but got {{value}}"
-        },
-        "uint8array": {
-          "is_uint8array": "Expected value to be a Uint8Array but got {{type}}",
-          "max_byte_length": "Expected Uint8Array to have byte length less or equal to {{maximum}} but got {{value}}",
-          "min_byte_length": "Expected Uint8Array to have byte length greater or equal to {{minimum}} but got {{value}}"
-        },
-        "undefined": {
-          "is_undefined": "Expected value to be undefined but got {{type}}"
-        },
-        "union": {
-          "is_union": "Expected value to be one of {{types}} but got {{type}}"
-        },
-        "void": {
-          "is_void": "Expected value to be void but got {{type}}"
+      "config": {
+        "validation": {
+          "array": {
+            "contains": "Expected array to contain at least one matching value",
+            "is_array": "Expected value to be an array but got {{type}}",
+            "max_contains": "Expected array to contain no more than {{max}} matching values",
+            "max_items": "Expected array length to be less or equal to {{max}} but got {{length}}",
+            "min_contains": "Expected array to contain at least {{min}} matching values",
+            "min_items": "Expected array length to be more or equal to {{min}} but got {{length}}",
+            "unique_items": "Expected array elements to be unique"
+          },
+          "async_iterator": {
+            "is_async_iterator": "Expected value to be an async iterator but got {{type}}"
+          },
+          "bigint": {
+            "exclusive_maximum": "Expected bigint to be less than {{max}} but got {{value}}",
+            "exclusive_minimum": "Expected bigint to be more than {{min}} but got {{value}}",
+            "is_bigint": "Expected value to be a bigint but got {{type}}",
+            "maximum": "Expected bigint to be less or equal to {{max}} but got {{value}}",
+            "minimum": "Expected bigint to be more or equal to {{min}} but got {{value}}",
+            "multiple_of": "Expected bigint to be a multiple of {{multiple}} but got {{value}}"
+          },
+          "boolean": {
+            "is_boolean": "Expected value to be a boolean but got {{type}}"
+          },
+          "date": {
+            "exclusive_maximum_timestamp": "Expected Date timestamp to be less than {{max}} but got {{value}}",
+            "exclusive_minimum_timestamp": "Expected Date timestamp to be greater than {{min}} but got {{value}}",
+            "is_date": "Expected value to be a Date but got {{type}}",
+            "maximum_timestamp": "Expected Date timestamp to be less or equal to {{max}} but got {{value}}",
+            "minimum_timestamp": "Expected Date timestamp to be greater or equal to {{min}} but got {{value}}",
+            "multiple_of_timestamp": "Expected Date timestamp to be a multiple of {{multiple}} but got {{value}}"
+          },
+          "default": "Unknown error type",
+          "format": {
+            "already_exists": "Format '{{format}}' already exists",
+            "does_not_exist": "Format '{{format}}' does not exist"
+          },
+          "function": {
+            "is_function": "Expected value to be a function but got {{type}}"
+          },
+          "integer": {
+            "exclusive_maximum": "Expected integer to be less than {{max}} but got {{value}}",
+            "exclusive_minimum": "Expected integer to be greater than {{min}} but got {{value}}",
+            "is_integer": "Expected value to be an integer but got {{type}}",
+            "maximum": "Expected integer to be less or equal to {{max}} but got {{value}}",
+            "minimum": "Expected integer to be greater or equal to {{min}} but got {{value}}",
+            "multiple_of": "Expected integer to be a multiple of {{multiple}} but got {{value}}"
+          },
+          "intersect": {
+            "is_intersect": "Expected all values to match",
+            "unevaluated_properties": "Unevaluated properties found: {{props}}"
+          },
+          "iterator": {
+            "is_iterator": "Expected value to be an iterator but got {{type}}"
+          },
+          "kind": {
+            "is_kind": "Expected value to be kind {{kind}} but got {{type}}"
+          },
+          "literal": {
+            "is_literal": "Expected value to be a literal but got {{type}}"
+          },
+          "never": {
+            "is_never": "Expected value to be never but got {{type}}"
+          },
+          "not": {
+            "not_match": "Value should not match"
+          },
+          "null": {
+            "is_null": "Expected value to be null but got {{type}}"
+          },
+          "number": {
+            "exclusive_maximum": "Expected number to be less than {{max}} but got {{value}}",
+            "exclusive_minimum": "Expected number to be greater than {{min}} but got {{value}}",
+            "is_number": "Expected value to be a number but got {{type}}",
+            "maximum": "Expected number to be less or equal to {{max}} but got {{value}}",
+            "minimum": "Expected number to be greater or equal to {{min}} but got {{value}}",
+            "multiple_of": "Expected number to be a multiple of {{multiple}} but got {{value}}"
+          },
+          "object": {
+            "additional_properties": "Additional properties found: {{props}}",
+            "is_object": "Expected value to be an object but got {{type}}",
+            "max_properties": "Expected object to have at most {{max}} properties but got {{value}}",
+            "min_properties": "Expected object to have at least {{min}} properties but got {{value}}",
+            "required_property": "Missing required property: {{key}}"
+          },
+          "promise": {
+            "is_promise": "Expected value to be a promise but got {{type}}"
+          },
+          "regexp": {
+            "not_match": "Expected string to match regular expression {{pattern}} but got {{value}}"
+          },
+          "string": {
+            "format": "Expected string to be in format {{format}} but got {{value}}",
+            "format_unknown": "Unknown string format {{format}}",
+            "is_string": "Expected value to be a string but got {{type}}",
+            "max_length": "Expected string length less or equal to {{max}} but got {{value}}",
+            "min_length": "Expected string length greater or equal to {{min}} but got {{value}}",
+            "pattern": "Expected string to match pattern {{pattern}} but got {{value}}"
+          },
+          "symbol": {
+            "is_symbol": "Expected value to be a symbol but got {{type}}"
+          },
+          "tuple": {
+            "is_tuple": "Expected value to be a tuple but got {{type}}",
+            "length": "Expected tuple to have length {{length}} but got {{value}}"
+          },
+          "uint8array": {
+            "is_uint8array": "Expected value to be a Uint8Array but got {{type}}",
+            "max_byte_length": "Expected Uint8Array to have byte length less or equal to {{max}} but got {{value}}",
+            "min_byte_length": "Expected Uint8Array to have byte length greater or equal to {{min}} but got {{value}}"
+          },
+          "undefined": {
+            "is_undefined": "Expected value to be undefined but got {{type}}"
+          },
+          "union": {
+            "is_union": "Expected value to be one of {{types}} but got {{type}}"
+          },
+          "void": {
+            "is_void": "Expected value to be void but got {{type}}"
+          }
         }
+      },
+      "database": {
+        "mssql": {
+          "connection_error": "Database connection error",
+          "database_access_denied": "Database access denied",
+          "database_ambiguous_column": "Ambiguous column",
+          "database_authorization_failed": "Database authorization failed",
+          "database_cannot_update_identity_column": "Cannot update identity column",
+          "database_column_not_found": "Column not found",
+          "database_data_too_large": "Data too large",
+          "database_deadlock_detected": "Deadlock detected",
+          "database_duplicate_key": "Duplicate key",
+          "database_foreign_key_violation": "Foreign key violation",
+          "database_identity_insert_not_allowed": "Identity insert not allowed",
+          "database_insufficient_memory": "Insufficient memory",
+          "database_insufficient_storage": "Insufficient storage",
+          "database_permission_denied": "Permission denied",
+          "database_query_timeout": "Query timeout",
+          "database_resource_locked": "Resource locked",
+          "database_syntax_error": "Database syntax error",
+          "database_transaction_aborted": "Transaction aborted",
+          "database_transaction_log_full": "Transaction log full",
+          "database_unique_constraint_violation": "Unique constraint violation",
+          "disconnect_error": "Database disconnect error",
+          "no_result": "No result",
+          "not_connected": "Not connected to database",
+          "query_error": "Query error",
+          "table_not_found": "Table not found"
+        }
+      },
+      "util": {
+        "invalid_environment": "Invalid environment"
       }
     }
   }

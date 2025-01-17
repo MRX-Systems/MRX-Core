@@ -1,127 +1,160 @@
 {
   "error": {
     "core": {
-      "invalid_environment": "無効な環境",
-      "validation": {
-        "array": {
-          "contains": "少なくとも一致する値を含む配列が期待されていました",
-          "is_array": "値は配列であることが期待されましたが、{{type}}が得られました",
-          "max_contains": "最大で{{max}}個の一致する値を含む配列が期待されていました",
-          "max_items": "配列の長さは{{max}}以下であることが期待されましたが、{{length}}が得られました",
-          "min_contains": "{{min}}個以上の一致する値を含む配列が期待されていました",
-          "min_items": "配列の長さは{{min}}以上であることが期待されましたが、{{length}}が得られました",
-          "unique_items": "配列要素は一意であることが期待されました"
-        },
-        "async_iterator": {
-          "is_async_iterator": "値は非同期イテレータであることが期待されましたが、{{type}}が得られました"
-        },
-        "bigint": {
-          "exclusive_maximum": "bigintは{{maximum}}未満であることが期待されましたが、{{value}}が得られました",
-          "exclusive_minimum": "bigintは{{minimum}}より大きいことが期待されましたが、{{value}}が得られました",
-          "is_bigint": "値はbigintであることが期待されましたが、{{type}}が得られました",
-          "maximum": "bigintは{{maximum}}以下であることが期待されましたが、{{value}}が得られました",
-          "minimum": "bigintは{{minimum}}以上であることが期待されましたが、{{value}}が得られました",
-          "multiple_of": "bigintは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
-        },
-        "boolean": {
-          "is_boolean": "値はブール値であることが期待されましたが、{{type}}が得られました"
-        },
-        "date": {
-          "exclusive_maximum_timestamp": "日付のタイムスタンプは{{maximum}}未満であることが期待されましたが、{{value}}が得られました",
-          "exclusive_minimum_timestamp": "日付のタイムスタンプは{{minimum}}より大きいことが期待されましたが、{{value}}が得られました",
-          "is_date": "値は日付であることが期待されましたが、{{type}}が得られました",
-          "maximum_timestamp": "日付のタイムスタンプは{{maximum}}以下であることが期待されましたが、{{value}}が得られました",
-          "minimum_timestamp": "日付のタイムスタンプは{{minimum}}以上であることが期待されましたが、{{value}}が得られました",
-          "multiple_of_timestamp": "日付のタイムスタンプは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
-        },
-        "default": "不明なエラータイプ",
-        "format": {
-          "already_exists": "フォーマット'{{format}}'はすでに存在します",
-          "does_not_exist": "フォーマット'{{format}}'は存在しません"
-        },
-        "function": {
-          "is_function": "値は関数であることが期待されましたが、{{type}}が得られました"
-        },
-        "integer": {
-          "exclusive_maximum": "整数は{{maximum}}未満であることが期待されましたが、{{value}}が得られました",
-          "exclusive_minimum": "整数は{{minimum}}より大きいことが期待されましたが、{{value}}が得られました",
-          "is_integer": "値は整数であることが期待されましたが、{{type}}が得られました",
-          "maximum": "整数は{{maximum}}以下であることが期待されましたが、{{value}}が得られました",
-          "minimum": "整数は{{minimum}}以上であることが期待されましたが、{{value}}が得られました",
-          "multiple_of": "整数は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
-        },
-        "intersect": {
-          "is_intersect": "すべての値が一致することが期待されました",
-          "unevaluated_properties": "評価されていないプロパティが見つかりました: {{props}}"
-        },
-        "iterator": {
-          "is_iterator": "値はイテレータであることが期待されましたが、{{type}}が得られました"
-        },
-        "kind": {
-          "is_kind": "値は{{kind}}であることが期待されましたが、{{type}}が得られました"
-        },
-        "literal": {
-          "is_literal": "値はリテラルであることが期待されましたが、{{type}}が得られました"
-        },
-        "never": {
-          "is_never": "値は決してないことが期待されましたが、{{type}}が得られました"
-        },
-        "not": {
-          "not_match": "値は一致してはいけません"
-        },
-        "null": {
-          "is_null": "値はnullであることが期待されましたが、{{type}}が得られました"
-        },
-        "number": {
-          "exclusive_maximum": "数値は{{maximum}}未満であることが期待されましたが、{{value}}が得られました",
-          "exclusive_minimum": "数値は{{minimum}}より大きいことが期待されましたが、{{value}}が得られました",
-          "is_number": "値は数値であることが期待されましたが、{{type}}が得られました",
-          "maximum": "数値は{{maximum}}以下であることが期待されましたが、{{value}}が得られました",
-          "minimum": "数値は{{minimum}}以上であることが期待されましたが、{{value}}が得られました",
-          "multiple_of": "数値は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
-        },
-        "object": {
-          "additional_properties": "追加のプロパティが見つかりました: {{props}}",
-          "is_object": "値はオブジェクトであることが期待されましたが、{{type}}が得られました",
-          "max_properties": "オブジェクトは最大で{{maximum}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
-          "min_properties": "オブジェクトは少なくとも{{minimum}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
-          "required_property": "必要なプロパティが見つかりません: {{key}}"
-        },
-        "promise": {
-          "is_promise": "値はプロミスであることが期待されましたが、{{type}}が得られました"
-        },
-        "regexp": {
-          "not_match": "文字列は正規表現{{pattern}}に一致することが期待されましたが、{{value}}が得られました"
-        },
-        "string": {
-          "format": "文字列は形式{{format}}であることが期待されましたが、{{value}}が得られました",
-          "format_unknown": "不明な文字列形式{{format}}",
-          "is_string": "値は文字列であることが期待されましたが、{{type}}が得られました",
-          "max_length": "文字列の長さは{{maximum}}以下であることが期待されましたが、{{value}}が得られました",
-          "min_length": "文字列の長さは{{minimum}}以上であることが期待されましたが、{{value}}が得られました",
-          "pattern": "文字列はパターン{{pattern}}に一致することが期待されましたが、{{value}}が得られました"
-        },
-        "symbol": {
-          "is_symbol": "値はシンボルであることが期待されましたが、{{type}}が得られました"
-        },
-        "tuple": {
-          "is_tuple": "値はタプルであることが期待されましたが、{{type}}が得られました",
-          "length": "タプルの長さは{{length}}であることが期待されましたが、{{value}}が得られました"
-        },
-        "uint8array": {
-          "is_uint8array": "値はUint8Arrayであることが期待されましたが、{{type}}が得られました",
-          "max_byte_length": "Uint8Arrayのバイト長は{{maximum}}以下であることが期待されましたが、{{value}}が得られました",
-          "min_byte_length": "Uint8Arrayのバイト長は{{minimum}}以上であることが期待されましたが、{{value}}が得られました"
-        },
-        "undefined": {
-          "is_undefined": "値は未定義であることが期待されましたが、{{type}}が得られました"
-        },
-        "union": {
-          "is_union": "値は{{types}}の1つであることが期待されましたが、{{type}}が得られました"
-        },
-        "void": {
-          "is_void": "値はvoidであることが期待されましたが、{{type}}が得られました"
+      "config": {
+        "validation": {
+          "array": {
+            "contains": "少なくとも一致する値を含む配列が期待されていました",
+            "is_array": "値は配列であることが期待されましたが、{{type}}が得られました",
+            "max_contains": "最大で{{max}}個の一致する値を含む配列が期待されていました",
+            "max_items": "配列の長さは{{max}}以下であることが期待されましたが、{{length}}が得られました",
+            "min_contains": "{{min}}個以上の一致する値を含む配列が期待されていました",
+            "min_items": "配列の長さは{{min}}以上であることが期待されましたが、{{length}}が得られました",
+            "unique_items": "配列要素は一意であることが期待されました"
+          },
+          "async_iterator": {
+            "is_async_iterator": "値は非同期イテレータであることが期待されましたが、{{type}}が得られました"
+          },
+          "bigint": {
+            "exclusive_maximum": "bigintは{{max}}未満であることが期待されましたが、{{value}}が得られました",
+            "exclusive_minimum": "bigintは{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+            "is_bigint": "値はbigintであることが期待されましたが、{{type}}が得られました",
+            "maximum": "bigintは{{max}}以下であることが期待されましたが、{{value}}が得られました",
+            "minimum": "bigintは{{min}}以上であることが期待されましたが、{{value}}が得られました",
+            "multiple_of": "bigintは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
+          },
+          "boolean": {
+            "is_boolean": "値はブール値であることが期待されましたが、{{type}}が得られました"
+          },
+          "date": {
+            "exclusive_maximum_timestamp": "日付のタイムスタンプは{{max}}未満であることが期待されましたが、{{value}}が得られました",
+            "exclusive_minimum_timestamp": "日付のタイムスタンプは{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+            "is_date": "値は日付であることが期待されましたが、{{type}}が得られました",
+            "maximum_timestamp": "日付のタイムスタンプは{{max}}以下であることが期待されましたが、{{value}}が得られました",
+            "minimum_timestamp": "日付のタイムスタンプは{{min}}以上であることが期待されましたが、{{value}}が得られました",
+            "multiple_of_timestamp": "日付のタイムスタンプは{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
+          },
+          "default": "不明なエラータイプ",
+          "format": {
+            "already_exists": "フォーマット'{{format}}'はすでに存在します",
+            "does_not_exist": "フォーマット'{{format}}'は存在しません"
+          },
+          "function": {
+            "is_function": "値は関数であることが期待されましたが、{{type}}が得られました"
+          },
+          "integer": {
+            "exclusive_maximum": "整数は{{max}}未満であることが期待されましたが、{{value}}が得られました",
+            "exclusive_minimum": "整数は{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+            "is_integer": "値は整数であることが期待されましたが、{{type}}が得られました",
+            "maximum": "整数は{{max}}以下であることが期待されましたが、{{value}}が得られました",
+            "minimum": "整数は{{min}}以上であることが期待されましたが、{{value}}が得られました",
+            "multiple_of": "整数は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
+          },
+          "intersect": {
+            "is_intersect": "すべての値が一致することが期待されました",
+            "unevaluated_properties": "評価されていないプロパティが見つかりました: {{props}}"
+          },
+          "iterator": {
+            "is_iterator": "値はイテレータであることが期待されましたが、{{type}}が得られました"
+          },
+          "kind": {
+            "is_kind": "値は{{kind}}であることが期待されましたが、{{type}}が得られました"
+          },
+          "literal": {
+            "is_literal": "値はリテラルであることが期待されましたが、{{type}}が得られました"
+          },
+          "never": {
+            "is_never": "値は決してないことが期待されましたが、{{type}}が得られました"
+          },
+          "not": {
+            "not_match": "値は一致してはいけません"
+          },
+          "null": {
+            "is_null": "値はnullであることが期待されましたが、{{type}}が得られました"
+          },
+          "number": {
+            "exclusive_maximum": "数値は{{max}}未満であることが期待されましたが、{{value}}が得られました",
+            "exclusive_minimum": "数値は{{min}}より大きいことが期待されましたが、{{value}}が得られました",
+            "is_number": "値は数値であることが期待されましたが、{{type}}が得られました",
+            "maximum": "数値は{{max}}以下であることが期待されましたが、{{value}}が得られました",
+            "minimum": "数値は{{min}}以上であることが期待されましたが、{{value}}が得られました",
+            "multiple_of": "数値は{{multiple}}の倍数であることが期待されましたが、{{value}}が得られました"
+          },
+          "object": {
+            "additional_properties": "追加のプロパティが見つかりました: {{props}}",
+            "is_object": "値はオブジェクトであることが期待されましたが、{{type}}が得られました",
+            "max_properties": "オブジェクトは最大で{{max}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
+            "min_properties": "オブジェクトは少なくとも{{min}}のプロパティを持つことが期待されましたが、{{value}}が得られました",
+            "required_property": "必要なプロパティが見つかりません: {{key}}"
+          },
+          "promise": {
+            "is_promise": "値はプロミスであることが期待されましたが、{{type}}が得られました"
+          },
+          "regexp": {
+            "not_match": "文字列は正規表現{{pattern}}に一致することが期待されましたが、{{value}}が得られました"
+          },
+          "string": {
+            "format": "文字列は形式{{format}}であることが期待されましたが、{{value}}が得られました",
+            "format_unknown": "不明な文字列形式{{format}}",
+            "is_string": "値は文字列であることが期待されましたが、{{type}}が得られました",
+            "max_length": "文字列の長さは{{max}}以下であることが期待されましたが、{{value}}が得られました",
+            "min_length": "文字列の長さは{{min}}以上であることが期待されましたが、{{value}}が得られました",
+            "pattern": "文字列はパターン{{pattern}}に一致することが期待されましたが、{{value}}が得られました"
+          },
+          "symbol": {
+            "is_symbol": "値はシンボルであることが期待されましたが、{{type}}が得られました"
+          },
+          "tuple": {
+            "is_tuple": "値はタプルであることが期待されましたが、{{type}}が得られました",
+            "length": "タプルの長さは{{length}}であることが期待されましたが、{{value}}が得られました"
+          },
+          "uint8array": {
+            "is_uint8array": "値はUint8Arrayであることが期待されましたが、{{type}}が得られました",
+            "max_byte_length": "Uint8Arrayのバイト長は{{max}}以下であることが期待されましたが、{{value}}が得られました",
+            "min_byte_length": "Uint8Arrayのバイト長は{{min}}以上であることが期待されましたが、{{value}}が得られました"
+          },
+          "undefined": {
+            "is_undefined": "値は未定義であることが期待されましたが、{{type}}が得られました"
+          },
+          "union": {
+            "is_union": "値は{{types}}の1つであることが期待されましたが、{{type}}が得られました"
+          },
+          "void": {
+            "is_void": "値はvoidであることが期待されましたが、{{type}}が得られました"
+          }
         }
+      },
+      "database": {
+        "mssql": {
+          "connection_error": "データベース接続エラー",
+          "database_access_denied": "データベースアクセスが拒否されました",
+          "database_ambiguous_column": "曖昧な列",
+          "database_authorization_failed": "データベース認証に失敗しました",
+          "database_cannot_update_identity_column": "アイデンティティ列を更新できません",
+          "database_column_not_found": "列が見つかりません",
+          "database_data_too_large": "データが大きすぎます",
+          "database_deadlock_detected": "デッドロックが検出されました",
+          "database_duplicate_key": "重複キー",
+          "database_foreign_key_violation": "外部キー違反",
+          "database_identity_insert_not_allowed": "アイデンティティの挿入は許可されていません",
+          "database_insufficient_memory": "メモリが不足しています",
+          "database_insufficient_storage": "ストレージが不足しています",
+          "database_permission_denied": "許可が拒否されました",
+          "database_query_timeout": "クエリタイムアウト",
+          "database_resource_locked": "リソースがロックされています",
+          "database_syntax_error": "データベース構文エラー",
+          "database_transaction_aborted": "トランザクションが中止されました",
+          "database_transaction_log_full": "トランザクションログがいっぱいです",
+          "database_unique_constraint_violation": "一意制約違反",
+          "disconnect_error": "データベース切断エラー",
+          "no_result": "結果なし",
+          "not_connected": "データベースに接続されていません",
+          "query_error": "クエリエラー",
+          "table_not_found": "テーブルが見つかりません"
+        }
+      },
+      "util": {
+        "invalid_environment": "無効な環境"
       }
     }
   }

@@ -7,6 +7,8 @@
   "types": "build/index.d.ts",
   "exports": {
     "./util": "./build/core/util/index.js",
+    "./database": "./build/core/database/index.js",
+    "./repository": "./build/core/repository/index.js",
     "./error": "./build/error/index.js",
     "./error/key": "./build/error/key/index.js",
     "./i18n": "./build/i18n/index.js",
@@ -40,23 +42,33 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "@sinclair/typebox": "^0.34.13",
-    "@stylistic/eslint-plugin": "^2.12.1",
-    "@types/bun": "^1.1.15",
-    "@types/node": "^22.10.5",
+    "@eslint/js": "^9.18.0",
+    "@sinclair/typebox": "^0.34.14",
+    "@stylistic/eslint-plugin": "^2.13.0",
+    "@types/bun": "^1.1.16",
+    "@types/node": "^22.10.7",
     "bun-plugin-dts": "^0.3.0",
+    "eslint": "^9.18.0",
     "eslint-plugin-tsdoc": "^0.4.0",
-    "eslint": "^9.17.0",
     "globals": "^15.14.0",
+    "knex": "^3.1.0",
+    "tedious": "^18.6.1",
     "typedoc": "^0.27.6",
-    "typescript-eslint": "^8.19.1"
+    "typescript-eslint": "^8.20.0"
   },
   "peerDependencies": {
     "@sinclair/typebox": "^0.34.13",
-    "typescript": "^5.7.2"
+    "knex": "^3.1.0",
+    "tedious": "^18.6.1",
+    "typescript": "^5.7.3"
   },
   "peerDependenciesMeta": {
+    "knex": {
+      "optional": true
+    },
+    "tedious": {
+      "optional": true
+    },
     "@sinclair/typebox": {
       "optional": true
     }
