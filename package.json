@@ -63,6 +63,12 @@
     "typescript": "^5.7.3"
   },
   "peerDependenciesMeta": {
+    "knex": {
+      "optional": true
+    },
+    "tedious": {
+      "optional": true
+    },
     "@sinclair/typebox": {
       "optional": true
     }
