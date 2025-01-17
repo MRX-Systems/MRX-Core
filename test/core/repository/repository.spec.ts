@@ -554,7 +554,11 @@ describe('Repository', () => {
 
     describe('findOne', () => {
         test('should return a single data', async () => {
-            const data = await repository.findOne();
+            const data = await repository.findOne({
+                advancedSearch: {
+                    id: 1
+                }
+            });
             expect(data).toHaveProperty('id');
             expect(data).toHaveProperty('name');
             expect(data).toHaveProperty('age');
@@ -564,6 +568,9 @@ describe('Repository', () => {
 
         test('should return a single data with selected fields', async () => {
             const data = await repository.findOne<Data>({
+                advancedSearch: {
+                    id: 1
+                },
                 selectedFields: {
                     id: true
                 }
@@ -577,7 +584,10 @@ describe('Repository', () => {
 
         test('should return a single data with correct order based on orderBy clause', async () => {
             const data1 = await repository.findOne<Data>({
-                orderBy: ['id', 'desc']
+                orderBy: ['id', 'desc'],
+                advancedSearch: {
+                    id: { $lte: 20 }
+                }
             });
             let previousId = Number.MAX_SAFE_INTEGER;
             expect(data1).toHaveProperty('id');
@@ -586,7 +596,10 @@ describe('Repository', () => {
             previousId = data1.id;
 
             const data2 = await repository.findOne<Data>({
-                orderBy: ['id', 'asc']
+                orderBy: ['id', 'asc'],
+                advancedSearch: {
+                    id: { $gte: 1 }
+                }
             });
             previousId = Number.MIN_SAFE_INTEGER;
             expect(data2).toHaveProperty('id');

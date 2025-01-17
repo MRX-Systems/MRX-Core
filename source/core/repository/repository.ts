@@ -285,7 +285,7 @@ export class Repository<T> {
      * });
      * ```
      */
-    public async findOne<K extends T = NoInfer<T>>(options?: QueryOptions<K>): Promise<K> {
+    public async findOne<K extends T = NoInfer<T>>(options: Omit<QueryOptions<K>, 'advancedSearch'> & Required<Pick<QueryOptions<K>, 'advancedSearch'>>): Promise<K> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -435,7 +435,7 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async delete<K extends T = NoInfer<T>>(options?: Omit<QueryOptions<K>, 'orderBy'>): Promise<K[]> {
+    public async delete<K extends T = NoInfer<T>>(options: Omit<QueryOptions<K>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<K>, 'advancedSearch'>>): Promise<K[]> {
         const query = this._knex(this._table.name)
             .delete()
             .returning(this._transformFieldSelectionToArray(options?.selectedFields));
