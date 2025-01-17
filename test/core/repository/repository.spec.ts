@@ -61,6 +61,7 @@ async function createDataTable(): Promise<void> {
 
 async function dropDataTable(): Promise<void> {
     await knexInstance.schema.dropTable(testTable);
+    await knexInstance.destroy();
 }
 
 type AdvancedSearchTest<T> = [AdvancedSearch<T> | AdvancedSearch<T>[], (data: T | T[]) => void, number];
