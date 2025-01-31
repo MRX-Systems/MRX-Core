@@ -4,6 +4,11 @@ export * from './core/database/table';
 
 // Export repository
 export * from './core/repository/repository';
+
+// Export plugins
+export * from './core/elysia/plugin/error';
+export * from './core/elysia/plugin/microservice';
+
 // Export store
 export * from './core/store/redis';
 
