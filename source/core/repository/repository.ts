@@ -160,6 +160,7 @@ export class Repository<T> {
             const code = (error as { number: number })?.number || 0;
             passThrough.emit('error', new CoreError({
                 key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
+                message: 'An error occurred while streaming the query results.',
                 cause: {
                     query: query.toSQL().sql,
                     error
@@ -666,6 +667,7 @@ export class Repository<T> {
             if (throwIfNoResult && result.length === 0)
                 throw new CoreError({
                     key: DATABASE_KEY_ERROR.MSSQL_NO_RESULT,
+                    message: 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql
                     }
@@ -677,6 +679,7 @@ export class Repository<T> {
             const code = (error as { number: number })?.number || 0;
             throw new CoreError({
                 key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
+                message: 'An error occurred while executing the query.',
                 cause: {
                     query: query.toSQL().sql,
                     error

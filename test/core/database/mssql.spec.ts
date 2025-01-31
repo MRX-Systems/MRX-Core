@@ -71,7 +71,7 @@ describe('MSSQL', () => {
         test('should throw an error when the connection fails', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL({ ...options, host: 'foo' });
-            expect(mssql.connect()).rejects.toThrow('error.core.database.mssql.connection_error');
+            expect(mssql.connect()).rejects.toThrow(`Failed to connect to the database: "${options.databaseName}".`);
         });
     });
 
@@ -87,7 +87,7 @@ describe('MSSQL', () => {
         test('should throw an error when the connection is not established', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
-            expect(mssql.disconnect()).rejects.toThrow('error.core.database.mssql.not_connected');
+            expect(mssql.disconnect()).rejects.toThrow(`Database "${options.databaseName}" is not connected.`);
         });
     });
 
@@ -109,14 +109,14 @@ describe('MSSQL', () => {
         test('should throw an error when the database is not connected', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
-            expect(() => mssql.setCustomRepository(testTable, ExampleRepository)).toThrow('error.core.database.mssql.not_connected');
+            expect(() => mssql.setCustomRepository(testTable, ExampleRepository)).toThrow(`Database "${options.databaseName}" is not connected.`);
         });
 
         test('should throw an error whe the table is not found', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             await mssql.connect();
-            expect(() => mssql.setCustomRepository('foo', ExampleRepository)).toThrow('error.core.database.mssql.table_not_found');
+            expect(() => mssql.setCustomRepository('foo', ExampleRepository)).toThrow('Table not found: "foo".');
         });
     });
 
@@ -145,14 +145,14 @@ describe('MSSQL', () => {
         test('should throw an error when the database is not connected', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
-            expect(() => mssql.getRepository(testTable)).toThrow('error.core.database.mssql.not_connected');
+            expect(() => mssql.getRepository(testTable)).toThrow(`Database "${options.databaseName}" is not connected.`);
         });
 
         test('should throw an error when the repository is not found', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             await mssql.connect();
-            expect(() => mssql.getRepository('foo')).toThrow('error.core.database.mssql.table_not_found');
+            expect(() => mssql.getRepository('foo')).toThrow('Table not found: "foo".');
         });
     });
 
@@ -179,7 +179,7 @@ describe('MSSQL', () => {
         test('should throw an error when the database is not connected', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
-            expect(() => mssql.db).toThrow('error.core.database.mssql.not_connected');
+            expect(() => mssql.db).toThrow(`Database "${options.databaseName}" is not connected.`);
         });
     });
 
@@ -194,14 +194,14 @@ describe('MSSQL', () => {
         test('should throw an error when the database is not connected', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
-            expect(() => mssql.table(testTable)).toThrow('error.core.database.mssql.not_connected');
+            expect(() => mssql.table(testTable)).toThrow(`Database "${options.databaseName}" is not connected.`);
         });
 
         test('should throw an error when the table is not found', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             await mssql.connect();
-            expect(() => mssql.table('foo')).toThrow('error.core.database.mssql.table_not_found');
+            expect(() => mssql.table('foo')).toThrow('Table not found: "foo".');
         });
     });
 

@@ -1,7 +1,7 @@
 /**
  * HTTP Status Code
  */
-export const HTTP_STATUS_CODE: Record<string, number> = {
+export const HTTP_STATUS_CODE = {
     OK: 200,
     CREATED: 201,
     ACCEPTED: 202,
