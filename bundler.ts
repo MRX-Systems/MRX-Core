@@ -1,5 +1,3 @@
-import dts from 'bun-plugin-dts';
-
 import pkg from './package.json';
 
 const dependencies = 'dependencies' in pkg ? Object.keys(pkg.dependencies ?? {}) : [];
@@ -7,29 +5,22 @@ const devDependencies = 'devDependencies' in pkg ? Object.keys(pkg.devDependenci
 const peerDependencies = 'peerDependencies' in pkg ? Object.keys(pkg.peerDependencies ?? {}) : [];
 
 await Bun.build({
-    target: 'node',
+    target: 'bun',
     external: [...dependencies, ...devDependencies, ...peerDependencies],
     root: './source',
     entrypoints: [
-        './source/core/util/index.ts',
         './source/core/database/index.ts',
         './source/core/repository/index.ts',
+        './source/core/store/index.ts',
+        './source/core/util/index.ts',
+        './source/core/elysia/plugin/index.ts',
 
         './source/error/index.ts',
         './source/error/key/index.ts',
 
-        './source/i18n/index.ts',
-
         './source/types/index.ts',
 
         './source/index.ts'
-    ],
-    plugins: [
-        dts({
-            output: {
-                noBanner: true
-            }
-        })
     ],
     outdir: './build',
     splitting: true,

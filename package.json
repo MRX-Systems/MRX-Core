@@ -1,64 +1,69 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@andesite-lab/andesite-core",
-  "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "version": "1.43.2",
+  "author": "Ruby",
+  "license": "MIT",
   "type": "module",
   "types": "build/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andesite-Lab/Core.git"
+  },
   "exports": {
-    "./util": "./build/core/util/index.js",
     "./database": "./build/core/database/index.js",
     "./repository": "./build/core/repository/index.js",
+    "./elysia/plugin": "./build/core/elysia/plugin/index.js",
+    "./store": "./build/core/store/index.js",
+    "./util": "./build/core/util/index.js",
     "./error": "./build/error/index.js",
     "./error/key": "./build/error/key/index.js",
     "./i18n": "./build/i18n/index.js",
     "./types": "./build/types/index.js",
     ".": "./build/index.js"
   },
-  "scripts": {
-    "dev": "bun --watch source/index.ts",
-    "build": "bun bundler.ts",
-    "start": "bun build/index.js",
-    "test": "bun test --coverage",
-    "docs": "typedoc",
-    "fix-lint": "eslint --fix ./source",
-    "lint": "eslint ./source"
-  },
-  "author": "Ruby",
-  "license": "MIT",
-  "homepage": "https://github.com/Andesite-Lab/Core#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Andesite-Lab/Core.git"
-  },
   "bugs": {
     "url": "https://github.com/Andesite-Lab/Core/issues"
   },
+  "description": "Andesite - Core provides a set of tools to help you build a microservice",
+  "homepage": "https://github.com/Andesite-Lab/Core#readme",
   "keywords": [
     "andesite",
     "andesite-lab",
     "andesite-core",
     "core"
   ],
-  "dependencies": {},
+  "scripts": {
+    "dev": "bun --watch source/index.ts",
+    "build": "bun bundler.ts && tsc --project tsconfig.dts.json && tsc-alias -p tsconfig.dts.json",
+    "start": "bun build/index.js",
+    "test": "bun test --coverage",
+    "docs": "typedoc",
+    "fix-lint": "eslint --fix ./source",
+    "lint": "eslint ./source"
+  },
+  "dependencies": {
+    "@basalt-lab/basalt-auth": "^1.9.5-canary-20250130-cf0028a",
+    "@basalt-lab/basalt-helper": "^1.11.1-canary-20250130-0e2ae99",
+    "@basalt-lab/basalt-logger": "^1.12.0-canary-20250130-9f3764c",
+    "type": "git",
+    "i18next": "^24.2.2"
+  },
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@sinclair/typebox": "^0.34.14",
-    "@stylistic/eslint-plugin": "^2.13.0",
-    "@types/bun": "^1.1.17",
-    "@types/node": "^22.10.7",
-    "bun-plugin-dts": "^0.3.0",
+    "@eslint/js": "^9.19.0",
+    "@stylistic/eslint-plugin": "^3.0.1",
+    "@types/bun": "^1.2.1",
     "eslint-plugin-tsdoc": "^0.4.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "ioredis": "^5.4.2",
     "knex": "^3.1.0",
     "tedious": "^18.6.1",
+    "tsc-alias": "^1.8.10",
     "typedoc": "^0.27.6",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.22.0"
   },
   "peerDependencies": {
-    "@sinclair/typebox": "^0.34.13",
     "ioredis": "^5.4.2",
     "knex": "^3.1.0",
     "tedious": "^18.6.1",
@@ -73,9 +78,58 @@
     },
     "tedious": {
       "optional": true
+    }
+  },
+  "changelog": {
+    "types": {
+      "feat": {
+        "title": "🚀 Enhancements",
+        "semver": "minor"
+      },
+      "perf": {
+        "title": "⚡ Performance",
+        "semver": "patch"
+      },
+      "fix": {
+        "title": "🔧 Fixes",
+        "semver": "patch"
+      },
+      "refactor": {
+        "title": "🧹 Refactors",
+        "semver": "patch"
+      },
+      "docs": {
+        "title": "📖 Documentation",
+        "semver": "patch"
+      },
+      "build": {
+        "title": "📦 Build",
+        "semver": "patch"
+      },
+      "types": {
+        "title": "🌊 Types",
+        "semver": "patch"
+      },
+      "chore": {
+        "title": "🦉 Chore"
+      },
+      "examples": {
+        "title": "🏀 Examples"
+      },
+      "test": {
+        "title": "🧪 Tests"
+      },
+      "style": {
+        "title": "🎨 Styles"
+      },
+      "ci": {
+        "title": "🤖 CI"
+      }
     },
-    "@sinclair/typebox": {
-      "optional": true
+    "templates": {
+      "commitMessage": "chore(🦉): v{{newVersion}}",
+      "tagMessage": "v{{newVersion}}",
+      "tagBody": "v{{newVersion}}"
     }
   }
 }
