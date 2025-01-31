@@ -109,7 +109,6 @@ export default [
             'default-param-last': 'error',
             'max-classes-per-file': ['error', 1],
             'max-depth': ['error', 4],
-            'new-cap': 'error',
             'no-else-return': 'error',
             'no-empty-function': 'error',
             'no-invalid-this': 'error',
@@ -131,7 +130,7 @@ export default [
             'prefer-object-spread': 'error',
             'require-await': 'error',
             'object-curly-spacing': ['error', 'always'],
-            'new-cap': 'off',
+            'new-cap': 'off'
         }
     },
     {
@@ -153,11 +152,9 @@ export default [
             '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'separate-type-imports' }],
             'default-param-last': 'off',
             '@typescript-eslint/default-param-last': 'error',
-            '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/explicit-member-accessibility': [
                 'error', { accessibility: 'explicit' }
             ],
-            '@typescript-eslint/explicit-module-boundary-types': 'error',
             'max-params': 'off',
             '@typescript-eslint/max-params': [
                 'error', { max: 6 }
