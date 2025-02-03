@@ -91,37 +91,8 @@ describe('MSSQL', () => {
         });
     });
 
-    describe('setCustomRepository', () => {
-        class ExampleRepository extends Repository<unknown> {
-            public foo(): string {
-                return 'bar';
-            }
-        }
-
-        test('should set a custom repository', async () => {
-            const { MSSQL } = await import('#/core/database/mssql');
-            const mssql = new MSSQL(options);
-            await mssql.connect();
-            mssql.setCustomRepository(testTable, ExampleRepository);
-            expect(mssql.getRepository(testTable)).toBeInstanceOf(ExampleRepository);
-        });
-
-        test('should throw an error when the database is not connected', async () => {
-            const { MSSQL } = await import('#/core/database/mssql');
-            const mssql = new MSSQL(options);
-            expect(() => mssql.setCustomRepository(testTable, ExampleRepository)).toThrow(`Database "${options.databaseName}" is not connected.`);
-        });
-
-        test('should throw an error whe the table is not found', async () => {
-            const { MSSQL } = await import('#/core/database/mssql');
-            const mssql = new MSSQL(options);
-            await mssql.connect();
-            expect(() => mssql.setCustomRepository('foo', ExampleRepository)).toThrow('Table not found: "foo".');
-        });
-    });
-
     describe('getRepository', () => {
-        class ExampleRepository extends Repository<unknown> {
+        class ExampleRepository extends Repository<{ a: string }> {
             public foo(): string {
                 return 'bar';
             }
@@ -138,8 +109,8 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             await mssql.connect();
-            mssql.setCustomRepository(testTable, ExampleRepository);
-            expect(mssql.getRepository(testTable)).toBeInstanceOf(ExampleRepository);
+            expect(mssql.getRepository(testTable, ExampleRepository)).toBeInstanceOf(ExampleRepository);
+            expect(mssql.getRepository(testTable, ExampleRepository).foo()).toBe('bar');
         });
 
         test('should throw an error when the database is not connected', async () => {
