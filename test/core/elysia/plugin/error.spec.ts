@@ -125,11 +125,10 @@ describe('Error Plugin', () => {
         });
 
         test('should handle unknown errors with status 500', async () => {
-            const error = new Error('Unknown error');
             const app = new Elysia()
                 .use(errorPlugin)
                 .get('/throw', () => {
-                    throw error;
+                    throw new Error('Unknown error');
                 });
 
             const res = await app
@@ -137,8 +136,7 @@ describe('Error Plugin', () => {
             const data = await res.json();
             expect(data).toEqual({
                 key: 'core.error.internal_server_error',
-                message: 'Internal server error',
-                cause: {}
+                message: 'Internal server error'
             });
             expect(res.status).toBe(500);
         });
