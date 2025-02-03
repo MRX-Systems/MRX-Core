@@ -331,13 +331,13 @@ describe('Repository', () => {
 
         test('should iterate asynchronously over all data from the stream', async () => {
             const stream = repository.findStream();
-            const data = await stream[Symbol.asyncIterator]().next();
-            expect(data).toHaveProperty('value');
-            expect(data.value).toHaveProperty('id');
-            expect(data.value).toHaveProperty('name');
-            expect(data.value).toHaveProperty('age');
-            expect(data.value).toHaveProperty('birth');
-            expect(data.value).toHaveProperty('bool');
+            for await (const data of stream) {
+                expect(data).toHaveProperty('id');
+                expect(data).toHaveProperty('name');
+                expect(data).toHaveProperty('age');
+                expect(data).toHaveProperty('birth');
+                expect(data).toHaveProperty('bool');
+            }
         });
 
         test('should emit data events and support stream subscriptions', (done) => {
