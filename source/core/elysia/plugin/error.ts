@@ -43,6 +43,14 @@ export const errorPlugin = new Elysia({
                     }
                 };
             }
+            case 'NOT_FOUND':
+                set.status = 404;
+                return {
+                    key: 'core.error.not_found',
+                    message: 'Not found'
+                };
+            case 'INTERNAL_SERVER_ERROR':
+            case 'UNKNOWN':
             default:
                 set.status = 500;
                 return {
