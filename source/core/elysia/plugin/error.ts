@@ -31,9 +31,24 @@ export const errorPlugin = new Elysia({
                     message: error.message,
                     cause: error.cause
                 };
+            case 'VALIDATION': {
+                set.status = 400;
+                return {
+                    key: 'core.error.validation',
+                    message: 'Validation error',
+                    cause: {
+                        on: error.type,
+                        found: error.value,
+                        props: error.all
+                    }
+                };
+            }
+            default:
+                set.status = 500;
+                return {
+                    key: 'core.error.internal_server_error',
+                    message: 'Internal server error',
+                    cause: error
+                };
         }
-        return {
-            message: 'Internal Server Error',
-            cause: error
-        };
     });
