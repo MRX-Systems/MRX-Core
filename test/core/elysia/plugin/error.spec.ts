@@ -73,9 +73,11 @@ describe('Error Plugin', () => {
 
             const res = await app
                 .handle(new Request('http://localhost/throw'));
-            expect(await res.json()).toEqual({
-                message: 'Internal Server Error',
-                cause: error
+            const data = await res.json();
+            expect(data).toEqual({
+                key: 'core.error.internal_server_error',
+                message: 'Internal server error',
+                cause: {}
             });
             expect(res.status).toBe(500);
         });
