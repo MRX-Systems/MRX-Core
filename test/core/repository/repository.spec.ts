@@ -430,7 +430,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while streaming the query results.');
             }
         });
 
@@ -444,7 +444,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while streaming the query results.');
                 done();
             });
         });
@@ -531,7 +531,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
             }
         });
 
@@ -547,7 +547,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toBe('error.core.database.mssql.no_result');
+                expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
             }
         });
     });
@@ -629,7 +629,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
             }
         });
 
@@ -645,7 +645,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toBe('error.core.database.mssql.no_result');
+                expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
             }
         });
     });
@@ -677,7 +677,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
             }
         });
     });
@@ -728,7 +728,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
             }
         });
     });
@@ -798,7 +798,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
             }
         });
     });
@@ -839,7 +839,7 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(Error);
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('error.core.database.mssql.');
+                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
             }
         });
     });

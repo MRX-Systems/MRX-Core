@@ -247,6 +247,7 @@ export class MSSQL extends EventEmitter {
         } catch (error) {
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_CONNECTION_ERROR,
+                message: `Failed to connect to the database: "${this._databaseName}".`,
                 cause: error
             });
         }
@@ -261,7 +262,8 @@ export class MSSQL extends EventEmitter {
     public async disconnect(): Promise<void> {
         if (!this._isConnected)
             throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED
+                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
+                message: `Database "${this._databaseName}" is not connected.`
             });
         try {
             await this._db.destroy();
@@ -269,6 +271,7 @@ export class MSSQL extends EventEmitter {
         } catch (error) {
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_DISCONNECT_ERROR,
+                message: `Failed to disconnect from the database: "${this._databaseName}".`,
                 cause: error
             });
         }
@@ -286,11 +289,13 @@ export class MSSQL extends EventEmitter {
     public setCustomRepository(tableName: string, repository: new(knex: Knex, table: Table) => Repository<unknown>): void {
         if (!this._isConnected)
             throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED
+                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
+                message: `Database "${this._databaseName}" is not connected.`
             });
         if (!this._tables.has(tableName))
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND,
+                message: `Table not found: "${tableName}".`,
                 cause: { table: tableName }
             });
         this._repositories.set(tableName, new repository(this._db, this._tables.get(tableName) as Table));
@@ -312,11 +317,13 @@ export class MSSQL extends EventEmitter {
     public getRepository<K, T extends Repository<K> = Repository<K>>(tableName: string): T {
         if (!this._isConnected)
             throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED
+                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
+                message: `Database "${this._databaseName}" is not connected.`
             });
         if (!this._tables.has(tableName))
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND,
+                message: `Table not found: "${tableName}".`,
                 cause: { table: tableName }
             });
         return this._repositories.get(tableName) as T;
@@ -334,11 +341,13 @@ export class MSSQL extends EventEmitter {
     public table(tableName: string): Table {
         if (!this._isConnected)
             throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED
+                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
+                message: `Database "${this._databaseName}" is not connected.`
             });
         if (!this._tables.has(tableName))
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND,
+                message: `Table not found: "${tableName}".`,
                 cause: { table: tableName }
             });
         return this._tables.get(tableName) as Table;
@@ -366,7 +375,8 @@ export class MSSQL extends EventEmitter {
     public get db(): Knex {
         if (!this._isConnected)
             throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED
+                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
+                message: `Database "${this._databaseName}" is not connected.`
             });
         return this._db;
     }

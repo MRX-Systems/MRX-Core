@@ -10,7 +10,7 @@ export const TEXT_EFFECTS = {
     INVERSE: '\x1b[7m',
     HIDDEN: '\x1b[8m',
     STRIKETHROUGH: '\x1b[9m'
-};
+} as const;
 
 /**
  * Colors for text in the console.
@@ -33,7 +33,7 @@ export const TEXT_COLORS = {
     LIGHT_MAGENTA: '\x1b[95m',
     LIGHT_CYAN: '\x1b[96m',
     WHITE: '\x1b[97m'
-};
+} as const;
 
 /**
  * Background colors for text in the console.
@@ -55,4 +55,4 @@ export const BACKGROUND_COLORS = {
     LIGHT_MAGENTA: '\x1b[105m',
     LIGHT_CYAN: '\x1b[106m',
     WHITE: '\x1b[107m'
-};
+} as const;

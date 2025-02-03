@@ -1,14 +1,12 @@
 # === Configuration and system files ===
 .github/
 .idea/
-.env*       # Includes .env, .env.local, etc.
+.env*
 .nvmrc
 .vscode/
 
 # === Archives and build-related files ===
 *.tgz
-bun.lockb
-pnpm-lock.yaml
 
 # === Bundler configuration files ===
 bundler.ts
@@ -26,7 +24,7 @@ jest.config.json
 node_modules/
 package-lock.json
 yarn.lock
-bun.lockb
+bun.lock
 pnpm-lock.yaml
 
 # === Project-specific folders ===
@@ -36,4 +34,5 @@ test/
 # === Core project files ===
 README.md
 tsconfig.json
+tsconfig.dts.json
 translate.json
