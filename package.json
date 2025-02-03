@@ -45,13 +45,13 @@
     "@basalt-lab/basalt-auth": "^1.9.5-canary-20250130-cf0028a",
     "@basalt-lab/basalt-helper": "^1.11.1-canary-20250130-0e2ae99",
     "@basalt-lab/basalt-logger": "^1.12.0-canary-20250130-9f3764c",
-    "elysia": "^1.2.10",
+    "elysia": "^1.2.11",
     "i18next": "^24.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@stylistic/eslint-plugin": "^3.0.1",
-    "@types/bun": "^1.2.1",
+    "@types/bun": "^1.2.2",
     "eslint-plugin-tsdoc": "^0.4.0",
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
