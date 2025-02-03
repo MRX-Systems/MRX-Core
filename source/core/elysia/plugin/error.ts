@@ -56,7 +56,6 @@ export const errorPlugin = new Elysia({
                 return {
                     key: 'core.error.internal_server_error',
                     message: 'Internal server error',
-                    cause: error
                 };
         }
     });

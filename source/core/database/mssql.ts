@@ -278,43 +278,30 @@ export class MSSQL extends EventEmitter {
     }
 
     /**
-     * Sets a custom repository for a specific table.
-     *
-     * @param tableName - The name of the table to associate with the custom repository.
-     * @param repository - The custom repository class to use for the table. The class must extend {@link AbstractRepository}.
-     *
-     * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED})
-     * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND})
-     */
-    public setCustomRepository(tableName: string, repository: new(knex: Knex, table: Table) => Repository<unknown>): void {
-        if (!this._isConnected)
-            throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
-                message: `Database "${this._databaseName}" is not connected.`
-            });
-        if (!this._tables.has(tableName))
-            throw new CoreError({
-                key: DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND,
-                message: `Table not found: "${tableName}".`,
-                cause: { table: tableName }
-            });
-        this._repositories.set(tableName, new repository(this._db, this._tables.get(tableName) as Table));
-    }
-
-    /**
      * Retrieves a repository for a specific table.
      *
      * @param tableName - The name of the table to retrieve the repository for.
+     * @param customRepository - Optional custom repository class to use for the table. The class must extend {@link Repository}.
      *
      * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED})
      * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND})
      *
-     * @typeParam T - The repository to retrieve extends {@link Repository}.
-     * @typeParam K - The type of of the model for the repository.
+     * @typeParam TModel - The type of the model for the repository.
+     * @typeParam TRepo - The repository to retrieve extends {@link Repository}.
      *
      * @returns The repository for the specified table.
      */
-    public getRepository<K, T extends Repository<K> = Repository<K>>(tableName: string): T {
+    public getRepository<TModel, TRepo extends Repository<TModel>>(
+        tableName: string,
+        customRepository: new (knex: Knex, table: Table) => TRepo
+    ): TRepo;
+    public getRepository<TModel = unknown>(
+        tableName: string
+    ): Repository<TModel>;
+    public getRepository(
+        tableName: string,
+        customRepository?: new (knex: Knex, table: Table) => Repository<unknown>
+    ): Repository<unknown> {
         if (!this._isConnected)
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
@@ -326,7 +313,18 @@ export class MSSQL extends EventEmitter {
                 message: `Table not found: "${tableName}".`,
                 cause: { table: tableName }
             });
-        return this._repositories.get(tableName) as T;
+
+        let repo = this._repositories.get(tableName);
+
+        if (customRepository) {
+            const table = this._tables.get(tableName) as Table;
+            if (repo && repo instanceof customRepository)
+                return repo;
+            repo = new customRepository(this._db, table);
+            this._repositories.set(tableName, repo);
+            return repo;
+        }
+        return this._repositories.get(tableName) as Repository<unknown>;
     }
 
     /**

@@ -91,7 +91,7 @@ describe('Error Plugin', () => {
                     found: {
                         foo: 1
                     },
-                    errors: [
+                    props: [
                         {
                             errors: [],
                             message: 'Expected string',
