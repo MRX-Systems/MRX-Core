@@ -39,7 +39,7 @@ export const errorPlugin = new Elysia({
                     cause: {
                         on: error.type,
                         found: error.value,
-                        props: error.all
+                        errors: error.all
                     }
                 };
             }

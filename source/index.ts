@@ -19,7 +19,6 @@ export * from './core/util/stream';
 // Exports of error classes
 export * from './error/coreError';
 export * from './error/key/databaseKeyError';
-export * from './error/key/serverKeyError';
 export * from './error/key/utilKeyError';
 
 // Exports of TypeScript types
