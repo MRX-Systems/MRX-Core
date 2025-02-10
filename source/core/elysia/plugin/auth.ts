@@ -284,9 +284,10 @@ export const authPlugin = (options: AuthOptions) => {
                 200: 'loginResponse200',
                 400: 'loginResponse400'
             }
-        })
+        });
 
-        .post('/login/mfa', async ({ body, jwt, cookie: { accessToken, refreshToken }, store: { redis } }) => {
+    if (options.mfa.isEnable)
+        app.post('/login/mfa', async ({ body, jwt, cookie: { accessToken, refreshToken }, store: { redis } }) => {
             const { token, email } = body;
 
             if (!await verifyMfaToken(email, token, redis))
