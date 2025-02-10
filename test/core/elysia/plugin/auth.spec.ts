@@ -1,16 +1,18 @@
-import { afterEach, describe, expect, mock, test } from 'bun:test';
+import { afterAll, afterEach, describe, expect, mock, test } from 'bun:test';
 import { Elysia } from 'elysia';
 
 import { authPlugin } from '#/core/elysia/plugin/auth';
 import { errorPlugin } from '#/core/elysia/plugin/error';
 import { Redis } from '#/core/store/redis';
 
-const redis = {
+const redisConf = {
     host: process.env.STORE_HOST ?? '',
     password: process.env.STORE_KEY ?? '',
     port: parseInt(process.env.STORE_PORT ?? ''),
     tls: {}
 };
+
+const redis = new Redis(redisConf);
 
 const password1 = await Bun.password.hash('T€st1!@#0');
 const password2 = await Bun.password.hash('T€st2!@#0');
@@ -59,14 +61,12 @@ describe('Auth Plugin', () => {
             }));
 
         afterEach(async () => {
-            const redisClient = new Redis(redis);
             await Promise.all([
-                redisClient.client.del('refresh:test1@example.com'),
-                redisClient.client.del('mfa:test1@example.com'),
-                redisClient.client.del('refresh:test2@example.com'),
-                redisClient.client.del('mfa:test2@example.com')
+                redis.client.del('refresh:test1@example.com'),
+                redis.client.del('mfa:test1@example.com'),
+                redis.client.del('refresh:test2@example.com'),
+                redis.client.del('mfa:test2@example.com')
             ]);
-            await redisClient.client.quit();
         });
 
         test('should login without MFA and return Login success with cookie', async () => {
@@ -364,24 +364,20 @@ describe('Auth Plugin', () => {
             }));
 
         afterEach(async () => {
-            const redisClient = new Redis(redis);
             await Promise.all([
-                redisClient.client.del('refresh:test1@example.com'),
-                redisClient.client.del('mfa:test1@example.com'),
-                redisClient.client.del('refresh:test2@example.com'),
-                redisClient.client.del('mfa:test2@example.com')
+                redis.client.del('refresh:test1@example.com'),
+                redis.client.del('mfa:test1@example.com'),
+                redis.client.del('refresh:test2@example.com'),
+                redis.client.del('mfa:test2@example.com')
             ]);
-            await redisClient.client.quit();
         });
 
         test('should login with MFA and return MFA success and login success', async () => {
-            const redisClient = new Redis(redis);
             const token = '617af89d19fc3445';
             const hasher = new Bun.CryptoHasher('blake2b256');
             hasher.update(token);
             const tokenHash = hasher.digest('hex');
-            await redisClient.client.set('mfa:test1@example.com', tokenHash);
-            await redisClient.client.quit();
+            await redis.client.set('mfa:test1@example.com', tokenHash);
             const res = await app
                 .handle(new Request('http://localhost/auth/login/mfa', {
                     method: 'POST',
@@ -691,9 +687,7 @@ describe('Auth Plugin', () => {
             }));
             const refreshToken = login.headers.getSetCookie()?.find((cookie) => cookie.includes('refreshToken='))?.split('=')[1] ?? '';
             const { jti } = JSON.parse(atob(refreshToken.split('.')[1])) as { jti: string };
-            const redisClient = new Redis(redis);
-            await redisClient.client.hdel('refresh:test1@example.com', jti);
-            await redisClient.client.quit();
+            await redis.client.hdel('refresh:test1@example.com', jti);
             await Bun.sleep(1100);
             const res = await app.handle(new Request('http://localhost/example', {
                 headers: {
@@ -742,9 +736,7 @@ describe('Auth Plugin', () => {
             }));
             const refreshToken = login.headers.getSetCookie()?.find((cookie) => cookie.includes('refreshToken='))?.split('=')[1] ?? '';
             const { jti } = JSON.parse(atob(refreshToken.split('.')[1])) as { jti: string };
-            const redisClient = new Redis(redis);
-            const res = await redisClient.client.hexists('refresh:test1@example.com', jti);
-            await redisClient.client.quit();
+            const res = await redis.client.hexists('refresh:test1@example.com', jti);
             expect(res).toBe(0);
         });
 
@@ -824,9 +816,7 @@ describe('Auth Plugin', () => {
             }));
             const refreshToken = login.headers.getSetCookie()?.find((cookie) => cookie.includes('refreshToken='))?.split('=')[1] ?? '';
             const { jti } = JSON.parse(atob(refreshToken.split('.')[1])) as { jti: string };
-            const redisClient = new Redis(redis);
-            const res = await redisClient.client.hexists('refresh:test1@example.com', jti);
-            await redisClient.client.quit();
+            const res = await redis.client.hexists('refresh:test1@example.com', jti);
             expect(res).toBe(0);
             expect(logout.status).toBe(200);
             expect(logout.headers.getSetCookie()).toEqual([
@@ -837,5 +827,8 @@ describe('Auth Plugin', () => {
                 message: 'Logout success'
             });
         });
+    });
+    afterAll(async () => {
+        await redis.client.quit();
     });
 });
