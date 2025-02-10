@@ -46,7 +46,7 @@ export interface JWTOption<
     payload?: JWTPayload;
 }
 
-export const jwt = <
+export const jwtPlugin = <
     const Name extends string = 'jwt',
     const Schema extends TSchema | undefined = undefined
 >(options: JWTOption<Name, Schema>) => {

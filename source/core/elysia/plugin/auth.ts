@@ -13,7 +13,7 @@ import { Redis } from '#/core/store/redis';
 import { CoreError } from '#/error/coreError';
 import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 import { HTTP_STATUS_CODE } from '#/types/enum/httpStatusCode';
-import { jwt } from './jwt';
+import { jwtPlugin } from './jwt';
 
 /**
  * Authentication options to be used in the auth plugin.
@@ -170,7 +170,7 @@ export const authPlugin = (options: AuthOptions) => {
             sign: true
         }
     })
-        .use(jwt({
+        .use(jwtPlugin({
             secret: options.jwtSecret
         }))
         .state({
