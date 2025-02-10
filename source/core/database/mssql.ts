@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import knex, { type Knex } from 'knex';
 
 import { Repository } from '#/core/repository/repository';
-import { CoreError } from '#/error';
+import { CoreError } from '#/error/coreError';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
 import { EVENT_MSSQL } from '#/types/constant/eventMssql';
 import { EVENT_TABLE } from '#/types/constant/eventTable';

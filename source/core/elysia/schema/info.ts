@@ -1,6 +1,6 @@
 import { t } from 'elysia';
 
-export const infoSchema = t.Object({
+export const infoResponse200Schema = t.Object({
     message: t.String({
         description: 'Message',
         example: 'Microservice Information'
@@ -19,6 +19,4 @@ export const infoSchema = t.Object({
             example: 'MRX-API is a REST API for the MRX project'
         })
     })
-}, {
-    title: 'info'
 });

@@ -1,8 +1,8 @@
 import { Elysia } from 'elysia';
 import { existsSync } from 'fs';
 
-import { infoSchema } from '#/core/elysia/schema/info';
-import { pingSchema } from '#/core/elysia/schema/ping';
+import { infoResponse200Schema } from '#/core/elysia/schema/info';
+import { pingResponse200Schema } from '#/core/elysia/schema/ping';
 
 /**
  * Recursively finds the path to the nearest package.json file.
@@ -36,7 +36,7 @@ const packageJson = await import(findPackageJson(Bun.main));
  * - `/info`: Provides information about the microservice.
  */
 export const microservicePlugin = new Elysia({
-    name: 'microservice',
+    name: 'microservicePlugin',
     prefix: '/microservice',
     detail: {
         tags: ['Microservice'],
@@ -44,16 +44,18 @@ export const microservicePlugin = new Elysia({
     }
 })
     .model({
-        info: infoSchema,
-        ping: pingSchema
+        infoResponse200: infoResponse200Schema,
+        pingResponse200: pingResponse200Schema
     })
     .get('/ping', () => ({
         message: 'pong'
     }), {
-        summary: 'Ping',
-        description: 'Ping the microservice to check if it is alive',
+        detail: {
+            summary: 'Ping',
+            description: 'Ping the microservice to check if it is alive'
+        },
         response: {
-            200: 'ping'
+            200: 'pingResponse200'
         }
     })
     .get('/info', () => ({
@@ -65,7 +67,11 @@ export const microservicePlugin = new Elysia({
             author: packageJson.default.author
         }
     }), {
+        detail: {
+            summary: 'Info',
+            description: 'Get information about the microservice'
+        },
         response: {
-            200: 'info'
+            200: 'infoResponse200'
         }
     });
