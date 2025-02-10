@@ -6,7 +6,9 @@ export * from './core/database/table';
 export * from './core/repository/repository';
 
 // Export plugins
+export * from './core/elysia/plugin/auth';
 export * from './core/elysia/plugin/error';
+export * from './core/elysia/plugin/jwt';
 export * from './core/elysia/plugin/microservice';
 
 // Export store
@@ -19,12 +21,13 @@ export * from './core/util/stream';
 // Exports of error classes
 export * from './error/coreError';
 export * from './error/key/databaseKeyError';
+export * from './error/key/elysiaKeyError';
 export * from './error/key/utilKeyError';
 
 // Exports of TypeScript types
-export type * from './types/constant/eventMssql';
-export type * from './types/constant/eventTable';
-export type * from './types/constant/mssqlErrorCode';
+export * from './types/constant/eventMssql';
+export * from './types/constant/eventTable';
+export * from './types/constant/mssqlErrorCode';
 
 export type * from './types/data/advancedSearch';
 export type * from './types/data/fieldSelection';
@@ -36,6 +39,6 @@ export type * from './types/data/streamWithAsyncIterable';
 export type * from './types/data/transaction';
 export type * from './types/data/whereClause';
 
-export type * from './types/enum/color';
-export type * from './types/enum/httpStatusCode';
+export * from './types/enum/color';
+export * from './types/enum/httpStatusCode';
 

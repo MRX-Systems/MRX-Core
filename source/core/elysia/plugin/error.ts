@@ -3,7 +3,7 @@ import { BasaltError as BasaltHelperError } from '@basalt-lab/basalt-helper/erro
 import { BasaltError as BasaltLoggerError } from '@basalt-lab/basalt-logger/error';
 import { Elysia } from 'elysia';
 
-import { CoreError } from '#/error';
+import { CoreError } from '#/error/coreError';
 
 /**
  * The `errorPlugin` handles errors for the Elysia application.
