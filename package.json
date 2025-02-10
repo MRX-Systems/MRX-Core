@@ -41,34 +41,37 @@
     "fix-lint": "eslint --fix ./source",
     "lint": "eslint ./source"
   },
-  "dependencies": {
+  "devDependencies": {
     "@basalt-lab/basalt-auth": "^1.9.5-canary-20250130-cf0028a",
     "@basalt-lab/basalt-helper": "^1.11.1-canary-20250130-0e2ae99",
     "@basalt-lab/basalt-logger": "^1.12.0-canary-20250130-9f3764c",
-    "elysia": "^1.2.11",
-    "i18next": "^24.2.2"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.19.0",
-    "@stylistic/eslint-plugin": "^3.0.1",
+    "@eslint/js": "^9.20.0",
+    "@stylistic/eslint-plugin": "^3.1.0",
     "@types/bun": "^1.2.2",
+    "elysia": "^1.2.12",
+    "eslint": "^9.20.0",
     "eslint-plugin-tsdoc": "^0.4.0",
-    "eslint": "^9.19.0",
     "globals": "^15.14.0",
-    "ioredis": "^5.4.2",
+    "ioredis": "^5.5.0",
+    "jose": "^5.9.6",
     "knex": "^3.1.0",
     "tedious": "^18.6.1",
     "tsc-alias": "^1.8.10",
-    "typedoc": "^0.27.6",
-    "typescript-eslint": "^8.22.0"
+    "typedoc": "^0.27.7",
+    "typescript-eslint": "^8.23.0"
   },
   "peerDependencies": {
+    "elysia": "^1.2.11",
     "ioredis": "^5.4.2",
+    "jose": "^5.9.6",
     "knex": "^3.1.0",
     "tedious": "^18.6.1",
     "typescript": "^5.7.3"
   },
   "peerDependenciesMeta": {
+    "jo": {
+      "optional": true
+    },
     "ioredis": {
       "optional": true
     },

@@ -147,7 +147,6 @@ export default [
              * @see https://typescript-eslint.io/rules/
              */
             'consistent-return': 'off',
-            '@typescript-eslint/consistent-return': 'error',
             '@typescript-eslint/consistent-type-exports': 'error',
             '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'separate-type-imports' }],
             'default-param-last': 'off',
@@ -185,7 +184,8 @@ export default [
             '@typescript-eslint/no-dynamic-delete': 'off',
             '@typescript-eslint/no-confusing-void-expression': 'off',
             '@typescript-eslint/explicit-function-return-type': 'warn',
-            '@typescript-eslint/explicit-module-boundary-types': 'warn'
+            '@typescript-eslint/explicit-module-boundary-types': 'warn',
+            '@typescript-eslint/consistent-return': 'warn',
         }
     }
 ];
