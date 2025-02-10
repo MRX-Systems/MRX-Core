@@ -185,7 +185,7 @@ export default [
             '@typescript-eslint/no-confusing-void-expression': 'off',
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/explicit-module-boundary-types': 'warn',
-            '@typescript-eslint/consistent-return': 'warn',
+            '@typescript-eslint/consistent-return': 'warn'
         }
     }
 ];
