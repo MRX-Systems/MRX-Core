@@ -126,6 +126,15 @@ export const authPlugin = (options: AuthOptions) => {
         return { accessToken, refreshToken, refreshTokenJti };
     };
 
+    /**
+     * Verify the MFA token.
+     *
+     * @param email - The email of the user.
+     * @param token - The MFA token.
+     * @param redis - The Redis instance.
+     *
+     * @returns true if the MFA token is valid, false otherwise.
+     */
     const verifyMfaToken = async (email: string, token: string, redis: Redis): Promise<boolean> => {
         const hasher = new Bun.CryptoHasher('blake2b256');
         hasher.update(token);
