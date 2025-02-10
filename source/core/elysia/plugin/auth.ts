@@ -1,6 +1,5 @@
 import { randomBytes } from 'crypto';
 import { type Cookie, Elysia } from 'elysia';
-import type { RedisOptions } from 'ioredis';
 
 import {
     loginBodySchema,
@@ -9,7 +8,7 @@ import {
     loginResponse200Schema,
     loginResponse400Schema
 } from '#/core/elysia/schema/login';
-import { Redis } from '#/core/store/redis';
+import type { Redis } from '#/core/store/redis';
 import { CoreError } from '#/error/coreError';
 import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 import { HTTP_STATUS_CODE } from '#/types/enum/httpStatusCode';
@@ -49,7 +48,7 @@ interface AuthOptions {
     /**
      * The redis options to store the MFA token and Refresh token.
      */
-    redis: RedisOptions
+    redis: Redis
     /**
      * The MFA options.
      */
@@ -65,7 +64,7 @@ interface AuthOptions {
          * @param token - The MFA token.
          * @param expireTime - The expiration time of the MFA token in seconds.
          */
-        sendToken: (email: string, token: string, expireTime: number) => Promise<void> | void;
+        sendToken?: (email: string, token: string, expireTime: number) => Promise<void> | void;
         /**
          * The expiration time of the MFA token in seconds. (Default: 900 (15 minutes))
          */
@@ -174,7 +173,7 @@ export const authPlugin = (options: AuthOptions) => {
             secret: options.jwtSecret
         }))
         .state({
-            redis: new Redis(options.redis)
+            redis: options.redis
         })
         .macro({
             isAuth(enabled = true) {
@@ -266,7 +265,8 @@ export const authPlugin = (options: AuthOptions) => {
 
             if (typeof options.mfa.isEnable === 'function' ? await options.mfa.isEnable(body.email) : options.mfa.isEnable) {
                 const token = await generateMfaToken(body.email, redis);
-                await options.mfa?.sendToken(body.email, token, options.mfa?.expireTime || 900);
+                if (options.mfa.sendToken)
+                    await options.mfa.sendToken(body.email, token, options.mfa?.expireTime || 900);
                 return {
                     message: 'MFA required, a code is sent'
                 };
