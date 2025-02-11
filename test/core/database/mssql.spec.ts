@@ -61,7 +61,7 @@ describe('MSSQL', () => {
             const mssql = new MSSQL({ ...options, pulse: true });
             await mssql.connect();
 
-            mssql.table(testTable)
+            mssql.getTable(testTable)
                 .on(EVENT_TABLE.SELECTED, (res) => {
                     expect(res).toBeDefined();
                 });
@@ -159,20 +159,20 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             await mssql.connect();
-            expect(mssql.table(testTable)).toBeDefined();
+            expect(mssql.getTable(testTable)).toBeDefined();
         });
 
         test('should throw an error when the database is not connected', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
-            expect(() => mssql.table(testTable)).toThrow(`Database "${options.databaseName}" is not connected.`);
+            expect(() => mssql.getTable(testTable)).toThrow(`Database "${options.databaseName}" is not connected.`);
         });
 
         test('should throw an error when the table is not found', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             await mssql.connect();
-            expect(() => mssql.table('foo')).toThrow('Table not found: "foo".');
+            expect(() => mssql.getTable('foo')).toThrow('Table not found: "foo".');
         });
     });
 
@@ -200,7 +200,7 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/core/database/mssql');
                 const mssql = new MSSQL(options);
                 await mssql.connect();
-                mssql.table(testTable).on(EVENT_TABLE.SELECTED, (res) => {
+                mssql.getTable(testTable).on(EVENT_TABLE.SELECTED, (res) => {
                     expect(res).toBeDefined();
                 });
                 await mssql.db(testTable).select('*').from(testTable);

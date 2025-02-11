@@ -31,7 +31,7 @@ import type { WhereClause } from '#/types/data/whereClause';
  * - **Error Handling**: Centralized error handling with custom error codes for MSSQL-specific errors.
  * - **Type Safety**: Ensures type safety for queries and results with TypeScript generics.
  *
- * @typeParam T - The type of the data model handled by the repository.
+ * @typeParam TModel - The type of the data model handled by the repository.
  *
  * ### Example Usage:
  * @example
@@ -93,7 +93,7 @@ import type { WhereClause } from '#/types/data/whereClause';
  * - **count**: Counts the number of records matching the specified query options.
  */
 
-export class Repository<T> {
+export class Repository<const TModel = unknown> {
     /**
      * The Knex.js instance used to interact with the database. ({@link Knex})
      */
@@ -120,7 +120,7 @@ export class Repository<T> {
      * for async iteration. The stream emits data events for each record and an end event when
      * the stream is finished.
      *
-     * @typeParam K - The type of the object to retrieve.
+     * @typeParam KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search. ({@link QueryOptionsExtendStream})
      *
      * @returns A stream with an async iterable interface. ({@link StreamWithAsyncIterable})
@@ -137,7 +137,7 @@ export class Repository<T> {
      * stream.on('data', (user) => console.log(user));
      * ```
      */
-    public findStream<K extends T = NoInfer<T>>(options?: QueryOptionsExtendStream<K>): StreamWithAsyncIterable<K[]> {
+    public findStream<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendStream<KModel>): StreamWithAsyncIterable<KModel[]> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -149,7 +149,7 @@ export class Repository<T> {
         ];
         query.orderBy(orderBy[0], orderBy[1]);
 
-        const kStream: StreamWithAsyncIterable<K> = query.stream();
+        const kStream: StreamWithAsyncIterable<KModel> = query.stream();
 
         const passThrough = new PassThrough({
             objectMode: true,
@@ -169,7 +169,7 @@ export class Repository<T> {
         });
 
         kStream.pipe(passThrough);
-        return makeStreamAsyncIterable<K, PassThrough>(passThrough);
+        return makeStreamAsyncIterable<KModel, PassThrough>(passThrough);
     }
 
     /**
@@ -177,13 +177,13 @@ export class Repository<T> {
      * as an array. The query options can include advanced search filters, pagination, field selection, and ordering.
      * If no records are found and the `throwIfNoResult` option is enabled, an error is thrown.
      *
-     * @typeParam K - The type of the object to retrieve.
+     * @typeParam KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search. ({@link QueryOptionsExtendPagination})
      *
      * @throws ({@link CoreError}): Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
      * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during the query execution. ({@link DATABASE_KEY_ERROR}.[ERROR_CODE] or {@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
      *
-     * @returns An array of records matching the query options. ({@link K}[])
+     * @returns An array of records matching the query options. ({@link KModel}[])
      *
      * @example
      * ```typescript
@@ -234,7 +234,7 @@ export class Repository<T> {
      * ...
      * ```
      */
-    public async find<K extends T = NoInfer<T>>(options?: QueryOptionsExtendPagination<K>): Promise<K[]> {
+    public async find<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendPagination<KModel>): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -251,7 +251,7 @@ export class Repository<T> {
             .limit(limit)
             .offset(offset);
 
-        return this._executeQuery<K>(query, options?.throwIfNoResult);
+        return this._executeQuery<KModel>(query, options?.throwIfNoResult);
     }
 
     /**
@@ -259,13 +259,13 @@ export class Repository<T> {
      * The query options support advanced search filters, field selection, and ordering.
      * If no records are found and the `throwIfNoResult` option is enabled, an error is thrown.
      *
-     * @typeParam K - The type of the object to retrieve.
+     * @typeParam KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search. ({@link QueryOptions})
      *
      * @throws ({@link CoreError}): Throws an error if no records are found and `throwIfNoResult` is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
      * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
      *
-     * @returns The record matching the query options. ({@link K})
+     * @returns The record matching the query options. ({@link KModel})
      *
      * @example
      * ```typescript
@@ -286,7 +286,7 @@ export class Repository<T> {
      * });
      * ```
      */
-    public async findOne<K extends T = NoInfer<T>>(options: Omit<QueryOptions<K>, 'advancedSearch'> & Required<Pick<QueryOptions<K>, 'advancedSearch'>>): Promise<K> {
+    public async findOne<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>): Promise<KModel> {
         const query = this._knex(this._table.name)
             .select(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
@@ -299,7 +299,7 @@ export class Repository<T> {
 
         query.orderBy(orderBy[0], orderBy[1]);
 
-        return this._executeQuery<K>(query, options?.throwIfNoResult)
+        return this._executeQuery<KModel>(query, options?.throwIfNoResult)
             .then((result) => result[0]);
     }
 
@@ -308,7 +308,7 @@ export class Repository<T> {
      * The query options support advanced search filters. If no records are found and the
      * `throwIfNoResult` option is enabled, an error is thrown.
      *
-     * @typeParam K - The type of the object to match.
+     * @typeParam KModel - The type of the object to match.
      * @param options - The query options to apply to the count operation. ({@link QueryOptions})
      *
      * @throws ({@link CoreError}): Throws an error if no records are found and `throwIfNoResult` is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
@@ -329,7 +329,7 @@ export class Repository<T> {
      * console.log(count);
      * ```
      */
-    public async count<K extends T = NoInfer<T>>(options?: QueryOptions<K>): Promise<number> {
+    public async count<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptions<KModel>): Promise<number> {
         const query = this._knex(this._table.name)
             .count({ count: '*' });
         if (options?.advancedSearch)
@@ -344,11 +344,11 @@ export class Repository<T> {
      * The data can be a single object or an array of objects. Field selection can be used
      * to specify which fields to return.
      *
-     * @typeParam K - The type of the object to insert.
+     * @typeParam KModel - The type of the object to insert.
      * @param data - The data to insert into the database. (K | K[])
      * @param options - The query options to apply to the insertion. ({@link QueryOptions})
      *
-     * @returns An array of the inserted records. ({@link K}[])
+     * @returns An array of the inserted records. ({@link KModel}[])
      *
      * @example
      * ```typescript
@@ -364,15 +364,15 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async insert<K extends T = NoInfer<T>>(
-        data: Partial<K> | Partial<K>[],
-        options?: Omit<QueryOptions<K>, 'advancedSearch' | 'orderBy'>
-    ): Promise<K[]> {
+    public async insert<KModel extends TModel = NoInfer<TModel>>(
+        data: Partial<KModel> | Partial<KModel>[],
+        options?: Omit<QueryOptions<KModel>, 'advancedSearch' | 'orderBy'>
+    ): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .insert(data)
             .returning(this._transformFieldSelectionToArray(options?.selectedFields));
 
-        return this._executeQuery<K>(query);
+        return this._executeQuery<KModel>(query);
     }
 
     /**
@@ -380,11 +380,11 @@ export class Repository<T> {
      * and returns the updated records. The query options support advanced search filters
      * and field selection.
      *
-     * @typeParam K - The type of the object to update.
+     * @typeParam KModel - The type of the object to update.
      * @param data - The data to update in the database. (Partial<K>)
      * @param options - The query options to apply to the update operation. ({@link QueryOptions})
      *
-     * @returns An array of the updated records. ({@link K}[])
+     * @returns An array of the updated records. ({@link KModel}[])
      *
      * @example
      * ```typescript
@@ -400,17 +400,17 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async update<K extends T = NoInfer<T>>(
-        data: Partial<K>,
-        options: Omit<QueryOptions<K>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<K>, 'advancedSearch'>>
-    ): Promise<K[]> {
+    public async update<KModel extends TModel = NoInfer<TModel>>(
+        data: Partial<KModel>,
+        options: Omit<QueryOptions<KModel>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>
+    ): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .update(data)
             .returning(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
-        return this._executeQuery<K>(query);
+        return this._executeQuery<KModel>(query);
     }
 
     /**
@@ -418,10 +418,10 @@ export class Repository<T> {
      * and returns the deleted records. The query options support advanced search filters
      * and field selection.
      *
-     * @typeParam K - The type of the object to delete.
+     * @typeParam KModel - The type of the object to delete.
      * @param options - The query options to apply to the delete operation. ({@link QueryOptions})
      *
-     * @returns An array of the deleted records. ({@link K}[])
+     * @returns An array of the deleted records. ({@link KModel}[])
      *
      * @example
      * ```typescript
@@ -436,14 +436,14 @@ export class Repository<T> {
      * console.log(users);
      * ```
      */
-    public async delete<K extends T = NoInfer<T>>(options: Omit<QueryOptions<K>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<K>, 'advancedSearch'>>): Promise<K[]> {
+    public async delete<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .delete()
             .returning(this._transformFieldSelectionToArray(options?.selectedFields));
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
-        return this._executeQuery<K>(query);
+        return this._executeQuery<KModel>(query);
     }
 
     /**
@@ -451,7 +451,7 @@ export class Repository<T> {
      * This method is used to convert the `selectedFields` query option into
      * a format that can be used by the database query.
      *
-     * @typeParam K - The type of the object containing the fields.
+     * @typeParam KModel - The type of the object containing the fields.
      * @param fields - The fields selection object to transform. ({@link FieldSelection})
      *
      * @returns An array of column names to select in the query. (string[])
@@ -470,7 +470,7 @@ export class Repository<T> {
      * console.log(columns); // ['*']
      * ```
      */
-    protected _transformFieldSelectionToArray<K>(fields?: FieldSelection<K>): string[] {
+    protected _transformFieldSelectionToArray<KModel>(fields?: FieldSelection<KModel>): string[] {
         if (!fields || Object.keys(fields).length === 0) return ['*'];
         return Object.entries(fields)
             .filter(
@@ -484,7 +484,7 @@ export class Repository<T> {
      * Applies advanced search filters to a query object. This method translates
      * search options into SQL WHERE clauses using the specified operators and conditions.
      *
-     * @typeParam K - The type of the object to apply the search filters to.
+     * @typeParam KModel - The type of the object to apply the search filters to.
      * @param query - The Knex.js query builder to apply the filters to. ({@link Knex.QueryBuilder})
      * @param search - The advanced search options to apply. ({@link AdvancedSearch})
      *
@@ -504,9 +504,9 @@ export class Repository<T> {
      * console.log(query.toString()); // SELECT * FROM "users" WHERE "id" >= 10 AND "name" LIKE '%Alice%'
      * ```
      */
-    protected _applySearch<K>(
+    protected _applySearch<KModel>(
         query: Knex.QueryBuilder,
-        search: AdvancedSearch<K> | AdvancedSearch<K>[]
+        search: AdvancedSearch<KModel> | AdvancedSearch<KModel>[]
     ): void {
         type OperatorFunction = (query: Knex.QueryBuilder, key: string, value: unknown) => void;
         const keysFunc: Record<keyof WhereClause, OperatorFunction> = {
@@ -567,7 +567,7 @@ export class Repository<T> {
                     query.whereNotNull(key);
             }
         };
-        const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<K>): void => {
+        const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<KModel>): void => {
             for (const [key, value] of Object.entries(search))
                 if (this._isComplexQuery(value)) {
                     const whereClause = value as WhereClause;
@@ -596,6 +596,7 @@ export class Repository<T> {
      * Determines whether the provided data object represents a complex query.
      * A complex query is defined as an object containing one or more valid query operators.
      *
+     * @typeParam MaybeWhereClause - The type of the object to check.
      * @param data - The data object to check.
      *
      * @returns `true` if the object contains valid query operators, otherwise `false`.
@@ -611,7 +612,7 @@ export class Repository<T> {
      * console.log(isComplex); // false
      * ```
      */
-    private _isComplexQuery(data: unknown): boolean {
+    private _isComplexQuery<MaybeWhereClause>(data: MaybeWhereClause): boolean {
         const validKeys = new Set<string>([
             '$eq',
             '$neq',
@@ -639,14 +640,14 @@ export class Repository<T> {
      * Executes a Knex.js query and returns the result. If the `throwIfNoResult` option
      * is enabled and no records are found, an error is thrown.
      *
-     * @typeParam K - The type of the records returned by the query.
+     * @typeParam KModel - The type of the records returned by the query.
      * @param query - The Knex.js query builder to execute. ({@link Knex.QueryBuilder})
      * @param throwIfNoResult - Whether to throw an error if no records are found.
      *
      * @throws ({@link CoreError}): Throws an error if no records are found and `throwIfNoResult` is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
      * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
      *
-     * @returns An array of records returned by the query. ({@link K}[])
+     * @returns An array of records returned by the query. ({@link KModel}[])
      *
      * @example
      * ```typescript
@@ -661,9 +662,9 @@ export class Repository<T> {
      * // Throws CoreError if no records are found
      * ```
      */
-    private async _executeQuery<K>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<K[]> {
+    private async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<KModel[]> {
         try {
-            const result: K[] = await query;
+            const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
                 throw new CoreError({
                     key: DATABASE_KEY_ERROR.MSSQL_NO_RESULT,

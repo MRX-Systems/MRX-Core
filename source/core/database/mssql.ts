@@ -172,7 +172,7 @@ export class MSSQL extends EventEmitter {
     /**
      * A map of repositories for each table.
      */
-    private readonly _repositories = new Map<string, Repository<unknown>>();
+    private readonly _repositories = new Map<string, Repository>();
 
     /**
      * The Knex instance for the database connection. ({@link Knex})
@@ -300,8 +300,8 @@ export class MSSQL extends EventEmitter {
     ): Repository<TModel>;
     public getRepository(
         tableName: string,
-        customRepository?: new (knex: Knex, table: Table) => Repository<unknown>
-    ): Repository<unknown> {
+        customRepository?: new (knex: Knex, table: Table) => Repository
+    ): Repository {
         if (!this._isConnected)
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
@@ -324,7 +324,7 @@ export class MSSQL extends EventEmitter {
             this._repositories.set(tableName, repo);
             return repo;
         }
-        return this._repositories.get(tableName) as Repository<unknown>;
+        return this._repositories.get(tableName) as Repository;
     }
 
     /**
@@ -336,7 +336,7 @@ export class MSSQL extends EventEmitter {
      * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED})
      * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND})
      */
-    public table(tableName: string): Table {
+    public getTable(tableName: string): Table {
         if (!this._isConnected)
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,

@@ -3,7 +3,7 @@ import type { WhereClause } from './whereClause';
 /**
  * Defines an advanced search model using either plain partials of the model T or a {@link WhereClause} filter for more dynamic querying.
  *
- * @typeParam T - The model type to be used for the advanced search.
+ * @typeParam TModel - The model type to be used for the advanced search.
  *
  * @example
  * ```typescript
@@ -37,8 +37,8 @@ import type { WhereClause } from './whereClause';
  * };
  * ```
  */
-export type AdvancedSearch<T> = {
-    [P in keyof T]?: T[P] | Partial<WhereClause>;
+export type AdvancedSearch<TModel> = {
+    [KeyOfTModel in keyof TModel]?: TModel[KeyOfTModel] | Partial<WhereClause>;
 }
 & Record<string, string | number | boolean | Date | Partial<WhereClause>>
 & { $q?: string; };
