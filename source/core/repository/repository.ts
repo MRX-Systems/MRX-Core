@@ -533,6 +533,13 @@ export class Repository<TModel = unknown> {
                     query.whereNotNull(key);
             }
         };
+        const checkField = (field: string): boolean => {
+            if (!this._table.fields.includes(field)) {
+                console.warn(`Le champ "${field}" n'existe pas dans la table "${this._table.name}".`);
+                return false;
+            }
+            return true;
+        };
         const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<KModel>): void => {
             for (const [key, value] of Object.entries(search))
                 if (this._isComplexQuery(value)) {
@@ -542,13 +549,19 @@ export class Repository<TModel = unknown> {
                             const func = keysFunc[operator as keyof WhereClause];
                             func(query, key, opValue);
                         }
-                } else if (key === '$q') {
+                } else if (key === '$q' && typeof value === 'string') {
                     for (const field of this._table.fields)
-                        query.where(field, 'like', `%${value as string}%`);
+                        if (checkField(field))
+                            query.orWhere(field, 'like', `%${value}%`);
+                } else if (key === '$q' && typeof value === 'object' && value !== null) {
+                    for (const [col, term] of Object.entries(value))
+                        if (checkField(col))
+                            query.orWhere(col, 'like', `%${term}%`);
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
-                    query.where(key, value);
+                    if (checkField(key))
+                        query.where(key, value);
                 }
         };
 

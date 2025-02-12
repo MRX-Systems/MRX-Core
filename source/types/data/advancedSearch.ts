@@ -38,7 +38,8 @@ import type { WhereClause } from './whereClause';
  * ```
  */
 export type AdvancedSearch<TModel> = {
-    [KeyOfTModel in keyof TModel]?: TModel[KeyOfTModel] | Partial<WhereClause>;
+    [Key in keyof TModel]?: TModel[Key] | Partial<WhereClause>;
 }
 & Record<string, string | number | boolean | Date | Partial<WhereClause>>
-& { $q?: string; };
+& { $q?: string | Partial<Record<keyof TModel, string>>; };
+
