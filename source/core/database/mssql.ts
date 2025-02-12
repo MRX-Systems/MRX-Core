@@ -359,6 +359,20 @@ export class MSSQL extends EventEmitter {
     }
 
     /**
+     * Gets the tables in the database.
+     */
+    public get tables(): Map<string, Table> {
+        return this._tables;
+    }
+
+    /**
+     * Gets the repositories for the tables in the database.
+     */
+    public get repositories(): Map<string, Repository> {
+        return this._repositories;
+    }
+
+    /**
      * Indicates whether the database is connected.
      */
     public get isConnected(): boolean {
