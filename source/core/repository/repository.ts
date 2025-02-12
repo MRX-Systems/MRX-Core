@@ -93,7 +93,7 @@ import type { WhereClause } from '#/types/data/whereClause';
  * - **count**: Counts the number of records matching the specified query options.
  */
 
-export class Repository<const TModel = unknown> {
+export class Repository<TModel = unknown> {
     /**
      * The Knex.js instance used to interact with the database. ({@link Knex})
      */
