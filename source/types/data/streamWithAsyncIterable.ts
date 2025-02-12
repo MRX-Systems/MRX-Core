@@ -3,7 +3,7 @@ import type { PassThrough } from 'stream';
 /**
  * A stream with an async iterable interface. ({@link PassThrough} & {@link AsyncIterable})
  *
- * @typeParam T - The type of the object to retrieve.
+ * @typeParam TModel - The type of the object to retrieve.
  *
  * @example
  * ```typescript
@@ -22,6 +22,4 @@ import type { PassThrough } from 'stream';
  * users.on('data', (user: User) => console.log(user));
  * ```
  */
-export type StreamWithAsyncIterable<T> =
-    PassThrough
-    & AsyncIterable<T extends (infer M)[] ? M : never>;
+export type StreamWithAsyncIterable<TModel> = PassThrough & AsyncIterable<TModel extends (infer Model)[] ? Model : never>;
