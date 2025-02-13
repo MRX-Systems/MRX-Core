@@ -568,6 +568,28 @@ export class Repository<TModel = unknown> {
     }
 
     /**
+     * Handles errors that occur during query execution. This method is used to catch
+     *
+     * @param error - The error object that occurred during query execution.
+     * @param query - The Knex.js query builder that caused the error.
+     *
+     * @throws ({@link CoreError}): Throws an error when an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
+     */
+    protected _handleError(error: unknown, query: Knex.QueryBuilder): never {
+        if (error instanceof CoreError)
+            throw error;
+        const code = (error as { number: number })?.number || 0;
+        throw new CoreError({
+            key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
+            message: 'An error occurred while executing the query.',
+            cause: {
+                query: query.toSQL().sql,
+                error
+            }
+        });
+    }
+
+    /**
      * Determines whether the provided data object represents a complex query.
      * A complex query is defined as an object containing one or more valid query operators.
      *
@@ -650,17 +672,7 @@ export class Repository<TModel = unknown> {
                 });
             return result;
         } catch (error) {
-            if (error instanceof CoreError)
-                throw error;
-            const code = (error as { number: number })?.number || 0;
-            throw new CoreError({
-                key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
-                message: 'An error occurred while executing the query.',
-                cause: {
-                    query: query.toSQL().sql,
-                    error
-                }
-            });
+            return this._handleError(error, query);
         }
     }
 }
