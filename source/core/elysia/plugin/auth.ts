@@ -72,7 +72,7 @@ interface AuthOptions {
     }
 }
 
-export const authPlugin = (options: AuthOptions) => {
+export const authPlugin = (options: AuthOptions): typeof app => {
     /**
      * Set the cookie with the value.
      *

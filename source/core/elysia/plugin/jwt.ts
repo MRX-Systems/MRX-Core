@@ -49,13 +49,13 @@ export interface JWTOption<
 export const jwtPlugin = <
     const Name extends string = 'jwt',
     const Schema extends TSchema | undefined = undefined
->(options: JWTOption<Name, Schema>) => {
+>(options: JWTOption<Name, Schema>): typeof app => {
     const key = typeof options.secret === 'string'
         ? new TextEncoder().encode(options.secret)
         : options.secret;
 
     const name = options.name as Name;
-    return new Elysia({
+    const app = new Elysia({
         name: 'jwtPlugin',
         seed: {
             name: options.name
@@ -103,4 +103,5 @@ export const jwtPlugin = <
                 }
             }
         });
+    return app;
 };
