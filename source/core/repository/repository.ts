@@ -533,13 +533,13 @@ export class Repository<TModel = unknown> {
                     query.whereNotNull(key);
             }
         };
+
         const checkField = (field: string): boolean => {
-            if (!this._table.fields.includes(field)) {
-                console.warn(`Le champ "${field}" n'existe pas dans la table "${this._table.name}".`);
+            if (!this._table.fields.includes(field))
                 return false;
-            }
             return true;
         };
+
         const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<KModel>): void => {
             for (const [key, value] of Object.entries(search))
                 if (this._isComplexQuery(value)) {
@@ -553,10 +553,13 @@ export class Repository<TModel = unknown> {
                     for (const field of this._table.fields)
                         if (checkField(field))
                             query.orWhere(field, 'like', `%${value}%`);
-                } else if (key === '$q' && typeof value === 'object' && value !== null) {
-                    for (const [col, term] of Object.entries(value))
-                        if (checkField(col))
-                            query.orWhere(col, 'like', `%${term}%`);
+                } else if (key === '$q'
+                    && typeof value === 'object'
+                    && value !== null
+                ) {
+                    for (const [col, searchValue] of Object.entries(value))
+                        if (checkField(col) && typeof searchValue === 'string')
+                            query.orWhere(col, 'like', `%${searchValue}%`);
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
@@ -564,7 +567,6 @@ export class Repository<TModel = unknown> {
                         query.where(key, value);
                 }
         };
-
         if (Array.isArray(search))
             search.reduce((acc, item) => acc.orWhere((q) => this._applySearch(q, item)), query);
         else

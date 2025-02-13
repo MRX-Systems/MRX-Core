@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import { randomUUID } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
@@ -249,6 +248,21 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             13
         ],
+        [
+            {
+                $q: {
+                    fieldSelection: ['toto'] as unknown as [keyof Data],
+                    value: 'foo'
+                }
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item).not.toBeDefined());
+                else
+                    expect(data).not.toBeDefined();
+            },
+            0
+        ],
         /**
          * Single advanced search tests with multiple conditions (AND)
          */
@@ -305,7 +319,7 @@ describe('Repository', () => {
     beforeAll(async () => {
         await createDataTable();
         const dataToInsert: Omit<Data, 'id'>[] = Array.from({ length: 20 }, (_, i) => ({
-            name: `Repository::${randomUUID()}`,
+            name: `Repository::${Bun.randomUUIDv7()}`,
             age: i,
             birth: new Date(`2021-01-${i + 1}`),
             bool: i % 2 === 0,
