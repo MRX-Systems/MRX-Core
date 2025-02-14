@@ -176,61 +176,57 @@ export const authPlugin = (options: AuthOptions): typeof app => {
             redis: options.redis
         })
         .macro({
-            isAuth(enabled = true) {
-                return {
-                    async beforeHandle({ jwt, cookie: { accessToken, refreshToken }, store: { redis } }) {
-                        if (!enabled)
-                            return;
-                        if (!accessToken.value || !refreshToken.value)
-                            throw new CoreError({
-                                key: ELYSIA_KEY_ERROR.UNAUTHORIZED,
-                                message: 'Unauthorized',
-                                httpStatusCode: HTTP_STATUS_CODE.UNAUTHORIZED
-                            });
+            isAuth: {
+                async beforeHandle({ jwt, cookie: { accessToken, refreshToken }, store: { redis } }) {
+                    if (!accessToken.value || !refreshToken.value)
+                        throw new CoreError({
+                            key: ELYSIA_KEY_ERROR.UNAUTHORIZED,
+                            message: 'Unauthorized',
+                            httpStatusCode: HTTP_STATUS_CODE.UNAUTHORIZED
+                        });
 
-                        // Verify the access token
-                        const accessPayload = await jwt.verify(accessToken.value);
-                        if (accessPayload)
-                            return;
+                    // Verify the access token
+                    const accessPayload = await jwt.verify(accessToken.value);
+                    if (accessPayload)
+                        return;
 
-                        // Invalid or expired access token, trying with the refresh token
-                        const refreshPayload = await jwt.verify(refreshToken.value) as { sub: string, jti: string } | null;
-                        if (!refreshPayload)
-                            throw new CoreError({
-                                key: ELYSIA_KEY_ERROR.UNAUTHORIZED,
-                                message: 'Unauthorized',
-                                httpStatusCode: HTTP_STATUS_CODE.UNAUTHORIZED
-                            });
+                    // Invalid or expired access token, trying with the refresh token
+                    const refreshPayload = await jwt.verify(refreshToken.value) as { sub: string, jti: string } | null;
+                    if (!refreshPayload)
+                        throw new CoreError({
+                            key: ELYSIA_KEY_ERROR.UNAUTHORIZED,
+                            message: 'Unauthorized',
+                            httpStatusCode: HTTP_STATUS_CODE.UNAUTHORIZED
+                        });
 
-                        // Verify that the refresh token is stored in Redis
-                        const storedRefreshToken = await redis.client.hget(`refresh:${refreshPayload.sub}`, refreshPayload.jti ?? '');
-                        if (!storedRefreshToken || storedRefreshToken !== refreshToken.value)
-                            throw new CoreError({
-                                key: ELYSIA_KEY_ERROR.UNAUTHORIZED,
-                                message: 'Unauthorized',
-                                httpStatusCode: HTTP_STATUS_CODE.UNAUTHORIZED
-                            });
+                    // Verify that the refresh token is stored in Redis
+                    const storedRefreshToken = await redis.client.hget(`refresh:${refreshPayload.sub}`, refreshPayload.jti ?? '');
+                    if (!storedRefreshToken || storedRefreshToken !== refreshToken.value)
+                        throw new CoreError({
+                            key: ELYSIA_KEY_ERROR.UNAUTHORIZED,
+                            message: 'Unauthorized',
+                            httpStatusCode: HTTP_STATUS_CODE.UNAUTHORIZED
+                        });
 
-                        // Remove the stored refresh token
-                        await redis.client.hdel(`refresh:${refreshPayload.sub}`, refreshPayload.jti);
+                    // Remove the stored refresh token
+                    await redis.client.hdel(`refresh:${refreshPayload.sub}`, refreshPayload.jti);
 
-                        // Generate new tokens
-                        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await generateTokens(refreshPayload.sub, redis, jwt.sign.bind(jwt));
+                    // Generate new tokens
+                    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await generateTokens(refreshPayload.sub, redis, jwt.sign.bind(jwt));
 
-                        // Update cookies with the new tokens
-                        setCookie(accessToken, newAccessToken);
-                        setCookie(refreshToken, newRefreshToken);
-                    },
+                    // Update cookies with the new tokens
+                    setCookie(accessToken, newAccessToken);
+                    setCookie(refreshToken, newRefreshToken);
+                },
 
-                    resolve({ cookie: { accessToken } }) {
-                        if (!accessToken.value) return {};
-                        const payload: { sub: string } = JSON.parse(Buffer.from(accessToken.value.split('.')[1], 'base64').toString());
-                        return {
-                            email: payload.sub
-                        };
-                    }
+                resolve({ cookie: { accessToken } }) {
+                    if (!accessToken.value) return {};
+                    const payload: { sub: string } = JSON.parse(Buffer.from(accessToken.value.split('.')[1], 'base64').toString());
+                    return {
+                        email: payload.sub
+                    };
+                }
 
-                };
             }
         })
 
