@@ -25,18 +25,27 @@ interface RateLimitOptions {
 export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOptions): Elysia => new Elysia({
     name: 'rateLimitPlugin'
 })
-    .onRequest(async ({ request }) => {
+    .onRequest(async ({ set, request }) => {
         const ip = request.headers.get('x-forwarded-for')
             || request.headers.get('x-real-ip')
             || '127.0.0.1';
 
         const key = `ratelimit:${ip}`;
 
-        // Get current count for this IP
         const current = await redis.client.get(key);
         const count = current ? parseInt(current) : 0;
 
-        if (count >= limit)
+        if (count === 0)
+            await redis.client.setex(key, window, '1');
+        else
+            await redis.client.incr(key);
+
+
+        const newCount = await redis.client.get(key);
+        const currentCount = newCount ? parseInt(newCount) : 0;
+
+        if (currentCount > limit) {
+            set.status = HTTP_STATUS_CODE.TOO_MANY_REQUESTS;
             throw new CoreError({
                 key: 'core.error.rate_limit_exceeded',
                 message: message || 'Rate limit exceeded',
@@ -48,15 +57,11 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
                     reset: await redis.client.ttl(key)
                 }
             });
+        }
 
-
-        if (count === 0)
-            await redis.client.setex(key, window, '1');
-        else
-            await redis.client.incr(key);
-
-
-        request.headers.set('X-RateLimit-Limit', limit.toString());
-        request.headers.set('X-RateLimit-Remaining', (limit - count - 1).toString());
-        request.headers.set('X-RateLimit-Reset', (await redis.client.ttl(key)).toString());
+        set.headers = {
+            'X-RateLimit-Limit': limit.toString(),
+            'X-RateLimit-Remaining': Math.max(0, limit - currentCount).toString(),
+            'X-RateLimit-Reset': (await redis.client.ttl(key)).toString()
+        };
     });
