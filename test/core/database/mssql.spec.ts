@@ -73,7 +73,7 @@ describe('MSSQL', () => {
 
         test('should throw an error when the connection fails', async () => {
             const { MSSQL } = await import('#/core/database/mssql');
-            const mssql = new MSSQL({ ...options, host: 'foo' });
+            const mssql = new MSSQL({ ...options, host: 'foo', connectionTimeout: 2500 });
             expect(mssql.connect()).rejects.toThrow(`Failed to connect to the database: "${options.databaseName}".`);
         });
     });
@@ -154,6 +154,20 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/core/database/mssql');
             const mssql = new MSSQL(options);
             expect(() => mssql.db).toThrow(`Database "${options.databaseName}" is not connected.`);
+        });
+
+        test('should return tables', async () => {
+            const { MSSQL } = await import('#/core/database/mssql');
+            const mssql = new MSSQL(options);
+            await mssql.connect();
+            expect(mssql.tables).toBeDefined();
+        });
+
+        test('should return repositories', async () => {
+            const { MSSQL } = await import('#/core/database/mssql');
+            const mssql = new MSSQL(options);
+            await mssql.connect();
+            expect(mssql.repositories).toBeDefined();
         });
     });
 
