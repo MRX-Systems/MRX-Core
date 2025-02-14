@@ -15,7 +15,9 @@ const options = {
     password: process.env.MSSQL_PASSWORD ?? ''
 };
 
-const testTable = 'unit_test_repository';
+const nanoId = randomBytes(4).toString('hex');
+
+const testTable = `unit_test_repository_${nanoId}`;
 
 const knexInstance = knex({
     client: 'mssql',

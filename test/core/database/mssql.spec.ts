@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { randomBytes } from 'crypto';
 import knex from 'knex';
 
 import { Repository } from '#/core/repository/repository';
@@ -18,7 +19,9 @@ const options = {
     poolMax: 10
 };
 
-const testTable = 'unit_test_mssql';
+const nanoId = randomBytes(4).toString('hex');
+
+const testTable = `unit_test_mssql_${nanoId}`;
 
 const knexInstance = knex({
     client: 'mssql',
