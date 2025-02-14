@@ -248,20 +248,45 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             13
         ],
+        // Verify the $q operator with specific field
         [
             {
                 $q: {
-                    fieldSelection: ['toto'] as unknown as [keyof Data],
-                    value: 'foo'
+                    name: 'Repository::'
                 }
             },
             (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item).not.toBeDefined());
-                else
-                    expect(data).not.toBeDefined();
+                if (Array.isArray(data)) {
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        expect(item.name).toContain('Repository::');
+                    });
+                } else {
+                    expect(data).toBeDefined();
+                    expect(data.name).toContain('Repository::');
+                }
             },
-            0
+            1
+        ],
+        // Ajouter dans la fonction advancedSearchTests()
+        [
+            {
+                $q: {
+                    age: '15'
+                }
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data)) {
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        expect(item.age.toString()).toContain('15');
+                    });
+                } else {
+                    expect(data).toBeDefined();
+                    expect(data.age.toString()).toContain('15');
+                }
+            },
+            1
         ],
         /**
          * Single advanced search tests with multiple conditions (AND)
