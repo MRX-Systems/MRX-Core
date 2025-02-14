@@ -527,6 +527,50 @@ describe('Auth Plugin', () => {
     });
 
     describe('Macro isAuth (middleware)', () => {
+        test('should return 200 when isAuth is not provided', async () => {
+            const app = new Elysia()
+                .use(errorPlugin)
+                .use(authPlugin({
+                    accessTokenExpiration: '15m',
+                    refreshTokenExpiration: '7d',
+                    cookieSecret: 'cookieSecret',
+                    jwtSecret: 'jwtSecret',
+                    loginUseCase,
+                    redis,
+                    mfa: {
+                        sendToken: () => Promise.resolve(),
+                        isEnable: (email: string) => fakeGetUser(email)?.mfa ?? false
+                    }
+                }))
+                .get('/example', () => 'example');
+            const res = await app.handle(new Request('http://localhost/example'));
+            const data = await res.text();
+            expect(data).toEqual('example');
+            expect(res.status).toBe(200);
+        });
+
+        test('should return 200 when isAuth is false', async () => {
+            const app = new Elysia()
+                .use(errorPlugin)
+                .use(authPlugin({
+                    accessTokenExpiration: '15m',
+                    refreshTokenExpiration: '7d',
+                    cookieSecret: 'cookieSecret',
+                    jwtSecret: 'jwtSecret',
+                    loginUseCase,
+                    redis,
+                    mfa: {
+                        sendToken: () => Promise.resolve(),
+                        isEnable: (email: string) => fakeGetUser(email)?.mfa ?? false
+                    }
+                }))
+                .get('/example', () => 'example', { isAuth: false });
+            const res = await app.handle(new Request('http://localhost/example'));
+            const data = await res.text();
+            expect(data).toEqual('example');
+            expect(res.status).toBe(200);
+        });
+
         test('should return 401 when no access token or refresh token is provided', async () => {
             const app = new Elysia()
                 .use(errorPlugin)
@@ -828,6 +872,7 @@ describe('Auth Plugin', () => {
             });
         });
     });
+
     afterAll(async () => {
         await redis.client.quit();
     });
