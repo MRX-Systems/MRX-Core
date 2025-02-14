@@ -41,19 +41,4 @@ export type AdvancedSearch<TModel> = {
     [Key in keyof TModel]?: TModel[Key] | Partial<WhereClause>;
 }
 & Record<string, string | number | boolean | Date | Partial<WhereClause>>
-<<<<<<< Updated upstream
 & { $q?: string | Partial<Record<keyof TModel, string>>; };
-
-=======
-<<<<<<< Updated upstream
-& { $q?: string; };
-=======
-& {
-    $q?: string | {
-        fieldSelection: [keyof TModel extends string ? keyof TModel : never];
-        value: string;
-    }
-};
-
->>>>>>> Stashed changes
->>>>>>> Stashed changes
