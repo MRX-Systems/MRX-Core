@@ -7,7 +7,7 @@ import { CoreError } from '#/error/coreError';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
 import { MSSQL_ERROR_CODE } from '#/types/constant/mssqlErrorCode';
 import type { AdvancedSearch } from '#/types/data/advancedSearch';
-import type { FieldSelection } from '#/types/data/fieldSelection';
+
 import type { QueryOptions } from '#/types/data/queryOptions';
 import type { QueryOptionsExtendPagination } from '#/types/data/queryOptionsExtendPagination';
 import type { QueryOptionsExtendStream } from '#/types/data/queryOptionsExtendStream';
@@ -139,7 +139,7 @@ export class Repository<TModel = unknown> {
      */
     public findStream<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendStream<KModel>): StreamWithAsyncIterable<KModel[]> {
         const query = this._knex(this._table.name)
-            .select(this._transformFieldSelectionToArray(options?.selectedFields));
+            .select(options?.selectedFields ?? '*');
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
@@ -236,7 +236,7 @@ export class Repository<TModel = unknown> {
      */
     public async find<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendPagination<KModel>): Promise<KModel[]> {
         const query = this._knex(this._table.name)
-            .select(this._transformFieldSelectionToArray(options?.selectedFields));
+            .select(options?.selectedFields ?? '*');
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
@@ -288,7 +288,7 @@ export class Repository<TModel = unknown> {
      */
     public async findOne<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>): Promise<KModel> {
         const query = this._knex(this._table.name)
-            .select(this._transformFieldSelectionToArray(options?.selectedFields));
+            .select(options?.selectedFields ?? '*');
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
@@ -370,7 +370,7 @@ export class Repository<TModel = unknown> {
     ): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .insert(data)
-            .returning(this._transformFieldSelectionToArray(options?.selectedFields));
+            .returning(options?.selectedFields ?? '*');
 
         return this._executeQuery<KModel>(query);
     }
@@ -406,7 +406,7 @@ export class Repository<TModel = unknown> {
     ): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .update(data)
-            .returning(this._transformFieldSelectionToArray(options?.selectedFields));
+            .returning(options?.selectedFields ?? '*');
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
@@ -439,45 +439,11 @@ export class Repository<TModel = unknown> {
     public async delete<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .delete()
-            .returning(this._transformFieldSelectionToArray(options?.selectedFields));
+            .returning(options?.selectedFields ?? '*');
         if (options?.advancedSearch)
             this._applySearch(query, options.advancedSearch);
 
         return this._executeQuery<KModel>(query);
-    }
-
-    /**
-     * Transforms a field selection object into an array of column names.
-     * This method is used to convert the `selectedFields` query option into
-     * a format that can be used by the database query.
-     *
-     * @typeParam KModel - The type of the object containing the fields.
-     * @param fields - The fields selection object to transform. ({@link FieldSelection})
-     *
-     * @returns An array of column names to select in the query. (string[])
-     *
-     * @example
-     * ```typescript
-     * // Transform a selection object
-     * const columns = userRepository._transformFieldSelectionToArray({
-     *     id: true,
-     *     name: true
-     * });
-     * console.log(columns); // ['id', 'name']
-     *
-     * // Transform an empty selection object
-     * const columns = userRepository._transformFieldSelectionToArray({});
-     * console.log(columns); // ['*']
-     * ```
-     */
-    protected _transformFieldSelectionToArray<KModel>(fields?: FieldSelection<KModel>): string[] {
-        if (!fields || Object.keys(fields).length === 0) return ['*'];
-        return Object.entries(fields)
-            .filter(
-                ([, value]) => (typeof value === 'boolean' && value)
-                    || (typeof value === 'string' && value.length > 0)
-            )
-            .map(([key, value]): string => (typeof value === 'string' ? value : key));
     }
 
     /**

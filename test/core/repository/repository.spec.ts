@@ -354,13 +354,11 @@ describe('Repository', () => {
 
         test('should iterate asynchronously over selected fields from the stream', async () => {
             const stream = repository.findStream<Data>({
-                selectedFields: {
-                    id: true
-                }
+                selectedFields: ['id', 'name']
             });
             for await (const data of stream) {
                 expect(data).toHaveProperty('id');
-                expect(data).not.toHaveProperty('name');
+                expect(data).toHaveProperty('name');
                 expect(data).not.toHaveProperty('age');
                 expect(data).not.toHaveProperty('birth');
                 expect(data).not.toHaveProperty('bool');
@@ -475,13 +473,11 @@ describe('Repository', () => {
 
         test('should return an array of data with selected fields', async () => {
             const data = await repository.find<Data>({
-                selectedFields: {
-                    id: true
-                }
+                selectedFields: ['id', 'name']
             });
             data.forEach((item) => {
                 expect(item).toHaveProperty('id');
-                expect(item).not.toHaveProperty('name');
+                expect(item).toHaveProperty('name');
                 expect(item).not.toHaveProperty('age');
                 expect(item).not.toHaveProperty('birth');
                 expect(item).not.toHaveProperty('bool');
@@ -571,12 +567,10 @@ describe('Repository', () => {
                 advancedSearch: {
                     id: 1
                 },
-                selectedFields: {
-                    id: true
-                }
+                selectedFields: ['id', 'name']
             });
             expect(data).toHaveProperty('id');
-            expect(data).not.toHaveProperty('name');
+            expect(data).toHaveProperty('name');
             expect(data).not.toHaveProperty('age');
             expect(data).not.toHaveProperty('birth');
             expect(data).not.toHaveProperty('bool');
@@ -701,6 +695,26 @@ describe('Repository', () => {
             });
         });
 
+        test('should insert a new data with selected fields', async () => {
+            const data = {
+                name: 'Repository::insert',
+                age: 21,
+                birth: new Date('2021-01-21'),
+                bool: true
+            };
+            const items = await repository.insert(data, {
+                selectedFields: ['id', 'name']
+            });
+            expect(items).toHaveLength(1);
+            items.forEach((item) => {
+                expect(item).toHaveProperty('id');
+                expect(item).toHaveProperty('name');
+                expect(item).not.toHaveProperty('age');
+                expect(item).not.toHaveProperty('birth');
+                expect(item).not.toHaveProperty('bool');
+            });
+        });
+
         test('should insert multiple new data', async () => {
             const data = Array.from({ length: 5 }, (_, i) => ({
                 name: `Repository::insert-${i}`,
@@ -785,6 +799,29 @@ describe('Repository', () => {
             });
         });
 
+        test('should update one row with selected fields', async () => {
+            const data = {
+                name: 'Repository::update',
+                age: 23,
+                birth: new Date('2021-01-23'),
+                bool: true
+            };
+            const items = await repository.update(data, {
+                advancedSearch: {
+                    id: 7
+                },
+                selectedFields: ['id', 'name']
+            });
+            expect(items).toHaveLength(1);
+            items.forEach((item) => {
+                expect(item).toHaveProperty('id');
+                expect(item).toHaveProperty('name');
+                expect(item).not.toHaveProperty('age');
+                expect(item).not.toHaveProperty('birth');
+                expect(item).not.toHaveProperty('bool');
+            });
+        });
+
         test('should throw an error when the data is invalid', async () => {
             try {
                 await repository.update({
@@ -825,6 +862,23 @@ describe('Repository', () => {
             items.forEach((item) => {
                 expect(item).toHaveProperty('id');
                 expect(item.id).toBeOneOf([2, 3]);
+            });
+        });
+
+        test('should delete one row with selected fields', async () => {
+            const items = await repository.delete({
+                advancedSearch: {
+                    id: 4
+                },
+                selectedFields: ['id', 'name']
+            });
+            expect(items).toHaveLength(1);
+            items.forEach((item) => {
+                expect(item).toHaveProperty('id');
+                expect(item).toHaveProperty('name');
+                expect(item).not.toHaveProperty('age');
+                expect(item).not.toHaveProperty('birth');
+                expect(item).not.toHaveProperty('bool');
             });
         });
 
