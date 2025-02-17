@@ -1,4 +1,3 @@
-import { BasaltError as BasaltAuthError } from '@basalt-lab/basalt-auth/error';
 import { BasaltError as BasaltHelperError } from '@basalt-lab/basalt-helper/error';
 import { BasaltError as BasaltLoggerError } from '@basalt-lab/basalt-logger/error';
 import { Elysia } from 'elysia';
@@ -15,14 +14,12 @@ export const errorPlugin = new Elysia({
 })
     .error({
         CoreError,
-        BasaltAuthError,
         BasaltHelperError,
         BasaltLoggerError
     })
     .onError({ as: 'global' }, ({ code, error, set }) => {
         switch (code) {
             case 'CoreError':
-            case 'BasaltAuthError':
             case 'BasaltHelperError':
             case 'BasaltLoggerError':
                 set.status = error.httpStatusCode;
