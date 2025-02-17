@@ -1,5 +1,6 @@
 import type { AdvancedSearch } from './advancedSearch';
-import type { FieldSelection } from './fieldSelection';
+import type { OrderBy } from './orderBy';
+import type { SelectedFields } from './selectedFields';
 import type { Transaction } from './transaction';
 
 /**
@@ -13,16 +14,13 @@ export interface QueryOptions<TModel> {
      */
     advancedSearch?: AdvancedSearch<NoInfer<TModel>> | AdvancedSearch<NoInfer<TModel>>[];
     /**
-     * The fields to select in the query. If not provided, all fields are selected. ({@link FieldSelection})
+     * The fields to select in the query. If not provided, all fields are selected. ({@link SelectedFields})
      */
-    selectedFields?: FieldSelection<NoInfer<TModel>>
+    selectedFields?: SelectedFields<NoInfer<TModel>>;
     /**
-     * Order the results by a specific column and direction.
+     * Order the results by a specific column and direction. ({@link OrderBy})
      */
-    orderBy?: [
-        Extract<keyof NoInfer<TModel>, string>,
-        'asc' | 'desc'
-    ];
+    orderBy?: OrderBy<NoInfer<TModel>>;
     /**
      * If the query does not return any result, throw an error or not. (default: false)
      */
