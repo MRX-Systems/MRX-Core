@@ -1,18 +1,16 @@
+import { BasaltError as BasaltHelperError } from '@basalt-lab/basalt-helper/error';
+import { BasaltError as BasaltLoggerError } from '@basalt-lab/basalt-logger/error';
 import { describe, expect, test } from 'bun:test';
 import { Elysia, t } from 'elysia';
-import { BasaltError as BasaltLoggerError } from '@basalt-lab/basalt-logger/error';
-import { BasaltError as BasaltAuthError } from '@basalt-lab/basalt-auth/error';
-import { BasaltError as BasaltHelperError } from '@basalt-lab/basalt-helper/error';
 
 import { errorPlugin } from '#/core/elysia/plugin/error';
 import { CoreError } from '#/error';
 
 describe('Error Plugin', () => {
     describe('onError', () => {
-        const errorCases: [string, typeof CoreError | typeof BasaltLoggerError | typeof BasaltAuthError | typeof BasaltHelperError][] = [
+        const errorCases: [string, typeof CoreError | typeof BasaltLoggerError | typeof BasaltHelperError][] = [
             ['CoreError', CoreError],
             ['BasaltLoggerError', BasaltLoggerError],
-            ['BasaltAuthError', BasaltAuthError],
             ['BasaltHelperError', BasaltHelperError]
         ];
 
