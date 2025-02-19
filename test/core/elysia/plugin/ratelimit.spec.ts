@@ -1,7 +1,8 @@
+import { Elysia } from 'elysia';
+
 import { rateLimitPlugin } from '#/core/elysia/plugin/ratelimit';
 import { Redis } from '#/core/store/redis';
 import { afterEach, describe, expect, test } from 'bun:test';
-import { Elysia } from 'elysia';
 
 describe('Rate Limit Plugin', () => {
     const redis = new Redis({
