@@ -252,7 +252,8 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    name: 'Repository::'
+                    selectedField: ['name'],
+                    value: 'Repository::'
                 }
             },
             (data: Data | Data[]): void => {
@@ -266,24 +267,27 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
                     expect(data.name).toContain('Repository::');
                 }
             },
-            1
+            20
         ],
-        // Ajouter dans la fonction advancedSearchTests()
+        // Add in the advancedSearchTests() function
         [
             {
                 $q: {
-                    age: '15'
+                    selectedField: ['age', 'name'],
+                    value: '15'
                 }
             },
             (data: Data | Data[]): void => {
                 if (Array.isArray(data)) {
                     data.forEach((item) => {
                         expect(item).toBeDefined();
-                        expect(item.age.toString()).toContain('15');
+                        expect(item.age).toBe(15);
+                        expect(item.name).toContain('Repository::');
                     });
                 } else {
                     expect(data).toBeDefined();
-                    expect(data.age.toString()).toContain('15');
+                    expect(data.age).toBe(15);
+                    expect(data.name).toContain('Repository::');
                 }
             },
             1

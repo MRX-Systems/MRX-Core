@@ -549,6 +549,12 @@ export class Repository<TModel = unknown> {
                             const func = keysFunc[operator as keyof WhereClause];
                             func(query, key, opValue);
                         }
+                } else if (key === '$q' && typeof value === 'object' && 'selectedField' in value) {
+                    const { selectedField, value: searchValue } = value;
+                    selectedField.forEach((field) => {
+                        if (this._table.fields.includes(field as string))
+                            query.orWhere(field as string, 'like', `%${searchValue}%`);
+                    });
                 } else if (key === '$q' && typeof value === 'string') {
                     for (const field of this._table.fields) {
                         if (!value) continue;
@@ -559,7 +565,7 @@ export class Repository<TModel = unknown> {
                     && value !== null
                 ) {
                     for (const [col, searchValue] of Object.entries(value))
-                        if (checkField(col) && typeof searchValue === 'string')
+                        if (checkField(col))
                             query.orWhere(col, 'like', `%${searchValue}%`);
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)

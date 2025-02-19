@@ -41,4 +41,8 @@ export type AdvancedSearch<TModel> = {
     [Key in keyof TModel]?: TModel[Key] | Partial<WhereClause>;
 }
 & Record<string, string | number | boolean | Date | Partial<WhereClause>>
-& { $q?: string | number | Partial<Record<keyof TModel, string>>; };
+& { $q?: string | number | {
+    selectedField: (keyof TModel)[],
+    value: string | number
+};
+};
