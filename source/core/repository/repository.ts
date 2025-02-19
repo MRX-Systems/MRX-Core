@@ -549,24 +549,20 @@ export class Repository<TModel = unknown> {
                             const func = keysFunc[operator as keyof WhereClause];
                             func(query, key, opValue);
                         }
-                } else if (key === '$q' && typeof value === 'object' && 'selectedField' in value) {
-                    const { selectedField, value: searchValue } = value;
-                    selectedField.forEach((field) => {
-                        if (this._table.fields.includes(field as string))
-                            query.orWhere(field as string, 'like', `%${searchValue}%`);
-                    });
-                } else if (key === '$q' && typeof value === 'string') {
+                } else if (key === '$q' && (typeof value === 'string' || typeof value === 'number')) {
                     for (const field of this._table.fields) {
                         if (!value) continue;
                         query.orWhere(field, 'like', `%${value}%`);
                     }
-                } else if (key === '$q'
-                    && typeof value === 'object'
-                    && value !== null
-                ) {
-                    for (const [col, searchValue] of Object.entries(value))
-                        if (checkField(col))
-                            query.orWhere(col, 'like', `%${searchValue}%`);
+                } else if (key === '$q' && typeof value === 'object' && 'selectedField' in value) {
+                    const { selectedField, value: searchValue } = value;
+                    selectedField.forEach((field) => {
+                        if (this._table.fields.includes(field as string))
+                            if (typeof searchValue === 'number')
+                                query.orWhere(field as string, '=', searchValue);
+                            else
+                                query.orWhere(field as string, 'like', `%${searchValue}%`);
+                    });
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
