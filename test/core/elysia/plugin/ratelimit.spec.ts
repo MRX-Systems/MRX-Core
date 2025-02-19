@@ -5,8 +5,10 @@ import { Elysia } from 'elysia';
 
 describe('Rate Limit Plugin', () => {
     const redis = new Redis({
-        host: 'localhost',
-        port: 6379
+        host: process.env.STORE_HOST ?? '',
+        password: process.env.STORE_KEY ?? '',
+        port: parseInt(process.env.STORE_PORT ?? ''),
+        tls: {}
     });
 
     afterEach(async () => {
@@ -20,7 +22,7 @@ describe('Rate Limit Plugin', () => {
             redis,
             limit: 5, // 5 requests
             window: 60, // per minute
-            message: 'Trop de requêtes, veuillez réessayer plus tard'
+            message: 'Too many requests, please try again later'
         }))
         .get('/', () => 'Hello World!');
 
@@ -59,7 +61,7 @@ describe('Rate Limit Plugin', () => {
                 })
             );
 
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await Bun.sleep(100);
 
         const blockedResponse = await app.handle(
             new Request('http://localhost/', {
@@ -69,7 +71,7 @@ describe('Rate Limit Plugin', () => {
 
         expect(blockedResponse.status).toBe(429);
         const errorText = await blockedResponse.text();
-        expect(errorText).toEqual('Trop de requêtes, veuillez réessayer plus tard');
+        expect(errorText).toEqual('Too many requests, please try again later');
     });
 
     test('should reset rate limit after window period', async () => {
