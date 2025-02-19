@@ -1,6 +1,8 @@
 import { Elysia } from 'elysia';
+
 import type { Redis } from '#/core/store/redis';
 import { CoreError } from '#/error/coreError';
+import { ELYSIA_KEY_ERROR } from '#/error/key';
 import { HTTP_STATUS_CODE } from '#/types/enum/httpStatusCode';
 
 interface RateLimitOptions {
@@ -23,7 +25,13 @@ interface RateLimitOptions {
 }
 
 export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOptions): Elysia => new Elysia({
-    name: 'rateLimitPlugin'
+    name: 'rateLimitPlugin',
+    seed: {
+        redis,
+        limit,
+        window,
+        message
+    }
 })
     .onRequest(async ({ set, request }) => {
         const ip = request.headers.get('x-forwarded-for')
@@ -47,7 +55,7 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
         if (currentCount > limit) {
             set.status = HTTP_STATUS_CODE.TOO_MANY_REQUESTS;
             throw new CoreError({
-                key: 'core.error.rate_limit_exceeded',
+                key: ELYSIA_KEY_ERROR.RATE_LIMIT_EXCEEDED,
                 message: message || 'Rate limit exceeded',
                 httpStatusCode: HTTP_STATUS_CODE.TOO_MANY_REQUESTS,
                 cause: {
