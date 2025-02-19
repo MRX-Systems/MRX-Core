@@ -550,9 +550,10 @@ export class Repository<TModel = unknown> {
                             func(query, key, opValue);
                         }
                 } else if (key === '$q' && typeof value === 'string') {
-                    for (const field of this._table.fields)
-                        if (checkField(field))
-                            query.orWhere(field, 'like', `%${value}%`);
+                    for (const field of this._table.fields) {
+                        if (!value) continue;
+                        query.orWhere(field, 'like', `%${value}%`);
+                    }
                 } else if (key === '$q'
                     && typeof value === 'object'
                     && value !== null
