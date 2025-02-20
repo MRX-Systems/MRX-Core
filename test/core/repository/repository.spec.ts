@@ -67,187 +67,187 @@ type AdvancedSearchTest<T> = [AdvancedSearch<T> | AdvancedSearch<T>[], (data: T 
 
 function advancedSearchTests(): AdvancedSearchTest<Data>[] {
     const advancedSearchTest: AdvancedSearchTest<Data>[] = [
-        // /**
-        //  * Single advanced search tests with one condition
-        //  */
-        // // Equal
-        // [
-        //     { id: 10 },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).toBe(10));
-        //         else
-        //             expect(data.id).toBe(10);
-        //     },
-        //     1
-        // ],
-        // // Equal
-        // [
-        //     { id: { $eq: 2 } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).toBe(2));
-        //         else
-        //             expect(data.id).toBe(2);
-        //     },
-        //     1
-        // ],
-        // // Not equal
-        // [
-        //     { id: { $neq: 2 } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).not.toBe(2));
-        //         else
-        //             expect(data.id).not.toBe(2);
-        //     },
-        //     19
-        // ],
-        // // Less than
-        // [
-        //     { id: { $lt: 5 } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).toBeLessThan(5));
-        //         else
-        //             expect(data.id).toBeLessThan(5);
-        //     },
-        //     4
-        // ],
-        // // Lesst than or equal
-        // [
-        //     { id: { $lte: 5 } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).toBeLessThanOrEqual(5));
-        //         else
-        //             expect(data.id).toBeLessThanOrEqual(5);
-        //     },
-        //     5
-        // ],
-        // // Greater than
-        // [
-        //     { id: { $gt: 5 } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).toBeGreaterThan(5));
-        //         else
-        //             expect(data.id).toBeGreaterThan(5);
-        //     },
-        //     15
-        // ],
-        // // Greater than or equal
-        // [
-        //     { id: { $gte: 5 } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.id).toBeGreaterThanOrEqual(5));
-        //         else
-        //             expect(data.id).toBeGreaterThanOrEqual(5);
-        //     },
-        //     16
-        // ],
-        // // In
-        // [
-        //     { id: { $in: [2, 3] } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect([2, 3]).toContain(item.id));
-        //         else
-        //             expect([2, 3]).toContain(data.id);
-        //     },
-        //     2
-        // ],
-        // // Not in
-        // [
-        //     { id: { $nin: [2, 3] } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect([2, 3]).not.toContain(item.id));
-        //         else
-        //             expect([2, 3]).not.toContain(data.id);
-        //     },
-        //     18
-        // ],
-        // // Between
-        // [
-        //     { id: { $between: [2, 5] } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data)) {
-        //             data.forEach((item) => {
-        //                 expect(item.id).toBeGreaterThanOrEqual(2);
-        //                 expect(item.id).toBeLessThanOrEqual(5);
-        //             });
-        //         } else {
-        //             expect(data.id).toBeGreaterThanOrEqual(2);
-        //             expect(data.id).toBeLessThanOrEqual(5);
-        //         }
-        //     },
-        //     4
-        // ],
-        // // Not between
-        // [
-        //     { id: { $nbetween: [3, 5] } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => {
-        //                 if (item.id <= 3)
-        //                     expect(item.id).toBeLessThanOrEqual(3);
-        //                 else
-        //                     expect(item.id).toBeGreaterThanOrEqual(5);
-        //             });
-        //         else
-        //             if (data.id < 3)
-        //                 expect(data.id).toBeLessThan(3);
-        //             else
-        //                 expect(data.id).toBeGreaterThan(5);
-        //     },
-        //     17
-        // ],
-        // // Like
-        // [
-        //     { name: { $like: 'Repository::' } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.name).toMatch(/^Repository::/));
-        //         else
-        //             expect(data.name).toMatch(/^Repository::/);
-        //     },
-        //     20
-        // ],
-        // // Not like
-        // [
-        //     { name: { $nlike: 'zRepositoryz' } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.name).not.toMatch(/:zRepositoryz/));
-        //         else
-        //             expect(data.name).not.toMatch(/zRepositoryz/);
-        //     },
-        //     20
-        // ],
-        // // Is null
-        // [
-        //     { n: { $isNull: true } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.n).toBeNull());
-        //         else
-        //             expect(data.n).toBeNull();
-        //     },
-        //     7
-        // ],
-        // // Is not null
-        // [
-        //     { n: { $isNull: false } },
-        //     (data: Data | Data[]): void => {
-        //         if (Array.isArray(data))
-        //             data.forEach((item) => expect(item.n).not.toBeNull());
-        //         else
-        //             expect(data.n).not.toBeNull();
-        //     },
-        //     13
-        // ],
+        /**
+         * Single advanced search tests with one condition
+         */
+        // Equal
+        [
+            { id: 10 },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).toBe(10));
+                else
+                    expect(data.id).toBe(10);
+            },
+            1
+        ],
+        // Equal
+        [
+            { id: { $eq: 2 } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).toBe(2));
+                else
+                    expect(data.id).toBe(2);
+            },
+            1
+        ],
+        // Not equal
+        [
+            { id: { $neq: 2 } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).not.toBe(2));
+                else
+                    expect(data.id).not.toBe(2);
+            },
+            19
+        ],
+        // Less than
+        [
+            { id: { $lt: 5 } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).toBeLessThan(5));
+                else
+                    expect(data.id).toBeLessThan(5);
+            },
+            4
+        ],
+        // Lesst than or equal
+        [
+            { id: { $lte: 5 } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).toBeLessThanOrEqual(5));
+                else
+                    expect(data.id).toBeLessThanOrEqual(5);
+            },
+            5
+        ],
+        // Greater than
+        [
+            { id: { $gt: 5 } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).toBeGreaterThan(5));
+                else
+                    expect(data.id).toBeGreaterThan(5);
+            },
+            15
+        ],
+        // Greater than or equal
+        [
+            { id: { $gte: 5 } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.id).toBeGreaterThanOrEqual(5));
+                else
+                    expect(data.id).toBeGreaterThanOrEqual(5);
+            },
+            16
+        ],
+        // In
+        [
+            { id: { $in: [2, 3] } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect([2, 3]).toContain(item.id));
+                else
+                    expect([2, 3]).toContain(data.id);
+            },
+            2
+        ],
+        // Not in
+        [
+            { id: { $nin: [2, 3] } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect([2, 3]).not.toContain(item.id));
+                else
+                    expect([2, 3]).not.toContain(data.id);
+            },
+            18
+        ],
+        // Between
+        [
+            { id: { $between: [2, 5] } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data)) {
+                    data.forEach((item) => {
+                        expect(item.id).toBeGreaterThanOrEqual(2);
+                        expect(item.id).toBeLessThanOrEqual(5);
+                    });
+                } else {
+                    expect(data.id).toBeGreaterThanOrEqual(2);
+                    expect(data.id).toBeLessThanOrEqual(5);
+                }
+            },
+            4
+        ],
+        // Not between
+        [
+            { id: { $nbetween: [3, 5] } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => {
+                        if (item.id <= 3)
+                            expect(item.id).toBeLessThanOrEqual(3);
+                        else
+                            expect(item.id).toBeGreaterThanOrEqual(5);
+                    });
+                else
+                    if (data.id < 3)
+                        expect(data.id).toBeLessThan(3);
+                    else
+                        expect(data.id).toBeGreaterThan(5);
+            },
+            17
+        ],
+        // Like
+        [
+            { name: { $like: 'Repository::' } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.name).toMatch(/^Repository::/));
+                else
+                    expect(data.name).toMatch(/^Repository::/);
+            },
+            20
+        ],
+        // Not like
+        [
+            { name: { $nlike: 'zRepositoryz' } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.name).not.toMatch(/:zRepositoryz/));
+                else
+                    expect(data.name).not.toMatch(/zRepositoryz/);
+            },
+            20
+        ],
+        // Is null
+        [
+            { n: { $isNull: true } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.n).toBeNull());
+                else
+                    expect(data.n).toBeNull();
+            },
+            7
+        ],
+        // Is not null
+        [
+            { n: { $isNull: false } },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => expect(item.n).not.toBeNull());
+                else
+                    expect(data.n).not.toBeNull();
+            },
+            13
+        ],
         // Verify the $q operator with a string
         [
             {
