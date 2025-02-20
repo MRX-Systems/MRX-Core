@@ -298,7 +298,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             20
         ],
-        // Verify the $q operator with an operator and selected fields
+        // Verify the $q operator with a string or an operator and selected fields
         [
             {
                 $q: {
@@ -316,6 +316,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             1
         ],
+        // Verify the $q operator with an operator and selected fields
         [
             {
                 $q: {

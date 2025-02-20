@@ -556,13 +556,16 @@ export class Repository<TModel = unknown> {
                     }
                 } else if (key === '$q' && typeof value === 'object' && 'selectedField' in value) {
                     const { selectedField, value: searchValue } = value;
-                    selectedField.forEach((field) => {
-                        if (this._table.fields.includes(field as string))
-                            if (typeof searchValue === 'number')
+                    if (typeof searchValue === 'number')
+                        selectedField.forEach((field) => {
+                            if (this._table.fields.includes(field as string))
                                 query.orWhere(field as string, '=', searchValue);
-                            else
+                        });
+                    else
+                        selectedField.forEach((field) => {
+                            if (this._table.fields.includes(field as string))
                                 query.orWhere(field as string, 'like', `%${searchValue}%`);
-                    });
+                        });
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
