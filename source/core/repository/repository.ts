@@ -550,22 +550,19 @@ export class Repository<TModel = unknown> {
                             func(query, key, opValue);
                         }
                 } else if (key === '$q' && (typeof value === 'string' || typeof value === 'number')) {
-                    for (const field of this._table.fields) {
-                        if (!value) continue;
-                        query.orWhere(field, 'like', `%${value}%`);
-                    }
+                    for (const field of this._table.fields)
+                        if (value)
+                            query.orWhere(field, 'like', `%${value}%`);
                 } else if (key === '$q' && typeof value === 'object' && 'selectedField' in value) {
                     const { selectedField, value: searchValue } = value;
-                    if (typeof searchValue === 'number')
-                        selectedField.forEach((field) => {
-                            if (this._table.fields.includes(field as string))
-                                query.orWhere(field as string, '=', searchValue);
-                        });
-                    else
-                        selectedField.forEach((field) => {
-                            if (this._table.fields.includes(field as string))
-                                query.orWhere(field as string, 'like', `%${searchValue}%`);
-                        });
+                    const isNumber = typeof searchValue === 'number';
+                    const operator = isNumber ? '=' : 'like';
+                    const formattedValue = isNumber ? searchValue : `%${searchValue}%`;
+
+                    selectedField.forEach((field) => {
+                        if (this._table.fields.includes(field))
+                            query.orWhere(field, operator, formattedValue);
+                    });
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
