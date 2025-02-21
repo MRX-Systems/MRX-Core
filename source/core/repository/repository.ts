@@ -533,13 +533,6 @@ export class Repository<TModel = unknown> {
                     query.whereNotNull(key);
             }
         };
-
-        const checkField = (field: string): boolean => {
-            if (!this._table.fields.includes(field))
-                return false;
-            return true;
-        };
-
         const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<KModel>): void => {
             for (const [key, value] of Object.entries(search))
                 if (this._isComplexQuery(value)) {
@@ -566,8 +559,7 @@ export class Repository<TModel = unknown> {
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
-                    if (checkField(key))
-                        query.where(key, value);
+                    query.where(key, value);
                 }
         };
         if (Array.isArray(search))

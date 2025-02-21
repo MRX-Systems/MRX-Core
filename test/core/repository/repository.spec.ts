@@ -254,6 +254,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
                 $q: 'Repository::'
             },
             (data: Data | Data[]): void => {
+                console.log('MA DATA CEST CA', data);
                 if (Array.isArray(data)) {
                     data.forEach((item) => {
                         expect(item).toBeDefined();
@@ -279,7 +280,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
                         expect(stringifiedItem).toContain('15');
                     });
             },
-            4
+            2
         ],
         // Verify the $q operator with a string and selected fields
         [
@@ -389,7 +390,7 @@ describe('Repository', () => {
     beforeAll(async () => {
         await createDataTable();
         const dataToInsert: Omit<Data, 'id'>[] = Array.from({ length: 20 }, (_, i) => ({
-            name: `Repository::${Bun.randomUUIDv7()}`,
+            name: `Repository::${i}`,
             age: i,
             birth: new Date(`2021-01-${i + 1}`),
             bool: i % 2 === 0,
