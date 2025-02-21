@@ -248,13 +248,12 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             13
         ],
-        // Verify the $q operator with a string
+        // Test $q operator with simple string search across all fields
         [
             {
                 $q: 'Repository::'
             },
             (data: Data | Data[]): void => {
-                console.log('MA DATA CEST CA', data);
                 if (Array.isArray(data)) {
                     data.forEach((item) => {
                         expect(item).toBeDefined();
@@ -267,7 +266,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             20
         ],
-        // Verify the $q operator with an operator
+        // Test $q operator with numeric value search across all fields
         [
             {
                 $q: 15
@@ -282,7 +281,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             2
         ],
-        // Verify the $q operator with a string and selected fields
+        // Test $q operator with search on selected field
         [
             {
                 $q: {
@@ -299,24 +298,6 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             20
         ],
-        // Verify the $q operator with a string or an operator and selected fields
-        [
-            {
-                $q: {
-                    selectedField: ['name', 'age'],
-                    value: '15'
-                }
-            },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        expect(item).toBeDefined();
-                        const stringifiedItem = JSON.stringify(item);
-                        expect(stringifiedItem).toContain('15');
-                    });
-            },
-            1
-        ],
         // Verify the $q operator with an operator and selected fields
         [
             {
@@ -330,6 +311,24 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
                     data.forEach((item) => {
                         expect(item).toBeDefined();
                         expect(item.age).toBe(15);
+                    });
+            },
+            1
+        ],
+        // Test $q operator with a string and numeric value search across selected fields
+        [
+            {
+                $q: {
+                    selectedField: ['name', 'age'],
+                    value: '15'
+                }
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        const stringifiedItem = JSON.stringify(item);
+                        expect(stringifiedItem).toContain('15');
                     });
             },
             1

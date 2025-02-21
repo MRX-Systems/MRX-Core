@@ -553,8 +553,7 @@ export class Repository<TModel = unknown> {
                     const formattedValue = isNumber ? searchValue : `%${searchValue}%`;
 
                     selectedField.forEach((field) => {
-                        if (this._table.fields.includes(field))
-                            query.orWhere(field, operator, formattedValue);
+                        query.orWhere(field, operator, formattedValue);
                     });
                 } else {
                     if (typeof value === 'object' && Object.keys(value).length === 0)
