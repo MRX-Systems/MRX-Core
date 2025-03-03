@@ -5,7 +5,7 @@ import { CoreError } from '#/error/coreError';
 import { ELYSIA_KEY_ERROR } from '#/error/key';
 import { HTTP_STATUS_CODE } from '#/types/enum/httpStatusCode';
 
-interface RateLimitOptions {
+export interface RateLimitOptions {
     /**
      * The Redis instance to store rate limit data
      */

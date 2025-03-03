@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { randomBytes } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 

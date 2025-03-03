@@ -14,6 +14,7 @@ await Bun.build({
         './source/core/store/index.ts',
         './source/core/util/index.ts',
         './source/core/elysia/plugin/index.ts',
+        './source/core/elysia/schema/index.ts',
 
         './source/error/index.ts',
         './source/error/key/index.ts',

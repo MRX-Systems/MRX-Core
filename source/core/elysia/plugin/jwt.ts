@@ -4,8 +4,7 @@ import {
     SignJWT,
     jwtVerify,
     type JWSHeaderParameters,
-    type JWTPayload,
-    type KeyLike
+    type JWTPayload
 } from 'jose';
 
 type UnwrapSchema<
@@ -24,7 +23,7 @@ export interface JWTOption<
     /**
     * JWT Secret
     */
-    secret: string | Uint8Array | KeyLike;
+    secret: string | Uint8Array;
     /**
     * Type strict validation for JWT payload
     */

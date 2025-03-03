@@ -17,7 +17,7 @@ import { jwtPlugin } from './jwt';
 /**
  * Authentication options to be used in the auth plugin.
  */
-interface AuthOptions {
+export interface AuthOptions {
     /**
      * The expiration time.
      * You can use string like '15m', '1h', '1d', '1w', '1y' or date or number representing iat (UNIX timestamp).
