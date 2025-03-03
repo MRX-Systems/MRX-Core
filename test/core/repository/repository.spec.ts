@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import { randomUUID } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
@@ -249,6 +248,91 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             13
         ],
+        // Test $q operator with simple string search across all fields
+        [
+            {
+                $q: 'Repository::'
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data)) {
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        expect(item.name).toContain('Repository::');
+                    });
+                } else {
+                    expect(data).toBeDefined();
+                    expect(data.name).toContain('Repository::');
+                }
+            },
+            20
+        ],
+        // Test $q operator with numeric value search across all fields
+        [
+            {
+                $q: 15
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        const stringifiedItem = JSON.stringify(item);
+                        expect(stringifiedItem).toContain('15');
+                    });
+            },
+            2
+        ],
+        // Test $q operator with search on selected field
+        [
+            {
+                $q: {
+                    selectedField: ['name'],
+                    value: 'Repository::'
+                }
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        expect(item.name).toContain('Repository::');
+                    });
+            },
+            20
+        ],
+        // Verify the $q operator with an operator and selected fields
+        [
+            {
+                $q: {
+                    selectedField: ['age'],
+                    value: 15
+                }
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        expect(item.age).toBe(15);
+                    });
+            },
+            1
+        ],
+        // Test $q operator with a string and numeric value search across selected fields
+        [
+            {
+                $q: {
+                    selectedField: ['name', 'age'],
+                    value: '15'
+                }
+            },
+            (data: Data | Data[]): void => {
+                if (Array.isArray(data))
+                    data.forEach((item) => {
+                        expect(item).toBeDefined();
+                        const stringifiedItem = JSON.stringify(item);
+                        expect(stringifiedItem).toContain('15');
+                    });
+            },
+            1
+        ],
         /**
          * Single advanced search tests with multiple conditions (AND)
          */
@@ -305,7 +389,7 @@ describe('Repository', () => {
     beforeAll(async () => {
         await createDataTable();
         const dataToInsert: Omit<Data, 'id'>[] = Array.from({ length: 20 }, (_, i) => ({
-            name: `Repository::${randomUUID()}`,
+            name: `Repository::${i}`,
             age: i,
             birth: new Date(`2021-01-${i + 1}`),
             bool: i % 2 === 0,

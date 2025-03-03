@@ -1,4 +1,5 @@
 import type { WhereClause } from './whereClause';
+import type { SelectedFields } from './selectedFields';
 
 /**
  * Defines an advanced search model using either plain partials of the model T or a {@link WhereClause} filter for more dynamic querying.
@@ -38,7 +39,13 @@ import type { WhereClause } from './whereClause';
  * ```
  */
 export type AdvancedSearch<TModel> = {
-    [KeyOfTModel in keyof TModel]?: TModel[KeyOfTModel] | Partial<WhereClause>;
+    [Key in keyof TModel]?: TModel[Key] | Partial<WhereClause>;
 }
 & Record<string, string | number | boolean | Date | Partial<WhereClause>>
-& { $q?: string; };
+& { $q?: string
+    | number
+    | {
+        selectedField: SelectedFields<TModel>,
+        value: string | number
+    };
+};
