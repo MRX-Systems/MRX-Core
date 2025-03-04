@@ -5,8 +5,17 @@ import { MSSQL, type MSSQLDatabaseOptions } from '#/core/database/mssql';
 import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 import { CoreError } from '#/error/coreError';
 
+/**
+ * The options for the dynamic database selector plugin
+ */
 export interface DynamicDatabaseSelectorPluginOptions {
+    /**
+     * Configuration for the base database ({@link MSSQLDatabaseOptions})
+     */
     baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
+    /**
+     * The header key to use to determine the database to use
+     */
     headerKey?: string;
 }
 
