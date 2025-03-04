@@ -5,11 +5,17 @@ export * from './core/database/table';
 // Export repository
 export * from './core/repository/repository';
 
-// Export plugins
+// Export Elysia plugins
 export * from './core/elysia/plugin/auth';
 export * from './core/elysia/plugin/error';
 export * from './core/elysia/plugin/jwt';
 export * from './core/elysia/plugin/microservice';
+
+// Export Elysia schemas
+export * from './core/elysia/schema/info';
+export * from './core/elysia/schema/login';
+export * from './core/elysia/schema/ping';
+export * from './core/elysia/schema/advancedSearch';
 
 // Export store
 export * from './core/store/redis';
