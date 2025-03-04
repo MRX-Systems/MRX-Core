@@ -5,7 +5,7 @@ import { MSSQL, type MSSQLDatabaseOptions } from '#/core/database/mssql';
 import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 import { CoreError } from '#/error/coreError';
 
-interface DynamicDatabaseSelectorPluginOptions {
+export interface DynamicDatabaseSelectorPluginOptions {
     baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
     headerKey?: string;
 }
