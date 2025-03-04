@@ -13,4 +13,4 @@
  * const selection: SelectedFields<User> = ['id', 'name'];
  * ```
  */
-export type SelectedFields<TModel> = (keyof TModel extends string ? keyof TModel : never)[];
+export type SelectedFields<TModel> = (keyof TModel extends string ? keyof TModel : never)[] | string[];
