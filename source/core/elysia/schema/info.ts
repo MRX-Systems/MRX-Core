@@ -8,7 +8,7 @@ export const infoResponse200Schema = t.Object({
     content: t.Object({
         name: t.String({
             description: 'Name',
-            example: 'MRX-API'
+            example: 'API'
         }),
         version: t.String({
             description: 'Version',
@@ -16,7 +16,7 @@ export const infoResponse200Schema = t.Object({
         }),
         description: t.String({
             description: 'Description',
-            example: 'MRX-API is a REST API for the MRX project'
+            example: 'Is a microservice that provides a RESTful API for the application.'
         })
     })
 });

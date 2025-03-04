@@ -18,41 +18,40 @@ import { jwtPlugin } from './jwt';
  * Authentication options to be used in the auth plugin.
  */
 export interface AuthOptions {
-    /**
-     * The expiration time.
-     * You can use string like '15m', '1h', '1d', '1w', '1y' or date or number representing iat (UNIX timestamp).
-     */
-    accessTokenExpiration: number | string | Date;
-    /**
-     * The expiration time of the refresh token.
-     * You can use string like '15m', '1h', '1d', '1w', '1y' or date or number representing iat (UNIX timestamp).
-     */
-    refreshTokenExpiration: number | string | Date;
-    /**
-     * The secret key for the cookie.
-     */
-    cookieSecret: string;
-    /**
-     * The secret key for the JWT.
-     */
-    jwtSecret: string;
-    /**
-     * The login use case is a function that handles the login process, get the user and check the password.
-     *
-     * @param email - The email of the user.
-     * @param password - The password of the user.
-     *
-     * @returns true if the credentials are correct, false otherwise.
-     */
-    loginUseCase: (email: string, password: string) => Promise<boolean> | boolean;
-    /**
-     * The redis options to store the MFA token and Refresh token.
-     */
-    redis: Redis
+    cookieConfig?: {
+        /**
+         * The secret key for the cookie. (Default: random UUID v7)
+         */
+        secrets?: string;
+    };
+    jwtConfig: {
+        /**
+         * The secret key for the JWT.
+         */
+        secret: string;
+        /**
+         * The expiration time.
+         * You can use string like '15m', '1h', '1d', '1w', '1y' or date or number representing iat (UNIX timestamp).
+         */
+        accessTokenExpiration: number | string | Date;
+        /**
+         * The expiration time of the refresh token.
+         * You can use string like '15m', '1h', '1d', '1w', '1y' or date or number representing iat (UNIX timestamp).
+         */
+        refreshTokenExpiration: number | string | Date;
+        /**
+         * The issuer and audience of the JWT. (Default: Core)
+         */
+        issuer?: string;
+        /**
+         * The audience of the JWT. (Default: Core User)
+         */
+        audience?: string;
+    };
     /**
      * The MFA options.
      */
-    mfa: {
+    mfaConfig: {
         /**
          * The function that checks if the MFA is enabled for the user. If it returns true, the MFA will be enabled. (Default: false)
          */
@@ -70,6 +69,19 @@ export interface AuthOptions {
          */
         expireTime?: number;
     }
+    /**
+     * The login use case is a function that handles the login process, get the user and check the password.
+     *
+     * @param email - The email of the user.
+     * @param password - The password of the user.
+     *
+     * @returns true if the credentials are correct, false otherwise.
+     */
+    loginUseCase: (email: string, password: string) => Promise<boolean> | boolean;
+    /**
+     * The redis options to store the MFA token and Refresh token.
+     */
+    redis: Redis
 }
 
 export const authPlugin = (options: AuthOptions): typeof app => {
@@ -81,7 +93,7 @@ export const authPlugin = (options: AuthOptions): typeof app => {
      */
     const setCookie = <T>(cookie: Cookie<string | undefined>, value: T): void => {
         cookie.set({
-            secrets: options.cookieSecret,
+            secrets: options.cookieConfig?.secrets ?? Bun.randomUUIDv7(),
             sameSite: Bun.env.NODE_ENV === 'production' ? 'none' : 'lax',
             httpOnly: true,
             secure: Bun.env.NODE_ENV === 'production',
@@ -110,16 +122,16 @@ export const authPlugin = (options: AuthOptions): typeof app => {
         const refreshTokenJti = Bun.randomUUIDv7();
         const [accessToken, refreshToken] = await Promise.all([
             sign({
-                iss: 'MRX System',
-                aud: 'MRX User',
+                iss: options.jwtConfig.issuer ?? 'Core',
+                aud: options.jwtConfig.audience ?? 'Core User',
                 sub: email
-            }, options.accessTokenExpiration),
+            }, options.jwtConfig.accessTokenExpiration),
             sign({
-                iss: 'MRX System',
-                aud: 'MRX User',
+                iss: options.jwtConfig.issuer ?? 'Core',
+                aud: options.jwtConfig.audience ?? 'Core User',
                 sub: email,
                 jti: refreshTokenJti
-            }, options.refreshTokenExpiration)
+            }, options.jwtConfig.refreshTokenExpiration)
         ]);
         await redis.client.hset(`refresh:${email}`, refreshTokenJti, refreshToken);
         return { accessToken, refreshToken, refreshTokenJti };
@@ -154,7 +166,7 @@ export const authPlugin = (options: AuthOptions): typeof app => {
         const hasher = new Bun.CryptoHasher('blake2b256');
         hasher.update(token);
         const tokenHash = hasher.digest('hex');
-        await redis.client.set(`mfa:${email}`, tokenHash, 'EX', options.mfa?.expireTime || 900);
+        await redis.client.set(`mfa:${email}`, tokenHash, 'EX', options.mfaConfig?.expireTime || 900);
         return token;
     };
 
@@ -165,12 +177,12 @@ export const authPlugin = (options: AuthOptions): typeof app => {
             tags: ['Auth']
         },
         cookie: {
-            secrets: options.cookieSecret,
+            secrets: options.cookieConfig?.secrets ?? Bun.randomUUIDv7(),
             sign: true
         }
     })
         .use(jwtPlugin({
-            secret: options.jwtSecret
+            secret: options.jwtConfig.secret
         }))
         .state({
             redis: options.redis
@@ -259,10 +271,10 @@ export const authPlugin = (options: AuthOptions): typeof app => {
                     httpStatusCode: HTTP_STATUS_CODE.BAD_REQUEST
                 });
 
-            if (typeof options.mfa.isEnable === 'function' ? await options.mfa.isEnable(body.email) : options.mfa.isEnable) {
+            if (typeof options.mfaConfig.isEnable === 'function' ? await options.mfaConfig.isEnable(body.email) : options.mfaConfig.isEnable) {
                 const token = await generateMfaToken(body.email, redis);
-                if (options.mfa.sendToken)
-                    await options.mfa.sendToken(body.email, token, options.mfa?.expireTime || 900);
+                if (options.mfaConfig.sendToken)
+                    await options.mfaConfig.sendToken(body.email, token, options.mfaConfig?.expireTime || 900);
                 return {
                     message: 'MFA required, a code is sent'
                 };
@@ -282,7 +294,7 @@ export const authPlugin = (options: AuthOptions): typeof app => {
             }
         });
 
-    if (options.mfa.isEnable)
+    if (options.mfaConfig.isEnable)
         app.post('/login/mfa', async ({ body, jwt, cookie: { accessToken, refreshToken }, store: { redis } }) => {
             const { token, email } = body;
 
