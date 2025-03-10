@@ -288,7 +288,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    selectedField: ['name'],
+                    selectedFields: ['name'],
                     value: 'Repository::'
                 }
             },
@@ -305,7 +305,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    selectedField: ['age'],
+                    selectedFields: ['age'],
                     value: 15
                 }
             },
@@ -322,7 +322,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    selectedField: ['name', 'age'],
+                    selectedFields: ['name', 'age'],
                     value: '15'
                 }
             },

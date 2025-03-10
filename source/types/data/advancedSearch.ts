@@ -45,7 +45,7 @@ export type AdvancedSearch<TModel> = {
 & { $q?: string
     | number
     | {
-        selectedField: SelectedFields<TModel>,
+        selectedFields: SelectedFields<TModel>,
         value: string | number
     };
 };
