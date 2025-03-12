@@ -126,7 +126,7 @@ function _createPropertiesWhereClauseSchema<TInferedObject extends TObject>(sche
  *
  * @returns Composite TypeBox schema for advanced search
  */
-export function buildBaseSearchSchema<TInferedObject extends TObject>(schema: TInferedObject): typeof searchSchema {
+export const buildBaseSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject): typeof searchSchema => {
     const searchSchema = t.Composite([
         t.Object({
             $q: t.Optional(_createQSchema(schema)),
@@ -137,7 +137,7 @@ export function buildBaseSearchSchema<TInferedObject extends TObject>(schema: TI
         )
     ]);
     return searchSchema;
-}
+};
 
 /**
  * Constructs a complete advanced search schema with pagination combining:
@@ -150,7 +150,7 @@ export function buildBaseSearchSchema<TInferedObject extends TObject>(schema: TI
  *
  * @returns Composite TypeBox schema for advanced search with pagination
  */
-export function buildBaseSearchSchemaWithPagination<TInferedObject extends TObject>(schema: TInferedObject): typeof searchSchemaWithPagination {
+export const buildBaseSearchSchemaWithPagination = <TInferedObject extends TObject>(schema: TInferedObject): typeof searchSchemaWithPagination => {
     const searchSchemaWithPagination = t.Composite([
         buildBaseSearchSchema(schema),
         t.Partial(t.Object({
@@ -159,7 +159,7 @@ export function buildBaseSearchSchemaWithPagination<TInferedObject extends TObje
         }))
     ]);
     return searchSchemaWithPagination;
-}
+};
 
 /**
  * Elysia plugin providing advanced search capabilities for a given schema
