@@ -558,6 +558,22 @@ describe('Repository', () => {
             expect(data).toHaveLength(5);
         });
 
+        test('should return an array of data with limit and offset and advanced search', async () => {
+            const data = await repository.find<Data>({
+                limit: 5,
+                offset: 5,
+                advancedSearch: {
+                    id: { $gte: 10 }
+                }
+            });
+            expect(data).toBeInstanceOf(Array);
+            expect(data).toHaveLength(5);
+            data.forEach((item) => {
+                expect(item).toHaveProperty('id');
+                expect(item.id).toBeGreaterThanOrEqual(10);
+            });
+        });
+
         test('should return an array of data with selected fields', async () => {
             const data = await repository.find<Data>({
                 selectedFields: ['id', 'name']
