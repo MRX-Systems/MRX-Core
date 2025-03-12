@@ -7,7 +7,6 @@ import { CoreError } from '#/error/coreError';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
 import { MSSQL_ERROR_CODE } from '#/types/constant/mssqlErrorCode';
 import type { AdvancedSearch } from '#/types/data/advancedSearch';
-
 import type { QueryOptions } from '#/types/data/queryOptions';
 import type { QueryOptionsExtendPagination } from '#/types/data/queryOptionsExtendPagination';
 import type { QueryOptionsExtendStream } from '#/types/data/queryOptionsExtendStream';
