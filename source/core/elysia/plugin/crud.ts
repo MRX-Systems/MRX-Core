@@ -9,35 +9,54 @@ import type { AdvancedSearch } from '#/types/data/advancedSearch';
 import { advancedSearchPlugin, buildBaseSearchSchema, buildBaseSearchSchemaWithPagination } from './advancedSearch';
 import { dynamicDatabaseSelectorPlugin, type DynamicDatabaseSelectorPluginOptions } from './dynamicDatabaseSelector';
 
-type Routes = 'insert' | 'find' | 'findOne' | 'update' | 'updateOne' | 'delete' | 'deleteOne' | 'count';
+/**
+ * Type definition to represent all available CRUD operations.
+ */
+type CRUDRoutes = 'insert' | 'find' | 'findOne' | 'update' | 'updateOne' | 'delete' | 'deleteOne' | 'count';
 
+/**
+ * Configuration options for the CRUD plugin.
+ *
+ * @typeParam TInferedObject - The inferred schema type for the base object to generate CRUD operations for.
+ */
 interface CrudOptions<TInferedObject extends TObject> {
     /**
-     * Name is used to identify the plugin and get the repository
+     * Name is used to identify the plugin and get the repository.
      */
     name: string;
+
     /**
      * Database is a parameter where you either provide the raw database name to use
-     * or provide a configuration object for the dynamic database selector plugin
+     * or provide a configuration object for the dynamic database selector plugin.
      */
     database: string | DynamicDatabaseSelectorPluginOptions;
+
     /**
-     * The schema to build the CRUD operations for
+     * The TypeBox schema to build the CRUD operations for.
      */
     baseSchema: TInferedObject;
+
     /**
-     * Specifies which properties are required for the insert operation
-     * If not provided, all properties are optional
+     * Specifies which properties are required for the insert operation.
+     * If not provided, all properties are optional.
      */
     insertPropertiesSchemaRequired?: (keyof Static<TInferedObject>)[];
+
     /**
-     * Specifies which CRUD routes should be included (if empty, all routes are included by default)
+     * Specifies which CRUD routes should be included.
+     * If empty, all routes are included by default.
      */
-    includedRoutes?: Routes[];
+    includedRoutes?: CRUDRoutes[];
+
     /**
-     * Specifies which CRUD routes should be excluded
+     * Specifies which CRUD routes should be excluded.
      */
-    excludedRoutes?: Routes[];
+    excludedRoutes?: CRUDRoutes[];
+
+    /**
+     * Permissions plugin to use for the CRUD operations.
+     * This plugin should provide macros for permission checking.
+     */
     permissionsPlugin: Elysia<
         '',
         SingletonBase,
@@ -61,25 +80,41 @@ interface CrudOptions<TInferedObject extends TObject> {
         EphemeralType,
         EphemeralType
     >
-    operationsPermissions: Partial<Record<Routes, string[]>>;
+
+    /**
+     * Permissions associated with each CRUD operation.
+     * Each operation can have multiple permission strings that will be checked.
+     */
+    operationsPermissions: Partial<Record<CRUDRoutes, string[]>>;
 }
 
-function _getEnabledRoutes(includedRoutes: Routes[], excludedRoutes: Routes[]): Routes[] {
-    let enabledRoutes = ['insert', 'find', 'findOne', 'update', 'updateOne', 'delete', 'deleteOne', 'count'] as Routes[];
+/**
+ * Determines which routes should be enabled based on included and excluded routes.
+ *
+ * @param includedRoutes - List of routes to include ({@link CRUDRoutes})
+ * @param excludedRoutes - List of routes to exclude ({@link CRUDRoutes})
+ *
+ * @returns Array of enabled routes
+ */
+function _getEnabledRoutes(includedRoutes: CRUDRoutes[], excludedRoutes: CRUDRoutes[]): CRUDRoutes[] {
+    let enabledRoutes = ['insert', 'find', 'findOne', 'update', 'updateOne', 'delete', 'deleteOne', 'count'] as CRUDRoutes[];
     if (includedRoutes && includedRoutes.length > 0)
         enabledRoutes = includedRoutes;
     if (excludedRoutes && excludedRoutes.length > 0)
-        enabledRoutes = enabledRoutes.filter((route) => !excludedRoutes?.includes(route));
+        enabledRoutes = enabledRoutes.filter((route) => !excludedRoutes.includes(route));
     return enabledRoutes;
 }
 
 /**
- * Create a response schema for the CRUD plugin
+ * Creates a response schema for the CRUD plugin operations.
  *
- * @typeParam TInferedObject - The inferred schema type for the base object to generate CRUD operations for.
- * @param schema - The schema to build the response schema for
+ * This function builds a TypeBox schema that represents the standard response format
+ * for CRUD operations, handling null and undefined values appropriately.
  *
- * @returns The response schema for the CRUD plugin
+ * @typeParam TInferedObject - The inferred schema type for the base object.
+ * @param schema - The schema to build the response schema for. ({@link TInferedObject})
+ *
+ * @returns TypeBox schema for the standard CRUD operation response
  */
 export const buildResponse200Schema = <TInferedObject extends TObject>(schema: TInferedObject): typeof crudResponse200Schema => {
     const { properties } = schema;
@@ -100,6 +135,18 @@ export const buildResponse200Schema = <TInferedObject extends TObject>(schema: T
     return crudResponse200Schema;
 };
 
+/**
+ * Creates an insert body schema for the CRUD plugin.
+ *
+ * This function builds a body schema for insert operations, applying required
+ * constraints to specified properties while leaving others optional.
+ *
+ * @typeParam TInferedObject - The inferred schema type for the base object.
+ * @param schema - The schema to build the insert body schema from. ({@link TInferedObject})
+ * @param requiredPropertiesSchema - Optional array of property keys that should be required.
+ *
+ * @returns TypeBox schema for the insert operation request body
+ */
 export const buildInsertBodySchema = <TInferedObject extends TObject>(schema: TInferedObject, requiredPropertiesSchema?: (keyof Static<TInferedObject>)[]): typeof bodySchema => {
     const { properties } = schema;
 
@@ -115,13 +162,68 @@ export const buildInsertBodySchema = <TInferedObject extends TObject>(schema: TI
 };
 
 /**
- * The CRUD plugin is a plugin that provides basic CRUD operations for a given schema.
- * This plugin is designed to be used with the Elysia framework.
+ * The CRUD plugin provides standardized REST endpoints for basic CRUD operations on a data model.
+ *
+ * This plugin automatically generates RESTful endpoints for Create, Read, Update, and Delete operations
+ * based on a TypeBox schema. It integrates with permission checking, advanced search capabilities,
+ * and supports both static and dynamic database connections.
+ *
+ * ### Key Features:
+ * - Automatic generation of RESTful CRUD endpoints
+ * - Integration with permission checking
+ * - Support for advanced search and filtering
+ * - Pagination for list operations
+ * - Flexible route inclusion/exclusion
+ * - Support for both static and dynamic database connections
+ *
+ * ### Overview:
+ * @example
+ * ```typescript
+ * // Define a schema for your data model
+ * const userSchema = t.Object({
+ *   id: t.Number(),
+ *   username: t.String(),
+ *   email: t.String(),
+ *   active: t.Boolean()
+ * });
+ *
+ * // Create the permissions plugin (simplified example)
+ * const permissionsPlugin = new Elysia({ name: 'permissions' })
+ *   .macro({
+ *     needsOnePermission: (permissions: string[]) => ({
+ *       beforeHandle: (ctx) => { /* permission checking logic *\/ }
+ *     })
+ *     needsMultiplePermissions: (permissions: string[]) => ({
+ *      beforeHandle: (ctx) => { /* permission checking logic *\/ }
+ *    })
+ *   });
+ *
+ * // Set up the CRUD plugin
+ * const userCrud = crudPlugin({
+ *   name: 'user',
+ *   database: 'main_db',
+ *   baseSchema: userSchema,
+ *   permissionsPlugin,
+ *   insertPropertiesSchemaRequired: ['username', 'email'],
+ *   operationsPermissions: {
+ *     insert: ['users:create'],
+ *     update: ['users:edit'],
+ *     delete: ['users:delete'],
+ *     find: ['users:view']
+ *   },
+ *   excludedRoutes: ['count']
+ * });
+ *
+ * // Use the CRUD plugin in your Elysia app
+ * const app = new Elysia()
+ *   .use(userCrud)
+ *   .listen(3000);
+ * ```
  *
  * @typeParam TInferedObject - The inferred schema type for the base object to generate CRUD operations for.
- * @param options - The options for the CRUD plugin. ({@link CrudOptions})
+ * @param options - Configuration options for the CRUD plugin. ({@link CrudOptions})
  *
- * @returns The Elysia application with the CRUD plugin attached
+ * @returns An Elysia application instance with CRUD routes configured
  */
 export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<TInferedObject>): typeof app => {
     const { baseSchema } = options;
