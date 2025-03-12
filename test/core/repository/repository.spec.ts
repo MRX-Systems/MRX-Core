@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { randomBytes } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
@@ -15,7 +16,9 @@ const options = {
     password: process.env.MSSQL_PASSWORD ?? ''
 };
 
-const testTable = 'unit_test_repository';
+const nanoId = randomBytes(4).toString('hex');
+
+const testTable = `unit_test_repository_${nanoId}`;
 
 const knexInstance = knex({
     client: 'mssql',
