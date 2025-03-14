@@ -411,6 +411,13 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
 
+            if (!ctx.advancedSearch || ctx.advancedSearch.length === 0 || !ctx.advancedSearch[0])
+                throw new CoreError({
+                    key: ELYSIA_KEY_ERROR.NEED_ADVANCED_SEARCH,
+                    message: 'You need to provide advanced search to update records. It\'s dangerous to update all records.',
+                    httpStatusCode: 400
+                });
+
             const data = await repo.update((ctx.body as Static<typeof crudUpdateBodySchema>), {
                 advancedSearch: ctx.advancedSearch,
                 selectedFields: ctx.selectedFields
