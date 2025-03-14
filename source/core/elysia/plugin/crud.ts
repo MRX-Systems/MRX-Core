@@ -69,11 +69,13 @@ interface CrudOptions<TInferedObject extends TObject> {
             }>;
             macroFn: {
                 readonly needsOnePermission: (permissions: string[]) => {
-                    beforeHandle: (ctx: Context) => void;
+                    beforeHandle: (ctx: Context) => Promise<void>;
                 };
                 readonly needsMultiplePermissions: (
                     permissions: string[]
-                ) => { beforeHandle: (ctx: Context) => void };
+                ) => {
+                    beforeHandle: (ctx: Context) => Promise<void>
+                };
             }
         },
         RouteBase,

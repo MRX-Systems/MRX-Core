@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import Elysia from 'elysia';
 
+import { author, description, name, version } from '#/root/package.json';
 import { microservicePlugin } from '#/core/elysia/plugin/microservice';
 
 describe('Microservice Plugin', () => {
@@ -28,10 +29,10 @@ describe('Microservice Plugin', () => {
         expect(res).toEqual({
             message: 'Microservice Information',
             content: {
-                author: 'Ruby',
-                description: 'Andesite - Core provides a set of tools to help you build a microservice',
-                name: '@andesite-lab/andesite-core',
-                version: '1.43.2'
+                author,
+                description,
+                name,
+                version
             }
         });
     });

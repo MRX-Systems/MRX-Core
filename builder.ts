@@ -4,6 +4,8 @@ const dependencies = 'dependencies' in pkg ? Object.keys(pkg.dependencies ?? {})
 const devDependencies = 'devDependencies' in pkg ? Object.keys(pkg.devDependencies ?? {}) : [];
 const peerDependencies = 'peerDependencies' in pkg ? Object.keys(pkg.peerDependencies ?? {}) : [];
 
+await Bun.$`rm -rf build`;
+
 await Bun.build({
     target: 'bun',
     external: [...dependencies, ...devDependencies, ...peerDependencies],
@@ -13,6 +15,7 @@ await Bun.build({
         './source/core/repository/index.ts',
         './source/core/store/index.ts',
         './source/core/util/index.ts',
+
         './source/core/elysia/plugin/index.ts',
         './source/core/elysia/schema/index.ts',
 
@@ -29,3 +32,11 @@ await Bun.build({
     minify: true,
     sourcemap: 'none'
 });
+
+await Bun.$`tsc --project tsconfig.dts.json`;
+
+await Bun.$`tsc-alias -p tsconfig.dts.json`;
+
+console.log('Build completed 🎉!');
+
+process.exit(0);

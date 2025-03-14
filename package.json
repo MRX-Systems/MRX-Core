@@ -1,15 +1,10 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@andesite-lab/andesite-core",
-  "version": "1.43.2",
+  "version": "2.0.0",
+  "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "author": "Ruby",
   "license": "MIT",
   "type": "module",
-  "types": "build/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Andesite-Lab/Core.git"
-  },
   "exports": {
     "./database": "./build/core/database/index.js",
     "./repository": "./build/core/repository/index.js",
@@ -22,11 +17,6 @@
     "./types": "./build/types/index.js",
     ".": "./build/index.js"
   },
-  "bugs": {
-    "url": "https://github.com/Andesite-Lab/Core/issues"
-  },
-  "description": "Andesite - Core provides a set of tools to help you build a microservice",
-  "homepage": "https://github.com/Andesite-Lab/Core#readme",
   "keywords": [
     "andesite",
     "andesite-lab",
@@ -35,7 +25,7 @@
   ],
   "scripts": {
     "dev": "bun --watch source/index.ts",
-    "build": "bun bundler.ts && tsc --project tsconfig.dts.json && tsc-alias -p tsconfig.dts.json",
+    "build": "bun builder.ts && tsc --project tsconfig.dts.json && tsc-alias -p tsconfig.dts.json",
     "start": "bun build/index.js",
     "test": "bun test --coverage",
     "docs": "typedoc",
@@ -43,44 +33,25 @@
     "lint": "eslint ./source"
   },
   "devDependencies": {
-    "@basalt-lab/basalt-helper": "^1.11.1",
-    "@basalt-lab/basalt-logger": "^1.12.0",
     "@eslint/js": "^9.22.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/bun": "^1.2.5",
-    "elysia": "^1.2.25",
-    "eslint": "^9.22.0",
     "eslint-plugin-tsdoc": "^0.4.0",
+    "eslint": "^9.22.0",
     "globals": "^16.0.0",
-    "ioredis": "^5.6.0",
-    "jose": "^6.0.10",
-    "knex": "^3.1.0",
-    "mssql": "^11.0.1",
     "tsc-alias": "^1.8.11",
-    "typedoc": "^0.27.9",
+    "typedoc": "^0.28.0",
     "typescript-eslint": "^8.26.1"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "@basalt-lab/basalt-helper": "^1.11.1",
+    "@basalt-lab/basalt-logger": "^1.12.0",
     "elysia": "^1.2.25",
     "ioredis": "^5.6.0",
     "jose": "^6.0.10",
     "knex": "^3.1.0",
     "mssql": "^11.0.1",
     "typescript": "^5.8.2"
-  },
-  "peerDependenciesMeta": {
-    "jose": {
-      "optional": true
-    },
-    "ioredis": {
-      "optional": true
-    },
-    "knex": {
-      "optional": true
-    },
-    "mssql": {
-      "optional": true
-    }
   },
   "changelog": {
     "types": {

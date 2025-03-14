@@ -12,6 +12,7 @@
 
     "outDir": "./build",
     "paths": {
+      "#/root/*": ["./*"],
       "#/*": ["./source/*"]
     },
 

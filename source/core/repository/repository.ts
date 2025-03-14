@@ -328,7 +328,7 @@ export class Repository<TModel = unknown> {
      * console.log(count);
      * ```
      */
-    public async count<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptions<KModel>): Promise<number> {
+    public async count<KModel extends TModel = NoInfer<TModel>>(options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>): Promise<number> {
         const query = this._knex(this._table.name)
             .count({ count: '*' });
         if (options?.advancedSearch)

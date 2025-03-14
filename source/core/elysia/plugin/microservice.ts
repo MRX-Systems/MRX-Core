@@ -1,5 +1,6 @@
 import { Elysia } from 'elysia';
 import { existsSync } from 'fs';
+import { platform } from 'os';
 
 import { infoResponse200Schema } from '#/core/elysia/schema/info';
 import { pingResponse200Schema } from '#/core/elysia/schema/ping';
@@ -12,13 +13,24 @@ import { pingResponse200Schema } from '#/core/elysia/schema/ping';
  * @returns The path to the package.json file if found, otherwise an empty string.
  */
 const findPackageJson = (path: string): string => {
-    const packageJsonPath = path + '/package.json';
+    const isWin = platform() === 'win32';
+    const separator = isWin ? '\\' : '/';
+
+    if ((isWin && /^[A-Z]:\\$/i.test(path)) || (!isWin && path === '/'))
+        return '';
+
+    const packageJsonPath = path + separator + 'package.json';
     if (existsSync(packageJsonPath))
         return packageJsonPath;
 
-    const newPath = path.split('/').slice(0, -1).join('/');
+    const pathParts = path.split(separator);
+    if (pathParts.length <= 1)
+        return '';
+
+    const newPath = pathParts.slice(0, -1).join(separator);
     if (newPath === '')
         return '';
+
 
     return findPackageJson(newPath);
 };
