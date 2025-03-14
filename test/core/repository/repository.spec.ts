@@ -288,7 +288,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    selectedField: ['name'],
+                    selectedFields: ['name'],
                     value: 'Repository::'
                 }
             },
@@ -305,7 +305,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    selectedField: ['age'],
+                    selectedFields: ['age'],
                     value: 15
                 }
             },
@@ -322,7 +322,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
         [
             {
                 $q: {
-                    selectedField: ['name', 'age'],
+                    selectedFields: ['name', 'age'],
                     value: '15'
                 }
             },
@@ -556,6 +556,22 @@ describe('Repository', () => {
             });
             expect(data).toBeInstanceOf(Array);
             expect(data).toHaveLength(5);
+        });
+
+        test('should return an array of data with limit and offset and advanced search', async () => {
+            const data = await repository.find<Data>({
+                limit: 5,
+                offset: 5,
+                advancedSearch: {
+                    id: { $gte: 10 }
+                }
+            });
+            expect(data).toBeInstanceOf(Array);
+            expect(data).toHaveLength(5);
+            data.forEach((item) => {
+                expect(item).toHaveProperty('id');
+                expect(item.id).toBeGreaterThanOrEqual(10);
+            });
         });
 
         test('should return an array of data with selected fields', async () => {

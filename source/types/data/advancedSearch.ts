@@ -39,13 +39,12 @@ import type { SelectedFields } from './selectedFields';
  * ```
  */
 export type AdvancedSearch<TModel> = {
+    $q?: string
+        | number
+        | {
+            selectedFields: SelectedFields<TModel>,
+            value: string | number
+        };
+} & {
     [Key in keyof TModel]?: TModel[Key] | Partial<WhereClause>;
-}
-& Record<string, string | number | boolean | Date | Partial<WhereClause>>
-& { $q?: string
-    | number
-    | {
-        selectedField: SelectedFields<TModel>,
-        value: string | number
-    };
-};
+} & Record<string, string | number | boolean | Date | Partial<WhereClause> | undefined>;

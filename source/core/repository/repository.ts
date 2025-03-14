@@ -7,7 +7,6 @@ import { CoreError } from '#/error/coreError';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
 import { MSSQL_ERROR_CODE } from '#/types/constant/mssqlErrorCode';
 import type { AdvancedSearch } from '#/types/data/advancedSearch';
-
 import type { QueryOptions } from '#/types/data/queryOptions';
 import type { QueryOptionsExtendPagination } from '#/types/data/queryOptionsExtendPagination';
 import type { QueryOptionsExtendStream } from '#/types/data/queryOptionsExtendStream';
@@ -546,13 +545,13 @@ export class Repository<TModel = unknown> {
                     for (const field of this._table.fields)
                         if (value)
                             query.orWhere(field, 'like', `%${value}%`);
-                } else if (key === '$q' && typeof value === 'object' && 'selectedField' in value) {
-                    const { selectedField, value: searchValue } = value;
+                } else if (key === '$q' && typeof value === 'object' && 'selectedFields' in value) {
+                    const { selectedFields, value: searchValue } = value;
                     const isNumber = typeof searchValue === 'number';
                     const operator = isNumber ? '=' : 'like';
                     const formattedValue = isNumber ? searchValue : `%${searchValue}%`;
 
-                    selectedField.forEach((field) => {
+                    selectedFields.forEach((field) => {
                         query.orWhere(field, operator, formattedValue);
                     });
                 } else {

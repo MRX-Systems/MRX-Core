@@ -2,7 +2,7 @@ import { Elysia } from 'elysia';
 
 import type { Redis } from '#/core/store/redis';
 import { CoreError } from '#/error/coreError';
-import { ELYSIA_KEY_ERROR } from '#/error/key';
+import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 import { HTTP_STATUS_CODE } from '#/types/enum/httpStatusCode';
 
 export interface RateLimitOptions {
