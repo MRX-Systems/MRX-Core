@@ -109,7 +109,6 @@ export default [
             'default-param-last': 'error',
             'max-classes-per-file': ['error', 1],
             'max-depth': ['error', 4],
-            'new-cap': 'error',
             'no-else-return': 'error',
             'no-empty-function': 'error',
             'no-invalid-this': 'error',
@@ -130,7 +129,8 @@ export default [
             'prefer-object-has-own': 'error',
             'prefer-object-spread': 'error',
             'require-await': 'error',
-            'object-curly-spacing': ['error', 'always']
+            'object-curly-spacing': ['error', 'always'],
+            'new-cap': 'off'
         }
     },
     {
@@ -147,16 +147,13 @@ export default [
              * @see https://typescript-eslint.io/rules/
              */
             'consistent-return': 'off',
-            '@typescript-eslint/consistent-return': 'error',
             '@typescript-eslint/consistent-type-exports': 'error',
             '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'separate-type-imports' }],
             'default-param-last': 'off',
             '@typescript-eslint/default-param-last': 'error',
-            '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/explicit-member-accessibility': [
                 'error', { accessibility: 'explicit' }
             ],
-            '@typescript-eslint/explicit-module-boundary-types': 'error',
             'max-params': 'off',
             '@typescript-eslint/max-params': [
                 'error', { max: 6 }
@@ -184,7 +181,11 @@ export default [
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-            '@typescript-eslint/no-dynamic-delete': 'off'
+            '@typescript-eslint/no-dynamic-delete': 'off',
+            '@typescript-eslint/no-confusing-void-expression': 'off',
+            '@typescript-eslint/explicit-function-return-type': 'warn',
+            '@typescript-eslint/explicit-module-boundary-types': 'warn',
+            '@typescript-eslint/consistent-return': 'warn'
         }
     }
 ];

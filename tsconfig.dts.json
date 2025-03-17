@@ -1,13 +1,5 @@
 {
-  "typedocOptions": {
-    "entryPoints": [
-      "source/**/*.ts"
-    ],
-    "exclude": [
-      "./**/index.ts"
-    ],
-    "out": "docs"
-  },
+  "include": ["source/**/*.ts"],
   "compilerOptions": {
     // Enable latest features
     "lib": ["ESNext", "DOM"],
@@ -28,7 +20,8 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "noEmit": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     // "removeComments": true,
 
     // Best practices

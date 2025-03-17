@@ -1,130 +1,21 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@andesite-lab/andesite-core",
+  "version": "2.0.0",
   "description": "Andesite - Core provides a set of tools to help you build a microservice",
-  "version": "1.43.2",
-  "type": "module",
-  "types": "build/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./build/index.d.ts",
-      "import": "./build/index.js",
-      "require": "./build/index.js"
-    },
-    "./error": {
-      "types": "./build/common/error/index.d.ts",
-      "import": "./build/common/error/index.js",
-      "require": "./build/common/error/index.js"
-    },
-    "./type": {
-      "types": "./build/common/type/data/index.d.ts",
-      "import": "./build/common/type/data/index.js",
-      "require": "./build/common/type/data/index.js"
-    },
-    "./ioredis": {
-      "types": "./build/common/lib/optional/ioredis/index.d.ts",
-      "import": "./build/common/lib/optional/ioredis/index.js",
-      "require": "./build/common/lib/optional/ioredis/index.js"
-    },
-    "./knex": {
-      "types": "./build/common/lib/optional/knex/index.d.ts",
-      "import": "./build/common/lib/optional/knex/index.js",
-      "require": "./build/common/lib/optional/knex/index.js"
-    },
-    "./vine": {
-      "types": "./build/common/lib/optional/vine/index.d.ts",
-      "import": "./build/common/lib/optional/vine/index.js",
-      "require": "./build/common/lib/optional/vine/index.js"
-    },
-    "./fastify": {
-      "types": "./build/common/lib/required/fastify/index.d.ts",
-      "import": "./build/common/lib/required/fastify/index.js",
-      "require": "./build/common/lib/required/fastify/index.js"
-    },
-    "./fluent": {
-      "types": "./build/common/lib/required/fluent-json-schema/index.d.ts",
-      "import": "./build/common/lib/required/fluent-json-schema/index.js",
-      "require": "./build/common/lib/required/fluent-json-schema/index.js"
-    },
-    "./i18n": {
-      "types": "./build/common/lib/required/i18n/index.d.ts",
-      "import": "./build/common/lib/required/i18n/index.js",
-      "require": "./build/common/lib/required/i18n/index.js"
-    },
-    "./util": {
-      "types": "./build/common/util/index.d.ts",
-      "import": "./build/common/util/index.js",
-      "require": "./build/common/util/index.js"
-    },
-    "./usecase": {
-      "types": "./build/domain/usecase/index.d.ts",
-      "import": "./build/domain/usecase/index.js",
-      "require": "./build/domain/usecase/index.js"
-    },
-    "./database": {
-      "types": "./build/infrastructure/database/index.d.ts",
-      "import": "./build/infrastructure/database/index.js",
-      "require": "./build/infrastructure/database/index.js"
-    },
-    "./database/creator": {
-      "types": "./build/infrastructure/database/creator/index.d.ts",
-      "import": "./build/infrastructure/database/creator/index.js",
-      "require": "./build/infrastructure/database/creator/index.js"
-    },
-    "./repository": {
-      "types": "./build/infrastructure/repository/index.d.ts",
-      "import": "./build/infrastructure/repository/index.js",
-      "require": "./build/infrastructure/repository/index.js"
-    },
-    "./storage": {
-      "types": "./build/infrastructure/storage/index.d.ts",
-      "import": "./build/infrastructure/storage/index.js",
-      "require": "./build/infrastructure/storage/index.js"
-    },
-    "./storage/creator": {
-      "types": "./build/infrastructure/storage/creator/index.d.ts",
-      "import": "./build/infrastructure/storage/creator/index.js",
-      "require": "./build/infrastructure/storage/creator/index.js"
-    },
-    "./store": {
-      "types": "./build/infrastructure/store/index.d.ts",
-      "import": "./build/infrastructure/store/index.js",
-      "require": "./build/infrastructure/store/index.js"
-    },
-    "./store/creator": {
-      "types": "./build/infrastructure/store/creator/index.d.ts",
-      "import": "./build/infrastructure/store/creator/index.js",
-      "require": "./build/infrastructure/store/creator/index.js"
-    },
-    "./http": {
-      "types": "./build/presentation/http/index.d.ts",
-      "import": "./build/presentation/http/index.js",
-      "require": "./build/presentation/http/index.js"
-    },
-    "./schema": {
-      "types": "./build/presentation/schema/index.d.ts",
-      "import": "./build/presentation/schema/index.js",
-      "require": "./build/presentation/schema/index.js"
-    }
-  },
-  "scripts": {
-    "dev": "bun --watch source/index.ts",
-    "build": "NODE_ENV=production bun bundler.config.ts && tsc && tsc-alias",
-    "start": "NODE_ENV=production bun build/index.js",
-    "test": "bun test",
-    "docs": "typedoc",
-    "fix-lint": "eslint --fix ./source",
-    "lint": "eslint ./source"
-  },
   "author": "Ruby",
   "license": "MIT",
-  "homepage": "https://github.com/Andesite-Lab/Core#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Andesite-Lab/Core.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Andesite-Lab/Core/issues"
+  "type": "module",
+  "exports": {
+    "./database": "./build/core/database/index.js",
+    "./repository": "./build/core/repository/index.js",
+    "./elysia/plugin": "./build/core/elysia/plugin/index.js",
+    "./elysia/schema": "./build/core/elysia/schema/index.js",
+    "./store": "./build/core/store/index.js",
+    "./util": "./build/core/util/index.js",
+    "./error": "./build/error/index.js",
+    "./error/key": "./build/error/key/index.js",
+    "./types": "./build/types/index.js",
+    ".": "./build/index.js"
   },
   "keywords": [
     "andesite",
@@ -132,53 +23,86 @@
     "andesite-core",
     "core"
   ],
-  "dependencies": {
-    "@basalt-lab/basalt-helper": "^1.10.3",
-    "@fastify/cors": "^10.0.1",
-    "@fastify/formbody": "^8.0.1",
-    "@fastify/helmet": "^13.0.0",
-    "@fastify/multipart": "^9.0.1",
-    "@fastify/swagger": "^9.4.0",
-    "@scalar/fastify-api-reference": "^1.25.93",
-    "@vinejs/vine": "^3.0.0",
-    "ajv-errors": "^3.0.0",
-    "ajv-formats": "^3.0.1",
-    "fast-querystring": "^1.1.2",
-    "fastify": "^5.2.0",
-    "fastify-print-routes": "^4.0.0",
-    "fluent-json-schema": "^5.0.0",
-    "i18next": "^24.2.0"
+  "scripts": {
+    "dev": "bun --watch source/index.ts",
+    "build": "bun builder.ts && tsc --project tsconfig.dts.json && tsc-alias -p tsconfig.dts.json",
+    "start": "bun build/index.js",
+    "test": "bun test --coverage",
+    "docs": "typedoc",
+    "fix-lint": "eslint --fix ./source",
+    "lint": "eslint ./source"
   },
   "devDependencies": {
-    "@azure/storage-blob": "^12.26.0",
-    "@basalt-lab/basalt-logger": "^1.11.2",
-    "@eslint/js": "^9.17.0",
-    "@stylistic/eslint-plugin": "^2.12.1",
-    "@types/bun": "^1.1.14",
-    "@types/node": "^22.10.2",
+    "@eslint/js": "^9.22.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "@types/bun": "^1.2.5",
     "eslint-plugin-tsdoc": "^0.4.0",
-    "eslint": "^9.17.0",
-    "ioredis": "^5.4.2",
-    "knex": "^3.1.0",
-    "tsc-alias": "^1.8.10",
-    "typedoc": "^0.27.5",
-    "typescript-eslint": "^8.18.1"
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
+    "tsc-alias": "^1.8.11",
+    "typedoc": "^0.28.0",
+    "typescript-eslint": "^8.26.1"
   },
-  "peerDependencies": {
-    "@azure/storage-blob": "^12.25.0",
-    "ioredis": "^5.4.1",
+  "dependencies": {
+    "@basalt-lab/basalt-helper": "^1.11.1",
+    "@basalt-lab/basalt-logger": "^1.12.0",
+    "elysia": "^1.2.25",
+    "ioredis": "^5.6.0",
+    "jose": "^6.0.10",
     "knex": "^3.1.0",
-    "typescript": "^5.7.2"
+    "mssql": "^11.0.1",
+    "typescript": "^5.8.2"
   },
-  "peerDependenciesMeta": {
-    "@azure/storage-blob": {
-      "optional": true
+  "changelog": {
+    "types": {
+      "feat": {
+        "title": "🚀 Enhancements",
+        "semver": "minor"
+      },
+      "perf": {
+        "title": "⚡ Performance",
+        "semver": "patch"
+      },
+      "fix": {
+        "title": "🔧 Fixes",
+        "semver": "patch"
+      },
+      "refactor": {
+        "title": "🧹 Refactors",
+        "semver": "patch"
+      },
+      "docs": {
+        "title": "📖 Documentation",
+        "semver": "patch"
+      },
+      "build": {
+        "title": "📦 Build",
+        "semver": "patch"
+      },
+      "types": {
+        "title": "🌊 Types",
+        "semver": "patch"
+      },
+      "chore": {
+        "title": "🦉 Chore"
+      },
+      "examples": {
+        "title": "🏀 Examples"
+      },
+      "test": {
+        "title": "🧪 Tests"
+      },
+      "style": {
+        "title": "🎨 Styles"
+      },
+      "ci": {
+        "title": "🤖 CI"
+      }
     },
-    "knex": {
-      "optional": true
-    },
-    "ioredis": {
-      "optional": true
+    "templates": {
+      "commitMessage": "chore(🦉): v{{newVersion}}",
+      "tagMessage": "v{{newVersion}}",
+      "tagBody": "v{{newVersion}}"
     }
   }
 }
