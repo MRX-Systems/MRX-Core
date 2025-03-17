@@ -15,7 +15,7 @@ import type { WhereClause } from '#/types/data/whereClause';
 
 /**
  * The `Repository` class provides a robust and extensible implementation for handling database operations
- * such as querying, insertion, update, and deletion. It acts as a wrapper around Knex.js to simplify
+ * such as querying, insertion, updating, and deletion. It acts as a wrapper around Knex.js to simplify
  * database interactions while maintaining flexibility and type safety.
  *
  * This class is designed to support common database operations using various query options such as
@@ -35,79 +35,62 @@ import type { WhereClause } from '#/types/data/whereClause';
  * ### Example Usage:
  * @example
  * ```typescript
- * import { Repository } from './repository';
- * import knex from 'knex';
- * import { Table } from './table';
- *
- * interface User {
- *     id: number;
- *     name: string;
- * }
- *
- * const knexInstance = knex({
- *     client: 'mssql',
- *     connection: {
- *         database: 'myDatabase',
- *         host: 'localhost',
- *         port: 1433,
- *         user: 'sa',
- *         password: 'password',
- *         options: { encrypt: true }
- *     }
- * });
- *
- * const userTable = new Table('users', ['id', 'name']);
+ * // Create a repository for a specific table
  * const userRepository = new Repository<User>(knexInstance, userTable);
  *
- * // Example 1: Find all users with pagination
- * const users = await userRepository.find({ limit: 10, offset: 0 });
- * console.log(users);
+ * // Find all users with pagination
+ * const allUsers = await userRepository.find({
+ *   limit: 10,
+ *   offset: 0
+ * });
  *
- * // Example 2: Find a single user by ID
- * const user = await userRepository.findOne({ advancedSearch: { id: { $eq: 1 } } });
- * console.log(user);
+ * // Find users with specific criteria
+ * const filteredUsers = await userRepository.find({
+ *   advancedSearch: {
+ *     age: { $gte: 18 },
+ *     status: 'active'
+ *   },
+ *   limit: 20,
+ *   selectedFields: ['id', 'name', 'email']
+ * });
  *
- * // Example 3: Insert a new user
- * const newUser = await userRepository.insert({ id: 2, name: 'Alice' });
- * console.log(newUser);
+ * // Insert a new user
+ * const insertedUser = await userRepository.insert({
+ *   name: 'John Doe',
+ *   email: 'john@example.com',
+ *   age: 25
+ * });
  *
- * // Example 4: Update a user's name
- * const updatedUser = await userRepository.update({ name: 'Bob' }, { advancedSearch: { id: { $eq: 2 } } });
- * console.log(updatedUser);
+ * // Update user information
+ * await userRepository.update(
+ *   { status: 'inactive' },
+ *   { advancedSearch: { id: 123 } }
+ * );
  *
- * // Example 5: Stream large datasets
- * const stream = userRepository.findStream({ orderBy: ['id', 'asc'] });
- * for await (const user of stream) {
- *     console.log(user);
- * }
+ * // Delete a user
+ * await userRepository.delete({
+ *   advancedSearch: { id: 123 }
+ * });
  * ```
- *
- * ### Methods Overview:
- * - **findStream**: Returns a stream for querying large datasets.
- * - **find**: Fetches multiple records with optional pagination and filtering.
- * - **findOne**: Fetches a single record based on the specified query options.
- * - **insert**: Inserts one or more records and returns the inserted records.
- * - **update**: Updates records based on query options and returns the updated records.
- * - **delete**: Deletes records based on query options and returns the deleted records.
- * - **count**: Counts the number of records matching the specified query options.
  */
-
 export class Repository<TModel = unknown> {
     /**
-     * The Knex.js instance used to interact with the database. ({@link Knex})
+     * The Knex.js instance used to interact with the database.
+     * This property holds the database connection and query builder used for executing SQL operations.
      */
     protected readonly _knex: Knex;
 
     /**
-     * The table object representing the database table to interact with. ({@link Table})
+     * The table object representing the database table to interact with.
+     * Contains metadata about the table such as name, columns, and primary key information.
      */
     protected readonly _table: Table;
 
     /**
      * Creates a new `Repository` instance with the specified Knex.js instance and table object.
      *
-     * @param knex - The Knex.js instance used to interact with the database. ({@link Knex})
-     * @param table - The table object representing the database table to interact with. ({@link Table})
+     * @param knex - The Knex.js instance used to interact with the database.
+     * @param table - The table object representing the database table to interact with.
      */
     public constructor(knex: Knex, table: Table) {
         this._knex = knex;
@@ -116,24 +99,56 @@ export class Repository<TModel = unknown> {
 
     /**
      * Finds records in the database based on the specified query options and returns a stream
-     * for async iteration. The stream emits data events for each record and an end event when
-     * the stream is finished.
+     * for async iteration. This method is particularly useful when working with large datasets
+     * that would be inefficient to load entirely into memory.
+     *
+     * The stream emits data events for each record and an end event when the stream is finished.
+     * It can be consumed using either async iteration or event listeners.
      *
      * @typeParam KModel - The type of the object to retrieve.
-     * @param options - The query options to apply to the search. ({@link QueryOptionsExtendStream})
+     * @param options - The query options to apply to the search.
+     *   - `selectedFields`: Specific fields to select from the table.
+     *   - `advancedSearch`: Filtering criteria for the query.
+     *   - `orderBy`: Field and direction for sorting results.
+     *   - `transform`: Optional transform function to process each record.
      *
-     * @returns A stream with an async iterable interface. ({@link StreamWithAsyncIterable})
+     * @returns A stream with an async iterable interface for consuming the results.
      *
+     * ### Usage Examples:
      * @example
      * ```typescript
-     * const stream = userRepository.findStream({ orderBy: ['id', 'asc'] });
+     * // Basic usage with async iteration
+     * const stream = userRepository.findStream();
+     * for await (const user of stream) {
+     *   console.log(user);
+     * }
      *
-     * // Method 1: Async iteration
-     * for await (const user of stream)
-     *    console.log(user);
+     * // With ordering and field selection
+     * const stream = userRepository.findStream({
+     *   selectedFields: ['id', 'name', 'email'],
+     *   orderBy: ['createdDate', 'desc']
+     * });
      *
-     * // Method 2: Event-driven consumption
-     * stream.on('data', (user) => console.log(user));
+     * // Using event listeners
+     * const stream = userRepository.findStream();
+     * stream.on('data', (user) => {
+     *   console.log('User:', user);
+     * });
+     * stream.on('error', (error) => {
+     *   console.error('Stream error:', error);
+     * });
+     * stream.on('end', () => {
+     *   console.log('Stream completed');
+     * });
+     *
+     * // With transform function to process records
+     * const stream = userRepository.findStream({
+     *   transform: (chunk, encoding, callback) => {
+     *     // Transform the data
+     *     const transformedData = { ...chunk, processed: true };
+     *     callback(null, transformedData);
+     *   }
+     * });
      * ```
      */
     public findStream<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendStream<KModel>): StreamWithAsyncIterable<KModel[]> {
@@ -173,64 +188,69 @@ export class Repository<TModel = unknown> {
 
     /**
      * Finds records in the database based on the specified query options and returns the results
-     * as an array. The query options can include advanced search filters, pagination, field selection, and ordering.
-     * If no records are found and the `throwIfNoResult` option is enabled, an error is thrown.
+     * as an array. This method supports comprehensive filtering, pagination, field selection, and sorting
+     * to provide flexible data retrieval capabilities.
      *
      * @typeParam KModel - The type of the object to retrieve.
-     * @param options - The query options to apply to the search. ({@link QueryOptionsExtendPagination})
+     * @param options - The query options to apply to the search.
+     *   - `selectedFields`: Specific fields to select from the table.
+     *   - `advancedSearch`: Filtering criteria for the query.
+     *   - `orderBy`: Field and direction for sorting results.
+     *   - `limit`: Maximum number of records to return (defaults to 100).
+     *   - `offset`: Number of records to skip (defaults to 0).
+     *   - `throwIfNoResult`: Whether to throw an error if no records are found.
+     *   - `transaction`: Optional transaction object for running the query within a transaction.
      *
-     * @throws ({@link CoreError}): Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
-     * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during the query execution. ({@link DATABASE_KEY_ERROR}.[ERROR_CODE] or {@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
+     * @throws {CoreError} Throws an error if no records are found and the `throwIfNoResult` option is enabled.
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during the query execution.
      *
-     * @returns An array of records matching the query options. ({@link KModel}[])
+     * @returns An array of records matching the query options.
      *
+     * ### Usage Examples:
      * @example
      * ```typescript
-     * // Example 1: Find all users with pagination
-     * const users = await userRepository.find({ limit: 10, offset: 0 });
-     * console.log(users);
-     *
-     * // Example 2.a: Find all users with advanced search
+     * // Basic usage with pagination
      * const users = await userRepository.find({
-     *     advancedSearch: {
-     *         id: { $gt: 10 },
-     *         name: { $match: 'Alice' }
-     *     }
+     *   limit: 25,
+     *   offset: 50  // Get users 51-75
      * });
      *
-     * // Example 2.b: Find all users with advanced search
-     * const users = await userRepository.find({
-     *     advancedSearch: {
-     *         id: 2
-     *     }
+     * // With field selection
+     * const userNames = await userRepository.find({
+     *   selectedFields: ['id', 'firstName', 'lastName']
      * });
      *
-     * // Example 2.c: Find all users with advanced search (multiple conditions)
-     * const users = await userRepository.find({
-     *     advancedSearch: [
-     *         { id: { $gt: 10 } },
-     *         { name: { $match: 'Alice' } }
-     *     ]
+     * // With advanced filtering
+     * const activeAdmins = await userRepository.find({
+     *   advancedSearch: {
+     *     role: 'admin',
+     *     status: { $eq: 'active' },
+     *     lastLogin: { $gte: new Date('2023-01-01') }
+     *   }
      * });
      *
-     * // Example 3: Find all users with field selection
-     * const users = await userRepository.find({
-     *     selectedFields: {
-     *         id: true,
-     *     }
+     * // With OR conditions
+     * const results = await userRepository.find({
+     *   advancedSearch: [
+     *     { department: 'engineering' },
+     *     { department: 'design', role: 'lead' }
+     *   ]
      * });
      *
-     * // Example 4: Find all users with ordering
-     * const users = await userRepository.find({
-     *    orderBy: ['id', 'asc']
+     * // With sorting
+     * const sortedUsers = await userRepository.find({
+     *   orderBy: ['lastName', 'asc']
      * });
      *
-     * // Example 5: Using transaction
-     * const knex = ...;
-     * await knex.transaction(async (trx) => { // u Get the knex instance from the MSSQL class
-     *    const user = await userRepository.find({ selectedFields: { id: true }, transaction: trx });
+     * // Using a transaction
+     * await knex.transaction(async (trx) => {
+     *   const users = await userRepository.find({
+     *     advancedSearch: { department: 'finance' },
+     *     transaction: trx
+     *   });
+     *
+     *   // Perform additional operations within the same transaction
      * });
-     * ...
      * ```
      */
     public async find<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendPagination<KModel>): Promise<KModel[]> {
@@ -255,33 +275,58 @@ export class Repository<TModel = unknown> {
 
     /**
      * Finds a single record in the database based on the specified query options and returns it.
-     * The query options support advanced search filters, field selection, and ordering.
-     * If no records are found and the `throwIfNoResult` option is enabled, an error is thrown.
+     * This method is optimized for retrieving individual records that match specific criteria.
      *
      * @typeParam KModel - The type of the object to retrieve.
-     * @param options - The query options to apply to the search. ({@link QueryOptions})
+     * @param options - The query options to apply to the search.
+     *   - `selectedFields`: Specific fields to select from the table.
+     *   - `advancedSearch` (required): Filtering criteria for the query.
+     *   - `orderBy`: Field and direction for sorting results.
+     *   - `throwIfNoResult`: Whether to throw an error if no records are found.
+     *   - `transaction`: Optional transaction object for running the query within a transaction.
      *
-     * @throws ({@link CoreError}): Throws an error if no records are found and `throwIfNoResult` is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
-     * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
+     * @throws {CoreError} Throws an error if no records are found and `throwIfNoResult` is enabled.
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during query execution.
      *
-     * @returns The record matching the query options. ({@link KModel})
+     * @returns The first record matching the query options.
      *
+     * ### Usage Examples:
      * @example
      * ```typescript
-     * // Find a single user by ID
-     * const user = await userRepository.findOne({ advancedSearch: { id: { $eq: 1 } } });
-     * console.log(user);
-     *
-     * // Find a single user with specific fields
+     * // Find a user by ID
      * const user = await userRepository.findOne({
-     *     advancedSearch: { id: { $eq: 1 } },
-     *     selectedFields: { id: true, name: true }
+     *   advancedSearch: { id: 123 }
      * });
      *
-     * // Find a single user with ordering
+     * // Find a user by email with selected fields
      * const user = await userRepository.findOne({
-     *     advancedSearch: { id: { $gte: 1 } },
-     *     orderBy: ['id', 'desc']
+     *   advancedSearch: { email: 'user@example.com' },
+     *   selectedFields: ['id', 'name', 'email', 'role']
+     * });
+     *
+     * // Find the most recently created user in a department
+     * const latestUser = await userRepository.findOne({
+     *   advancedSearch: { department: 'marketing' },
+     *   orderBy: ['createdAt', 'desc']
+     * });
+     *
+     * // Find a user with compound conditions
+     * const user = await userRepository.findOne({
+     *   advancedSearch: {
+     *     email: { $like: 'admin' },
+     *     status: 'active',
+     *     lastLogin: { $gte: new Date('2023-01-01') }
+     *   }
+     * });
+     *
+     * // Using a transaction
+     * await knex.transaction(async (trx) => {
+     *   const user = await userRepository.findOne({
+     *     advancedSearch: { id: 123 },
+     *     transaction: trx
+     *   });
+     *
+     *   // Perform additional operations with the user within the same transaction
      * });
      * ```
      */
@@ -304,28 +349,58 @@ export class Repository<TModel = unknown> {
 
     /**
      * Counts the number of records in the database that match the specified query options.
-     * The query options support advanced search filters. If no records are found and the
-     * `throwIfNoResult` option is enabled, an error is thrown.
+     * This method is useful for getting the total count of records without retrieving the actual data,
+     * which can be more efficient for large datasets or when only the count is needed.
      *
      * @typeParam KModel - The type of the object to match.
-     * @param options - The query options to apply to the count operation. ({@link QueryOptions})
+     * @param options - The query options to apply to the count operation.
+     *   - `advancedSearch`: Filtering criteria for determining which records to count.
+     *   - `throwIfNoResult`: Whether to throw an error if no records are found.
+     *   - `transaction`: Optional transaction object for running the query within a transaction.
      *
-     * @throws ({@link CoreError}): Throws an error if no records are found and `throwIfNoResult` is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
-     * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
+     * @throws {CoreError} Throws an error if no records are found and `throwIfNoResult` is enabled.
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during query execution.
      *
-     * @returns The number of records matching the query options. (number)
+     * @returns The number of records matching the query options.
      *
+     * ### Usage Examples:
      * @example
      * ```typescript
      * // Count all users
-     * const count = await userRepository.count();
-     * console.log(count);
+     * const totalUsers = await userRepository.count();
      *
-     * // Count users with advanced search filters
-     * const count = await userRepository.count({
-     *     advancedSearch: { name: { $match: 'Alice' } }
+     * // Count active users
+     * const activeUsers = await userRepository.count({
+     *   advancedSearch: { status: 'active' }
      * });
-     * console.log(count);
+     *
+     * // Count users with complex conditions
+     * const count = await userRepository.count({
+     *   advancedSearch: {
+     *     role: { $in: ['admin', 'editor'] },
+     *     lastLogin: { $gte: new Date('2023-01-01') }
+     *   }
+     * });
+     *
+     * // Count users with OR conditions
+     * const combinedCount = await userRepository.count({
+     *   advancedSearch: [
+     *     { department: 'engineering' },
+     *     { department: 'design', role: 'lead' }
+     *   ]
+     * });
+     *
+     * // Using a transaction
+     * await knex.transaction(async (trx) => {
+     *   const count = await userRepository.count({
+     *     advancedSearch: { department: 'finance' },
+     *     transaction: trx
+     *   });
+     *
+     *   if (count > 0) {
+     *     // Perform additional operations within the same transaction
+     *   }
+     * });
      * ```
      */
     public async count<KModel extends TModel = NoInfer<TModel>>(options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>): Promise<number> {
@@ -340,27 +415,72 @@ export class Repository<TModel = unknown> {
 
     /**
      * Inserts one or more records into the database and returns the inserted records.
-     * The data can be a single object or an array of objects. Field selection can be used
-     * to specify which fields to return.
+     * This method supports both single and bulk insertions, making it versatile for various use cases.
      *
      * @typeParam KModel - The type of the object to insert.
-     * @param data - The data to insert into the database. (K | K[])
-     * @param options - The query options to apply to the insertion. ({@link QueryOptions})
+     * @param data - The data to insert into the database. Can be a single object or an array of objects.
+     * @param options - The query options to apply to the insertion.
+     *   - `selectedFields`: Specific fields to return from the inserted record(s).
+     *   - `throwIfNoResult`: Whether to throw an error if no records are inserted.
+     *   - `transaction`: Optional transaction object for running the query within a transaction.
      *
-     * @returns An array of the inserted records. ({@link KModel}[])
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during query execution.
      *
+     * @returns An array of the inserted records with the fields specified in the options.
+     *
+     * ### Usage Examples:
      * @example
      * ```typescript
      * // Insert a single user
-     * const user = await userRepository.insert({ id: 1, name: 'Alice' });
-     * console.log(user);
+     * const newUser = await userRepository.insert({
+     *   firstName: 'John',
+     *   lastName: 'Doe',
+     *   email: 'john.doe@example.com',
+     *   department: 'engineering'
+     * });
      *
      * // Insert multiple users
-     * const users = await userRepository.insert([
-     *     { id: 2, name: 'Bob' },
-     *     { id: 3, name: 'Charlie' }
+     * const newUsers = await userRepository.insert([
+     *   {
+     *     firstName: 'Alice',
+     *     lastName: 'Johnson',
+     *     email: 'alice.johnson@example.com',
+     *     department: 'marketing'
+     *   },
+     *   {
+     *     firstName: 'Bob',
+     *     lastName: 'Smith',
+     *     email: 'bob.smith@example.com',
+     *     department: 'finance'
+     *   }
      * ]);
-     * console.log(users);
+     *
+     * // Insert with specific return fields
+     * const newUser = await userRepository.insert(
+     *   {
+     *     firstName: 'Sarah',
+     *     lastName: 'Parker',
+     *     email: 'sarah.parker@example.com',
+     *     department: 'design',
+     *     salary: 75000,
+     *     startDate: new Date()
+     *   },
+     *   { selectedFields: ['id', 'email'] }
+     * );
+     *
+     * // Using a transaction
+     * await knex.transaction(async (trx) => {
+     *   const user = await userRepository.insert(
+     *     {
+     *       firstName: 'Mike',
+     *       lastName: 'Taylor',
+     *       email: 'mike.taylor@example.com'
+     *     },
+     *     { transaction: trx }
+     *   );
+     *
+     *   // Perform additional operations within the same transaction
+     * });
      * ```
      */
     public async insert<KModel extends TModel = NoInfer<TModel>>(
@@ -376,27 +496,64 @@ export class Repository<TModel = unknown> {
 
     /**
      * Updates one or more records in the database based on the specified query options
-     * and returns the updated records. The query options support advanced search filters
-     * and field selection.
+     * and returns the updated records. This method allows for precise updates to records
+     * that match specific filtering criteria.
      *
      * @typeParam KModel - The type of the object to update.
-     * @param data - The data to update in the database. (Partial<K>)
-     * @param options - The query options to apply to the update operation. ({@link QueryOptions})
+     * @param data - The data to update in the database. Contains the fields and values to be updated.
+     * @param options - The query options to apply to the update operation.
+     *   - `selectedFields`: Specific fields to return from the updated record(s).
+     *   - `advancedSearch` (required): Filtering criteria to determine which records to update.
+     *   - `throwIfNoResult`: Whether to throw an error if no records are updated.
+     *   - `transaction`: Optional transaction object for running the query within a transaction.
      *
-     * @returns An array of the updated records. ({@link KModel}[])
+     * @throws {CoreError} Throws an error if no records are updated and `throwIfNoResult` is enabled.
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during query execution.
      *
+     * @returns An array of the updated records with the fields specified in the options.
+     *
+     * ### Usage Examples:
      * @example
      * ```typescript
-     * // Update a single user's name
-     * const user = await userRepository.update({ name: 'Updated Name' }, { advancedSearch: { id: { $eq: 1 } } });
-     * console.log(user);
-     *
-     * // Update multiple users
-     * const users = await userRepository.update(
-     *     { active: false },
-     *     { advancedSearch: { role: { $eq: 'admin' } } }
+     * // Update a user's status by ID
+     * const updatedUser = await userRepository.update(
+     *   { status: 'inactive' },
+     *   { advancedSearch: { id: 123 } }
      * );
-     * console.log(users);
+     *
+     * // Update multiple users by department
+     * const updatedUsers = await userRepository.update(
+     *   {
+     *     department: 'Customer Service',
+     *     updatedAt: new Date()
+     *   },
+     *   { advancedSearch: { department: 'Support' } }
+     * );
+     *
+     * // Update with complex conditions
+     * const result = await userRepository.update(
+     *   { securityLevel: 'elevated', lastAudit: new Date() },
+     *   {
+     *     advancedSearch: {
+     *       role: { $in: ['admin', 'security'] },
+     *       lastLogin: { $gte: new Date('2023-01-01') }
+     *     },
+     *     selectedFields: ['id', 'email', 'securityLevel']
+     *   }
+     * );
+     *
+     * // Using a transaction
+     * await knex.transaction(async (trx) => {
+     *   const updated = await userRepository.update(
+     *     { status: 'verified' },
+     *     {
+     *       advancedSearch: { email: 'user@example.com' },
+     *       transaction: trx
+     *     }
+     *   );
+     *
+     *   // Perform additional operations within the same transaction
+     * });
      * ```
      */
     public async update<KModel extends TModel = NoInfer<TModel>>(
@@ -414,25 +571,55 @@ export class Repository<TModel = unknown> {
 
     /**
      * Deletes one or more records in the database based on the specified query options
-     * and returns the deleted records. The query options support advanced search filters
-     * and field selection.
+     * and returns the deleted records. This method ensures that only records matching
+     * specific filtering criteria are removed from the database.
      *
      * @typeParam KModel - The type of the object to delete.
-     * @param options - The query options to apply to the delete operation. ({@link QueryOptions})
+     * @param options - The query options to apply to the delete operation.
+     *   - `selectedFields`: Specific fields to return from the deleted record(s).
+     *   - `advancedSearch` (required): Filtering criteria to determine which records to delete.
+     *   - `throwIfNoResult`: Whether to throw an error if no records are deleted.
+     *   - `transaction`: Optional transaction object for running the query within a transaction.
      *
-     * @returns An array of the deleted records. ({@link KModel}[])
+     * @throws {CoreError} Throws an error if no records are deleted and `throwIfNoResult` is enabled.
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during query execution.
      *
+     * @returns An array of the deleted records with the fields specified in the options.
+     *
+     * ### Usage Examples:
      * @example
      * ```typescript
-     * // Delete a single user
-     * const user = await userRepository.delete({ advancedSearch: { id: { $eq: 1 } } });
-     * console.log(user);
-     *
-     * // Delete multiple users
-     * const users = await userRepository.delete({
-     *     advancedSearch: { role: { $eq: 'guest' } }
+     * // Delete a user by ID
+     * const deletedUser = await userRepository.delete({
+     *   advancedSearch: { id: 123 }
      * });
-     * console.log(users);
+     *
+     * // Delete inactive users
+     * const deletedUsers = await userRepository.delete({
+     *   advancedSearch: {
+     *     status: 'inactive',
+     *     lastLogin: { $lt: new Date('2022-01-01') }
+     *   }
+     * });
+     *
+     * // Delete with specific return fields
+     * const result = await userRepository.delete({
+     *   advancedSearch: { department: 'deprecated' },
+     *   selectedFields: ['id', 'email']
+     * });
+     *
+     * // Using a transaction
+     * await knex.transaction(async (trx) => {
+     *   const deleted = await userRepository.delete({
+     *     advancedSearch: {
+     *       role: 'guest',
+     *       createdAt: { $lt: new Date('2023-01-01') }
+     *     },
+     *     transaction: trx
+     *   });
+     *
+     *   // Perform additional operations within the same transaction
+     * });
      * ```
      */
     public async delete<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'orderBy' | 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>): Promise<KModel[]> {
@@ -449,24 +636,63 @@ export class Repository<TModel = unknown> {
      * Applies advanced search filters to a query object. This method translates
      * search options into SQL WHERE clauses using the specified operators and conditions.
      *
-     * @typeParam KModel - The type of the object to apply the search filters to.
-     * @param query - The Knex.js query builder to apply the filters to. ({@link Knex.QueryBuilder})
-     * @param search - The advanced search options to apply. ({@link AdvancedSearch})
+     * The search parameter can be either a single object with field conditions or an array
+     * of such objects. When an array is provided, the conditions are combined using OR logic.
      *
+     * ### Supported Operators:
+     * - `$eq`: Equal to (exact match)
+     * - `$neq`: Not equal to
+     * - `$lt`: Less than
+     * - `$lte`: Less than or equal to
+     * - `$gt`: Greater than
+     * - `$gte`: Greater than or equal to
+     * - `$in`: In a set of values
+     * - `$nin`: Not in a set of values
+     * - `$between`: Between two values (inclusive)
+     * - `$nbetween`: Not between two values
+     * - `$like`: Contains substring (case-insensitive)
+     * - `$nlike`: Does not contain substring
+     * - `$isNull`: Field is null (when true) or not null (when false)
+     * - `$q`: Full-text search across specified fields
+     *
+     * @typeParam KModel - The type of the object to apply the search filters to.
+     * @param query - The Knex.js query builder to apply the filters to.
+     * @param search - The advanced search options to apply.
+     *
+     * ### Usage Examples:
      * @example
      * ```typescript
-     * // Apply a single search filter
+     * // Simple equality condition
      * const query = knex('users');
-     * userRepository._applySearch(query, { id: { $eq: 1 } });
-     * console.log(query.toString()); // SELECT * FROM "users" WHERE "id" = 1
+     * repository._applySearch(query, { status: 'active' });
+     * // Produces: SELECT * FROM users WHERE status = 'active'
      *
-     * // Apply multiple filters
+     * // Using operators
      * const query = knex('users');
-     * userRepository._applySearch(query, {
-     *     id: { $gte: 10 },
-     *     name: { $match: 'Alice' }
+     * repository._applySearch(query, {
+     *   age: { $gte: 21 },
+     *   name: { $like: 'John' },
+     *   role: { $in: ['admin', 'manager'] }
      * });
-     * console.log(query.toString()); // SELECT * FROM "users" WHERE "id" >= 10 AND "name" LIKE '%Alice%'
+     * // Produces: SELECT * FROM users WHERE age >= 21 AND name LIKE '%John%' AND role IN ('admin', 'manager')
+     *
+     * // Using OR logic with array
+     * const query = knex('users');
+     * repository._applySearch(query, [
+     *   { department: 'engineering' },
+     *   { role: 'manager', department: 'design' }
+     * ]);
+     * // Produces: SELECT * FROM users WHERE (department = 'engineering') OR (role = 'manager' AND department = 'design')
+     *
+     * // Using the $q operator for full-text search
+     * const query = knex('users');
+     * repository._applySearch(query, {
+     *   $q: {
+     *     selectedFields: ['name', 'email', 'bio'],
+     *     value: 'programmer'
+     *   }
+     * });
+     * // Searches for 'programmer' in name, email, and bio columns
      * ```
      */
     protected _applySearch<KModel>(
@@ -567,12 +793,14 @@ export class Repository<TModel = unknown> {
     }
 
     /**
-     * Handles errors that occur during query execution. This method is used to catch
+     * Handles errors that occur during query execution. This method centralizes error handling
+     * for all database operations, providing consistent error reporting and translation of
+     * database-specific error codes into application-specific error types.
      *
      * @param error - The error object that occurred during query execution.
      * @param query - The Knex.js query builder that caused the error.
      *
-     * @throws ({@link CoreError}): Throws an error when an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
+     * @throws {CoreError} Throws an enhanced error with additional context about the failed query.
      */
     protected _handleError(error: unknown, query: Knex.QueryBuilder): never {
         if (error instanceof CoreError)
@@ -590,23 +818,13 @@ export class Repository<TModel = unknown> {
 
     /**
      * Determines whether the provided data object represents a complex query.
-     * A complex query is defined as an object containing one or more valid query operators.
+     * A complex query is defined as an object containing one or more valid query operators,
+     * such as $eq, $gt, $like, etc.
      *
      * @typeParam MaybeWhereClause - The type of the object to check.
      * @param data - The data object to check.
      *
      * @returns `true` if the object contains valid query operators, otherwise `false`.
-     *
-     * @example
-     * ```typescript
-     * // Check a valid complex query
-     * const isComplex = userRepository._isComplexQuery({ $eq: 1 });
-     * console.log(isComplex); // true
-     *
-     * // Check an invalid complex query
-     * const isComplex = userRepository._isComplexQuery({ invalidKey: 1 });
-     * console.log(isComplex); // false
-     * ```
      */
     private _isComplexQuery<MaybeWhereClause>(data: MaybeWhereClause): boolean {
         const validKeys = new Set<string>([
@@ -633,30 +851,17 @@ export class Repository<TModel = unknown> {
     }
 
     /**
-     * Executes a Knex.js query and returns the result. If the `throwIfNoResult` option
-     * is enabled and no records are found, an error is thrown.
+     * Executes a Knex.js query and returns the result. This method provides centralized
+     * error handling and supports the option to throw an error if no records are found.
      *
      * @typeParam KModel - The type of the records returned by the query.
-     * @param query - The Knex.js query builder to execute. ({@link Knex.QueryBuilder})
+     * @param query - The Knex.js query builder to execute.
      * @param throwIfNoResult - Whether to throw an error if no records are found.
      *
-     * @throws ({@link CoreError}): Throws an error if no records are found and `throwIfNoResult` is enabled. ({@link DATABASE_KEY_ERROR.MSSQL_NO_RESULT})
-     * @throws ({@link CoreError}): Throws an error if an MSSQL-specific error occurs during query execution. ({@link DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR})
+     * @throws {CoreError} Throws an error if no records are found and `throwIfNoResult` is enabled.
+     * @throws {CoreError} Throws an error if an MSSQL-specific error occurs during query execution.
      *
-     * @returns An array of records returned by the query. ({@link KModel}[])
-     *
-     * @example
-     * ```typescript
-     * // Execute a query and handle the result
-     * const query = knex('users').where('id', 1);
-     * const users = await userRepository._executeQuery(query);
-     * console.log(users);
-     *
-     * // Execute a query and throw an error if no result
-     * const query = knex('users').where('id', 999);
-     * const users = await userRepository._executeQuery(query, true);
-     * // Throws CoreError if no records are found
-     * ```
+     * @returns An array of records returned by the query.
      */
     private async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<KModel[]> {
         try {

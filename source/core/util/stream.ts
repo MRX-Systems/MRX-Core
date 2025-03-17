@@ -3,16 +3,16 @@ import type { Stream } from 'stream';
 /**
  * Makes a stream async iterable.
  *
- * @typeParam T - The type of the data emitted by the stream.
- * @typeParam K - The type of the stream.
+ * @typeParam TModel - The type of the data emitted by the stream.
+ * @typeParam KStream - The type of the stream.
  * @param stream - The stream to make async iterable.
  *
- * @returns The stream as an async iterable. ({@link K} extends {@link Stream} & {@link AsyncIterable})
+ * @returns The stream as an async iterable. ({@link KStream} extends {@link Stream} & {@link AsyncIterable})
  */
-export function makeStreamAsyncIterable<T, K extends Stream = Stream>(stream: K): K & AsyncIterable<T> {
+export function makeStreamAsyncIterable<TModel, KStream extends Stream = Stream>(stream: KStream): KStream & AsyncIterable<TModel> {
     const asyncIterable = {
-        [Symbol.asyncIterator]: (): AsyncIterator<T> => ({
-            next(): Promise<IteratorResult<T>> {
+        [Symbol.asyncIterator]: (): AsyncIterator<TModel> => ({
+            next(): Promise<IteratorResult<TModel>> {
                 return new Promise((resolve, reject) => {
                     const cleanup = (): void => {
                         // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -23,7 +23,7 @@ export function makeStreamAsyncIterable<T, K extends Stream = Stream>(stream: K)
                         stream.off('error', onError);
                     };
 
-                    const onData = (data: T): void => {
+                    const onData = (data: TModel): void => {
                         cleanup();
                         resolve({ value: data, done: false });
                     };
@@ -45,6 +45,6 @@ export function makeStreamAsyncIterable<T, K extends Stream = Stream>(stream: K)
             }
         })
     };
-    (stream as K & AsyncIterable<T>)[Symbol.asyncIterator] = asyncIterable[Symbol.asyncIterator];
-    return stream as K & AsyncIterable<T>;
+    (stream as KStream & AsyncIterable<TModel>)[Symbol.asyncIterator] = asyncIterable[Symbol.asyncIterator];
+    return stream as KStream & AsyncIterable<TModel>;
 }

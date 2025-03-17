@@ -11,6 +11,34 @@ import { Table } from './table';
 
 /**
  * Options to configure the MSSQL database connection.
+ *
+ * This interface provides all necessary configuration parameters to establish
+ * a connection to an MSSQL database server. It includes essential connection
+ * details such as host, port, credentials, as well as optional performance and
+ * behavior configurations.
+ *
+ * ### Key Configuration Areas:
+ * - Basic connection parameters (host, port, credentials)
+ * - Connection encryption settings
+ * - Connection pool configuration
+ * - Timeout settings
+ * - Debug and event options
+ *
+ * @example
+ * ```typescript
+ * const options: MSSQLDatabaseOptions = {
+ *   databaseName: 'my_database',
+ *   host: 'localhost',
+ *   port: 1433,
+ *   user: 'sa',
+ *   password: 'Password123',
+ *   encrypt: true,
+ *   poolMin: 5,
+ *   poolMax: 20,
+ *   debug: true,
+ *   pulse: true
+ * };
+ * ```
  */
 export interface MSSQLDatabaseOptions {
     /**
@@ -40,36 +68,56 @@ export interface MSSQLDatabaseOptions {
 
     /**
      * Whether to encrypt the database connection.
+     * When enabled, communication between the client and server will be encrypted,
+     * providing increased security but potentially slight performance impact.
+     *
      * @defaultValue true
      */
     encrypt?: boolean;
 
     /**
      * Minimum number of connections in the connection pool.
+     * This represents the minimum number of connections that will be maintained in the pool,
+     * even when there is no activity. Higher values can reduce connection latency
+     * but increase resource usage.
+     *
      * @defaultValue 2
      */
     poolMin?: number;
 
     /**
      * Maximum number of connections in the connection pool.
+     * This limits how many concurrent connections can be established to the database.
+     * Setting this too low might cause connection timeouts during high load,
+     * while setting it too high might overload the database server.
+     *
      * @defaultValue 10
      */
     poolMax?: number;
 
     /**
      * The timeout in milliseconds for acquiring a connection.
+     * If a connection cannot be acquired within this timeframe, an error will be thrown.
+     *
      * @defaultValue 20000
      */
     connectionTimeout?: number;
 
     /**
      * Enables debug mode for logging database operations.
+     * When enabled, all SQL queries will be logged with their parameters,
+     * which is valuable for development but may impact performance.
+     *
      * @defaultValue false
      */
     debug?: boolean;
 
     /**
      * If set to true, adds basic event listeners for all tables.
+     * This automatically sets up event listeners to track database operations
+     * (select, create, update, delete) for all tables, allowing for easy monitoring
+     * and event-driven programming.
+     *
      * @defaultValue false
      * @example
      * ```typescript
