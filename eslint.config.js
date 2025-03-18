@@ -19,6 +19,7 @@ export default [
                 ...globals.node
             }
         },
+        // Stylistic rules
         rules: {
             /**
              * TsDoc rules
@@ -86,6 +87,7 @@ export default [
         }
     },
     {
+        // ESLint rules
         rules: {
             /**
              * EsLint rules not included in recommended
@@ -141,6 +143,7 @@ export default [
                 tsconfigRootDir: import.meta.dirname
             }
         },
+        // TypeScript rules
         rules: {
             /**
              * TypeScript rules not included in strictTypeChecked and stylistic
@@ -183,8 +186,6 @@ export default [
             '@typescript-eslint/no-unnecessary-type-parameters': 'off',
             '@typescript-eslint/no-dynamic-delete': 'off',
             '@typescript-eslint/no-confusing-void-expression': 'off',
-            '@typescript-eslint/explicit-function-return-type': 'warn',
-            '@typescript-eslint/explicit-module-boundary-types': 'warn',
             '@typescript-eslint/consistent-return': 'warn'
         }
     }
