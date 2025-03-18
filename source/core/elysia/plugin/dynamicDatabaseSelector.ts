@@ -108,8 +108,8 @@ export interface DynamicDatabaseSelectorPluginOptions {
  *   );
  * ```
  */
-export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPluginOptions): typeof app => {
-    const app = new Elysia({
+export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPluginOptions): typeof plugin => {
+    const plugin = new Elysia({
         name: 'dynamicDatabaseSelectorPlugin'
     })
         .model({
@@ -140,7 +140,8 @@ export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPl
                     };
                 }
             }
-        });
-    return app;
+        })
+        .as('plugin');
+    return plugin;
 };
 

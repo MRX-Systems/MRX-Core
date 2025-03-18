@@ -310,8 +310,8 @@ export const buildBaseSearchSchemaWithPagination = <TInferedObject extends TObje
  *   });
  * ```
  */
-export const advancedSearchPlugin = <TInferedObject extends TObject>(name: string, baseSchema: TInferedObject): typeof app => {
-    const app = new Elysia({
+export const advancedSearchPlugin = <TInferedObject extends TObject>(name: string, baseSchema: TInferedObject): typeof plugin => {
+    const plugin = new Elysia({
         name: `advancedSearchPlugin-${name}`,
         seed: baseSchema
     })
@@ -372,7 +372,7 @@ export const advancedSearchPlugin = <TInferedObject extends TObject>(name: strin
                     return result;
                 }
             }
-        });
-    return app;
+        })
+        .as('plugin');
+    return plugin;
 };
-

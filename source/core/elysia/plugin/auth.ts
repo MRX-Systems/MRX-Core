@@ -191,7 +191,7 @@ export interface AuthOptions {
  * @param options - Configuration options for the auth plugin
  * @returns An Elysia application instance with authentication routes and middleware
  */
-export const authPlugin = (options: AuthOptions): typeof app => {
+export const authPlugin = (options: AuthOptions): typeof plugin => {
     /**
      * Set the cookie with the value.
      *
@@ -271,7 +271,7 @@ export const authPlugin = (options: AuthOptions): typeof app => {
         return value === hasher.digest('hex');
     };
 
-    const app = new Elysia({
+    const plugin = new Elysia({
         name: 'authPlugin',
         prefix: '/auth',
         detail: {
@@ -368,6 +368,13 @@ export const authPlugin = (options: AuthOptions): typeof app => {
                 }
             }
         })
+        .model({
+            loginBody: loginBodySchema,
+            loginResponse200: loginResponse200Schema,
+            loginResponse400: loginResponse400Schema,
+            loginMfaBody: loginMfaBodySchema,
+            loginMfaResponse200: loginMfaResponse200Schema
+        })
 
         .get('/logout', async ({ cookie: { accessToken, refreshToken }, store: { redis } }) => {
             accessToken.remove();
@@ -380,14 +387,6 @@ export const authPlugin = (options: AuthOptions): typeof app => {
             };
         }, {
             isAuth: true
-        })
-
-        .model({
-            loginBody: loginBodySchema,
-            loginResponse200: loginResponse200Schema,
-            loginResponse400: loginResponse400Schema,
-            loginMfaBody: loginMfaBodySchema,
-            loginMfaResponse200: loginMfaResponse200Schema
         })
 
         .post('/login', async ({ body: { email, password }, store: { redis }, jwt, cookie: { accessToken, refreshToken } }) => {
@@ -445,7 +444,7 @@ export const authPlugin = (options: AuthOptions): typeof app => {
         });
 
     if (options.mfaConfig.isEnable)
-        app.post('/login/mfa', async ({ body: { token, email }, jwt, cookie: { accessToken, refreshToken }, store: { redis } }) => {
+        plugin.post('/login/mfa', async ({ body: { token, email }, jwt, cookie: { accessToken, refreshToken }, store: { redis } }) => {
             // Verify the MFA token by email and token in Redis
             if (!await verifyMfaToken(email, token, redis))
                 throw new CoreError({
@@ -489,5 +488,6 @@ export const authPlugin = (options: AuthOptions): typeof app => {
                 200: 'loginMfaResponse200'
             }
         });
-    return app;
+    plugin.as('plugin');
+    return plugin;
 };

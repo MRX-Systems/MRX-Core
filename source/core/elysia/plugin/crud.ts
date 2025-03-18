@@ -227,7 +227,7 @@ export const buildInsertBodySchema = <TInferedObject extends TObject>(schema: TI
  *
  * @returns An Elysia application instance with CRUD routes configured
  */
-export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<TInferedObject>): typeof app => {
+export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<TInferedObject>): typeof plugin => {
     const { baseSchema } = options;
     type BaseModel = Static<typeof baseSchema>;
 
@@ -245,7 +245,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         content: t.Number()
     });
 
-    const app = new Elysia({
+    const plugin = new Elysia({
         name: `crudPlugin-${options.name}`
     })
         .model({
@@ -263,11 +263,11 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
     const enabledRoutes = _getEnabledRoutes(options.includedRoutes || [], options.excludedRoutes || []);
 
     if (!isDynamicDatabase)
-        app.resolve({ as: 'local' }, () => ({
+        plugin.resolve({ as: 'local' }, () => ({
             dynamicDB: SingletonManager.get<MSSQL>(`database:${options.database as string}`)
         }));
     else if (isDynamicDatabase)
-        app.use(dynamicDatabaseSelectorPlugin({
+        plugin.use(dynamicDatabaseSelectorPlugin({
             baseDatabaseConfig: (options.database as DynamicDatabaseSelectorPluginOptions).baseDatabaseConfig,
             headerKey: (options.database as DynamicDatabaseSelectorPluginOptions).headerKey || 'database-using'
         }));
@@ -275,7 +275,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
     const base = isDynamicDatabase ? { hasDynamicDatabaseSelector: true } : {};
 
     if (enabledRoutes.includes('insert'))
-        app.post('/insert', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
+        plugin.post('/insert', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
 
@@ -297,7 +297,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('find'))
-        app.get('/find', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
+        plugin.get('/find', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
 
@@ -325,7 +325,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('findOne'))
-        app.get('/findOne/:id', async (ctx): Promise<{ message: string; content: BaseModel; }> => {
+        plugin.get('/findOne/:id', async (ctx): Promise<{ message: string; content: BaseModel; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
             const table = db.getTable(options.name);
@@ -350,7 +350,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('delete'))
-        app.delete('/delete', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
+        plugin.delete('/delete', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
 
@@ -383,7 +383,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('deleteOne'))
-        app.delete('/deleteOne/:id', async (ctx): Promise<{ message: string; content: BaseModel; }> => {
+        plugin.delete('/deleteOne/:id', async (ctx): Promise<{ message: string; content: BaseModel; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
             const table = db.getTable(options.name);
@@ -409,7 +409,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('update'))
-        app.patch('/update', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
+        plugin.patch('/update', async (ctx): Promise<{ message: string; content: BaseModel[]; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
 
@@ -444,7 +444,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('updateOne'))
-        app.patch('/updateOne/:id', async (ctx): Promise<{ message: string; content: BaseModel; }> => {
+        plugin.patch('/updateOne/:id', async (ctx): Promise<{ message: string; content: BaseModel; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
             const table = db.getTable(options.name);
@@ -471,7 +471,7 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
         });
 
     if (enabledRoutes.includes('count'))
-        app.get('/count', async (ctx): Promise<{ message: string; content: number; }> => {
+        plugin.get('/count', async (ctx): Promise<{ message: string; content: number; }> => {
             const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
             const repo = db.getRepository<BaseModel>(options.name);
             const count = await repo.count({
@@ -493,5 +493,6 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
             hasAdvancedSearch: true,
             ...base as Record<string, unknown>
         });
-    return app;
+    plugin.as('plugin');
+    return plugin;
 };
