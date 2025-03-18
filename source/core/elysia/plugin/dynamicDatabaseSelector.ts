@@ -108,40 +108,36 @@ export interface DynamicDatabaseSelectorPluginOptions {
  *   );
  * ```
  */
-export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPluginOptions): typeof plugin => {
-    const plugin = new Elysia({
-        name: 'dynamicDatabaseSelectorPlugin'
+export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPluginOptions) => new Elysia({
+    name: 'dynamicDatabaseSelectorPlugin'
+})
+    .model({
+        databaseUsingHeader: t.Object({
+            [options.headerKey || 'database-using']: t.String()
+        })
     })
-        .model({
-            databaseUsingHeader: t.Object({
-                [options.headerKey || 'database-using']: t.String()
-            })
-        })
 
-        .macro({
-            hasDynamicDatabaseSelector: {
-                async resolve({ headers }) {
-                    const databaseName = headers[options.headerKey || 'database-using'];
-                    if (!databaseName)
-                        throw new CoreError({
-                            key: ELYSIA_KEY_ERROR.DYNAMIC_DATABASE_KEY_NOT_FOUND,
-                            message: 'Dynamic Database key not found in the request headers.',
-                            httpStatusCode: 400
-                        });
-                    if (!SingletonManager.has(`database:${databaseName}`)) {
-                        SingletonManager.register(`database:${databaseName}`, MSSQL, {
-                            ...options.baseDatabaseConfig,
-                            databaseName
-                        });
-                        await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
-                    }
-                    return {
-                        dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
-                    };
+    .macro({
+        hasDynamicDatabaseSelector: {
+            async resolve({ headers }) {
+                const databaseName = headers[options.headerKey || 'database-using'];
+                if (!databaseName)
+                    throw new CoreError({
+                        key: ELYSIA_KEY_ERROR.DYNAMIC_DATABASE_KEY_NOT_FOUND,
+                        message: 'Dynamic Database key not found in the request headers.',
+                        httpStatusCode: 400
+                    });
+                if (!SingletonManager.has(`database:${databaseName}`)) {
+                    SingletonManager.register(`database:${databaseName}`, MSSQL, {
+                        ...options.baseDatabaseConfig,
+                        databaseName
+                    });
+                    await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
                 }
+                return {
+                    dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
+                };
             }
-        })
-        .as('plugin');
-    return plugin;
-};
-
+        }
+    })
+    .as('plugin');
