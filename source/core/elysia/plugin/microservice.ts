@@ -66,9 +66,7 @@ export const microservicePlugin = new Elysia({
             summary: 'Ping',
             description: 'Ping the microservice to check if it is alive'
         },
-        response: {
-            200: 'pingResponse200'
-        }
+        response: 'pingResponse200'
     })
     .get('/info', () => ({
         message: 'Microservice Information',
@@ -83,8 +81,6 @@ export const microservicePlugin = new Elysia({
             summary: 'Info',
             description: 'Get information about the microservice'
         },
-        response: {
-            200: 'infoResponse200'
-        }
+        response: 'infoResponse200'
     })
     .as('plugin');
