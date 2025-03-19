@@ -1,4 +1,3 @@
-import type { Static, TSchema } from '@sinclair/typebox';
 import { Elysia } from 'elysia';
 import {
     SignJWT,
@@ -7,103 +6,126 @@ import {
     type JWTPayload
 } from 'jose';
 
-/**
- * Utility type for unwrapping TypeBox schemas into their TypeScript equivalents.
- * If no schema is provided, falls back to a default type.
- *
- * @typeParam Schema - The TypeBox schema to unwrap
- * @typeParam Fallback - The fallback type to use if no schema is provided
- *
- * @internal
- */
-type UnwrapSchema<
-    Schema extends TSchema | undefined,
-    Fallback = unknown
-> = Schema extends TSchema ? Static<NonNullable<Schema>> : Fallback;
+import { CoreError } from '#/root/source/error/coreError';
+import { ELYSIA_KEY_ERROR } from '#/root/source/error/key/utilKeyError';
+import { ELYSIA_KEY_ERROR } from '#/root/source/error/key';
 
 /**
  * Configuration options for the JWT plugin.
  *
- * @typeParam Name - The name to be used for accessing the JWT functionality in the Elysia context
- * @typeParam Schema - Optional TypeBox schema to type-check JWT payloads
+ * This interface provides all necessary configuration parameters to set up
+ * JWT functionality in Elysia applications. It includes essential settings
+ * such as the secret key for signing tokens, as well as optional configurations
+ * for token expiration, headers, and default payload values.
+ *
+ * ### Key Configuration Areas:
+ * - Plugin naming for accessing JWT functionality
+ * - Secret key for token signing and verification
+ * - Token expiration settings
+ * - Custom JWT headers
+ * - Default payload values
+ *
+ * @typeParam TPluginName - The name to be used for accessing the JWT functionality in the Elysia context
+ *
+ * @example
+ * ```typescript
+ * const options: JWTOption = {
+ *   name: 'auth',
+ *   secret: process.env.JWT_SECRET || 'your-secret-key',
+ *   exp: '1d',
+ *   header: {
+ *     alg: 'HS256',
+ *     typ: 'JWT'
+ *   },
+ *   payload: {
+ *     iss: 'my-api',
+ *     aud: 'my-client'
+ *   }
+ * };
+ * ```
  */
-export interface JWTOption<
-    Name extends string | undefined = 'jwt',
-    Schema extends TSchema | undefined = undefined
-> {
+export interface JWTOption<TPluginName extends string | undefined = 'jwt'> {
     /**
      * JWT name to add in context with decorate.
      * This will be the property name used to access JWT functionality.
      *
+     * This allows you to customize how you access the JWT functionality in your
+     * route handlers. For example, if set to 'auth', you would use `auth.sign()`
+     * instead of the default `jwt.sign()`.
+     *
      * @defaultValue 'jwt'
+     *
+     * @example
+     * ```typescript
+     * // With default name
+     * app.post('/login', ({ jwt, body }) => {
+     *   const token = jwt.sign({ userId: body.id });
+     *   return { token };
+     * });
+     *
+     * // With custom name 'auth'
+     * app.post('/login', ({ auth, body }) => {
+     *   const token = auth.sign({ userId: body.id });
+     *   return { token };
+     * });
+     * ```
      */
-    name?: Name;
+    name?: TPluginName;
 
     /**
      * Secret key used to sign and verify JWTs.
-     * Can be provided as a string or a Uint8Array.
+     *
+     * This is a required parameter that defines the secret used for both
+     * signing new tokens and verifying existing ones. The security of your
+     * tokens depends on keeping this value private and secure.
      *
      * @example
      * ```typescript
      * // Using a string secret
      * secret: 'your-very-secret-key'
      *
-     * // Using a Uint8Array
-     * secret: new Uint8Array([1, 2, 3, 4, 5])
+     * // Using an environment variable (recommended for production)
+     * secret: process.env.JWT_SECRET
      * ```
      */
-    secret: string | Uint8Array;
-
-    /**
-     * TypeBox schema for validating JWT payload structure.
-     * When provided, enables strong typing for JWT payloads.
-     *
-     * @example
-     * ```typescript
-     * import { t } from 'elysia'
-     *
-     * schema: t.Object({
-     *   userId: t.Number(),
-     *   role: t.String(),
-     *   permissions: t.Array(t.String())
-     * })
-     * ```
-     */
-    schema?: Schema;
+    secret: string;
 
     /**
      * JWT expiration setting. Applies as the default expiration for tokens.
      *
-     * Can be specified as:
-     * - String duration (e.g. '15m', '1h', '1d', '1w', '1y')
-     * - Date object (specific expiration date)
-     * - Number (UNIX timestamp in seconds)
+     * Controls how long tokens are valid before they expire. This setting provides
+     * a good balance between security (limiting the window of opportunity for token misuse)
+     * and user experience (not requiring frequent re-authentication).
      *
      * @defaultValue '15m' (15 minutes)
      *
      * @example
      * ```typescript
-     * // 1 hour expiration
+     * // Set tokens to expire after 1 hour
      * exp: '1h'
      *
-     * // Specific date
+     * // Set tokens to expire at a specific date
      * exp: new Date('2023-12-31')
      *
-     * // UNIX timestamp
-     * exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hour from now
+     * // Set tokens to expire after 3600 seconds (1 hour)
+     * exp: 3600
      * ```
      */
     exp?: number | string | Date;
 
     /**
      * Default JWT header parameters.
-     * The 'alg' property defaults to 'HS256' if not specified.
+     *
+     * These parameters are included in the protected header portion of the JWT.
+     * The 'alg' property defaults to 'HS256' if not specified, which is the
+     * HMAC SHA-256 algorithm commonly used for JWT signing.
      *
      * @example
      * ```typescript
      * header: {
      *   alg: 'HS256',
-     *   typ: 'JWT'
+     *   typ: 'JWT',
+     *   kid: 'key-id-12345'
      * }
      * ```
      */
@@ -111,13 +133,18 @@ export interface JWTOption<
 
     /**
      * Default payload values to include in every JWT.
-     * These values will be merged with any additional payload provided during signing.
+     *
+     * These values are merged with any additional payload provided during signing,
+     * allowing you to set standard claims that should be included in all tokens
+     * generated by your application.
      *
      * @example
      * ```typescript
      * payload: {
-     *   iss: 'my-api',
-     *   aud: 'my-frontend'
+     *   iss: 'my-api',           // Issuer
+     *   aud: 'my-frontend',      // Audience
+     *   roles: ['user'],         // Default roles
+     *   version: '1.0'           // API version
      * }
      * ```
      */
@@ -127,54 +154,63 @@ export interface JWTOption<
 /**
  * The `jwtPlugin` provides JSON Web Token (JWT) authentication capabilities for Elysia applications.
  *
- * This plugin simplifies the process of generating and verifying JWTs with strong typing support
- * through TypeBox schemas. It leverages the jose library for secure token handling and integrates
- * seamlessly with Elysia's context system.
+ * This plugin simplifies the process of generating and verifying JWTs with strong typing support.
+ * It leverages the jose library for secure token handling and integrates seamlessly with Elysia's
+ * context system, making it easy to add authentication to your API endpoints.
  *
  * ### Key Features:
- * - **Type-safe JWT Generation**: Create tokens with payload validation via TypeBox schemas
- * - **Flexible Token Configuration**: Customize token expiration, headers, and default payload values
- * - **Simple Verification API**: Easy-to-use methods for validating tokens
- * - **Strong TypeScript Integration**: Full type inference for JWT payloads
+ * - **Simple JWT Generation**: Create tokens with configurable payloads and expiration times
+ * - **Secure Verification**: Easily verify and decode tokens with built-in signature validation
+ * - **Default Claims**: Automatically include standard JWT claims like issuer and audience
+ * - **Flexible Configuration**: Customize token behavior with sensible defaults
+ * - **TypeScript Integration**: Full type inference for JWT payloads and plugin options
  *
- * ### Overview:
+ * The plugin adds two primary methods to your Elysia context:
+ * - `sign()`: Generate and sign new JWTs
+ * - `verify()`: Validate and decode existing JWTs
+ *
+ * @typeParam Name - The name to use for JWT functionality in the context (default: 'jwt')
+ * @param options - Configuration options for the JWT plugin
+ *
+ * @returns An Elysia plugin that adds JWT functionality to the application context
+ *
  * @example
  * ```typescript
- * import { Elysia, t } from 'elysia';
- * import { jwtPlugin } from './jwtPlugin';
+ * import { Elysia } from 'elysia';
+ * import { jwtPlugin } from '#/core/elysia/plugin/jwt';
  *
- * // Define a schema for your JWT payload
- * const userSchema = t.Object({
- *   userId: t.Number(),
- *   username: t.String(),
- *   role: t.String()
- * });
- *
- * // Set up JWT plugin with the schema
  * const app = new Elysia()
+ *   // Add JWT plugin with configuration
  *   .use(jwtPlugin({
  *     name: 'auth',
- *     secret: process.env.JWT_SECRET || 'supersecret',
- *     schema: userSchema,
+ *     secret: process.env.JWT_SECRET || 'your-secret-key',
  *     exp: '1d',
  *     payload: {
  *       iss: 'my-api',
- *       aud: 'my-frontend'
+ *       aud: 'my-client'
  *     }
  *   }))
- *   .post('/login', async ({ auth, body }) => {
- *     // Authenticate user from body...
- *     // If valid, sign a token
- *     const token = await auth.sign({
- *       userId: 123,
- *       username: 'john.doe',
- *       role: 'admin'
- *     });
  *
- *     return { token };
+ *   // Login route that generates a token
+ *   .post('/login', async ({ auth, body }) => {
+ *     // Authenticate user (example)
+ *     if (body.username === 'admin' && body.password === 'password') {
+ *       // Generate a token with user-specific data
+ *       const token = await auth.sign({
+ *         userId: 123,
+ *         username: body.username,
+ *         role: 'admin'
+ *       });
+ *
+ *       return { success: true, token };
+ *     }
+ *
+ *     return { success: false, message: 'Invalid credentials' };
  *   })
- *   .get('/profile', async ({ auth, request, set }) => {
- *     // Extract Bearer token
+ *
+ *   // Protected route that requires authentication
+ *   .get('/protected', async ({ auth, request, set }) => {
+ *     // Extract token from Authorization header
  *     const authHeader = request.headers.get('authorization');
  *     const token = authHeader?.split(' ')[1];
  *
@@ -183,134 +219,152 @@ export interface JWTOption<
  *
  *     if (!payload) {
  *       set.status = 401;
- *       return { error: 'Unauthorized' };
+ *       return { success: false, message: 'Unauthorized' };
  *     }
  *
- *     // Token is valid, payload is fully typed
+ *     // Access payload data (fully typed)
  *     return {
+ *       success: true,
+ *       message: `Hello ${payload.username}!`,
  *       userId: payload.userId,
- *       username: payload.username,
  *       role: payload.role
  *     };
  *   })
+ *
  *   .listen(3000);
  * ```
- *
- * @typeParam Name - The name to use for JWT functionality in the context (default: 'jwt')
- * @typeParam Schema - Optional TypeBox schema to type-check JWT payloads
- * @param options - Configuration options for the JWT plugin
- *
- * @returns An Elysia application instance with JWT functionality added to the context
  */
-export const jwtPlugin = <
-    const Name extends string = 'jwt',
-    const Schema extends TSchema | undefined = undefined
->(options: JWTOption<Name, Schema>): typeof plugin => {
-    const key = typeof options.secret === 'string'
-        ? new TextEncoder().encode(options.secret)
-        : options.secret;
+export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOption<Name>) => {
+    // Check if the secret is provided
+    if (!options.secret)
+        throw new CoreError({
+            key: ELYSIA_KEY_ERROR.JWT_SECRET_NOT_FOUND,
+            message: 'Secret key is required for JWT signing and verification.'
+        });
 
-    const name = options.name as Name;
-    const plugin = new Elysia({
+    // Encode string secret to Uint8Array
+    const key = new TextEncoder().encode(options.secret);
+
+    // Create name of the decorated key
+    const name = options.name ?? 'jwt' as Name;
+
+    return new Elysia({
         name: 'jwtPlugin',
-        seed: {
-            name: options.name
-        }
+        seed: options
     })
-        .decorate(name ?? 'jwt', {
+        .decorate(name, {
             /**
-             * Sign a new JWT with the provided payload and configuration.
+             * Signs a payload and creates a JSON Web Token (JWT).
              *
-             * This method creates a JSON Web Token by merging the provided payload
-             * with any default payload values configured in the plugin options.
-             * The resulting token is signed using the configured secret key.
+             * This method creates a signed JWT containing the provided payload data plus
+             * any default values configured in the plugin options. It automatically handles
+             * setting standard claims like issuer, audience, and JWT ID.
              *
-             * @param additionalPayload - Payload data to include in the JWT ({@link JWTPayload})
-             * @param exp - Token expiration time. Can be:
-             *   - A string duration (e.g., '15m', '1h', '1d')
-             *   - A Date object representing the exact expiration time
-             *   - A number representing a UNIX timestamp in seconds
+             * @param additionalPayload - The custom data to include in the token
+             * @param exp - Optional expiration time override (defaults to plugin configuration)
              *
-             * @defaultValue options.exp ?? '15m'
+             * @returns A promise that resolves to the signed JWT string
              *
-             * @returns A Promise resolving to the signed JWT string
+             * @throws ({@link CoreError}) If there's an error during the signing process. ({})
              *
              * @example
              * ```typescript
-             * // Basic signing with default expiration
+             * // Basic usage
              * const token = await jwt.sign({ userId: 123 });
              *
-             * // Signing with a specific expiration
-             * const token = await jwt.sign({ userId: 123 }, '1d');
+             * // With custom expiration
+             * const shortLivedToken = await jwt.sign(
+             *   { permission: 'file-download', fileId: 'abc123' },
+             *   '5m'
+             * );
              *
-             * // Signing with a specific date
-             * const token = await jwt.sign({ userId: 123 }, new Date('2023-12-31'));
+             * // With multiple custom claims
+             * const adminToken = await jwt.sign({
+             *   userId: 456,
+             *   username: 'admin',
+             *   roles: ['admin', 'editor'],
+             *   permissions: {
+             *     users: 'manage',
+             *     content: 'publish'
+             *   }
+             * });
              * ```
              */
             sign(
-                additionalPayload: UnwrapSchema<Schema, Record<string, string | number>> & JWTPayload,
+                additionalPayload?: JWTPayload,
                 exp: number | string | Date = options.exp ?? '15m'
             ) {
-                const jwt = new SignJWT({ ...options.payload, ...additionalPayload })
-                    .setProtectedHeader({
-                        alg: options.header?.alg ?? 'HS256',
-                        ...options.header,
-                        b64: true
-                    })
-
-                    .setIssuer(options.payload?.iss ?? additionalPayload.iss ?? 'core')
-                    .setAudience(options.payload?.aud ?? additionalPayload.aud ?? 'client')
-                    .setExpirationTime(exp)
-                    .sign(key);
-                return jwt;
+                const payload: JWTPayload = {
+                    iss: 'core',
+                    aud: 'core client',
+                    jti: Bun.randomUUIDv7(),
+                    ...options.payload,
+                    ...additionalPayload
+                };
+                try {
+                    return new SignJWT(payload)
+                        .setProtectedHeader({
+                            alg: 'HS256',
+                            b64: true
+                        })
+                        .setIssuer(payload.iss ?? 'core')
+                        .setAudience(payload.aud ?? 'client')
+                        .setExpirationTime(exp)
+                        .sign(key);
+                } catch {
+                    throw new CoreError({
+                        key: ELYSIA_KEY_ERROR.JWT_SIGN_ERROR,
+                        message: 'Error signing JWT.'
+                    });
+                }
             },
 
             /**
-             * Verify a JWT and extract its payload if valid.
+             * Verifies and decodes a JSON Web Token (JWT).
              *
-             * This method validates that the token:
-             * - Was signed with the correct secret key
-             * - Has not expired
-             * - Has not been tampered with
+             * This method validates the token's signature using the plugin's configured
+             * secret key and checks that the token hasn't expired. If the token is valid,
+             * it returns the decoded payload; otherwise, it returns false.
              *
-             * If validation succeeds, the decoded payload is returned with full type information
-             * based on the schema provided in plugin options.
+             * @param jwt - The JWT string to verify and decode
              *
-             * @param jwt - The JWT string to verify
-             *
-             * @returns A Promise resolving to either:
-             *   - The decoded payload if verification succeeds
-             *   - `false` if verification fails or no token is provided
+             * @returns A promise that resolves to either the decoded payload or false if verification fails
              *
              * @example
              * ```typescript
-             * // Extract token from Authorization header
-             * const authHeader = request.headers.get('authorization');
-             * const token = authHeader?.split(' ')[1];
-             *
-             * // Verify the token
+             * // Basic verification
              * const payload = await jwt.verify(token);
-             *
              * if (payload) {
-             *   // Token is valid, payload is fully typed
-             *   console.log(`User ID: ${payload.userId}`);
+             *   console.log('Valid token for user:', payload.userId);
              * } else {
-             *   // Token is invalid or missing
-             *   console.log('Authentication failed');
+             *   console.log('Invalid or expired token');
              * }
+             *
+             * // In a route handler
+             * app.get('/profile', async ({ jwt, request, set }) => {
+             *   const token = request.headers.get('authorization')?.split(' ')[1];
+             *   const payload = await jwt.verify(token);
+             *
+             *   if (!payload) {
+             *     set.status = 401;
+             *     return { error: 'Unauthorized' };
+             *   }
+             *
+             *   // Token is valid, use the payload data
+             *   return fetchUserProfile(payload.userId);
+             * });
              * ```
              */
-            async verify(jwt?: string): Promise<(UnwrapSchema<Schema, Record<string, string | number>> & JWTPayload) | false> {
+            async verify(jwt?: string): Promise<JWTPayload | false> {
                 if (!jwt)
                     return false;
                 try {
                     const data = (await jwtVerify(jwt, key)).payload;
-                    return data as UnwrapSchema<Schema, Record<string, string | number>> & JWTPayload;
+                    return data;
                 } catch {
                     return false;
                 }
             }
         })
         .as('plugin');
-    return plugin;
 };
