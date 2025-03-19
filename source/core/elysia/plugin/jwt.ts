@@ -7,8 +7,7 @@ import {
 } from 'jose';
 
 import { CoreError } from '#/root/source/error/coreError';
-import { ELYSIA_KEY_ERROR } from '#/root/source/error/key/utilKeyError';
-import { ELYSIA_KEY_ERROR } from '#/root/source/error/key';
+import { ELYSIA_KEY_ERROR } from '#/root/source/error/key/elysiaKeyError';
 
 /**
  * Configuration options for the JWT plugin.
