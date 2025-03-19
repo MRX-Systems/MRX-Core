@@ -1,5 +1,43 @@
 # Changelog
 
+## v2.1.0-canary-20250319-42563e32
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250317-d4670d75...v2.1.0-canary-20250319-42563e32)
+
+### 🚀 Enhancements
+
+- **🚀:** Add scope instance ([5821d122](https://github.com/Andesite-Lab/Core/commit/5821d122))
+- **🚀:** Add jwt plugin (rework) ([fa8582f3](https://github.com/Andesite-Lab/Core/commit/fa8582f3))
+
+### 🔧 Fixes
+
+- **🔧:** Import correction in jwt plugin ([de45ef52](https://github.com/Andesite-Lab/Core/commit/de45ef52))
+
+### 🧹 Refactors
+
+- **🧹:** Simplify plugin definitions and improve readability ([d5239c0e](https://github.com/Andesite-Lab/Core/commit/d5239c0e))
+- **🧹:** Remove auth + clean ([960f996f](https://github.com/Andesite-Lab/Core/commit/960f996f))
+
+### 📖 Documentation
+
+- **📖:** Enhance tsDoc and clean changelog ([c72a7ebc](https://github.com/Andesite-Lab/Core/commit/c72a7ebc))
+
+### 🧪 Tests
+
+- **🧪:** Add comprehensive tests for jwtPlugin functionalityv ([12d41f13](https://github.com/Andesite-Lab/Core/commit/12d41f13))
+
+### 🎨 Styles
+
+- **🎨:** Remove useless rules ([58a41bec](https://github.com/Andesite-Lab/Core/commit/58a41bec))
+
+### 🤖 CI
+
+- **🤖:** Add contain pull request to dev workflow ([95eed2a5](https://github.com/Andesite-Lab/Core/commit/95eed2a5))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250317-d4670d75
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v1.43.2...v2.1.0-canary-20250317-d4670d75)
