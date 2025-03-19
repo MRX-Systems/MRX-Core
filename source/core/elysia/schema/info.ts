@@ -6,6 +6,10 @@ export const infoResponse200Schema = t.Object({
         example: 'Microservice Information'
     }),
     content: t.Object({
+        author: t.String({
+            description: 'Author',
+            example: 'Ruby'
+        }),
         name: t.String({
             description: 'Name',
             example: 'API'
