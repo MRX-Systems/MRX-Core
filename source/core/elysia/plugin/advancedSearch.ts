@@ -310,69 +310,65 @@ export const buildBaseSearchSchemaWithPagination = <TInferedObject extends TObje
  *   });
  * ```
  */
-export const advancedSearchPlugin = <TInferedObject extends TObject>(name: string, baseSchema: TInferedObject): typeof app => {
-    const app = new Elysia({
-        name: `advancedSearchPlugin-${name}`,
-        seed: baseSchema
+export const advancedSearchPlugin = <TInferedObject extends TObject>(name: string, baseSchema: TInferedObject) => new Elysia({
+    name: `advancedSearchPlugin-${name}`,
+    seed: baseSchema
+})
+    .model({
+        [`advancedSearch${name}Query`]: buildBaseSearchSchema(baseSchema),
+        [`advancedSearch${name}QueryWithPagination`]: buildBaseSearchSchemaWithPagination(baseSchema)
     })
-        .model({
-            [`advancedSearch${name}Query`]: buildBaseSearchSchema(baseSchema),
-            [`advancedSearch${name}QueryWithPagination`]: buildBaseSearchSchemaWithPagination(baseSchema)
-        })
-        .macro({
-            hasAdvancedSearch: {
-                resolve: ({ query }) => {
-                    let rawAdvancedSearchQuery = query as ReturnType<typeof buildBaseSearchSchema<typeof baseSchema>>;
+    .macro({
+        hasAdvancedSearch: {
+            resolve: ({ query }) => {
+                let rawAdvancedSearchQuery = query as ReturnType<typeof buildBaseSearchSchema<typeof baseSchema>>;
 
-                    // The additional context object to be returned
-                    const result: {
-                        advancedSearch: AdvancedSearch<Static<TInferedObject>>[];
-                        selectedFields: string[];
-                        pagination?: {
-                            limit: number;
-                            offset: number;
-                        };
-                    } = {
-                        advancedSearch: [],
-                        selectedFields: rawAdvancedSearchQuery.$selectedFields || ['*'],
-                        pagination: {
-                            limit: rawAdvancedSearchQuery.$limit || 100,
-                            offset: rawAdvancedSearchQuery.$offset || 0
-                        }
+                // The additional context object to be returned
+                const result: {
+                    advancedSearch: AdvancedSearch<Static<TInferedObject>>[];
+                    selectedFields: string[];
+                    pagination?: {
+                        limit: number;
+                        offset: number;
                     };
-
-                    // Process $q parameter
-                    if (query.$q) {
-                        const qItems = Array.isArray(query.$q)
-                            ? query.$q
-                            : [query.$q];
-                        result.advancedSearch.push(...qItems.map(($q) => ({ $q })));
+                } = {
+                    advancedSearch: [],
+                    selectedFields: rawAdvancedSearchQuery.$selectedFields || ['*'],
+                    pagination: {
+                        limit: rawAdvancedSearchQuery.$limit || 100,
+                        offset: rawAdvancedSearchQuery.$offset || 0
                     }
+                };
 
-                    // Delete processed parameters
-                    rawAdvancedSearchQuery = filterByKeyExclusion(rawAdvancedSearchQuery, [
-                        '$selectedFields',
-                        '$q',
-                        '$limit',
-                        '$offset'
-                    ], true);
-
-                    // Process property-specific where clauses (sanitized to AdvancedSearch[])
-                    for (const [key, value] of Object.entries(rawAdvancedSearchQuery)) {
-                        const values = Array.isArray(value) ? value : [value];
-
-                        values.forEach((val, index) => {
-                            if (!result.advancedSearch[index])
-                                result.advancedSearch[index] = {};
-
-                            (result.advancedSearch[index] as Record<string, unknown>)[key] = val;
-                        });
-                    }
-
-                    return result;
+                // Process $q parameter
+                if (query.$q) {
+                    const qItems = Array.isArray(query.$q)
+                        ? query.$q
+                        : [query.$q];
+                    result.advancedSearch.push(...qItems.map(($q) => ({ $q })));
                 }
-            }
-        });
-    return app;
-};
 
+                // Delete processed parameters
+                rawAdvancedSearchQuery = filterByKeyExclusion(rawAdvancedSearchQuery, [
+                    '$selectedFields',
+                    '$q',
+                    '$limit',
+                    '$offset'
+                ], true);
+
+                // Process property-specific where clauses (sanitized to AdvancedSearch[])
+                for (const [key, value] of Object.entries(rawAdvancedSearchQuery)) {
+                    const values = Array.isArray(value) ? value : [value];
+
+                    values.forEach((val, index) => {
+                        if (!result.advancedSearch[index])
+                            result.advancedSearch[index] = {};
+
+                        (result.advancedSearch[index] as Record<string, unknown>)[key] = val;
+                    });
+                }
+                return result;
+            }
+        }
+    })
+    .as('plugin');

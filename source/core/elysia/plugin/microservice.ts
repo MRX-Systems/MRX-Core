@@ -86,4 +86,5 @@ export const microservicePlugin = new Elysia({
         response: {
             200: 'infoResponse200'
         }
-    });
+    })
+    .as('plugin');

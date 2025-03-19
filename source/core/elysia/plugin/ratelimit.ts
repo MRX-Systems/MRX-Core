@@ -120,7 +120,7 @@ export interface RateLimitOptions {
  * app.listen(3000);
  * ```
  */
-export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOptions): Elysia => new Elysia({
+export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOptions) => new Elysia({
     name: 'rateLimitPlugin',
     seed: {
         redis,
@@ -143,7 +143,6 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
             await redis.client.setex(key, window, '1');
         else
             await redis.client.incr(key);
-
 
         const newCount = await redis.client.get(key);
         const currentCount = newCount ? parseInt(newCount) : 0;
@@ -168,4 +167,5 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
             'X-RateLimit-Remaining': Math.max(0, limit - currentCount).toString(),
             'X-RateLimit-Reset': (await redis.client.ttl(key)).toString()
         };
-    });
+    })
+    .as('global');

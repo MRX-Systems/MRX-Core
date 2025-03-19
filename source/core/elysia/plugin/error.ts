@@ -81,7 +81,7 @@ export const errorPlugin = new Elysia({
         BasaltHelperError,
         BasaltLoggerError
     })
-    .onError({ as: 'global' }, ({ code, error, set }) => {
+    .onError(({ code, error, set }) => {
         switch (code) {
             case 'CoreError':
             case 'BasaltHelperError':
@@ -119,4 +119,5 @@ export const errorPlugin = new Elysia({
                     message: 'Internal server error'
                 };
         }
-    });
+    })
+    .as('global');
