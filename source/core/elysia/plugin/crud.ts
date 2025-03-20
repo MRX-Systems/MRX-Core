@@ -24,6 +24,12 @@ interface CrudOptions<TInferedObject extends TObject> {
      * Name is used to identify the plugin and get the repository.
      */
     name: string;
+    /**
+     * Prefix is used to create the route prefix for the CRUD operations.
+     *
+     * @defaultValue '/'
+     */
+    prefix?: string;
 
     /**
      * Database is a parameter where you either provide the raw database name to use
@@ -246,7 +252,8 @@ export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<
     });
 
     const plugin = new Elysia({
-        name: `crudPlugin-${options.name}`
+        name: `crudPlugin-${options.name}`,
+        prefix: options.prefix || '/'
     })
         .model({
             [`crud${options.name}IdParam`]: crudIdParamSchema,
