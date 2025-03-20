@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.1.0-canary-20250320-1ee10333
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250319-42563e32...v2.1.0-canary-20250320-1ee10333)
+
+### 🚀 Enhancements
+
+- **🚀:** Add prefix option to crud plugin ([abb56086](https://github.com/Andesite-Lab/Core/commit/abb56086))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250319-42563e32
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250317-d4670d75...v2.1.0-canary-20250319-42563e32)
