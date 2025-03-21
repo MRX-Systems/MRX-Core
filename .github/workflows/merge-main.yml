@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint:
-    if: contains(github.event.head_commit.message, 'Merge branch')
+    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
     name: Check Lint of the code (try to auto-fix if possible)
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +59,7 @@ jobs:
           git push origin HEAD:main
 
   test:
-    if: contains(github.event.head_commit.message, 'Merge branch')
+    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
     name: Run tests
     runs-on: ubuntu-latest
     needs: lint
@@ -95,7 +95,7 @@ jobs:
         run: bun run test
 
   stable:
-    if: contains(github.event.head_commit.message, 'Merge branch')
+    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
     name: Create Stable Release
     runs-on: ubuntu-latest
     needs: test
@@ -176,7 +176,7 @@ jobs:
           git push origin develop
 
   doc:
-    if: contains(github.event.head_commit.message, 'Merge branch')
+    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
     name: Doc
     runs-on: ubuntu-latest
     needs: stable
@@ -206,7 +206,7 @@ jobs:
           publish_dir: ./docs
 
   publish:
-    if: contains(github.event.head_commit.message, 'Merge branch')
+    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
     name: Publish Stable Release
     runs-on: ubuntu-latest
     needs: stable
@@ -235,6 +235,6 @@ jobs:
         run: bun run build
 
       - name: Publish the project
-        run: bun publish --access public
+        run: bun publish --provenance --access public
         env:
           NPM_CONFIG_TOKEN: ${{secrets.NPM_TOKEN}}
