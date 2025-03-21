@@ -12,7 +12,7 @@ import { UTIL_KEY_ERROR } from '#/error/key/utilKeyError';
  *
  * @throws ({@link CoreError}) - If the environment variables are invalid based on the schema. ({@link UTIL_KEY_ERROR.INVALID_ENVIRONMENT})
  */
-export function validateEnv(schema: TSchema, env: Record<string, unknown> = process.env): void {
+export const validateEnv = (schema: TSchema, env: Record<string, unknown> = process.env): void => {
     try {
         const newEnv = Value.Parse(schema, env);
         Value.Assert(schema, newEnv);
@@ -22,4 +22,4 @@ export function validateEnv(schema: TSchema, env: Record<string, unknown> = proc
             cause: error
         });
     }
-}
+};

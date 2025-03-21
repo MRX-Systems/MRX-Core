@@ -1,76 +1,8 @@
+import { filterByKeyExclusion } from '@basalt-lab/basalt-helper/data';
 import { TypeGuard, type Static, type TArray, type TObject, type TSchema, type TUnion } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
-import { filterByKeyExclusion } from '@basalt-lab/basalt-helper/data';
 
 import type { AdvancedSearch } from '#/types/data/advancedSearch';
-
-/**
- * Creates a TypeBox schema for the $q (query) parameter used in advanced search.
- * The $q parameter can be an array of either:
- * 1. Search objects with selected fields and search value
- * 2. Simple string values
- *
- * @typeParam TInferedObject - The inferred schema type for the field to generate operators for.
- * @param schema - The base schema to derive valid field keys from. ({@link TInferedObject})
- *
- * @returns TypeBox array schema for the $q parameter in advanced search.
- *
- * @example
- * ```typescript
- * const userSchema = t.Object({
- *   id: t.Number(),
- *   name: t.String(),
- *   email: t.String()
- * });
- *
- * const qSchema = _createQSchema(userSchema);
- * // This would allow queries like:
- * // $q=["john"] - Search for "john" across all fields
- * // $q=[{"selectedFields":["name","email"],"value":"john"}] - Search for "john" in name and email fields
- * ```
- */
-function _createQSchema<TInferedObject extends TObject>(schema: TInferedObject): typeof qSchema {
-    const qSchema = t.Array(
-        t.Union([
-            t.Partial(t.Object({
-                selectedFields: t.Union([
-                    t.Array(t.KeyOf(schema)),
-                    t.KeyOf(schema)
-                ]),
-                value: t.String()
-            })),
-            t.String()
-        ])
-    );
-    return qSchema;
-}
-
-/**
- * Creates a TypeBox schema for the $selectedFields parameter specifying which
- * fields to return in the query results.
- *
- * @typeParam TInferedObject - The inferred schema type for the field to generate operators for.
- * @param schema - The base schema to derive valid field keys from. ({@link TInferedObject})
- *
- * @returns TypeBox array schema for $selectedFields
- *
- * @example
- * ```typescript
- * const userSchema = t.Object({
- *   id: t.Number(),
- *   name: t.String(),
- *   email: t.String()
- * });
- *
- * const selectedFieldsSchema = _createSelectedFieldsSchema(userSchema);
- * // This would allow queries like:
- * // $selectedFields=["name","email"] - Return only name and email fields
- * ```
- */
-function _createSelectedFieldsSchema<TInferedObject extends TObject>(schema: TInferedObject): typeof selectedFieldsSchema {
-    const selectedFieldsSchema = t.Array(t.KeyOf(schema));
-    return selectedFieldsSchema;
-}
 
 /**
  * Generates a where clause condition schema for a specific field type.
@@ -95,34 +27,31 @@ function _createSelectedFieldsSchema<TInferedObject extends TObject>(schema: TIn
  * // $eq, $neq, $isNull
  * ```
  */
-function _createWhereClauseSchema<TInferedSchema extends TSchema>(schema: TInferedSchema): typeof whereClauseSchema {
-    const whereClauseSchema = t.Object({
-        // Basic operators
-        $eq: schema,
-        $neq: schema,
+const _createWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInferedSchema) => t.Object({
+    // Basic operators
+    $eq: schema,
+    $neq: schema,
 
-        // Type-specific operators
-        ...(
-            !TypeGuard.IsBoolean(schema)
-                ? {
-                    $lt: schema,
-                    $lte: schema,
-                    $gt: schema,
-                    $gte: schema,
-                    $in: t.Array(schema),
-                    $nin: t.Array(schema),
-                    $between: t.Tuple([schema, schema]),
-                    $nbetween: t.Tuple([schema, schema]),
-                    $like: t.String(),
-                    $nlike: t.String()
-                }
-                : {}
-        ),
-        // Null operators
-        $isNull: t.Boolean()
-    });
-    return whereClauseSchema;
-}
+    // Type-specific operators
+    ...(
+        !TypeGuard.IsBoolean(schema)
+            ? {
+                $lt: schema,
+                $lte: schema,
+                $gt: schema,
+                $gte: schema,
+                $in: t.Array(schema),
+                $nin: t.Array(schema),
+                $between: t.Tuple([schema, schema]),
+                $nbetween: t.Tuple([schema, schema]),
+                $like: t.String(),
+                $nlike: t.String()
+            }
+            : {}
+    ),
+    // Null operators
+    $isNull: t.Boolean()
+});
 
 /**
  * Creates a where clause schema for all properties in the base schema.
@@ -149,7 +78,7 @@ function _createWhereClauseSchema<TInferedSchema extends TSchema>(schema: TInfer
  * // id=[1,2,3] - Where id is 1, 2, or 3
  * ```
  */
-function _createPropertiesWhereClauseSchema<TInferedObject extends TObject>(schema: TInferedObject): typeof clauseSchema {
+const _createPropertiesWhereClauseSchema = <TInferedObject extends TObject>(schema: TInferedObject) => {
     const { properties } = schema;
     const clauseSchema = {} as Record<
         string,
@@ -170,9 +99,70 @@ function _createPropertiesWhereClauseSchema<TInferedObject extends TObject>(sche
             ])
         );
     }
-
     return clauseSchema;
-}
+};
+
+/**
+ * Creates a TypeBox schema for the $q (query) parameter used in advanced search.
+ * The $q parameter can be an array of either:
+ * 1. Search objects with selected fields and search value
+ * 2. Simple string values
+ *
+ * @typeParam TInferedObject - The inferred schema type for the field to generate operators for.
+ * @param schema - The base schema to derive valid field keys from. ({@link TInferedObject})
+ *
+ * @returns TypeBox array schema for the $q parameter in advanced search.
+ *
+ * @example
+ * ```typescript
+ * const userSchema = t.Object({
+ *   id: t.Number(),
+ *   name: t.String(),
+ *   email: t.String()
+ * });
+ *
+ * const qSchema = _createQSchema(userSchema);
+ * // This would allow queries like:
+ * // $q=["john"] - Search for "john" across all fields
+ * // $q=[{"selectedFields":["name","email"],"value":"john"}] - Search for "john" in name and email fields
+ * ```
+ */
+const _createQSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Array(
+    t.Union([
+        t.Partial(t.Object({
+            selectedFields: t.Union([
+                t.Array(t.KeyOf(schema)),
+                t.KeyOf(schema)
+            ]),
+            value: t.String()
+        })),
+        t.String()
+    ])
+);
+
+/**
+ * Creates a TypeBox schema for the $selectedFields parameter specifying which
+ * fields to return in the query results.
+ *
+ * @typeParam TInferedObject - The inferred schema type for the field to generate operators for.
+ * @param schema - The base schema to derive valid field keys from. ({@link TInferedObject})
+ *
+ * @returns TypeBox array schema for $selectedFields
+ *
+ * @example
+ * ```typescript
+ * const userSchema = t.Object({
+ *   id: t.Number(),
+ *   name: t.String(),
+ *   email: t.String()
+ * });
+ *
+ * const selectedFieldsSchema = _createSelectedFieldsSchema(userSchema);
+ * // This would allow queries like:
+ * // $selectedFields=["name","email"] - Return only name and email fields
+ * ```
+ */
+const _createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Array(t.KeyOf(schema));
 
 /**
  * Constructs a complete advanced search schema combining:
@@ -206,18 +196,15 @@ function _createPropertiesWhereClauseSchema<TInferedObject extends TObject>(sche
  * // name=[{"$like":"john"}] - Where name contains "john"
  * ```
  */
-export const buildBaseSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject): typeof searchSchema => {
-    const searchSchema = t.Composite([
-        t.Object({
-            $q: t.Optional(_createQSchema(schema)),
-            $selectedFields: t.Optional(_createSelectedFieldsSchema(schema))
-        }),
-        t.Partial(
-            t.Object(_createPropertiesWhereClauseSchema(schema))
-        )
-    ]);
-    return searchSchema;
-};
+export const createBaseSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Composite([
+    t.Object({
+        $q: t.Optional(_createQSchema(schema)),
+        $selectedFields: t.Optional(_createSelectedFieldsSchema(schema))
+    }),
+    t.Partial(
+        t.Object(_createPropertiesWhereClauseSchema(schema))
+    )
+]);
 
 /**
  * Constructs a complete advanced search schema with pagination combining:
@@ -249,16 +236,13 @@ export const buildBaseSearchSchema = <TInferedObject extends TObject>(schema: TI
  * // ?name=[{"$like":"Smith"}]&$limit=10&$offset=20
  * ```
  */
-export const buildBaseSearchSchemaWithPagination = <TInferedObject extends TObject>(schema: TInferedObject): typeof searchSchemaWithPagination => {
-    const searchSchemaWithPagination = t.Composite([
-        buildBaseSearchSchema(schema),
-        t.Partial(t.Object({
-            $limit: t.Number(),
-            $offset: t.Number()
-        }))
-    ]);
-    return searchSchemaWithPagination;
-};
+export const createBaseSearchSchemaWithPagination = <TInferedObject extends TObject>(schema: TInferedObject) => t.Composite([
+    createBaseSearchSchema(schema),
+    t.Partial(t.Object({
+        $limit: t.Number(),
+        $offset: t.Number()
+    }))
+]);
 
 /**
  * The `advancedSearchPlugin` creates an Elysia plugin that provides powerful search
@@ -315,13 +299,13 @@ export const advancedSearchPlugin = <TInferedObject extends TObject>(name: strin
     seed: baseSchema
 })
     .model({
-        [`advancedSearch${name}Query`]: buildBaseSearchSchema(baseSchema),
-        [`advancedSearch${name}QueryWithPagination`]: buildBaseSearchSchemaWithPagination(baseSchema)
+        [`advancedSearch${name}Query`]: createBaseSearchSchema(baseSchema),
+        [`advancedSearch${name}QueryWithPagination`]: createBaseSearchSchemaWithPagination(baseSchema)
     })
     .macro({
         hasAdvancedSearch: {
             resolve: ({ query }) => {
-                let rawAdvancedSearchQuery = query as ReturnType<typeof buildBaseSearchSchema<typeof baseSchema>>;
+                let rawAdvancedSearchQuery = query as ReturnType<typeof createBaseSearchSchema<typeof baseSchema>>;
 
                 // The additional context object to be returned
                 const result: {
