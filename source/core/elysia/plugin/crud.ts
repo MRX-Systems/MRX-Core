@@ -639,14 +639,14 @@ const _addRoutes = <const TInferedObject extends TObject>
     };
 
     const routesPath: Partial<Record<CRUDRoutes, string>> = {
-        insert: '/insert',
-        find: '/find',
-        findOne: '/find/:id',
+        insert: '/',
+        find: '/',
+        findOne: '/:id',
         count: '/count',
-        update: '/update',
-        updateOne: '/update/:id',
-        delete: '/delete',
-        deleteOne: '/delete/:id'
+        update: '/',
+        updateOne: '/:id',
+        delete: '/',
+        deleteOne: '/:id'
     };
 
     const hasAdvancedSearch = enabledRoutes.includes('find') || enabledRoutes.includes('count') || enabledRoutes.includes('update') || enabledRoutes.includes('delete');
