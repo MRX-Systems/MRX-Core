@@ -1,5 +1,35 @@
 # Changelog
 
+## v2.1.0-canary-20250324-f2b16212
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250320-1ee10333...v2.1.0-canary-20250324-f2b16212)
+
+### 🧹 Refactors
+
+- **🧹:** Convert function to arrow functions in modules and rename ([2f8151c0](https://github.com/Andesite-Lab/Core/commit/2f8151c0))
+- **🧹:** Improve crud ([71130ce5](https://github.com/Andesite-Lab/Core/commit/71130ce5))
+- **🧹:** Rename crud operation path ([b838879b](https://github.com/Andesite-Lab/Core/commit/b838879b))
+
+### 📦 Build
+
+- **📦:** Update dependencies ([c1626f10](https://github.com/Andesite-Lab/Core/commit/c1626f10))
+- **📦:** Update elysia to experimental ([5171bb0b](https://github.com/Andesite-Lab/Core/commit/5171bb0b))
+- **📦:** Update dependencies ([90b6dbb7](https://github.com/Andesite-Lab/Core/commit/90b6dbb7))
+- **📦:** Elysia to stable branch ([dc98c8cb](https://github.com/Andesite-Lab/Core/commit/dc98c8cb))
+
+### 🧪 Tests
+
+- **🧪:** Remove console logs and correction error summary messages ([5b7aaf49](https://github.com/Andesite-Lab/Core/commit/5b7aaf49))
+- **🧪:** Add spaces temp ([99a74808](https://github.com/Andesite-Lab/Core/commit/99a74808))
+
+### 🤖 CI
+
+- **🤖:** Add provenance flag to bun publish commands in workflow files ([fb18014e](https://github.com/Andesite-Lab/Core/commit/fb18014e))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250320-1ee10333
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250319-42563e32...v2.1.0-canary-20250320-1ee10333)
