@@ -15,7 +15,6 @@ describe('Error Plugin', () => {
         ];
 
         test.each(errorCases)('should handle %s with status 500 and specific status', async (name, ErrorClass) => {
-            console.log('name', name);
             const app = new Elysia()
                 .use(errorPlugin)
                 .get('/throw', () => {

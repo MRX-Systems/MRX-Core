@@ -63,7 +63,6 @@ describe('JWT Plugin', () => {
 
             const signRes = await app.handle(new Request('http://localhost:3000/sign'));
             const signData = await signRes.json();
-            console.log(signData);
             expect(signData).toEqual({
                 token: expect.any(String)
             });

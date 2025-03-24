@@ -9,7 +9,7 @@ import type { Stream } from 'stream';
  *
  * @returns The stream as an async iterable. ({@link KStream} extends {@link Stream} & {@link AsyncIterable})
  */
-export function makeStreamAsyncIterable<TModel, KStream extends Stream = Stream>(stream: KStream): KStream & AsyncIterable<TModel> {
+export const makeStreamAsyncIterable = <TModel, KStream extends Stream = Stream>(stream: KStream): KStream & AsyncIterable<TModel> => {
     const asyncIterable = {
         [Symbol.asyncIterator]: (): AsyncIterator<TModel> => ({
             next(): Promise<IteratorResult<TModel>> {
@@ -47,4 +47,4 @@ export function makeStreamAsyncIterable<TModel, KStream extends Stream = Stream>
     };
     (stream as KStream & AsyncIterable<TModel>)[Symbol.asyncIterator] = asyncIterable[Symbol.asyncIterator];
     return stream as KStream & AsyncIterable<TModel>;
-}
+};
