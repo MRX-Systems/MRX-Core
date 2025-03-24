@@ -96,7 +96,7 @@ describe('Error Plugin', () => {
                             schema: {
                                 type: 'string'
                             },
-                            summary: 'Expected property \'foo\' to be string but found: 1',
+                            summary: 'Expected  property \'foo\' to be  string but found: 1',
                             type: 54,
                             value: 1
                         }
