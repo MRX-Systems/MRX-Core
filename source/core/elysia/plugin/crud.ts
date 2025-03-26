@@ -259,7 +259,7 @@ interface CrudOptions<TInferedObject extends TObject> {
  * // }
  * ```
  */
-export const createResponse200Schema = <const TInferedObject extends TObject>(schema: TInferedObject) => {
+export const createResponse200Schema = <TInferedObject extends TObject>(schema: TInferedObject) => {
     const { properties } = schema;
 
     const contentSchema = {} as Record<string, TSchema>;
@@ -302,7 +302,7 @@ export const createResponse200Schema = <const TInferedObject extends TObject>(sc
  * const insertSchema = createInsertBodySchema(userSchema, ['name', 'email']);
  * ```
  */
-export const createInsertBodySchema = <const TInferedObject extends TObject>(schema: TInferedObject, requiredPropertiesSchema?: (keyof Static<TInferedObject>)[]) => {
+export const createInsertBodySchema = <TInferedObject extends TObject>(schema: TInferedObject, requiredPropertiesSchema?: (keyof Static<TInferedObject>)[]) => {
     const { properties } = schema;
 
     const contentSchema = {} as Record<string, TSchema>;
@@ -327,7 +327,7 @@ export const createInsertBodySchema = <const TInferedObject extends TObject>(sch
  *
  * @returns An Elysia plugin containing all the model definitions
  */
-const _addModels = <const TInferedObject extends TObject>(enabledRoutes: CRUDRoutes[], options: CrudOptions<TInferedObject>) => {
+const _addModels = <TInferedObject extends TObject>(enabledRoutes: CRUDRoutes[], options: CrudOptions<TInferedObject>) => {
     const { baseSchema, tableName, insertPropertiesSchemaRequired } = options;
 
     // Initialize plugin with common response schema
@@ -620,7 +620,7 @@ const handlerDefinition = {
  * @param isDynamicDatabase - Whether to use dynamic database selection
  * @returns A function that adds the routes to an Elysia application
  */
-const _addRoutes = <const TInferedObject extends TObject>
+const _addRoutes = <TInferedObject extends TObject>
 (
     enabledRoutes: CRUDRoutes[],
     tableName: string,
@@ -762,7 +762,7 @@ const _addRoutes = <const TInferedObject extends TObject>
  *   .listen(3000);
  * ```
  */
-export const crudPlugin = <const TInferedObject extends TObject>(options: CrudOptions<TInferedObject>) => {
+export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<TInferedObject>) => {
     const enabledRoutes = _getEnabledRoutes(options.includedRoutes, options.excludedRoutes);
     const app = new Elysia({
         name: `crudPlugin[${options.tableName}]`,
