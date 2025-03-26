@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint:
-    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
+    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Check Lint of the code (try to auto-fix if possible)
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +59,7 @@ jobs:
           git push origin HEAD:main
 
   test:
-    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
+    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Run tests
     runs-on: ubuntu-latest
     needs: lint
@@ -95,7 +95,7 @@ jobs:
         run: bun run test
 
   stable:
-    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
+    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Create Stable Release
     runs-on: ubuntu-latest
     needs: test
@@ -176,7 +176,7 @@ jobs:
           git push origin develop
 
   doc:
-    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
+    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Doc
     runs-on: ubuntu-latest
     needs: stable
@@ -188,16 +188,16 @@ jobs:
           fetch-depth: 0
           ssh-key: ${{ secrets.ANDESITE_SSH }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: '.nvmrc'
+          bun-version: latest
 
       - name: Install Dependencies
-        run: npm install
+        run: bun install
 
       - name: Generate Docs
-        run: npm run docs
+        run: bun run docs
 
       - name: Upload Coverage
         uses: peaceiris/actions-gh-pages@v3
@@ -206,7 +206,7 @@ jobs:
           publish_dir: ./docs
 
   publish:
-    if: contains(github.event.head_commit.message, 'Merge branch') || contains(github.event.head_commit.message, 'Merge pull request')
+    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Publish Stable Release
     runs-on: ubuntu-latest
     needs: stable
