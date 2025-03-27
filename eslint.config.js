@@ -2,7 +2,6 @@ import pluginJs from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
-import tsdoclint from 'eslint-plugin-tsdoc';
 
 export default [
     pluginJs.configs.recommended,
@@ -10,9 +9,8 @@ export default [
     ...tseslint.configs.stylistic,
     {
         plugins: {
-            '@stylistic': stylistic,
-            tsdoc: tsdoclint
-        },
+            '@stylistic': stylistic
+        },    
         languageOptions: {
             globals: {
                 ...globals.browser,
@@ -21,11 +19,6 @@ export default [
         },
         // Stylistic rules
         rules: {
-            /**
-             * TsDoc rules
-             */
-            'tsdoc/syntax': 'warn',
-
             /**
              * Stylistic rules
              * @see https://eslint.style/packages/default#rules
@@ -186,7 +179,8 @@ export default [
             '@typescript-eslint/no-unnecessary-type-parameters': 'off',
             '@typescript-eslint/no-dynamic-delete': 'off',
             '@typescript-eslint/no-confusing-void-expression': 'off',
-            '@typescript-eslint/consistent-return': 'warn'
+            '@typescript-eslint/consistent-return': 'warn',
+            '@typescript-eslint/prefer-for-of': 'off',
         }
     }
 ];

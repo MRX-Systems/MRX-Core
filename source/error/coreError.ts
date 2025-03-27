@@ -29,7 +29,7 @@ export interface CoreErrorOptions<T = unknown> {
  * A custom error class that extends the native {@link Error} class, providing additional properties
  * such as a unique identifier, error key, HTTP status code, and cause.
  *
- * @typeParam T - The type of the cause of the error, which can be any object or error.
+ * @template T - The type of the cause of the error, which can be any object or error.
  *
  * @example
  * The following example demonstrates how to throw and catch a CoreError.

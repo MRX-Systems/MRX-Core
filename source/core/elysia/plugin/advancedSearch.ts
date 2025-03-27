@@ -9,7 +9,7 @@ import type { AdvancedSearch } from '#/types/data/advancedSearch';
  * Includes type-appropriate comparison operators (e.g., numeric ranges, string patterns).
  * The schema automatically adapts based on the field type, providing only relevant operators.
  *
- * @typeParam TInferedSchema - The inferred schema type for the field to generate operators for.
+ * @template TInferedSchema - The inferred schema type for the field to generate operators for.
  * @param schema - The schema for the field to generate operators for. ({@link TInferedSchema})
  *
  * @returns TypeBox object schema with available query operators
@@ -59,7 +59,7 @@ const _createWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInfer
  * 1. An array of where clause conditions
  * 2. An array of the base schema type
  *
- * @typeParam TInferedObject - The inferred schema type for the base object to generate property conditions for.
+ * @template TInferedObject - The inferred schema type for the base object to generate property conditions for.
  * @param schema - The base object schema to generate property conditions for. ({@link TInferedObject})
  *
  * @returns Mapped TypeBox schema for all properties in the advanced search.
@@ -108,7 +108,7 @@ const _createPropertiesWhereClauseSchema = <TInferedObject extends TObject>(sche
  * 1. Search objects with selected fields and search value
  * 2. Simple string values
  *
- * @typeParam TInferedObject - The inferred schema type for the field to generate operators for.
+ * @template TInferedObject - The inferred schema type for the field to generate operators for.
  * @param schema - The base schema to derive valid field keys from. ({@link TInferedObject})
  *
  * @returns TypeBox array schema for the $q parameter in advanced search.
@@ -144,7 +144,7 @@ const _createQSchema = <TInferedObject extends TObject>(schema: TInferedObject) 
  * Creates a TypeBox schema for the $selectedFields parameter specifying which
  * fields to return in the query results.
  *
- * @typeParam TInferedObject - The inferred schema type for the field to generate operators for.
+ * @template TInferedObject - The inferred schema type for the field to generate operators for.
  * @param schema - The base schema to derive valid field keys from. ({@link TInferedObject})
  *
  * @returns TypeBox array schema for $selectedFields
@@ -173,7 +173,7 @@ const _createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TIn
  * complex query parameters for search operations. The schema supports both global
  * full-text search via $q and field-specific filtering with comparison operators.
  *
- * @typeParam TInferedObject - The inferred schema type for the base object to generate search capabilities for.
+ * @template TInferedObject - The inferred schema type for the base object to generate search capabilities for.
  * @param schema - The base schema to build search capabilities for. ({@link TInferedObject})
  *
  * @returns Composite TypeBox schema for advanced search.
@@ -215,7 +215,7 @@ export const createBaseSearchSchema = <TInferedObject extends TObject>(schema: T
  * This extends the base search schema to include pagination capabilities,
  * allowing clients to request specific page sizes and offsets for large result sets.
  *
- * @typeParam TInferedObject - The inferred schema type for the base object to generate search capabilities for.
+ * @template TInferedObject - The inferred schema type for the base object to generate search capabilities for.
  * @param schema - The base schema to build search capabilities for. ({@link TInferedObject})
  *
  * @returns Composite TypeBox schema for advanced search with pagination.
@@ -256,7 +256,7 @@ export const createBaseSearchSchemaWithPagination = <TInferedObject extends TObj
  *
  * These components can then be used directly with database repository methods.
  *
- * @typeParam TInferedObject - The inferred schema type for the base object to generate search capabilities for.
+ * @template TInferedObject - The inferred schema type for the base object to generate search capabilities for.
  * @param name - Plugin name for identification and model registration.
  * @param baseSchema - The TypeBox schema to enable searching on. ({@link TInferedObject})
  *

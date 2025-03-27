@@ -24,7 +24,7 @@ import { ELYSIA_KEY_ERROR } from '#/root/source/error/key/elysiaKeyError';
  * - Custom JWT headers
  * - Default payload values
  *
- * @typeParam TPluginName - The name to be used for accessing the JWT functionality in the Elysia context
+ * @template TPluginName - The name to be used for accessing the JWT functionality in the Elysia context
  *
  * @example
  * ```typescript
@@ -168,7 +168,7 @@ export interface JWTOption<TPluginName extends string | undefined = 'jwt'> {
  * - `sign()`: Generate and sign new JWTs
  * - `verify()`: Validate and decode existing JWTs
  *
- * @typeParam Name - The name to use for JWT functionality in the context (default: 'jwt')
+ * @template Name - The name to use for JWT functionality in the context (default: 'jwt')
  * @param options - Configuration options for the JWT plugin
  *
  * @returns An Elysia plugin that adds JWT functionality to the application context

@@ -4,7 +4,7 @@ import type { SelectedFields } from './selectedFields';
 /**
  * Defines an advanced search model using either plain partials of the model T or a {@link WhereClause} filter for more dynamic querying.
  *
- * @typeParam TModel - The model type to be used for the advanced search.
+ * @template TModel - The model type to be used for the advanced search.
  *
  * @example
  * ```typescript

@@ -3,7 +3,7 @@ import type { PassThrough } from 'stream';
 /**
  * A stream with an async iterable interface. ({@link PassThrough} & {@link AsyncIterable})
  *
- * @typeParam TModel - The type of the object to retrieve.
+ * @template TModel - The type of the object to retrieve.
  *
  * @example
  * ```typescript

@@ -3,7 +3,7 @@ import type { QueryOptions } from './queryOptions';
 /**
  * Interface Option query with pagination inherited from {@link QueryOptions}
  *
- * @typeParam TModel - The type of the object to retrieve.
+ * @template TModel - The type of the object to retrieve.
  */
 export interface QueryOptionsExtendPagination<TModel> extends QueryOptions<TModel> {
     /**
