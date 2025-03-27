@@ -334,8 +334,8 @@ export class MSSQL extends EventEmitter {
      * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED})
      * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND})
      *
-     * @typeParam TModel - The type of the model for the repository.
-     * @typeParam TRepo - The repository to retrieve extends {@link Repository}.
+     * @template TModel - The type of the model for the repository.
+     * @template TRepo - The repository to retrieve extends {@link Repository}.
      *
      * @returns The repository for the specified table.
      */

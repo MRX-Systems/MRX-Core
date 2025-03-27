@@ -1,7 +1,7 @@
 /**
  * Defines which columns to select in a query using an array of keys from the model type.
  *
- * @typeParam TModel - The type of the object to select fields from.
+ * @template TModel - The type of the object to select fields from.
  *
  * @example
  * ```typescript

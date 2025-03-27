@@ -3,8 +3,8 @@ import type { Stream } from 'stream';
 /**
  * Makes a stream async iterable.
  *
- * @typeParam TModel - The type of the data emitted by the stream.
- * @typeParam KStream - The type of the stream.
+ * @template TModel - The type of the data emitted by the stream.
+ * @template KStream - The type of the stream.
  * @param stream - The stream to make async iterable.
  *
  * @returns The stream as an async iterable. ({@link KStream} extends {@link Stream} & {@link AsyncIterable})

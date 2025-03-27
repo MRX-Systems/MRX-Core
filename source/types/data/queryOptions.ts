@@ -6,7 +6,7 @@ import type { Transaction } from './transaction';
 /**
  * This interface defines the basic options for a repository query.
  *
- * @typeParam TModel - The type of the object to retrieve.
+ * @template TModel - The type of the object to retrieve.
  */
 export interface QueryOptions<TModel> {
     /**

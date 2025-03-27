@@ -30,7 +30,7 @@ import type { WhereClause } from '#/types/data/whereClause';
  * - **Error Handling**: Centralized error handling with custom error codes for MSSQL-specific errors.
  * - **Type Safety**: Ensures type safety for queries and results with TypeScript generics.
  *
- * @typeParam TModel - The type of the data model handled by the repository.
+ * @template TModel - The type of the data model handled by the repository.
  *
  * ### Example Usage:
  * @example
@@ -105,7 +105,7 @@ export class Repository<TModel = unknown> {
      * The stream emits data events for each record and an end event when the stream is finished.
      * It can be consumed using either async iteration or event listeners.
      *
-     * @typeParam KModel - The type of the object to retrieve.
+     * @template KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search.
      *   - `selectedFields`: Specific fields to select from the table.
      *   - `advancedSearch`: Filtering criteria for the query.
@@ -191,7 +191,7 @@ export class Repository<TModel = unknown> {
      * as an array. This method supports comprehensive filtering, pagination, field selection, and sorting
      * to provide flexible data retrieval capabilities.
      *
-     * @typeParam KModel - The type of the object to retrieve.
+     * @template KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search.
      *   - `selectedFields`: Specific fields to select from the table.
      *   - `advancedSearch`: Filtering criteria for the query.
@@ -277,7 +277,7 @@ export class Repository<TModel = unknown> {
      * Finds a single record in the database based on the specified query options and returns it.
      * This method is optimized for retrieving individual records that match specific criteria.
      *
-     * @typeParam KModel - The type of the object to retrieve.
+     * @template KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search.
      *   - `selectedFields`: Specific fields to select from the table.
      *   - `advancedSearch` (required): Filtering criteria for the query.
@@ -352,7 +352,7 @@ export class Repository<TModel = unknown> {
      * This method is useful for getting the total count of records without retrieving the actual data,
      * which can be more efficient for large datasets or when only the count is needed.
      *
-     * @typeParam KModel - The type of the object to match.
+     * @template KModel - The type of the object to match.
      * @param options - The query options to apply to the count operation.
      *   - `advancedSearch`: Filtering criteria for determining which records to count.
      *   - `throwIfNoResult`: Whether to throw an error if no records are found.
@@ -417,7 +417,7 @@ export class Repository<TModel = unknown> {
      * Inserts one or more records into the database and returns the inserted records.
      * This method supports both single and bulk insertions, making it versatile for various use cases.
      *
-     * @typeParam KModel - The type of the object to insert.
+     * @template KModel - The type of the object to insert.
      * @param data - The data to insert into the database. Can be a single object or an array of objects.
      * @param options - The query options to apply to the insertion.
      *   - `selectedFields`: Specific fields to return from the inserted record(s).
@@ -499,7 +499,7 @@ export class Repository<TModel = unknown> {
      * and returns the updated records. This method allows for precise updates to records
      * that match specific filtering criteria.
      *
-     * @typeParam KModel - The type of the object to update.
+     * @template KModel - The type of the object to update.
      * @param data - The data to update in the database. Contains the fields and values to be updated.
      * @param options - The query options to apply to the update operation.
      *   - `selectedFields`: Specific fields to return from the updated record(s).
@@ -574,7 +574,7 @@ export class Repository<TModel = unknown> {
      * and returns the deleted records. This method ensures that only records matching
      * specific filtering criteria are removed from the database.
      *
-     * @typeParam KModel - The type of the object to delete.
+     * @template KModel - The type of the object to delete.
      * @param options - The query options to apply to the delete operation.
      *   - `selectedFields`: Specific fields to return from the deleted record(s).
      *   - `advancedSearch` (required): Filtering criteria to determine which records to delete.
@@ -655,7 +655,7 @@ export class Repository<TModel = unknown> {
      * - `$isNull`: Field is null (when true) or not null (when false)
      * - `$q`: Full-text search across specified fields
      *
-     * @typeParam KModel - The type of the object to apply the search filters to.
+     * @template KModel - The type of the object to apply the search filters to.
      * @param query - The Knex.js query builder to apply the filters to.
      * @param search - The advanced search options to apply.
      *
@@ -821,7 +821,7 @@ export class Repository<TModel = unknown> {
      * A complex query is defined as an object containing one or more valid query operators,
      * such as $eq, $gt, $like, etc.
      *
-     * @typeParam MaybeWhereClause - The type of the object to check.
+     * @template MaybeWhereClause - The type of the object to check.
      * @param data - The data object to check.
      *
      * @returns `true` if the object contains valid query operators, otherwise `false`.
@@ -854,7 +854,7 @@ export class Repository<TModel = unknown> {
      * Executes a Knex.js query and returns the result. This method provides centralized
      * error handling and supports the option to throw an error if no records are found.
      *
-     * @typeParam KModel - The type of the records returned by the query.
+     * @template KModel - The type of the records returned by the query.
      * @param query - The Knex.js query builder to execute.
      * @param throwIfNoResult - Whether to throw an error if no records are found.
      *
