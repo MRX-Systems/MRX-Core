@@ -1,5 +1,38 @@
 # Changelog
 
+## v2.1.0-canary-20250327-8f2cd369
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250324-f2b16212...v2.1.0-canary-20250327-8f2cd369)
+
+### 🧹 Refactors
+
+- **🧹:** [update ESLint configuration for consistent return rule] - Disabled '@typescript-eslint/prefer-for-of' rule. - Maintained existing warning for '@typescript-eslint/consistent-return'. ([42892b59](https://github.com/Andesite-Lab/Core/commit/42892b59))
+- **🧹:** [remove tsdoclint from ESLint configuration] Updated the ESLint configuration to remove the unused tsdoclint plugin, streamlining the setup and improving maintainability. ([8304e4f7](https://github.com/Andesite-Lab/Core/commit/8304e4f7))
+- **🧹:** [remove 'const' from generic type parameters] ([1bc41927](https://github.com/Andesite-Lab/Core/commit/1bc41927))
+
+### 📖 Documentation
+
+- **📖:** [update typeParam to template in type definitions] ## Type Changes - Changed `@typeParam` to `@template` in multiple type definition files. ## Description This commit updates the JSDoc annotations in various type definition files to use `@template` instead of `@typeParam`, aligning with the correct JSDoc syntax for generic type parameters. This change improves clarity and consistency across the codebase. ([c12ec0b5](https://github.com/Andesite-Lab/Core/commit/c12ec0b5))
+
+### 📦 Build
+
+- **📦:** [update devDependencies for bun and typescript-eslint] ## Build Changes - Updated `@types/bun` from `^1.2.5` to `^1.2.6` - Updated `typescript-eslint` from `^8.27.0` to `^8.28.0` ([2c651669](https://github.com/Andesite-Lab/Core/commit/2c651669))
+- **📦:** [update @basalt-lab/basalt-helper to version 1.12.1] Updated the dependency @basalt-lab/basalt-helper from version 1.11.1 to 1.12.1 to incorporate the latest features and improvements. (`TypedEventEmitter` class) ([418e4fd2](https://github.com/Andesite-Lab/Core/commit/418e4fd2))
+- **📦:** [move dependencies to peerDependencies] Updated the package.json to move dependencies under "dependencies" to "peerDependencies" for better compatibility and to clarify the intended usage of these packages. ([e8deda53](https://github.com/Andesite-Lab/Core/commit/e8deda53))
+- **📦:** [update dependencies to latest versions] - Updated all dependencies to their latest versions in the bun.lock file. - Moved some dependencies to peerDependencies for better compatibility. ([704bc929](https://github.com/Andesite-Lab/Core/commit/704bc929))
+
+### 🌊 Types
+
+- **🌊:** [update type parameters for CRUD options] - Added KEnumPermission type parameter for permissions-based access control. - Updated type definitions to use @template instead of @typeParam for clarity. - Adjusted operationsPermissions to utilize KEnumPermission for better type safety. ([d229cad6](https://github.com/Andesite-Lab/Core/commit/d229cad6))
+
+### 🤖 CI
+
+- **🤖:** [update merge workflows to simplify merge checks] ([7dba1a14](https://github.com/Andesite-Lab/Core/commit/7dba1a14))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250324-f2b16212
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250320-1ee10333...v2.1.0-canary-20250324-f2b16212)
