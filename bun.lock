@@ -3,25 +3,25 @@
   "workspaces": {
     "": {
       "name": "@andesite-lab/andesite-core",
-      "dependencies": {
-        "@basalt-lab/basalt-helper": "^1.12.1",
-        "@basalt-lab/basalt-logger": "^1.12.0",
-        "elysia": "^1.2.25",
-        "ioredis": "^5.6.0",
-        "jose": "^6.0.10",
-        "knex": "^3.1.0",
-        "mssql": "^11.0.1",
-        "typescript": "^5.8.2",
-      },
       "devDependencies": {
-        "@eslint/js": "^9.23.0",
-        "@stylistic/eslint-plugin": "^4.2.0",
-        "@types/bun": "^1.2.6",
-        "eslint": "^9.23.0",
-        "globals": "^16.0.0",
-        "tsc-alias": "^1.8.11",
-        "typedoc": "^0.28.1",
-        "typescript-eslint": "^8.28.0",
+        "@eslint/js": "latest",
+        "@stylistic/eslint-plugin": "latest",
+        "@types/bun": "latest",
+        "eslint": "latest",
+        "globals": "latest",
+        "tsc-alias": "latest",
+        "typedoc": "latest",
+        "typescript-eslint": "latest",
+      },
+      "peerDependencies": {
+        "@basalt-lab/basalt-helper": "latest",
+        "@basalt-lab/basalt-logger": "latest",
+        "elysia": "latest",
+        "ioredis": "latest",
+        "jose": "latest",
+        "knex": "latest",
+        "mssql": "latest",
+        "typescript": "latest",
       },
     },
   },
@@ -196,7 +196,7 @@
 
     "colorette": ["colorette@2.0.19", "", {}, "sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ=="],
 
-    "commander": ["commander@9.5.0", "", {}, "sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ=="],
+    "commander": ["commander@10.0.1", "", {}, "sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug=="],
 
     "concat-map": ["concat-map@0.0.1", "", {}, "sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg=="],
 
@@ -548,8 +548,6 @@
 
     "jsonwebtoken/jws": ["jws@3.2.2", "", { "dependencies": { "jwa": "^1.4.1", "safe-buffer": "^5.0.1" } }, "sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA=="],
 
-    "knex/commander": ["commander@10.0.1", "", {}, "sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug=="],
-
     "knex/debug": ["debug@4.3.4", "", { "dependencies": { "ms": "2.1.2" } }, "sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ=="],
 
     "micromatch/picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
@@ -557,6 +555,8 @@
     "mssql/commander": ["commander@11.1.0", "", {}, "sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ=="],
 
     "readdirp/picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
+
+    "tsc-alias/commander": ["commander@9.5.0", "", {}, "sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ=="],
 
     "typedoc/minimatch": ["minimatch@9.0.5", "", { "dependencies": { "brace-expansion": "^2.0.1" } }, "sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow=="],
 
