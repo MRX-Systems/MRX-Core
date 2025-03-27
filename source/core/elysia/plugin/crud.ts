@@ -32,7 +32,8 @@ type CRUDRoutes = 'insert' | 'find' | 'findOne' | 'update' | 'updateOne' | 'dele
  * - Route inclusion/exclusion for customizing available operations
  * - Permissions-based access control integration
  *
- * @typeParam TInferedObject - The TypeBox schema type for the entity being managed
+ * @template TInferedObject - The TypeBox schema type for the entity being managed
+ * @template KEnumPermission - The type of the permission enum used for access control
  *
  * @example
  * ```typescript
@@ -63,7 +64,10 @@ type CRUDRoutes = 'insert' | 'find' | 'findOne' | 'update' | 'updateOne' | 'dele
  * };
  * ```
  */
-interface CrudOptions<TInferedObject extends TObject> {
+interface CrudOptions<
+    TInferedObject extends TObject,
+    KEnumPermission extends string
+> {
     /**
      * Optional API path prefix for all generated routes.
      *
@@ -180,16 +184,14 @@ interface CrudOptions<TInferedObject extends TObject> {
             MetadataBase & {
                 schema: RouteSchema;
                 macro: Partial<{
-                    readonly needsOnePermission: string[];
-                    readonly needsMultiplePermissions: string[];
+                    readonly needsOnePermission: KEnumPermission[];
+                    readonly needsMultiplePermissions: KEnumPermission[];
                 }>;
                 macroFn: {
-                    readonly needsOnePermission: (permissions: string[]) => {
+                    readonly needsOnePermission: (permissions: KEnumPermission[]) => {
                         beforeHandle: (ctx: Context) => Promise<void>;
                     };
-                    readonly needsMultiplePermissions: (
-                        permissions: string[]
-                    ) => {
+                    readonly needsMultiplePermissions: (permissions: KEnumPermission[]) => {
                         beforeHandle: (ctx: Context) => Promise<void>
                     };
                 }
@@ -216,7 +218,7 @@ interface CrudOptions<TInferedObject extends TObject> {
          * }
          * ```
          */
-        operationsPermissions: Partial<Record<CRUDRoutes, string[]>>;
+        operationsPermissions: Partial<Record<CRUDRoutes, KEnumPermission[]>>;
     }
 }
 
@@ -234,7 +236,7 @@ interface CrudOptions<TInferedObject extends TObject> {
  * }
  * ```
  *
- * @typeParam TInferedObject - The inferred schema type for the base object
+ * @template TInferedObject - The inferred schema type for the base object
  * @param schema - The schema to build the response schema for
  *
  * @returns TypeBox schema for the standard CRUD operation response
@@ -283,7 +285,7 @@ export const createResponse200Schema = <TInferedObject extends TObject>(schema: 
  * This function builds a body schema for insert operations, applying required
  * constraints to specified properties while leaving others optional.
  *
- * @typeParam TInferedObject - The inferred schema type for the base object
+ * @template TInferedObject - The inferred schema type for the base object
  * @param schema - The schema to build the insert body schema from
  * @param requiredPropertiesSchema - Optional array of property keys that should be required
  *
@@ -321,13 +323,13 @@ export const createInsertBodySchema = <TInferedObject extends TObject>(schema: T
  * This internal function sets up all the necessary validation schemas for request
  * bodies, URL parameters, and responses for each enabled CRUD route.
  *
- * @typeParam TInferedObject - The inferred schema type for the base object
+ * @template TInferedObject - The inferred schema type for the base object
  * @param enabledRoutes - Array of routes that are enabled for this CRUD interface
  * @param options - The main CRUD options containing schema information
  *
  * @returns An Elysia plugin containing all the model definitions
  */
-const _addModels = <TInferedObject extends TObject>(enabledRoutes: CRUDRoutes[], options: CrudOptions<TInferedObject>) => {
+const _addModels = <TInferedObject extends TObject, KEnumPermission extends string>(enabledRoutes: CRUDRoutes[], options: CrudOptions<TInferedObject, KEnumPermission>) => {
     const { baseSchema, tableName, insertPropertiesSchemaRequired } = options;
 
     // Initialize plugin with common response schema
@@ -717,7 +719,7 @@ const _addRoutes = <TInferedObject extends TObject>
  * - `DELETE /delete/:id`: Delete a single record by ID
  * - `GET /count`: Count records matching filter criteria
  *
- * @typeParam TInferedObject - The TypeBox schema type for the entity being managed
+ * @template TInferedObject - The TypeBox schema type for the entity being managed
  * @param options - Configuration options for the CRUD plugin
  *
  * @returns An Elysia plugin with configured CRUD routes
@@ -762,7 +764,10 @@ const _addRoutes = <TInferedObject extends TObject>
  *   .listen(3000);
  * ```
  */
-export const crudPlugin = <TInferedObject extends TObject>(options: CrudOptions<TInferedObject>) => {
+export const crudPlugin = <
+    TInferedObject extends TObject,
+    KEnumPermission extends string
+>(options: CrudOptions<TInferedObject, KEnumPermission>) => {
     const enabledRoutes = _getEnabledRoutes(options.includedRoutes, options.excludedRoutes);
     const app = new Elysia({
         name: `crudPlugin[${options.tableName}]`,
