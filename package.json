@@ -1,22 +1,10 @@
 {
   "name": "@andesite-lab/andesite-core",
   "version": "2.1.0-canary-20250327-8f2cd369",
-  "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "author": "Ruby",
-  "license": "MIT",
+  "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "type": "module",
-  "exports": {
-    "./database": "./build/core/database/index.js",
-    "./repository": "./build/core/repository/index.js",
-    "./elysia/plugin": "./build/core/elysia/plugin/index.js",
-    "./elysia/schema": "./build/core/elysia/schema/index.js",
-    "./store": "./build/core/store/index.js",
-    "./util": "./build/core/util/index.js",
-    "./error": "./build/error/index.js",
-    "./error/key": "./build/error/key/index.js",
-    "./types": "./build/types/index.js",
-    ".": "./build/index.js"
-  },
+  "license": "MIT",
   "keywords": [
     "andesite",
     "andesite-lab",
@@ -25,7 +13,7 @@
   ],
   "scripts": {
     "dev": "bun --watch source/index.ts",
-    "build": "bun builder.ts && tsc --project tsconfig.dts.json && tsc-alias -p tsconfig.dts.json",
+    "build": "bun builder.ts",
     "start": "bun build/index.js",
     "test": "bun test --coverage",
     "docs": "typedoc",
@@ -33,14 +21,14 @@
     "lint": "eslint ./source"
   },
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
+    "@eslint/js": "^9.24.0",
     "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/bun": "^1.2.6",
-    "eslint": "^9.23.0",
+    "@types/bun": "^1.2.8",
+    "eslint": "^9.24.0",
     "globals": "^16.0.0",
-    "tsc-alias": "^1.8.11",
-    "typedoc": "^0.28.1",
-    "typescript-eslint": "^8.28.0"
+    "tsc-alias": "^1.8.13",
+    "typedoc": "^0.28.2",
+    "typescript-eslint": "^8.29.1"
   },
   "peerDependencies": {
     "@basalt-lab/basalt-helper": "^1.12.1",
@@ -50,7 +38,19 @@
     "jose": "^6.0.10",
     "knex": "^3.1.0",
     "mssql": "^11.0.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
+  },
+  "exports": {
+    "./database": "./dist/core/database/index.js",
+    "./repository": "./dist/core/repository/index.js",
+    "./elysia/plugin": "./dist/core/elysia/plugin/index.js",
+    "./elysia/schema": "./dist/core/elysia/schema/index.js",
+    "./store": "./dist/core/store/index.js",
+    "./util": "./dist/core/util/index.js",
+    "./error": "./dist/error/index.js",
+    "./error/key": "./dist/error/key/index.js",
+    "./types": "./dist/types/index.js",
+    ".": "./dist/index.js"
   },
   "changelog": {
     "types": {
