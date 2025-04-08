@@ -200,9 +200,9 @@ jobs:
         run: bun run docs
 
       - name: Upload Coverage
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.BASALT_TOKEN }}
+          github_token: ${{ secrets.ANDESITE_TOKEN }}
           publish_dir: ./docs
 
   publish:

@@ -770,7 +770,7 @@ export class Repository<TModel = unknown> {
                 } else if (key === '$q' && (typeof value === 'string' || typeof value === 'number')) {
                     for (const field of this._table.fields)
                         if (value)
-                            query.orWhere(field, 'like', `%${value}%`);
+                            query.orWhere(field, 'like', `%${value}%`); // TODO add table in prefix
                 } else if (key === '$q' && typeof value === 'object' && 'selectedFields' in value) {
                     const { selectedFields, value: searchValue } = value;
                     const isNumber = typeof searchValue === 'number';

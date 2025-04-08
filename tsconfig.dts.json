@@ -1,43 +1,56 @@
 {
   "include": ["source/**/*.ts"],
   "compilerOptions": {
-    // Enable latest features
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-    "resolveJsonModule": true,
-
-    "outDir": "./build",
-    "paths": {
-      "#/root/*": ["./*"],
-      "#/*": ["./source/*"]
-    },
-
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    // "removeComments": true,
-
-    // Best practices
+    // Type Checking
     "strict": true,
-    "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-
-    // Some flags
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "alwaysStrict": true,
+    "alwaysStrict": true, // because of `strict`
     "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true, // because of `strict`
     "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noImplicitThis": true, // because of `strict`
     "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+
+    // Modules
+    "allowArbitraryExtensions": true,
+    "allowImportingTsExtensions": true, // This flag is only allowed when --noEmit or --emitDeclarationOnly is enabled
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "noUncheckedSideEffectImports": true,
+    "paths": {
+      "#/root/*": ["./*"],
+      "#/*": ["./source/*"],
+    },
+    "resolveJsonModule": true,
+
+    // Emit
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "removeComments": false,
+
+    // Javascript Support
+    "allowJs": true,
+    "checkJs": true,
+
+    // Interop Constraints
+    "allowSyntheticDefaultImports": true, // true if moduleResolution is bundler
+    "erasableSyntaxOnly": true,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "lib": ["ESNext"],
+    "target": "ESNext",
+
+    // Completeness
+    "skipLibCheck": true,
   }
 }
