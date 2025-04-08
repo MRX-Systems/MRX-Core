@@ -1,5 +1,35 @@
 # Changelog
 
+## v2.1.0-canary-20250408-4bfc53ad
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250327-8f2cd369...v2.1.0-canary-20250408-4bfc53ad)
+
+### 🧹 Refactors
+
+- **🧹:** [refactor TypeScript configuration files for clarity] - Improved organization of `tsconfig.json` and `tsconfig.dts.json`. - Consolidated type checking options and module settings for better readability. - Updated output directory from `build` to `dist` for consistency. - Enhanced JavaScript support with new options for interop and completeness. ([519d9bfe](https://github.com/Andesite-Lab/Core/commit/519d9bfe))
+
+### 📖 Documentation
+
+- **📖:** Add todo in repository ([689c441b](https://github.com/Andesite-Lab/Core/commit/689c441b))
+
+### 📦 Build
+
+- **📦:** [update build output directory from 'build' to 'dist'] Changed the output directory for the build process from './build' to './dist' to align with the project's structure. This ensures that all built files are consistently placed in the designated distribution folder. ([697926d1](https://github.com/Andesite-Lab/Core/commit/697926d1))
+- **📦:** [update package.json] - Updated description and license fields. - Removed old exports and added new exports pointing to the dist directory. - Updated build script to only run bun builder.ts. - Bumped devDependencies:   - @eslint/js from ^9.23.0 to ^9.24.0   - @types/bun from ^1.2.6 to ^1.2.8   - eslint from ^9.23.0 to ^9.24.0   - tsc-alias from ^1.8.11 to ^1.8.13   - typedoc from ^0.28.1 to ^0.28.2   - typescript-eslint from ^8.28.0 to ^8.29.1 - Bumped typescript from ^5.8.2 to ^5.8.3 ([3a226fc4](https://github.com/Andesite-Lab/Core/commit/3a226fc4))
+
+### 🦉 Chore
+
+- **🦉:** [update dotenv files in .gitignore] Updated the .gitignore to include standard dotenv files without the local suffix. This change ensures that the environment variable files are ignored correctly during version control. ([257f2066](https://github.com/Andesite-Lab/Core/commit/257f2066))
+- **🦉:** [add telemetry configuration to bunfig.toml] ([b1dc98ce](https://github.com/Andesite-Lab/Core/commit/b1dc98ce))
+
+### 🤖 CI
+
+- **🤖:** [update GitHub Actions workflows for publishing] ([1e9e56b5](https://github.com/Andesite-Lab/Core/commit/1e9e56b5))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250327-8f2cd369
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250324-f2b16212...v2.1.0-canary-20250327-8f2cd369)
