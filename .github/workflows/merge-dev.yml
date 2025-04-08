@@ -199,6 +199,6 @@ jobs:
         run: bun run build
 
       - name: Publish the project
-        run: bun publish --provenance --access public --tag canary
+        run: bun publish --access public --tag canary
         env:
           NPM_CONFIG_TOKEN: ${{secrets.NPM_TOKEN}}
