@@ -57,7 +57,6 @@ jobs:
         run: |
           git push origin HEAD:${{ github.head_ref }}
 
-
   build-test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -78,7 +77,7 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Check if build
+      - name: Run build
         run: bun run build
 
   test:
