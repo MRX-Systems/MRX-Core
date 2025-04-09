@@ -15,6 +15,7 @@
     "dev": "bun --watch source/index.ts",
     "build": "bun builder.ts",
     "start": "bun build/index.js",
+    "test": "bun test --coverage",
     "docs": "typedoc",
     "fix-lint": "eslint --fix ./source",
     "lint": "eslint ./source"
