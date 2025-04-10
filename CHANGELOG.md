@@ -1,5 +1,32 @@
 # Changelog
 
+## v2.1.0-canary-20250410-da98e5bc
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250408-4bfc53ad...v2.1.0-canary-20250410-da98e5bc)
+
+### 🧹 Refactors
+
+- **🧹:** [correct bundler file name in .npmignore] Updated the .npmignore file to replace 'bundler.ts' with 'builder.ts' for accurate file exclusion. ([5158bba4](https://github.com/Andesite-Lab/Core/commit/5158bba4))
+- **🧹:** [add test coverage thresholds to bunfig.toml] ([460ca7a0](https://github.com/Andesite-Lab/Core/commit/460ca7a0))
+
+### 📦 Build
+
+- **📦:** [update dependencies in package.json] ## Build Changes - Updated `@types/bun` from `^1.2.8` to `^1.2.9` - Updated `tsc-alias` from `^1.8.13` to `^1.8.14` - Updated `@basalt-lab/basalt-helper` from `^1.12.1` to `^1.13.0` - Updated `@basalt-lab/basalt-logger` from `^1.12.0` to `^1.12.1` ## Description This commit updates several dependencies in the `package.json` file to their latest versions to ensure compatibility and take advantage of improvements and bug fixes. ([cbd7008c](https://github.com/Andesite-Lab/Core/commit/cbd7008c))
+
+### 🧪 Tests
+
+- **🧪:** Split unit and integration tests ([6614e557](https://github.com/Andesite-Lab/Core/commit/6614e557))
+
+### 🤖 CI
+
+- **🤖:** [update pull request checker and CI configurations] ## CI Changes - Added build-test job to the pull request checker workflow. - Updated test job to depend on build-test. - Enhanced the build-test job with steps for checking out code, setting up Bun, installing dependencies, and running the build. - Added coverage option to the test script in package.json. - Specified output directory in tsconfig.json. ([44119db3](https://github.com/Andesite-Lab/Core/commit/44119db3))
+- **🤖:** [refactor pull request checker workflow steps] - Removed unnecessary blank line before the build-test job. - Renamed the "Check if build" step to "Run build" for clarity. ([f63e291d](https://github.com/Andesite-Lab/Core/commit/f63e291d))
+- **🤖:** [refactor build-test job in CI workflows] ## CI Changes - Added a new `build-test` job to both `merge-dev.yml` and `merge-main.yml`. - The job includes steps for checking out the code, setting up Bun, installing dependencies, and running the build process. - Updated the `test` job to depend on the `build-test` job instead of `lint`. ([86cebc4f](https://github.com/Andesite-Lab/Core/commit/86cebc4f))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250408-4bfc53ad
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250327-8f2cd369...v2.1.0-canary-20250408-4bfc53ad)
