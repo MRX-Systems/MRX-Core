@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
-    name: Check Lint of the code (try to auto-fix if possible)
+    name: Check Lint (try to auto-fix if possible)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -58,8 +58,8 @@ jobs:
         run: |
           git push origin HEAD:develop
 
-  build-test:
-    name: Build and Test
+  build:
+    name: Check Build
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -81,11 +81,10 @@ jobs:
       - name: Run build
         run: bun run build
 
-  test:
-    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
-    name: Run tests
+  unit-test:
+    name: Check unit tests
     runs-on: ubuntu-latest
-    needs: build-test
+    needs: build
     env:
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
@@ -95,12 +94,11 @@ jobs:
       STORE_HOST: ${{ secrets.STORE_HOST }}
       STORE_PORT: ${{ secrets.STORE_PORT }}
       STORE_KEY: ${{ secrets.STORE_KEY }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: 'develop'
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
           ssh-key: ${{ secrets.ANDESITE_SSH }}
 
@@ -112,14 +110,46 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Run tests
-        run: bun run test
+      - name: Run unit tests
+        run: bun run test:unit
+
+  integration-test:
+    name: Check integration tests
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
+
+      STORE_HOST: ${{ secrets.STORE_HOST }}
+      STORE_PORT: ${{ secrets.STORE_PORT }}
+      STORE_KEY: ${{ secrets.STORE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          ssh-key: ${{ secrets.ANDESITE_SSH }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Run integration tests
+        run: bun run test:integration
 
   canary:
     if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Create Canary Release
     runs-on: ubuntu-latest
-    needs: test
+    needs: [unit-test, integration-test]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
