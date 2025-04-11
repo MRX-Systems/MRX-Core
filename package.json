@@ -15,8 +15,8 @@
     "dev": "bun --watch source/index.ts",
     "build": "bun builder.ts",
     "start": "bun build/index.js",
-    "test:unit": "bun test --timeout 5500 --coverage $(fd .spec.ts test/unit)",
-    "test:integration": "bun test --timeout 5500 $(fd .spec.ts test/integration)",
+    "test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
+    "test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
     "docs": "typedoc",
     "fix-lint": "eslint --fix ./source",
     "lint": "eslint ./source"
