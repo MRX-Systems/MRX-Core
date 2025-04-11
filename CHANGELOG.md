@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.1.0-canary-20250411-298158c4
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250410-da98e5bc...v2.1.0-canary-20250411-298158c4)
+
+### 🧪 Tests
+
+- **🧪:** [update test scripts for unit and integration tests] ## Changes - Added `test:unit` script to run unit tests with coverage. - Added `test:integration` script to run integration tests. ([d632f61a](https://github.com/Andesite-Lab/Core/commit/d632f61a))
+- **🧪:** [add timeout to unit and integration test scripts] Updated the test scripts in package.json to include a timeout of 5500 milliseconds for both unit and integration tests, ensuring better control over test execution time. ([b018527f](https://github.com/Andesite-Lab/Core/commit/b018527f))
+- **🧪:** [update test command to use find for spec files] - Updated the test commands in package.json to use `find` instead of `fd` for locating test specification files. - This change ensures compatibility and consistency in how test files are identified across different environments. ([98fa1573](https://github.com/Andesite-Lab/Core/commit/98fa1573))
+
+### 🤖 CI
+
+- **🤖:** [refactor pull request checker workflow for tests] ## CI Changes - Renamed the test job to `unit-test` for clarity. - Separated unit and integration tests into distinct jobs. - Updated the integration test job to include proper setup and execution steps. ## Description This commit refactors the pull request checker workflow by clearly defining the unit-test and integration-test jobs. The changes enhance the organization of the CI process, making it easier to manage and understand the testing phases. ([b0056911](https://github.com/Andesite-Lab/Core/commit/b0056911))
+- **🤖:** [refactor CI workflows for consistency and clarity] ## CI Changes - Updated job names for clarity (e.g., "Check Lint" instead of "Check Lint of the code"). - Standardized job dependencies to ensure proper execution order. - Enhanced unit and integration test steps with consistent checkout and setup procedures. - Improved naming conventions for better readability and maintenance. ([047e9223](https://github.com/Andesite-Lab/Core/commit/047e9223))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.1.0-canary-20250410-da98e5bc
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250408-4bfc53ad...v2.1.0-canary-20250410-da98e5bc)
