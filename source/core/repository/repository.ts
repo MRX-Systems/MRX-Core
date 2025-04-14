@@ -863,7 +863,7 @@ export class Repository<TModel = unknown> {
      *
      * @returns An array of records returned by the query.
      */
-    private async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<KModel[]> {
+    protected async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<KModel[]> {
         try {
             const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
