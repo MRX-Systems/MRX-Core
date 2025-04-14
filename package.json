@@ -1,6 +1,6 @@
 {
   "name": "@andesite-lab/andesite-core",
-  "version": "2.1.0-canary-20250411-298158c4",
+  "version": "2.1.0-canary-20250414-31441dd1",
   "author": "Ruby",
   "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "type": "module",

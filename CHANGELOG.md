@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.1.0-canary-20250414-31441dd1
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250411-298158c4...v2.1.0-canary-20250414-31441dd1)
+
+### 🧹 Refactors
+
+- **🧹:** [change _executeQuery method visibility to protected] ([5a44d2e5](https://github.com/Andesite-Lab/Core/commit/5a44d2e5))
+
+### ❤️ Contributors
+
+- DamienMonchaty <damienmonchaty@hotmail.fr>
+
 ## v2.1.0-canary-20250411-298158c4
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0-canary-20250410-da98e5bc...v2.1.0-canary-20250411-298158c4)
