@@ -4,8 +4,6 @@ import { randomBytes } from 'crypto';
 import knex from 'knex';
 
 import { Repository } from '#/core/repository/repository';
-import { EVENT_MSSQL } from '#/types/constant/eventMssql';
-import { EVENT_TABLE } from '#/types/constant/eventTable';
 import type { MssqlEventLog } from '#/types/data/mssqlEventLog';
 
 const options = {
@@ -65,7 +63,7 @@ describe('MSSQL', () => {
             await mssql.connect();
 
             mssql.getTable(testTable)
-                .on(EVENT_TABLE.SELECTED, (res) => {
+                .on('selected', (res) => {
                     expect(res).toBeDefined();
                 });
             await mssql.db(testTable).select('*').from(testTable);
@@ -198,7 +196,7 @@ describe('MSSQL', () => {
             test('should log events', async () => {
                 const { MSSQL } = await import('#/core/database/mssql');
                 const mssql = new MSSQL({ ...options, debug: true });
-                mssql.on(EVENT_MSSQL.LOG, (event: MssqlEventLog) => {
+                mssql.on('log', (event: MssqlEventLog) => {
                     expect(event).toBeDefined();
                     expect(event.bindings).toBeDefined();
                     expect(event.database).toBeDefined();
@@ -217,7 +215,7 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/core/database/mssql');
                 const mssql = new MSSQL(options);
                 await mssql.connect();
-                mssql.getTable(testTable).on(EVENT_TABLE.SELECTED, (res) => {
+                mssql.getTable(testTable).on('selected', (res) => {
                     expect(res).toBeDefined();
                 });
                 await mssql.db(testTable).select('*').from(testTable);
