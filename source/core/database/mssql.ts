@@ -191,7 +191,7 @@ export interface MSSQLDatabaseOptions {
  *     console.log('Inserted data:', response);
  * });
  *
- * // Listen to table event created
+ * // Listen to table event updated
  * table.on('updated', (response: Pilot[]) => {
  *     console.log('Updated data:', response);
  * });
