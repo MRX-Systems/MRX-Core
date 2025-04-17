@@ -32,8 +32,6 @@ export * from './error/key/elysiaKeyError';
 export * from './error/key/utilKeyError';
 
 // Exports of TypeScript types
-export * from './types/constant/eventMssql';
-export * from './types/constant/eventTable';
 export * from './types/constant/mssqlErrorCode';
 
 export type * from './types/data/advancedSearch';
@@ -46,6 +44,8 @@ export type * from './types/data/selectedFields';
 export type * from './types/data/streamWithAsyncIterable';
 export type * from './types/data/transaction';
 export type * from './types/data/whereClause';
+export type * from './types/data/msSQLEvents';
+export type * from './types/data/tableEvents';
 
 export * from './types/enum/color';
 export * from './types/enum/httpStatusCode';
