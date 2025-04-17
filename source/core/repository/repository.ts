@@ -84,7 +84,7 @@ export class Repository<TModel = unknown> {
      * The table object representing the database table to interact with.
      * Contains metadata about the table such as name, columns, and primary key information.
      */
-    protected readonly _table: Table;
+    protected readonly _table: Table<TModel>;
 
     /**
      * Creates a new `Repository` instance with the specified Knex.js instance and table object.
@@ -92,7 +92,7 @@ export class Repository<TModel = unknown> {
      * @param knex - The Knex.js instance used to interact with the database.
      * @param table - The table object representing the database table to interact with.
      */
-    public constructor(knex: Knex, table: Table) {
+    public constructor(knex: Knex, table: Table<TModel>) {
         this._knex = knex;
         this._table = table;
     }
