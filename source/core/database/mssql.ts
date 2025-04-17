@@ -5,8 +5,8 @@ import { Repository } from '#/core/repository/repository';
 import { CoreError } from '#/error/coreError';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
 import type { MssqlEventLog } from '#/types/data/mssqlEventLog';
-import type { MSSQLEvents } from '#/types/data/msSQLEvents';
 import { Table } from './table';
+import type { MSSQLEvents } from '../../types/data/mssqlEvents';
 
 /**
  * Options to configure the MSSQL database connection.

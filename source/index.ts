@@ -44,7 +44,7 @@ export type * from './types/data/selectedFields';
 export type * from './types/data/streamWithAsyncIterable';
 export type * from './types/data/transaction';
 export type * from './types/data/whereClause';
-export type * from './types/data/msSQLEvents';
+export type * from './types/data/mssqlEvents';
 export type * from './types/data/tableEvents';
 
 export * from './types/enum/color';
