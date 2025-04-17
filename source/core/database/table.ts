@@ -1,4 +1,6 @@
-import EventEmitter from 'events';
+import { TypedEventEmitter } from '@basalt-lab/basalt-helper';
+
+import type { TableEvents } from '#/types/data/tableEvents';
 
 /**
  * The `Table` class represents a database table and provides access to table metadata
@@ -49,7 +51,7 @@ import EventEmitter from 'events';
  * });
  * ```
  */
-export class Table extends EventEmitter {
+export class Table<TModel> extends TypedEventEmitter<TableEvents<TModel>> {
     /**
      * The name of the database this table belongs to.
      * This helps maintain the relationship between the table and its parent database,
