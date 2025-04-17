@@ -35,6 +35,7 @@ export * from './error/key/utilKeyError';
 export * from './types/constant/mssqlErrorCode';
 
 export type * from './types/data/advancedSearch';
+export type * from './types/data/mssqlEvents';
 export type * from './types/data/mssqlEventLog';
 export type * from './types/data/orderBy';
 export type * from './types/data/queryOptions';
@@ -42,10 +43,9 @@ export type * from './types/data/queryOptionsExtendPagination';
 export type * from './types/data/queryOptionsExtendStream';
 export type * from './types/data/selectedFields';
 export type * from './types/data/streamWithAsyncIterable';
+export type * from './types/data/tableEvents';
 export type * from './types/data/transaction';
 export type * from './types/data/whereClause';
-export type * from './types/data/mssqlEvents';
-export type * from './types/data/tableEvents';
 
 export * from './types/enum/color';
 export * from './types/enum/httpStatusCode';
