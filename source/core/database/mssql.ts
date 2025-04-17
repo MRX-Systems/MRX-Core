@@ -1,12 +1,11 @@
-import { EventEmitter } from 'events';
+import { TypedEventEmitter } from '@basalt-lab/basalt-helper';
 import knex, { type Knex } from 'knex';
 
 import { Repository } from '#/core/repository/repository';
 import { CoreError } from '#/error/coreError';
 import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
-import { EVENT_MSSQL } from '#/types/constant/eventMssql';
-import { EVENT_TABLE } from '#/types/constant/eventTable';
 import type { MssqlEventLog } from '#/types/data/mssqlEventLog';
+import type { MSSQLEvents } from '#/types/data/msSQLEvents';
 import { Table } from './table';
 
 /**
@@ -134,7 +133,7 @@ export interface MSSQLDatabaseOptions {
 
 /**
  * The `MSSQL` class manages the connection and operations with an **MSSQL** database.
- * It supports event emission by extending the {@link EventEmitter} class.
+ * It supports event emission by extending the {@link TypedEventEmitter<TEvents>} class.
  *
  * When an instance of `MSSQL` is created, it can be configured using {@link MSSQLDatabaseOptions}.
  * The connection to the database is established using the {@link MSSQL.connect} method, which performs introspection
@@ -146,10 +145,10 @@ export interface MSSQLDatabaseOptions {
  *
  * ### Key Features:
  * - Manage connections to MSSQL databases.
- * - Support for event logging via {@link EventEmitter}.
+ * - Support for event logging via {@link TypedEventEmitter<TEvents>}.
  * - Automatic generation of repositories and tables for CRUD operations.
  * - Customization of repositories for specific use cases.
- * - Integration of table-specific events to track operations (e.g., `SELECTED`, `CREATED`, `UPDATED`, `DELETED`).
+ * - Integration of table-specific events to track operations (e.g., `selected`, `created`, `updated`, `deleted`).
  *
  * ### Overview:
  * @example
@@ -166,16 +165,40 @@ export interface MSSQLDatabaseOptions {
  * const mssql = new MSSQL(options);
  *
  * // Listen to log events
- * mssql.on(EVENT_MSSQL.LOG, (log: MssqlEventLog) => {
+ * mssql.on('log', (log: MssqlEventLog) => {
  *     console.log('Log:', log);
  * });
  *
  * await mssql.connect(); // Connect to the database
  *
- * // Access a table and listen to its events
- * const table = mssql.table('users');
- * table.on(EVENT_TABLE.SELECTED, (response) => {
+ * // Define a model interface for a table
+ * interface User {
+ *    id: number;
+ *    name: string;
+ *    // other fields...
+ * }
+ *
+ * // Access a table
+ * const table = mssql.getTable<Users>('users');
+ *
+ * // Listen to table event selected
+ * table.on('selected', (response: User | User[]) => {
  *     console.log('Selected data:', response);
+ * });
+ *
+ * // Listen to table event created
+ * table.on('created', (response: User[]) => {
+ *     console.log('Inserted data:', response);
+ * });
+ *
+ * // Listen to table event created
+ * table.on('updated', (response: Pilot[]) => {
+ *     console.log('Updated data:', response);
+ * });
+ *
+ * // Listen to table event deleted
+ * table.on('deleted', (response: Pilot[]) => {
+ *     console.log('Updated data:', response);
  * });
  *
  * // Use the default repository for queries
@@ -200,7 +223,7 @@ export interface MSSQLDatabaseOptions {
  * customRepo.customQuery(); // Execute a custom method
  * ```
  */
-export class MSSQL extends EventEmitter {
+export class MSSQL extends TypedEventEmitter<MSSQLEvents> {
     /**
      * Indicates whether the database is connected.
      */
@@ -214,8 +237,7 @@ export class MSSQL extends EventEmitter {
     /**
      * A map of tables in the database.
      */
-
-    private readonly _tables = new Map<string, Table>();
+    private readonly _tables = new Map<string, Table<unknown>>();
 
     /**
      * A map of repositories for each table.
@@ -257,7 +279,7 @@ export class MSSQL extends EventEmitter {
                             sql: debug.sql,
                             bindings: debug.bindings
                         };
-                        this.emit(EVENT_MSSQL.LOG, eventDebugLog);
+                        this.emit('log', eventDebugLog);
                     }
                 }
             },
@@ -341,14 +363,14 @@ export class MSSQL extends EventEmitter {
      */
     public getRepository<TModel, TRepo extends Repository<TModel>>(
         tableName: string,
-        customRepository: new (knex: Knex, table: Table) => TRepo
+        customRepository: new (knex: Knex, table: Table<TModel>) => TRepo
     ): TRepo;
     public getRepository<TModel = unknown>(
         tableName: string
     ): Repository<TModel>;
     public getRepository(
         tableName: string,
-        customRepository?: new (knex: Knex, table: Table) => Repository
+        customRepository?: new (knex: Knex, table: Table<unknown>) => Repository
     ): Repository {
         if (!this._isConnected)
             throw new CoreError({
@@ -365,7 +387,7 @@ export class MSSQL extends EventEmitter {
         let repo = this._repositories.get(tableName);
 
         if (customRepository) {
-            const table = this._tables.get(tableName) as Table;
+            const table = this._tables.get(tableName) as Table<unknown>;
             if (repo && repo instanceof customRepository)
                 return repo;
             repo = new customRepository(this._db, table);
@@ -384,7 +406,7 @@ export class MSSQL extends EventEmitter {
      * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED})
      * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND})
      */
-    public getTable(tableName: string): Table {
+    public getTable<TModel>(tableName: string): Table<TModel> {
         if (!this._isConnected)
             throw new CoreError({
                 key: DATABASE_KEY_ERROR.MSSQL_NOT_CONNECTED,
@@ -396,7 +418,7 @@ export class MSSQL extends EventEmitter {
                 message: `Table not found: "${tableName}".`,
                 cause: { table: tableName }
             });
-        return this._tables.get(tableName) as Table;
+        return this._tables.get(tableName) as Table<TModel>;
     }
 
     /**
@@ -409,7 +431,7 @@ export class MSSQL extends EventEmitter {
     /**
      * Gets the tables in the database.
      */
-    public get tables(): Map<string, Table> {
+    public get tables(): Map<string, Table<unknown>> {
         return this._tables;
     }
 
@@ -520,16 +542,16 @@ export class MSSQL extends EventEmitter {
         const table = this._tables.get(tables[0]);
         switch (obj.method) {
             case 'select':
-                table?.emit(EVENT_TABLE.SELECTED, response);
+                table?.emit('selected', response);
                 break;
             case 'insert':
-                table?.emit(EVENT_TABLE.CREATED, response);
+                table?.emit('created', response as unknown[]);
                 break;
             case 'update':
-                table?.emit(EVENT_TABLE.UPDATED, response);
+                table?.emit('updated', response as unknown[]);
                 break;
             case 'delete':
-                table?.emit(EVENT_TABLE.DELETED, response);
+                table?.emit('deleted', response as unknown[]);
                 break;
             default:
                 break;
@@ -542,8 +564,8 @@ export class MSSQL extends EventEmitter {
      * @param error - The error that occurred during the query.
      * @param query - The query object containing the method and SQL query string.
      */
-    private _handleQueryError(error: Error, query: Record<string, unknown>): void {
-        this.emit('query:error', error, query);
+    private _handleQueryError(error: Error, query: Knex.QueryBuilder): void {
+        this.emit('error', { error, query });
     }
 
     /**
