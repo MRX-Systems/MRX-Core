@@ -178,8 +178,17 @@ jobs:
           git config --local user.email "necrelox@proton.me"
           git config --local user.name "github-actions"
 
+      - name: Compute the latest stable tag
+        id: compute_latest_tag
+        run: |
+          LAST=$(git tag --list 'v[0-9]*' --sort=-version:refname \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+            | head -n1)
+          echo "Found last stable tag: $LAST"
+          echo "LAST_STABLE=$LAST" >> $GITHUB_ENV
+
       - name: Generate Changelog and bump version
-        run: bunx changelogen@latest --bump --release
+        run: bunx changelogen@latest --from $LAST_STABLE --bump --release
 
       - name: Sign the tag manually
         run: |
