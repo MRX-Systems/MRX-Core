@@ -1,65 +1,63 @@
 {
-  "include": [
-    "source/**/*.ts",
-    "template/**/*.json"
-  ],
   "typedocOptions": {
     "entryPoints": [
       "source/**/*.ts"
     ],
     "exclude": [
-      "./**/index.ts",
-      "cli.ts"
+      "./**/index.ts"
     ],
     "out": "docs"
   },
   "compilerOptions": {
-    "types": ["@types/node"],
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleDetection": "force",
-    "allowJs": true,
 
-    "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "outDir": "./build",                              /* Specify an output folder for all emitted files. */
+    // Type Checking
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true, // because of `strict`
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true, // because of `strict`
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true, // because of `strict`
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // Modules
+    "allowArbitraryExtensions": true,
+    "allowImportingTsExtensions": true, // This flag is only allowed when --noEmit or --emitDeclarationOnly is enabled
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "noUncheckedSideEffectImports": true,
+    "paths": {
+      "#/root/*": ["./*"],
+      "#/*": ["./source/*"],
+    },
+    "resolveJsonModule": true,
+
+    // Emit
+    "outDir": "./dist",
+    "noEmit": true,
     "removeComments": false,
 
-    "rootDir": "./source",                            /* Specify the root folder within your source files. */
-    "baseUrl": "./source",
-    "paths": {
-      "#/*": ["./*"]
-    },
-    "resolveJsonModule": true,                        /* Enable importing .json files. */
-    "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
+    // Javascript Support
+    "allowJs": true,
+    "checkJs": true,
 
+    // Interop Constraints
+    "allowSyntheticDefaultImports": true, // true if moduleResolution is bundler
+    "erasableSyntaxOnly": true,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "lib": ["ESNext"],
+    "target": "ESNext",
 
-    /* Type Checking */
-    "strict": true,                                   /* Enable all strict type-checking options. */
-    "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
-    "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
-    "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
-    "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
-    "strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
-    "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
-    "useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
-    "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
-    "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
-    "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
-    "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
-    "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
-    "noFallthroughCasesInSwitch": true,               /* Enable error reporting for fallthrough cases in switch statements. */
-    "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
-    "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
-    "noPropertyAccessFromIndexSignature": false,      /* Enforces using indexed accessors for keys declared using an indexed type. */
-    "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
-    "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
-
-    /* Completeness */
-    "skipLibCheck": true    
+    // Completeness
+    "skipLibCheck": true,
   }
 }
