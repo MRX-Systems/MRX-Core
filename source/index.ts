@@ -29,6 +29,7 @@ export * from './core/util/stream';
 export * from './error/coreError';
 export * from './error/key/databaseKeyError';
 export * from './error/key/elysiaKeyError';
+export * from './error/key/mailerKeyError';
 export * from './error/key/utilKeyError';
 
 // Exports of TypeScript types
