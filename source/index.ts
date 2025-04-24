@@ -18,6 +18,9 @@ export * from './core/elysia/plugin/ratelimit';
 export * from './core/elysia/schema/info';
 export * from './core/elysia/schema/ping';
 
+// Export Mailer
+export * from './core/mailer/smtp';
+
 // Export store
 export * from './core/store/redis';
 
