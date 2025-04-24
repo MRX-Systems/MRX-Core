@@ -1,5 +1,5 @@
 import { createTransport, type Transporter } from 'nodemailer';
-import type { Options as SendMailOptions } from 'nodemailer/lib/mailer';
+import type { Options } from 'nodemailer/lib/mailer';
 
 import { CoreError } from '#/error/coreError';
 import { MAILER_KEY_ERROR } from '#/error/key/mailerKeyError';
@@ -99,6 +99,11 @@ export interface SMTPConfig {
      */
     pool?: SMTPPoolOptions;
 }
+
+/**
+ * Options for sending an email.
+ */
+export type SendMailOptions = Options;
 
 /**
  * The `SMTP` class manages the connection and operations with an SMTP server.
