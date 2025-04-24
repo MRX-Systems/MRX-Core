@@ -1,4 +1,30 @@
 
+## v2.2.0
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0...v2.2.0)
+
+### 🚀 Enhancements
+
+- **🚀): fix(🔧): perf(⚡): refactor(🧹): build(📦): types(🌊): chore(🦉): examples(🏀): docs(📖): test(🧪): style(🎨:** Ci(🤖): ([af19bad3](https://github.com/Andesite-Lab/Core/commit/af19bad3))
+- **🚀:** [enhance SMTP interfaces and error handling] ([8e7373ef](https://github.com/Andesite-Lab/Core/commit/8e7373ef))
+
+### 📦 Build
+
+- **📦:** [update test script and add missing dependencies] ([dabcf60a](https://github.com/Andesite-Lab/Core/commit/dabcf60a))
+
+### 🦉 Chore
+
+- **🦉:** V2.2.0-canary-20250424-4ec2732f ([19fcc78b](https://github.com/Andesite-Lab/Core/commit/19fcc78b))
+
+### 🧪 Tests
+
+- **🧪:** [add SMTP tests for constructor, connection, disconnection send] ([9c48dd32](https://github.com/Andesite-Lab/Core/commit/9c48dd32))
+
+### ❤️ Contributors
+
+- Github-actions <necrelox@proton.me>
+- Ruby <necrelox@proton.me>
+
 ## v2.2.0-canary-20250424-4ec2732f
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0...v2.2.0-canary-20250424-4ec2732f)
