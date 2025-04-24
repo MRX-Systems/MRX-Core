@@ -15,6 +15,7 @@ await Bun.build({
     entrypoints: [
         './source/core/database/index.ts',
         './source/core/repository/index.ts',
+        './source/core/mailer/index.ts',
         './source/core/store/index.ts',
         './source/core/util/index.ts',
 

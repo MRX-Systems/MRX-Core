@@ -1,4 +1,16 @@
 
+## v2.2.1-canary-20250424-a36e6507
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.0...v2.2.1-canary-20250424-a36e6507)
+
+### 📦 Build
+
+- **📦:** [add mailer module to core exports] ([d3fcdba0](https://github.com/Andesite-Lab/Core/commit/d3fcdba0))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.2.0
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.1.0...v2.2.0)
