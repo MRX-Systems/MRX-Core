@@ -17,7 +17,7 @@
     "start": "bun build/index.js",
     "test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
     "test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
-    "test": "bun run test:unit && bun run test:integration",
+    "test": "bun test --coverage --timeout 5500",
     "docs": "typedoc",
     "fix-lint": "eslint --fix ./source",
     "lint": "eslint ./source"
@@ -26,6 +26,7 @@
     "@eslint/js": "^9.25.1",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/bun": "^1.2.10",
+    "@types/nodemailer": "^6.4.17",
     "eslint": "^9.25.1",
     "globals": "^16.0.0",
     "tsc-alias": "^1.8.15",
@@ -40,6 +41,7 @@
     "jose": "^6.0.10",
     "knex": "^3.1.0",
     "mssql": "^11.0.1",
+    "nodemailer": "^6.10.1",
     "typescript": "^5.8.3"
   },
   "exports": {
