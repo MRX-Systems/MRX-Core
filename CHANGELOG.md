@@ -1,4 +1,21 @@
 
+## v2.2.2
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.1...v2.2.2)
+
+### 🌊 Types
+
+- **🌊:** [update SendMailOptions type definition] Updated the SendMailOptions type to directly use Options from Nodemailer, ensuring consistency and clarity in type definitions for email sending options. ([a8c80a21](https://github.com/Andesite-Lab/Core/commit/a8c80a21))
+
+### 🦉 Chore
+
+- **🦉:** V2.2.2-canary-20250424-8000e680 ([a1415446](https://github.com/Andesite-Lab/Core/commit/a1415446))
+
+### ❤️ Contributors
+
+- Github-actions <necrelox@proton.me>
+- Ruby <necrelox@proton.me>
+
 ## v2.2.2-canary-20250424-8000e680
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.1...v2.2.2-canary-20250424-8000e680)
