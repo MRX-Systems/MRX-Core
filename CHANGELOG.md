@@ -1,4 +1,16 @@
 
+## v2.2.3-canary-20250424-9a05df46
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.2...v2.2.3-canary-20250424-9a05df46)
+
+### 🌊 Types
+
+- **🌊:** [update SendMailOptions and add new interfaces] ([01ad4604](https://github.com/Andesite-Lab/Core/commit/01ad4604))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.2.2
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.1...v2.2.2)
