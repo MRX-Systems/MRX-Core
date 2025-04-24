@@ -49,6 +49,7 @@
     "./repository": "./dist/core/repository/index.js",
     "./elysia/plugin": "./dist/core/elysia/plugin/index.js",
     "./elysia/schema": "./dist/core/elysia/schema/index.js",
+    "./mailer": "./dist/core/mailer/index.js",
     "./store": "./dist/core/store/index.js",
     "./util": "./dist/core/util/index.js",
     "./error": "./dist/error/index.js",
