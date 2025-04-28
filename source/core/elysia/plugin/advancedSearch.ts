@@ -294,7 +294,11 @@ export const createBaseSearchSchemaWithPagination = <TInferedObject extends TObj
  *   });
  * ```
  */
-export const advancedSearchPlugin = <TInferedObject extends TObject>(name: string, baseSchema: TInferedObject) => new Elysia({
+export const advancedSearchPlugin = <TInferedObject extends TObject>(
+    name: string,
+    baseSchema: TInferedObject,
+    additionalExcludedProps: string[] = []
+) => new Elysia({
     name: `advancedSearchPlugin-${name}`,
     seed: baseSchema
 })
@@ -337,7 +341,8 @@ export const advancedSearchPlugin = <TInferedObject extends TObject>(name: strin
                     '$selectedFields',
                     '$q',
                     '$limit',
-                    '$offset'
+                    '$offset',
+                    ...additionalExcludedProps
                 ], true);
 
                 // Process property-specific where clauses (sanitized to AdvancedSearch[])
