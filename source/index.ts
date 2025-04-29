@@ -18,6 +18,9 @@ export * from './core/elysia/plugin/ratelimit';
 export * from './core/elysia/schema/info';
 export * from './core/elysia/schema/ping';
 
+// Export Mailer
+export * from './core/mailer/smtp';
+
 // Export store
 export * from './core/store/redis';
 
@@ -29,6 +32,7 @@ export * from './core/util/stream';
 export * from './error/coreError';
 export * from './error/key/databaseKeyError';
 export * from './error/key/elysiaKeyError';
+export * from './error/key/mailerKeyError';
 export * from './error/key/utilKeyError';
 
 // Exports of TypeScript types
