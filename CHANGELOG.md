@@ -1,4 +1,16 @@
 
+## v2.2.4-canary-20250430-489acacc
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.3...v2.2.4-canary-20250430-489acacc)
+
+### 🔧 Fixes
+
+- **🔧:** [Add empty string literal to response schema] ([3adc5a2a](https://github.com/Andesite-Lab/Core/commit/3adc5a2a))
+
+### ❤️ Contributors
+
+- DamienMonchaty <damienmonchaty@hotmail.fr>
+
 ## v2.2.3
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.2...v2.2.3)
