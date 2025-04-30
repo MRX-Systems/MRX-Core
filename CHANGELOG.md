@@ -1,4 +1,16 @@
 
+## v2.2.4-canary-20250430-e3274d25
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.4-canary-20250430-489acacc...v2.2.4-canary-20250430-e3274d25)
+
+### 🤖 CI
+
+- **🤖:** [Enhance CI workflows with detailed summaries and checks] ([8486791d](https://github.com/Andesite-Lab/Core/commit/8486791d))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.2.4-canary-20250430-489acacc
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.3...v2.2.4-canary-20250430-489acacc)
