@@ -270,7 +270,8 @@ export const createResponse200Schema = <TInferedObject extends TObject>(schema: 
         contentSchema[key] = t.Union([
             properties[key],
             t.Undefined(),
-            t.Null()
+            t.Null(),
+            t.Literal('')
         ]);
 
     return t.Object({
