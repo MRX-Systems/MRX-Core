@@ -1,4 +1,31 @@
 
+## v2.3.0
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.3...v2.3.0)
+
+### 🚀 Enhancements
+
+- **🚀:** [Add additionalExcludedProps to advancedSearchPlugin] ([c962f4aa](https://github.com/Andesite-Lab/Core/commit/c962f4aa))
+
+### 🔧 Fixes
+
+- **🔧:** [Add empty string literal to response schema] ([3adc5a2a](https://github.com/Andesite-Lab/Core/commit/3adc5a2a))
+
+### 🦉 Chore
+
+- **🦉:** V2.2.4-canary-20250430-489acacc ([b5e16220](https://github.com/Andesite-Lab/Core/commit/b5e16220))
+- **🦉:** V2.2.4-canary-20250430-e3274d25 ([960d7402](https://github.com/Andesite-Lab/Core/commit/960d7402))
+
+### 🤖 CI
+
+- **🤖:** [Enhance CI workflows with detailed summaries and checks] ([8486791d](https://github.com/Andesite-Lab/Core/commit/8486791d))
+
+### ❤️ Contributors
+
+- DamienMonchaty <damienmonchaty@hotmail.fr>
+- Github-actions <necrelox@proton.me>
+- Ruby <necrelox@proton.me>
+
 ## v2.2.4-canary-20250430-e3274d25
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.4-canary-20250430-489acacc...v2.2.4-canary-20250430-e3274d25)
