@@ -24,11 +24,25 @@ on:
         required: true
       GH_TOKEN:
         required: true
+    outputs:
+      tag:
+        value: ${{ jobs.publish-release.outputs.tag }}
+        description: 'The tag name of the release'
+      changelog:
+        value: ${{ jobs.publish-release.outputs.changelog }}
+        description: 'The changelog generated for the release'
+      isPrerelease:
+        value: ${{ jobs.publish-release.outputs.isPrerelease }}
+        description: 'Indicates if the release is a prerelease or not'
 
 jobs:
   publish-release:
     name: Publish Release
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.latest_tag.outputs.tag_name }}
+      changelog: ${{ steps.changelog_diff.outputs.changelog }}
+      isPrerelease: ${{ inputs.isPrerelease }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,7 +61,6 @@ jobs:
 
       - name: Import GPG key and Configure Git
         run: |
-          echo "${{ secrets.KEY_GPG }}" > key.gpg && cat key.gpg
           echo "${{ secrets.KEY_GPG }}" | gpg --batch --import
           git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
           git config --local commit.gpgsign true

@@ -25,7 +25,7 @@ jobs:
     secrets:
       KEY_SSH: ${{ secrets.KEY_SSH }}
       KEY_GPG: ${{ secrets.KEY_GPG }}
-      GIT_EMAIL: "necrelox@proton.me"
+      GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
   build:
     needs: lint
