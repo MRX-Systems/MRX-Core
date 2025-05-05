@@ -6,327 +6,89 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write   # allow push, tag, release
+
+# Secrets used in the workflow
+# KEY_SSH: SSH key to access the repository (used with deploy keys)
+# KEY_GPG: GPG key to sign commits or tags
+# GIT_EMAIL: Email address used for git commits
+# NPM_TOKEN: NPM token for publishing packages
+
+
 jobs:
   lint:
     if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
-    name: Check Lint (try to auto-fix if possible)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: 'main' # head_ref is the branch name of the pull request
-          fetch-depth: 0 # Fetch all history for all branches and tags
-          ssh-key: ${{ secrets.ANDESITE_SSH }} # SSH key to access the repository (used with deploy keys)
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Run Lint and try to auto-fix if possible
-        id: lint_step
-        run: |
-          echo "## 🔍 Code Analysis (Lint)" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-      
-          if bun run lint; then
-            echo "- ✅ No lint errors detected." >> $GITHUB_STEP_SUMMARY
-            echo "lint_status=clean" >> $GITHUB_ENV
-          else
-            echo "- ❌ Lint errors detected. Attempting automatic correction..." >> $GITHUB_STEP_SUMMARY
-      
-            bun run fix-lint
-      
-            if bun run lint; then
-                echo "- ✅ Automatic correction successful." >> $GITHUB_STEP_SUMMARY
-              echo "lint_status=fixed" >> $GITHUB_ENV
-            else
-                echo "- ❌ Automatic correction failed. Errors remain." >> $GITHUB_STEP_SUMMARY
-              echo "lint_status=failed" >> $GITHUB_ENV
-            fi
-          fi
-
-      - name: Check for changes after lint
-        id: check_changes
-        run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-            echo "## 🔄 Checking for changes" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-      
-          if git diff --name-only | grep -E '\.(js|ts|jsx|tsx|css|scss|json|md|yml|yaml)$'; then
-            echo "- 📝 Changes have been detected in the following files:" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "| Fichier modifié |" >> $GITHUB_STEP_SUMMARY
-            echo "|:---------------|" >> $GITHUB_STEP_SUMMARY
-            git diff --name-only | grep -E '\.(js|ts|jsx|tsx|css|scss|json|md|yml|yaml)$' | while read file; do
-              echo "| \`$file\` |" >> $GITHUB_STEP_SUMMARY
-            done
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          else
-            echo "- ✅ No files modified after lint." >> $GITHUB_STEP_SUMMARY
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and Push Lint Fixes
-        if: steps.check_changes.outputs.has_changes == 'true'
-        run: |
-          # Import GPG key to sign commits
-          echo "${{ secrets.ANDESITE_GPG }}" | gpg --batch --import
-          git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
-          git config --local commit.gpgsign true
-          git config --local tag.gpgsign true
-
-          # Configure git user for commit
-          git config --local user.email "necrelox@proton.me"
-          git config --local user.name "github-actions"
-
-          # Add and commit only if there are real changes (safe check)
-          if [ -n "$(git status --porcelain)" ]; then
-            git add .
-            git commit -m "style(🎨): Auto-fix lint issues"
-
-            # Push changes to the pull request branch
-            git push origin HEAD:main
-          else
-            echo "No changes to commit."
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🚀 Automatic Publication" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Style fixes pushed to the pull request branch." >> $GITHUB_STEP_SUMMARY
+    uses: ./.github/workflows/lint.yml
+    with:
+      branch: main
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
+      KEY_GPG: ${{ secrets.KEY_GPG }}
+      GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
   build:
-    name: Check Build
-    runs-on: ubuntu-latest
     needs: lint
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: "main" # head_ref is the branch name of the pull request
-          fetch-depth: 0 # Fetch all history for all branches and tags
-          ssh-key: ${{ secrets.ANDESITE_SSH }} # SSH key to access the repository (used with deploy keys)
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with: 
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Run Build and update Summary
-        run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🏗️ Build Verification" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if bun run build; then
-            echo "- ✅ Build succeeded." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ Build failed. Please check the logs above for details." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
+    uses: ./.github/workflows/build.yml
+    with:
+      branch: main
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
 
   unit-test:
-    name: Check unit tests
-    runs-on: ubuntu-latest
     needs: build
-    env:
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      branch: main
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
       MSSQL_USER: ${{ secrets.MSSQL_USER }}
       MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
-
       STORE_HOST: ${{ secrets.STORE_HOST }}
-      STORE_PORT: ${{ secrets.STORE_PORT }}
       STORE_KEY: ${{ secrets.STORE_KEY }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: "main" # head_ref is the branch name of the pull request
-          fetch-depth: 0 # Fetch all history for all branches and tags
-          ssh-key: ${{ secrets.ANDESITE_SSH }} # SSH key to access the repository (used with deploy keys)
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Run Unit Tests and update Summary
-        run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🧪 Unit Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Run tests and capture output
-          if bun run test:unit; then
-            echo "- ✅ All unit tests passed." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ Some unit tests failed." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
+      STORE_PORT: ${{ secrets.STORE_PORT }}
 
   integration-test:
-    name: Check integration tests
-    runs-on: ubuntu-latest
     needs: build
-    env:
+    uses: ./.github/workflows/integration-test.yml
+    with:
+      branch: main
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
       MSSQL_USER: ${{ secrets.MSSQL_USER }}
       MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
-
       STORE_HOST: ${{ secrets.STORE_HOST }}
-      STORE_PORT: ${{ secrets.STORE_PORT }}
       STORE_KEY: ${{ secrets.STORE_KEY }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: "main" # head_ref is the branch name of the pull request
-          fetch-depth: 0 # Fetch all history for all branches and tags
-          ssh-key: ${{ secrets.ANDESITE_SSH }} # SSH key to access the repository (used with deploy keys)
+      STORE_PORT: ${{ secrets.STORE_PORT }}
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Run Integration Tests and update Summary
-        run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🧪 Integration Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Run tests and capture output
-          if bun run test:integration; then
-            echo "- ✅ All integration tests passed." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ Some integration tests failed." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-  stable:
-    name: Create Stable Release
-    runs-on: ubuntu-latest
+  create-github-release:
     needs: [unit-test, integration-test]
-    outputs:
-      tag: ${{ steps.latest_tag.outputs.tag_name }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: "main" # head_ref is the branch name of the pull request
-          fetch-depth: 0 # Fetch all history for all branches and tags
-          ssh-key: ${{ secrets.ANDESITE_SSH }} # SSH key to access the repository (used with deploy keys)
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Fetch tags
-        run: git fetch --tags --prune
-
-      - name: Import GPG key and Configure Git
-        run: |
-          echo "${{ secrets.ANDESITE_GPG }}" | gpg --batch --import
-          git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
-          git config --local commit.gpgsign true
-          git config --local tag.gpgsign true
-          git config --local user.email "necrelox@proton.me"
-          git config --local user.name "github-actions"
-
-      - name: Compute the latest stable tag
-        id: compute_latest_tag
-        run: |
-          LAST=$(git tag --list 'v[0-9]*' --sort=-version:refname \
-          | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
-          | head -n1)
-          echo "Found last stable tag: $LAST"
-          echo "last_stable=$LAST" >> $GITHUB_OUTPUT
-
-      - name: Generate Changelog and bump version
-        run: bunx changelogen@latest --from ${{ steps.compute_latest_tag.outputs.last_stable }} --bump --release
-      
-      - name: Sign the tag manually
-        run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          echo "Signing tag: $LATEST_TAG"
-          git tag -s "$LATEST_TAG" -m "Signed Stable Release $LATEST_TAG" --force
-
-      - name: Push generated tag
-        run: git push origin HEAD:main --tags
-
-      - name: Verify tag signature
-        run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          git tag -v "$LATEST_TAG"
-
-      - name: Extract Changelog additions
-        id: changelog_diff
-        run: |
-          PREV_MAIN=$(git log -1 --pretty=%P | awk '{print $1}')
-          git diff ${PREV_MAIN} HEAD --unified=0 CHANGELOG.md | grep '^+' | grep -v '++' | sed 's/^+//' > temp.md
-          echo "Changelog additions between previous main and current main:"
-          cat temp.md
-
-      - name: Extract latest tag
-        id: latest_tag
-        run: |
-          echo "tag_name=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
-
-      - name: Create Stable Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Using tag: ${{ steps.latest_tag.outputs.tag_name }}"
-          gh release create "${{ steps.latest_tag.outputs.tag_name }}" \
-            --title "Stable Release ${{ steps.latest_tag.outputs.tag_name }}" \
-            --notes "$(cat temp.md)" \
-            --latest
-
-      - name: Rebase develop branch to main
-        run: |
-          git checkout develop
-          git rebase main
-          git push origin develop
-
-      - name: Final Summary
-        run: |
-          echo "## 🚀 Stable Release Created" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- 🔖 Tag: **${{ steps.latest_tag.outputs.tag_name }}**" >> $GITHUB_STEP_SUMMARY
-          echo "- 📦 [View Release on GitHub](https://github.com/${{ github.repository }}/releases/tag/${{ steps.latest_tag.outputs.tag_name }})" >> $GITHUB_STEP_SUMMARY
-          echo "- 🔒 Tag and commits signed with GPG" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Stable publication successful." >> $GITHUB_STEP_SUMMARY
+    uses: ./.github/workflows/create-github-release.yml
+    with:
+      branch: main
+      versionSuffix: ''
+      isPrerelease: false
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
+      KEY_GPG: ${{ secrets.KEY_GPG }}
+      GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+      GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
 
   doc:
-    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
     name: Doc
     runs-on: ubuntu-latest
-    needs: stable
+    needs: create-github-release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: 'main'
           fetch-depth: 0
-          ssh-key: ${{ secrets.ANDESITE_SSH }}
+          ssh-key: ${{ secrets.KEY_SSH }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -342,39 +104,15 @@ jobs:
       - name: Upload Coverage
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.ANDESITE_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
 
-  publish:
-    if: contains(github.event.head_commit.message, 'Merge') || contains(github.event.head_commit.message, 'merge')
-    name: Publish Stable Release
-    runs-on: ubuntu-latest
-    needs: stable
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: 'main'
-          fetch-depth: 0
-          ssh-key: ${{ secrets.ANDESITE_SSH }}
-
-      - name: Pull latest changes from main
-        run: |
-          git checkout main
-          git pull origin main --ff-only
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Build the project
-        run: bun run build
-
-      - name: Publish the project
-        run: bun publish --access public
-        env:
-          NPM_CONFIG_TOKEN: ${{secrets.NPM_TOKEN}}
+  publish-npm:
+    needs: create-github-release
+    uses: ./.github/workflows/publish-npm.yml
+    with:
+      branch: main
+      npmTag: latest
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

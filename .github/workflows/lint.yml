@@ -1,0 +1,135 @@
+name: Reusable Lint
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: 'Branch to checkout'
+        required: true
+        type: string
+    secrets:
+      KEY_SSH:
+        required: true
+      KEY_GPG:
+        required: true
+      GIT_EMAIL:
+        required: true
+
+jobs:
+  lint:
+    name: Check Lint (try to auto-fix if possible)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+          ssh-key: ${{ secrets.KEY_SSH }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Run Lint and try to auto-fix if possible
+        id: lint_step
+        run: |
+          # Lint before auto-fix
+          bunx eslint ./source --format json -o lint-before.json || true
+          error_count_before=$(jq '[.[].errorCount] | add' lint-before.json)
+          warning_count_before=$(jq '[.[].warningCount] | add' lint-before.json)
+          files_with_errors_before=$(jq '[.[] | select(.errorCount > 0)] | length' lint-before.json)
+
+          # Try auto-fix
+          bun run fix-lint || true
+
+          # Lint after auto-fix
+          bunx eslint ./source --format json -o lint-after.json || true
+          error_count_after=$(jq '[.[].errorCount] | add' lint-after.json)
+          warning_count_after=$(jq '[.[].warningCount] | add' lint-after.json)
+          files_with_errors_after=$(jq '[.[] | select(.errorCount > 0)] | length' lint-after.json)
+
+          # Files changed by auto-fix
+          git diff --name-only > lint-fixed-files.txt
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 Lint Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Before Fix | After Fix | Files With Errors | Files Fixed |" >> $GITHUB_STEP_SUMMARY
+          echo "|:----------:|:---------:|:----------------:|:-----------:|" >> $GITHUB_STEP_SUMMARY
+          echo "| $error_count_before | $error_count_after | $files_with_errors_before | $(cat lint-fixed-files.txt | wc -l) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$error_count_before" = "0" ]; then
+            echo "✅ No lint issues detected." >> $GITHUB_STEP_SUMMARY
+          elif [ "$error_count_after" = "0" ]; then
+            echo "✅ All lint issues were fixed automatically." >> $GITHUB_STEP_SUMMARY
+            if [ -s lint-fixed-files.txt ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### 📝 Files fixed automatically" >> $GITHUB_STEP_SUMMARY
+              echo "| File |" >> $GITHUB_STEP_SUMMARY
+              echo "|:-----|" >> $GITHUB_STEP_SUMMARY
+              while read file; do
+                echo "| \`$file\` |" >> $GITHUB_STEP_SUMMARY
+              done < lint-fixed-files.txt
+            fi
+          else
+            echo "❌ Some lint errors remain after auto-fix." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 🚨 Files with remaining errors" >> $GITHUB_STEP_SUMMARY
+            echo "| File | Errors |" >> $GITHUB_STEP_SUMMARY
+            echo "|:-----|:------:|" >> $GITHUB_STEP_SUMMARY
+            jq -r '.[] | select(.errorCount > 0) | "| `" + .filePath + "` | " + (.errorCount|tostring) + " |"' lint-after.json >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Status for workflow
+          if [ "$error_count_after" = "0" ]; then
+            exit 0
+          else
+            exit 1
+          fi
+
+      - name: Check for changes after lint
+        id: check_changes
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔄 Checking for changes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if git diff --name-only | grep -E '\\.(js|ts|jsx|tsx|css|scss|json|md|yml|yaml)$'; then
+            echo "- 📝 Changes have been detected in the following files:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Modified File |" >> $GITHUB_STEP_SUMMARY
+            echo "|:---------------|" >> $GITHUB_STEP_SUMMARY
+            git diff --name-only | grep -E '\\.(js|ts|jsx|tsx|css|scss|json|md|yml|yaml)$' | while read file; do
+              echo "| \`$file\` |" >> $GITHUB_STEP_SUMMARY
+            done
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "- ✅ No files modified after lint." >> $GITHUB_STEP_SUMMARY
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and Push Lint Fixes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          echo "${{ secrets.KEY_GPG }}" | gpg --batch --import
+          git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
+          git config --local commit.gpgsign true
+          git config --local tag.gpgsign true
+          git config --local user.email "${{ secrets.GIT_EMAIL }}"
+          git config --local user.name "github-actions"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "style(🎨): Auto-fix lint issues"
+            git push origin HEAD:${{ inputs.branch }}
+          else
+            echo "No changes to commit."
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Automatic Publication" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Style fixes pushed to the branch." >> $GITHUB_STEP_SUMMARY
