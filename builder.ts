@@ -5,8 +5,11 @@ const devDependencies = 'devDependencies' in pkg ? Object.keys(pkg.devDependenci
 const peerDependencies = 'peerDependencies' in pkg ? Object.keys(pkg.peerDependencies ?? {}) : [];
 
 await Bun.$`rm -rf dist`;
+console.log('🗑️  Deleted dist folder if it existed. ✅');
 
 await Bun.$`tsc --project tsconfig.dts.json`;
+await Bun.$`tsc-alias -p tsconfig.dts.json`;
+console.log('🔍 Type analysis and generation completed. ✅');
 
 await Bun.build({
     target: 'bun',
@@ -35,9 +38,6 @@ await Bun.build({
     minify: true,
     sourcemap: 'none'
 });
-
-await Bun.$`tsc-alias -p tsconfig.dts.json`;
-
-console.log('Build completed 🎉!');
+console.log('🎉 Build completed successfully! 🎉');
 
 process.exit(0);
