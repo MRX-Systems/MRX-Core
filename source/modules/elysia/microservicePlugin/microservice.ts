@@ -1,9 +1,8 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { existsSync } from 'fs';
 import { platform } from 'os';
 
-import { infoResponse200Schema } from './schemas/info';
-import { pingResponse200Schema } from './schemas/ping';
+import { infoResponse200Schema } from '#/core/elysia/schema/info';
 
 /**
  * Recursively finds the path to the nearest package.json file.
@@ -56,17 +55,13 @@ export const microservicePlugin = new Elysia({
     }
 })
     .model({
-        infoResponse200: infoResponse200Schema,
-        pingResponse200: pingResponse200Schema
+        infoResponse200: infoResponse200Schema
     })
-    .get('/ping', () => ({
-        message: 'pong'
-    }), {
+    .head('/ping', () => undefined, {
         detail: {
             summary: 'Ping',
             description: 'Ping the microservice to check if it is alive'
-        },
-        response: 'pingResponse200'
+        }
     })
     .get('/info', () => ({
         message: 'Microservice Information',
