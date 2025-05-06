@@ -18,14 +18,10 @@ docs/
 
 # === Tool configuration files ===
 eslint.config.js
-jest.config.json
 
 # === Dependency-related folders and files ===
 node_modules/
-package-lock.json
-yarn.lock
 bun.lock
-pnpm-lock.yaml
 
 # === Project-specific folders ===
 source/
@@ -35,4 +31,3 @@ test/
 README.md
 tsconfig.json
 tsconfig.dts.json
-translate.json

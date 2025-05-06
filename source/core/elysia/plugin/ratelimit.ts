@@ -168,4 +168,4 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
             'X-RateLimit-Reset': (await redis.client.ttl(key)).toString()
         };
     })
-    .as('global');
+    .as('scoped');

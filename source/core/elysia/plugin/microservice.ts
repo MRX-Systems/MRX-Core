@@ -83,4 +83,4 @@ export const microservicePlugin = new Elysia({
         },
         response: 'infoResponse200'
     })
-    .as('plugin');
+    .as('scoped');

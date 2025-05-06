@@ -1,4 +1,43 @@
 
+## v2.3.1-canary-20250506-24a9b45
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.1-canary-20250505-475c5a2...v2.3.1-canary-20250506-24a9b45)
+
+### 🧹 Refactors
+
+- **🧹:** [Change plugin registration from 'plugin' to 'scoped'] ([e2595494](https://github.com/Andesite-Lab/Core/commit/e2595494))
+
+### 📦 Build
+
+- **📦:** [Update dependencies in package.json] ([9a83b502](https://github.com/Andesite-Lab/Core/commit/9a83b502))
+
+### 🧪 Tests
+
+- **🧪:** [Fix summary formatting in error test case] Updated the summary message for the validation error in the error plugin test to correct spacing and improve readability. ([0986e20a](https://github.com/Andesite-Lab/Core/commit/0986e20a))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
+## v2.3.1-canary-20250505-475c5a2
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.0...v2.3.1-canary-20250505-475c5a2)
+
+### 🦉 Chore
+
+- **🦉:** [Update .gitignore and .npmignore for clarity and organization] ([b12360cd](https://github.com/Andesite-Lab/Core/commit/b12360cd))
+- **🦉:** [Refactor build process and improve logging messages] ([f53cdc64](https://github.com/Andesite-Lab/Core/commit/f53cdc64))
+- **🦉:** [delete old file translate] ([bf39495e](https://github.com/Andesite-Lab/Core/commit/bf39495e))
+
+### 🤖 CI
+
+- **🤖:** [add reusable workflows for build, lint, unit test, and release] ([e6bbf8d6](https://github.com/Andesite-Lab/Core/commit/e6bbf8d6))
+- **🤖:** [Add outputs for publish-release job in GitHub Actions workflow] ([cf24a876](https://github.com/Andesite-Lab/Core/commit/cf24a876))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.3.0
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.2.3...v2.3.0)

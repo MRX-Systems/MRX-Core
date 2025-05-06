@@ -424,7 +424,7 @@ const _injectDynamicDbInContext = (database: string | DynamicDatabaseSelectorPlu
             baseDatabaseConfig: database.baseDatabaseConfig,
             headerKey: database.headerKey || 'database-using'
         }));
-    return plugin.as('plugin');
+    return plugin.as('scoped');
 };
 
 /**
