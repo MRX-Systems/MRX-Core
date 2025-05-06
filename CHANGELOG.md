@@ -1,4 +1,24 @@
 
+## v2.3.1-canary-20250506-24a9b45
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.1-canary-20250505-475c5a2...v2.3.1-canary-20250506-24a9b45)
+
+### 🧹 Refactors
+
+- **🧹:** [Change plugin registration from 'plugin' to 'scoped'] ([e2595494](https://github.com/Andesite-Lab/Core/commit/e2595494))
+
+### 📦 Build
+
+- **📦:** [Update dependencies in package.json] ([9a83b502](https://github.com/Andesite-Lab/Core/commit/9a83b502))
+
+### 🧪 Tests
+
+- **🧪:** [Fix summary formatting in error test case] Updated the summary message for the validation error in the error plugin test to correct spacing and improve readability. ([0986e20a](https://github.com/Andesite-Lab/Core/commit/0986e20a))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.3.1-canary-20250505-475c5a2
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.0...v2.3.1-canary-20250505-475c5a2)
