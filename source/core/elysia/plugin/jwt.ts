@@ -365,5 +365,5 @@ export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOption<
                 }
             }
         })
-        .as('plugin');
+        .as('scoped');
 };
