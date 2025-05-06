@@ -1,4 +1,8 @@
 
+## v2.3.1
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.1-canary-20250506-24a9b45...v2.3.1)
+
 ## v2.3.1-canary-20250506-24a9b45
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.1-canary-20250505-475c5a2...v2.3.1-canary-20250506-24a9b45)
