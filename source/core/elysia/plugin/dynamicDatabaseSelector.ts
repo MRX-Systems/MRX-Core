@@ -2,8 +2,8 @@ import { SingletonManager } from '@basalt-lab/basalt-helper/util';
 import { Elysia, t } from 'elysia';
 
 import { MSSQL, type MSSQLDatabaseOptions } from '#/core/database/mssql';
-import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 import { CoreError } from '#/error/coreError';
+import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
 
 /**
  * Options to configure the dynamic database selector plugin.
@@ -140,4 +140,4 @@ export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPl
             }
         }
     })
-    .as('plugin');
+    .as('scoped');

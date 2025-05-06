@@ -360,4 +360,4 @@ export const advancedSearchPlugin = <TInferedObject extends TObject>(
             }
         }
     })
-    .as('plugin');
+    .as('scoped');
