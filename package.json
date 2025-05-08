@@ -1,6 +1,6 @@
 {
   "name": "@andesite-lab/andesite-core",
-  "version": "2.3.1",
+  "version": "2.3.2-canary-20250508-f5780cc",
   "author": "Ruby",
   "description": "Andesite - Core provides a set of tools to help you build a microservice",
   "type": "module",
@@ -28,7 +28,7 @@
     "@types/bun": "^1.2.12",
     "@types/nodemailer": "^6.4.17",
     "eslint": "^9.26.0",
-    "globals": "^16.0.0",
+    "globals": "^16.1.0",
     "tsc-alias": "^1.8.16",
     "typedoc": "^0.28.4",
     "typescript-eslint": "^8.32.0"
@@ -36,12 +36,12 @@
   "peerDependencies": {
     "@basalt-lab/basalt-helper": "^1.13.3",
     "@basalt-lab/basalt-logger": "^1.12.2",
-    "elysia": "^1.3.0",
+    "elysia": "^1.3.1",
     "ioredis": "^5.6.1",
     "jose": "^6.0.11",
     "knex": "^3.1.0",
     "mssql": "^11.0.1",
-    "nodemailer": "^7.0.2",
+    "nodemailer": "^7.0.3",
     "typescript": "^5.8.3"
   },
   "exports": {

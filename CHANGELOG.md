@@ -1,4 +1,21 @@
 
+## v2.3.2-canary-20250508-f5780cc
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.1-canary-20250506-24a9b45...v2.3.2-canary-20250508-f5780cc)
+
+### 📦 Build
+
+- **📦:** [Update dependencies in package.json] ([fc17482b](https://github.com/Andesite-Lab/Core/commit/fc17482b))
+
+### 🦉 Chore
+
+- **🦉:** V2.3.1 ([587baeeb](https://github.com/Andesite-Lab/Core/commit/587baeeb))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <necrelox@proton.me>
+
 ## v2.3.1
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.1-canary-20250506-24a9b45...v2.3.1)
