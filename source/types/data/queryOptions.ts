@@ -22,11 +22,12 @@ export interface QueryOptions<TModel> {
      */
     orderBy?: OrderBy<NoInfer<TModel>>;
     /**
-     * If the query does not return any result, throw an error or not. (default: false)
+     * Whether to throw an error if the query does not return any result.
+     * @default false
      */
     throwIfNoResult?: boolean;
     /**
-     * If the query is a transaction ({@link Transaction})
+     * The transaction context for the query. ({@link Transaction})
      */
     transaction?: Transaction;
 }
