@@ -1,12 +1,14 @@
 /**
- * Array of two elements, where the first element is the name of the field to order by and the second element is the order direction.
+ * Represents an ordering instruction for queries.
+ *
+ * This tuple specifies the field to order by and the direction of the ordering.
  *
  * @template TModel - The type of the object to order by.
  *
  * @example
  * ```typescript
  * type User = {
- *    id: number;
+ *   id: number;
  *   name: string;
  * };
  *
