@@ -3,6 +3,8 @@ import type { PassThrough } from 'stream';
 /**
  * A stream with an async iterable interface. ({@link PassThrough} & {@link AsyncIterable})
  *
+ * This type enables both stream-based and async iteration access to the same data source.
+ *
  * @template TModel - The type of the object to retrieve.
  *
  * @example
