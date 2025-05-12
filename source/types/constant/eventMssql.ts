@@ -1,7 +1,7 @@
 /**
  * These events are emitted by the `MSSQL` class to provide logging.
  */
-export const EVENT_MSSQL = {
+export const eventMssql = {
     /** Emitted for general log messages. */
-    LOG: 'log'
+    log: 'log'
 } as const;

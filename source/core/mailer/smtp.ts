@@ -1,9 +1,9 @@
 import { createTransport, type Transporter } from 'nodemailer';
 import type { Readable } from 'stream';
+import type { Url } from 'url';
 
 import { CoreError } from '#/error/coreError';
-import { MAILER_KEY_ERROR } from '#/error/key/mailerKeyError';
-import type { Url } from 'url';
+import { mailerKeyError } from '#/error/key/mailerKeyError';
 
 /**
  * Credentials required for SMTP authentication.
@@ -334,16 +334,16 @@ export class SMTP {
      *
      * After creating the transporter, it attempts to verify the connection to the SMTP server.
      * If verification fails, a {@link CoreError} is thrown with the error key
-     * {@link MAILER_KEY_ERROR.SMTP_CONNECTION_ERROR}, including the original error as the cause.
+     * {@link mailerKeyError.smtpConnectionError}, including the original error as the cause.
      *
-     * @throws ({@link CoreError}): If the transporter is already connected. ({@link MAILER_KEY_ERROR.SMTP_ALREADY_CONNECTED})
-     * @throws ({@link CoreError}): If the connection or verification fails. ({@link MAILER_KEY_ERROR.SMTP_CONNECTION_ERROR})
+     * @throws ({@link CoreError}): If the transporter is already connected. ({@link mailerKeyError.smtpAlreadyConnected})
+     * @throws ({@link CoreError}): If the connection or verification fails. ({@link mailerKeyError.smtpConnectionError})
      */
     public async connect(): Promise<void> {
         // If already connected, throw an error.
         if (this._transporter)
             throw new CoreError({
-                key: MAILER_KEY_ERROR.SMTP_ALREADY_CONNECTED,
+                key: mailerKeyError.smtpAlreadyConnected,
                 message: 'SMTP transporter is already connected.'
             });
 
@@ -365,7 +365,7 @@ export class SMTP {
         } catch (error) {
             // Wrap and throw connection errors as CoreError for consistent error handling.
             throw new CoreError({
-                key: MAILER_KEY_ERROR.SMTP_CONNECTION_ERROR,
+                key: mailerKeyError.smtpConnectionError,
                 message: 'An error occurred while connecting to the SMTP server',
                 cause: error
             });
@@ -390,12 +390,12 @@ export class SMTP {
      * @param options - The mail options, such as recipient, subject, and content.
      * @returns A promise resolving to the result of the send operation.
      *
-     * @throws ({@link CoreError}) - If the transporter is not connected. ({@link MAILER_KEY_ERROR.SMTP_NOT_CONNECTED})
+     * @throws ({@link CoreError}) - If the transporter is not connected. ({@link mailerKeyError.smtpNotConnected})
      */
     public async sendMail(options: SendMailOptions): Promise<unknown> {
         if (!this._transporter)
             throw new CoreError({
-                key: MAILER_KEY_ERROR.SMTP_NOT_CONNECTED,
+                key: mailerKeyError.smtpNotConnected,
                 message: 'SMTP transporter is not connected.'
             });
         return this._transporter.sendMail(options);
