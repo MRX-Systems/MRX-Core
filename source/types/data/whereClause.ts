@@ -1,5 +1,8 @@
 /**
- * Interface Where clause, each key is a clause to use in the query
+ * Represents a set of conditional clauses for filtering data in queries.
+ *
+ * Each property corresponds to a specific comparison or logical operation,
+ * allowing for flexible and expressive query construction.
  */
 export interface WhereClause {
     /**
