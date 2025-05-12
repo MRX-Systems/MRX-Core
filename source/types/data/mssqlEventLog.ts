@@ -9,6 +9,9 @@
  *     console.log(log);
  * });
  * ```
+ *
+ * @remarks
+ * This interface is intended for internal logging and debugging of MSSQL queries.
  */
 export interface MssqlEventLog {
     /**
