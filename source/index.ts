@@ -51,6 +51,5 @@ export type * from './types/data/streamWithAsyncIterable';
 export type * from './types/data/transaction';
 export type * from './types/data/whereClause';
 
-export * from './types/enum/color';
 export * from './types/enum/httpStatusCode';
 

@@ -13,5 +13,4 @@ export type * from './data/streamWithAsyncIterable';
 export type * from './data/transaction';
 export type * from './data/whereClause';
 
-export * from './enum/color';
 export * from './enum/httpStatusCode';
