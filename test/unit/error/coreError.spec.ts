@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { CoreError } from '#/error/coreError.ts';
+import { CoreError } from '#/error/coreError';
 
 describe('CoreError', () => {
     describe('constructor', () => {

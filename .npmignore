@@ -31,3 +31,4 @@ test/
 README.md
 tsconfig.json
 tsconfig.dts.json
+bunfig.toml
