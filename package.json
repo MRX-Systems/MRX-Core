@@ -1,14 +1,13 @@
 {
-  "name": "@andesite-lab/andesite-core",
+  "name": "@mrxsys/mrx-core",
   "version": "2.3.3-canary-20250514-764de87",
   "author": "Ruby",
-  "description": "Andesite - Core provides a set of tools to help you build a microservice",
+  "description": " Core provides a set of tools to help you build a microservice",
   "type": "module",
   "license": "MIT",
   "keywords": [
-    "andesite",
-    "andesite-lab",
-    "andesite-core",
+    "mrxsys",
+    "mrxsys-core",
     "core"
   ],
   "scripts": {
