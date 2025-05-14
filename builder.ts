@@ -16,19 +16,37 @@ await Bun.build({
     external: [...dependencies, ...devDependencies, ...peerDependencies],
     root: './source',
     entrypoints: [
-        './source/core/database/index.ts',
-        './source/core/repository/index.ts',
-        './source/core/mailer/index.ts',
-        './source/core/store/index.ts',
-        './source/core/util/index.ts',
+        // Database
+        './source/database/index.ts',
+        './source/database/enums/index.ts',
+        './source/database/events/index.ts',
+        './source/database/types/index.ts',
 
-        './source/core/elysia/plugin/index.ts',
-        './source/core/elysia/schema/index.ts',
+        // Elysia
+        './source/elysia/index.ts',
+        './source/elysia/enums/index.ts',
+        './source/elysia/schemas/index.ts',
+        './source/elysia/types/index.ts',
 
+        // Error
         './source/error/index.ts',
-        './source/error/key/index.ts',
 
-        './source/types/index.ts',
+        // Mailer
+        './source/mailer/index.ts',
+        './source/mailer/enums/index.ts',
+        './source/mailer/types/index.ts',
+
+        // Repository
+        './source/repository/index.ts',
+        './source/repository/types/index.ts',
+
+        // Store
+        './source/store/index.ts',
+
+        // Utils
+        './source/utils/index.ts',
+        './source/utils/enums/index.ts',
+        './source/utils/types/index.ts',
 
         './source/index.ts'
     ],

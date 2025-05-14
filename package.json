@@ -25,13 +25,13 @@
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/bun": "^1.2.12",
+    "@types/bun": "^1.2.13",
     "@types/nodemailer": "^6.4.17",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
     "tsc-alias": "^1.8.16",
     "typedoc": "^0.28.4",
-    "typescript-eslint": "^8.32.0"
+    "typescript-eslint": "^8.32.1"
   },
   "peerDependencies": {
     "@basalt-lab/basalt-helper": "^1.13.3",
@@ -45,16 +45,24 @@
     "typescript": "^5.8.3"
   },
   "exports": {
-    "./database": "./dist/core/database/index.js",
-    "./repository": "./dist/core/repository/index.js",
-    "./elysia/plugin": "./dist/core/elysia/plugin/index.js",
-    "./elysia/schema": "./dist/core/elysia/schema/index.js",
-    "./mailer": "./dist/core/mailer/index.js",
-    "./store": "./dist/core/store/index.js",
-    "./util": "./dist/core/util/index.js",
+    "./elysia": "./dist/elysia/index.js",
+    "./elysia/enums": "./dist/elysia/enums/index.js",
+    "./elysia/schema": "./dist/elysia/schemas/index.js",
+    "./elysia/types": "./dist/elysia/types/index.js",
     "./error": "./dist/error/index.js",
-    "./error/key": "./dist/error/key/index.js",
-    "./types": "./dist/types/index.js",
+    "./mailer": "./dist/mailer/index.js",
+    "./mailer/enums": "./dist/mailer/enums/index.js",
+    "./mailer/types": "./dist/mailer/types/index.js",
+    "./database": "./dist/database/index.js",
+    "./database/enums": "./dist/database/enums/index.js",
+    "./database/events": "./dist/database/events/index.js",
+    "./database/types": "./dist/database/types/index.js",
+    "./repository": "./dist/repository/index.js",
+    "./repository/types": "./dist/repository/types/index.js",
+    "./redis": "./dist/store/index.js",
+    "./utils": "./dist/utils/index.js",
+    "./utils/enums": "./dist/utils/enums/index.js",
+    "./utils/types": "./dist/utils/types/index.js",
     ".": "./dist/index.js"
   },
   "changelog": {
