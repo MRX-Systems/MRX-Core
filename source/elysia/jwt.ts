@@ -9,6 +9,18 @@ import { CoreError } from '#/error/coreError';
 import { elysiaKeyError } from './enums/elysiaKeyError';
 import type { JWTOptions } from './types/jwtOptions';
 
+/**
+ * The `jwtPlugin` provides JSON Web Token (JWT) authentication capabilities for Elysia applications.
+ *
+ * The plugin adds two primary methods to your Elysia context:
+ * - `sign()`: Generate and sign new JWTs
+ * - `verify()`: Validate and decode existing JWTs
+ *
+ * @template Name - The name to use for JWT functionality in the context (default: 'jwt')
+ * @param options - Configuration options for the JWT plugin
+ *
+ * @returns An Elysia plugin that adds JWT functionality to the application context
+ */
 export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOptions<Name>) => {
     // Check if the secret is provided
     if (!options.secret)
