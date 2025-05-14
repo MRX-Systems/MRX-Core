@@ -34,8 +34,8 @@
     "moduleDetection": "force",
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "#/root/*": ["./*"],
       "#/*": ["./source/*"],
+      "#/root/*": ["./*"],
     },
     "resolveJsonModule": true,
 
