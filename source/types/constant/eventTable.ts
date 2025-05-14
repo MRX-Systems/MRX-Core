@@ -1,6 +1,6 @@
-export const EVENT_TABLE = {
-    SELECTED: 'selected',
-    CREATED: 'created',
-    UPDATED: 'updated',
-    DELETED: 'deleted'
+export const eventTable = {
+    selected: 'selected',
+    created: 'created',
+    updated: 'updated',
+    deleted: 'deleted'
 } as const;

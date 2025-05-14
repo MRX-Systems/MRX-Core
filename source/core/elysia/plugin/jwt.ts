@@ -7,7 +7,7 @@ import {
 } from 'jose';
 
 import { CoreError } from '#/root/source/error/coreError';
-import { ELYSIA_KEY_ERROR } from '#/root/source/error/key/elysiaKeyError';
+import { elysiaKeyError } from '#/error/key/elysiaKeyError';
 
 /**
  * Configuration options for the JWT plugin.
@@ -237,7 +237,7 @@ export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOption<
     // Check if the secret is provided
     if (!options.secret)
         throw new CoreError({
-            key: ELYSIA_KEY_ERROR.JWT_SECRET_NOT_FOUND,
+            key: elysiaKeyError.jwtSecretNotFound,
             message: 'Secret key is required for JWT signing and verification.'
         });
 
@@ -312,7 +312,7 @@ export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOption<
                         .sign(key);
                 } catch {
                     throw new CoreError({
-                        key: ELYSIA_KEY_ERROR.JWT_SIGN_ERROR,
+                        key: elysiaKeyError.jwtSignError,
                         message: 'Error signing JWT.'
                     });
                 }

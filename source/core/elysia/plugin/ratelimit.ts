@@ -2,8 +2,8 @@ import { Elysia } from 'elysia';
 
 import type { Redis } from '#/core/store/redis';
 import { CoreError } from '#/error/coreError';
-import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
-import { HTTP_STATUS_CODE } from '#/types/enum/httpStatusCode';
+import { elysiaKeyError } from '#/error/key/elysiaKeyError';
+import { httpStatusCode } from '#/types/enum/httpStatusCode';
 
 /**
  * Options to configure the rate limit plugin.
@@ -148,11 +148,11 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
         const currentCount = newCount ? parseInt(newCount) : 0;
 
         if (currentCount > limit) {
-            set.status = HTTP_STATUS_CODE.TOO_MANY_REQUESTS;
+            set.status = httpStatusCode.tooManyRequests;
             throw new CoreError({
-                key: ELYSIA_KEY_ERROR.RATE_LIMIT_EXCEEDED,
+                key: elysiaKeyError.rateLimitExceeded,
                 message: message || 'Rate limit exceeded',
-                httpStatusCode: HTTP_STATUS_CODE.TOO_MANY_REQUESTS,
+                httpStatusCode: httpStatusCode.tooManyRequests,
                 cause: {
                     limit,
                     window,

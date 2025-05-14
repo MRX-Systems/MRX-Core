@@ -1,29 +1,29 @@
-import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
+import { databaseKeyError } from '#/error/key/databaseKeyError';
 
 /**
  * MSSQL error codes with their corresponding error key.
  */
-export const MSSQL_ERROR_CODE: Record<number, typeof DATABASE_KEY_ERROR[keyof typeof DATABASE_KEY_ERROR]> = {
-    0: DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
-    4060: DATABASE_KEY_ERROR.MSSQL_DATABASE_ACCESS_DENIED,
-    18452: DATABASE_KEY_ERROR.MSSQL_DATABASE_AUTHORIZATION_FAILED,
-    18456: DATABASE_KEY_ERROR.MSSQL_DATABASE_AUTHORIZATION_FAILED,
-    102: DATABASE_KEY_ERROR.MSSQL_DATABASE_SYNTAX_ERROR,
-    207: DATABASE_KEY_ERROR.MSSQL_DATABASE_COLUMN_NOT_FOUND,
-    208: DATABASE_KEY_ERROR.MSSQL_TABLE_NOT_FOUND,
-    209: DATABASE_KEY_ERROR.MSSQL_DATABASE_AMBIGUOUS_COLUMN,
-    2627: DATABASE_KEY_ERROR.MSSQL_DATABASE_DUPLICATE_KEY,
-    547: DATABASE_KEY_ERROR.MSSQL_DATABASE_FOREIGN_KEY_VIOLATION,
-    2601: DATABASE_KEY_ERROR.MSSQL_DATABASE_UNIQUE_CONSTRAINT_VIOLATION,
-    1205: DATABASE_KEY_ERROR.MSSQL_DATABASE_DEADLOCK_DETECTED,
-    1222: DATABASE_KEY_ERROR.MSSQL_DATABASE_RESOURCE_LOCKED,
-    3928: DATABASE_KEY_ERROR.MSSQL_DATABASE_TRANSACTION_ABORTED,
-    701: DATABASE_KEY_ERROR.MSSQL_DATABASE_INSUFFICIENT_MEMORY,
-    1105: DATABASE_KEY_ERROR.MSSQL_DATABASE_INSUFFICIENT_STORAGE,
-    8645: DATABASE_KEY_ERROR.MSSQL_DATABASE_QUERY_TIMEOUT,
-    9002: DATABASE_KEY_ERROR.MSSQL_DATABASE_TRANSACTION_LOG_FULL,
-    8152: DATABASE_KEY_ERROR.MSSQL_DATABASE_DATA_TOO_LARGE,
-    229: DATABASE_KEY_ERROR.MSSQL_DATABASE_PERMISSION_DENIED,
-    544: DATABASE_KEY_ERROR.MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED,
-    8102: DATABASE_KEY_ERROR.MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN
+export const mssqlErrorCode: Record<number, typeof databaseKeyError[keyof typeof databaseKeyError]> = {
+    0: databaseKeyError.mssqlQueryError,
+    4060: databaseKeyError.mssqlDatabaseAccessDenied,
+    18452: databaseKeyError.mssqlDatabaseAuthorizationFailed,
+    18456: databaseKeyError.mssqlDatabaseAuthorizationFailed,
+    102: databaseKeyError.mssqlDatabaseSyntaxError,
+    207: databaseKeyError.mssqlDatabaseColumnNotFound,
+    208: databaseKeyError.mssqlTableNotFound,
+    209: databaseKeyError.mssqlDatabaseAmbiguousColumn,
+    2627: databaseKeyError.mssqlDatabaseDuplicateKey,
+    547: databaseKeyError.mssqlDatabaseForeignKeyViolation,
+    2601: databaseKeyError.mssqlDatabaseUniqueConstraintViolation,
+    1205: databaseKeyError.mssqlDatabaseDeadlockDetected,
+    1222: databaseKeyError.mssqlDatabaseResourceLocked,
+    3928: databaseKeyError.mssqlDatabaseTransactionAborted,
+    701: databaseKeyError.mssqlDatabaseInsufficientMemory,
+    1105: databaseKeyError.mssqlDatabaseInsufficientStorage,
+    8645: databaseKeyError.mssqlDatabaseQueryTimeout,
+    9002: databaseKeyError.mssqlDatabaseTransactionLogFull,
+    8152: databaseKeyError.mssqlDatabaseDataTooLarge,
+    229: databaseKeyError.mssqlDatabasePermissionDenied,
+    544: databaseKeyError.mssqlDatabaseIdentityInsertNotAllowed,
+    8102: databaseKeyError.mssqlDatabaseCannotUpdateIdentityColumn
 } as const;

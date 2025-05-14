@@ -4,7 +4,7 @@ import { Elysia, t, type Context, type DefinitionBase, type EphemeralType, type 
 
 import type { MSSQL } from '#/core/database/mssql';
 import { CoreError } from '#/error/coreError';
-import { ELYSIA_KEY_ERROR } from '#/error/key/elysiaKeyError';
+import { elysiaKeyError } from '#/error/key/elysiaKeyError';
 import type { SelectedFields } from '#/root/source/types';
 import type { AdvancedSearch } from '#/types/data/advancedSearch';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
@@ -520,7 +520,7 @@ const handlerDefinition = {
 
         if (!ctx.advancedSearch || (ctx.advancedSearch as AdvancedSearch<unknown>[]).length === 0 || !(ctx.advancedSearch as AdvancedSearch<unknown>[])[0])
             throw new CoreError({
-                key: ELYSIA_KEY_ERROR.NEED_ADVANCED_SEARCH,
+                key: elysiaKeyError.needAdvancedSearch,
                 message: 'You need to provide advanced search to update records. It\'s dangerous to update all records.',
                 httpStatusCode: 400
             });
@@ -570,7 +570,7 @@ const handlerDefinition = {
 
         if (!ctx.advancedSearch || (ctx.advancedSearch as AdvancedSearch<unknown>[]).length === 0 || !(ctx.advancedSearch as AdvancedSearch<unknown>[])[0])
             throw new CoreError({
-                key: ELYSIA_KEY_ERROR.NEED_ADVANCED_SEARCH,
+                key: elysiaKeyError.needAdvancedSearch,
                 message: 'You need to provide advanced search to delete records. It\'s dangerous to delete all records.',
                 httpStatusCode: 400
             });

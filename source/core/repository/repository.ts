@@ -4,8 +4,8 @@ import { PassThrough } from 'stream';
 import type { Table } from '#/core/database/table';
 import { makeStreamAsyncIterable } from '#/core/util/stream';
 import { CoreError } from '#/error/coreError';
-import { DATABASE_KEY_ERROR } from '#/error/key/databaseKeyError';
-import { MSSQL_ERROR_CODE } from '#/types/constant/mssqlErrorCode';
+import { databaseKeyError } from '#/error/key/databaseKeyError';
+import { mssqlErrorCode } from '#/types/constant/mssqlErrorCode';
 import type { AdvancedSearch } from '#/types/data/advancedSearch';
 import type { QueryOptions } from '#/types/data/queryOptions';
 import type { QueryOptionsExtendPagination } from '#/types/data/queryOptionsExtendPagination';
@@ -173,7 +173,7 @@ export class Repository<TModel = unknown> {
         kStream.on('error', (error: unknown) => {
             const code = (error as { number: number })?.number || 0;
             passThrough.emit('error', new CoreError({
-                key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
+                key: mssqlErrorCode[code] ?? databaseKeyError.mssqlQueryError,
                 message: 'An error occurred while streaming the query results.',
                 cause: {
                     query: query.toSQL().sql,
@@ -807,7 +807,7 @@ export class Repository<TModel = unknown> {
             throw error;
         const code = (error as { number: number })?.number || 0;
         throw new CoreError({
-            key: MSSQL_ERROR_CODE[code] ?? DATABASE_KEY_ERROR.MSSQL_QUERY_ERROR,
+            key: mssqlErrorCode[code] ?? databaseKeyError.mssqlQueryError,
             message: 'An error occurred while executing the query.',
             cause: {
                 query: query.toSQL().sql,
@@ -868,7 +868,7 @@ export class Repository<TModel = unknown> {
             const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
                 throw new CoreError({
-                    key: DATABASE_KEY_ERROR.MSSQL_NO_RESULT,
+                    key: databaseKeyError.mssqlNoResult,
                     message: 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql
