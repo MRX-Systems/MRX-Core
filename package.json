@@ -1,14 +1,13 @@
 {
-  "name": "@andesite-lab/andesite-core",
+  "name": "@mrxsys/mrx-core",
   "version": "2.3.3-canary-20250514-764de87",
   "author": "Ruby",
-  "description": "Andesite - Core provides a set of tools to help you build a microservice",
+  "description": " Core provides a set of tools to help you build a microservice",
   "type": "module",
   "license": "MIT",
   "keywords": [
-    "andesite",
-    "andesite-lab",
-    "andesite-core",
+    "mrxsys",
+    "mrxsys-core",
     "core"
   ],
   "scripts": {
@@ -18,7 +17,7 @@
     "test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
     "test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
     "test": "bun test --coverage --timeout 5500",
-    "docs": "typedoc",
+    "docs": "typedoc --tsconfig tsconfig.dts.json",
     "fix-lint": "eslint --fix ./source",
     "lint": "eslint ./source"
   },
