@@ -1,4 +1,21 @@
 
+## v2.3.3-canary-20250514-ce5e64c
+
+[compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.2-canary-20250508-f5780cc...v2.3.3-canary-20250514-ce5e64c)
+
+### 🧹 Refactors
+
+- **🧹:** [standardize error key exports and improve naming conventions] ([da647781](https://github.com/Andesite-Lab/Core/commit/da647781))
+
+### 🦉 Chore
+
+- **🦉:** V2.3.2 ([353c17dd](https://github.com/Andesite-Lab/Core/commit/353c17dd))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <necrelox@proton.me>
+
 ## v2.3.2
 
 [compare changes](https://github.com/Andesite-Lab/Core/compare/v2.3.2-canary-20250508-f5780cc...v2.3.2)
