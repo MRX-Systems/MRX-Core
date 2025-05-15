@@ -58,7 +58,7 @@
     "./database/types": "./dist/database/types/index.js",
     "./repository": "./dist/repository/index.js",
     "./repository/types": "./dist/repository/types/index.js",
-    "./redis": "./dist/store/index.js",
+    "./store": "./dist/store/index.js",
     "./utils": "./dist/utils/index.js",
     "./utils/enums": "./dist/utils/enums/index.js",
     "./utils/types": "./dist/utils/types/index.js",
