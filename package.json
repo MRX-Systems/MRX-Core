@@ -10,16 +10,37 @@
     "mrxsys-core",
     "core"
   ],
+  "exports": {
+    "./elysia": "./dist/elysia/index.js",
+    "./elysia/enums": "./dist/elysia/enums/index.js",
+    "./elysia/schema": "./dist/elysia/schemas/index.js",
+    "./elysia/types": "./dist/elysia/types/index.js",
+    "./error": "./dist/error/index.js",
+    "./error/types": "./dist/error/types/index.js",
+    "./mailer": "./dist/mailer/index.js",
+    "./mailer/enums": "./dist/mailer/enums/index.js",
+    "./mailer/types": "./dist/mailer/types/index.js",
+    "./database": "./dist/database/index.js",
+    "./database/enums": "./dist/database/enums/index.js",
+    "./database/events": "./dist/database/events/index.js",
+    "./database/types": "./dist/database/types/index.js",
+    "./repository": "./dist/repository/index.js",
+    "./repository/types": "./dist/repository/types/index.js",
+    "./store": "./dist/store/index.js",
+    "./utils": "./dist/utils/index.js",
+    "./utils/enums": "./dist/utils/enums/index.js",
+    "./utils/types": "./dist/utils/types/index.js",
+    ".": "./dist/index.js"
+  },
   "scripts": {
-    "dev": "bun --watch source/index.ts",
     "build": "bun builder.ts",
-    "start": "bun build/index.js",
-    "test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
-    "test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
-    "test": "bun test --coverage --timeout 5500",
     "docs": "typedoc --tsconfig tsconfig.dts.json",
     "fix-lint": "eslint --fix ./source",
-    "lint": "eslint ./source"
+    "lint": "eslint ./source",
+    "start": "bun build/index.js",
+    "test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
+    "test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
+    "test": "bun test --coverage --timeout 5500"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
@@ -42,27 +63,6 @@
     "mssql": "^11.0.1",
     "nodemailer": "^7.0.3",
     "typescript": "^5.8.3"
-  },
-  "exports": {
-    "./elysia": "./dist/elysia/index.js",
-    "./elysia/enums": "./dist/elysia/enums/index.js",
-    "./elysia/schema": "./dist/elysia/schemas/index.js",
-    "./elysia/types": "./dist/elysia/types/index.js",
-    "./error": "./dist/error/index.js",
-    "./mailer": "./dist/mailer/index.js",
-    "./mailer/enums": "./dist/mailer/enums/index.js",
-    "./mailer/types": "./dist/mailer/types/index.js",
-    "./database": "./dist/database/index.js",
-    "./database/enums": "./dist/database/enums/index.js",
-    "./database/events": "./dist/database/events/index.js",
-    "./database/types": "./dist/database/types/index.js",
-    "./repository": "./dist/repository/index.js",
-    "./repository/types": "./dist/repository/types/index.js",
-    "./store": "./dist/store/index.js",
-    "./utils": "./dist/utils/index.js",
-    "./utils/enums": "./dist/utils/enums/index.js",
-    "./utils/types": "./dist/utils/types/index.js",
-    ".": "./dist/index.js"
   },
   "changelog": {
     "types": {

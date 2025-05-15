@@ -14,13 +14,13 @@ import type { QueryOptionsExtendPagination } from './types/queryOptionsExtendPag
 import type { QueryOptionsExtendStream } from './types/queryOptionsExtendStream';
 import type { WhereClause } from './types/whereClause';
 
-export type OperatorFn = (
+type OperatorFn = (
     query: Knex.QueryBuilder,
     column: string,
     value: unknown
 ) => Knex.QueryBuilder;
 
-export const operators: Record<keyof WhereClause<unknown>, OperatorFn> = ({
+const _operators: Record<keyof WhereClause<unknown>, OperatorFn> = ({
     $eq: (q, c, v) => q.where(c, v as string | number | boolean | Date),
     $neq: (q, c, v) => q.whereNot(c, v as string | number | boolean | Date),
     $lt: (q, c, v) => q.where(c, '<', v as string | number | Date),
@@ -506,8 +506,8 @@ export class Repository<TModel = unknown> {
                 if (this._isComplexQuery(value)) {
                     const whereClause = value as WhereClause<unknown>;
                     for (const [operator, opValue] of Object.entries(whereClause))
-                        if (operator in operators) {
-                            const func = operators[operator as keyof WhereClause<unknown>];
+                        if (operator in _operators) {
+                            const func = _operators[operator as keyof WhereClause<unknown>];
                             func(query, key, opValue);
                         }
                 } else if (key === '$q' && (typeof value === 'string' || typeof value === 'number')) {
