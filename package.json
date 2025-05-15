@@ -1,6 +1,6 @@
 {
   "name": "@mrxsys/mrx-core",
-  "version": "2.3.3",
+  "version": "2.3.4-canary-20250515-0a404bc",
   "author": "Ruby",
   "description": " Core provides a set of tools to help you build a microservice",
   "type": "module",
@@ -58,7 +58,7 @@
     "./database/types": "./dist/database/types/index.js",
     "./repository": "./dist/repository/index.js",
     "./repository/types": "./dist/repository/types/index.js",
-    "./redis": "./dist/store/index.js",
+    "./store": "./dist/store/index.js",
     "./utils": "./dist/utils/index.js",
     "./utils/enums": "./dist/utils/enums/index.js",
     "./utils/types": "./dist/utils/types/index.js",
