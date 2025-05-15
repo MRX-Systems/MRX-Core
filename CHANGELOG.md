@@ -1,4 +1,8 @@
 
+## v2.3.4
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.4-canary-20250515-0a404bc...v2.3.4)
+
 ## v2.3.4-canary-20250515-0a404bc
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.3-canary-20250514-ce5e64c...v2.3.4-canary-20250515-0a404bc)
