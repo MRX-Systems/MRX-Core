@@ -30,6 +30,7 @@ await Bun.build({
 
         // Error
         './source/error/index.ts',
+        './source/error/types/index.ts',
 
         // Mailer
         './source/mailer/index.ts',
