@@ -1,4 +1,16 @@
 
+## v2.3.5-canary-20250516-82ef1fb
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.5-canary-20250516-ec25fa6...v2.3.5-canary-20250516-82ef1fb)
+
+### 🧹 Refactors
+
+- **🧹:** [refactor error handling and update package.json scripts] ([70532ad0](https://github.com/MRX-Systems/MRX-Core/commit/70532ad0))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.3.5-canary-20250516-ec25fa6
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.4-canary-20250515-0a404bc...v2.3.5-canary-20250516-ec25fa6)
