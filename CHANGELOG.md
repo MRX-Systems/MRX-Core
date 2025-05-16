@@ -1,4 +1,21 @@
 
+## v2.3.5-canary-20250516-ec25fa6
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.4-canary-20250515-0a404bc...v2.3.5-canary-20250516-ec25fa6)
+
+### 🧹 Refactors
+
+- **🧹:** [update error handling content-type header] ([e17ed9f1](https://github.com/MRX-Systems/MRX-Core/commit/e17ed9f1))
+
+### 🦉 Chore
+
+- **🦉:** V2.3.4 ([d29a8952](https://github.com/MRX-Systems/MRX-Core/commit/d29a8952))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <maxime.meriaux@mrxsys.com>
+
 ## v2.3.4
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.4-canary-20250515-0a404bc...v2.3.4)

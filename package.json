@@ -1,6 +1,6 @@
 {
   "name": "@mrxsys/mrx-core",
-  "version": "2.3.4",
+  "version": "2.3.5-canary-20250516-ec25fa6",
   "author": "Ruby",
   "description": " Core provides a set of tools to help you build a microservice",
   "type": "module",
