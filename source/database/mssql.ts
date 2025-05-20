@@ -58,7 +58,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
      * Indicates whether to add basic event listeners for all tables.
      * @default false
      */
-    private readonly _pulse: boolean;
+    private readonly _isEventEnabled: boolean;
 
     /**
      * Create a new instance of `MSSQL` with the specified options.
@@ -68,7 +68,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
     public constructor(options: MSSQLDatabaseOptions) {
         super();
         this._databaseName = options.databaseName;
-        this._pulse = options.pulse ?? false;
+        this._isEventEnabled = options.isEventEnabled ?? false;
         this._db = knex({
             client: 'mssql',
             acquireConnectionTimeout: options.connectionTimeout ?? 20000,
@@ -103,7 +103,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
         try {
             await this._introspectDatabase();
             this._isConnected = true;
-            if (this._pulse)
+            if (this._isEventEnabled)
                 this._addEventKnex();
         } catch (error) {
             throw new CoreError({
@@ -353,7 +353,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
             case 'update':
                 table?.emit('updated', response, queryContext);
                 break;
-            case 'delete':
+            case 'del':
                 table?.emit('deleted', response, queryContext);
                 break;
             default:
@@ -372,7 +372,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
             this.emit('query:error', error, queryContext);
         });
         this._db.on('query-response', (response: unknown[], queryContext: QueryContext) => {
-            this.emit('query-response', response, queryContext);
+            this.emit('query:response', response, queryContext);
             this._handleQueryResponse(response, queryContext);
         });
     }
