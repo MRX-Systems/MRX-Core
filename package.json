@@ -11,6 +11,10 @@
     "core"
   ],
   "exports": {
+    "./database": "./dist/database/index.js",
+    "./database/enums": "./dist/database/enums/index.js",
+    "./database/events": "./dist/database/events/index.js",
+    "./database/types": "./dist/database/types/index.js",
     "./elysia": "./dist/elysia/index.js",
     "./elysia/enums": "./dist/elysia/enums/index.js",
     "./elysia/schema": "./dist/elysia/schemas/index.js",
@@ -20,16 +24,9 @@
     "./mailer": "./dist/mailer/index.js",
     "./mailer/enums": "./dist/mailer/enums/index.js",
     "./mailer/types": "./dist/mailer/types/index.js",
-    "./database": "./dist/database/index.js",
-    "./database/enums": "./dist/database/enums/index.js",
-    "./database/events": "./dist/database/events/index.js",
-    "./database/types": "./dist/database/types/index.js",
     "./repository": "./dist/repository/index.js",
     "./repository/types": "./dist/repository/types/index.js",
     "./store": "./dist/store/index.js",
-    "./utils": "./dist/utils/index.js",
-    "./utils/enums": "./dist/utils/enums/index.js",
-    "./utils/types": "./dist/utils/types/index.js",
     ".": "./dist/index.js"
   },
   "scripts": {
