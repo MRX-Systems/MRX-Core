@@ -62,7 +62,7 @@
 
     "@basalt-lab/basalt-helper": ["@basalt-lab/basalt-helper@1.13.4", "", { "peerDependencies": { "typescript": "^5.8.3" } }, "sha512-ZbiJmFLvVYOlIhySAgpPjq+dK9Pi9fn/iwRi301VCOWafkc3rYSen80D9DX1aj+STgLoLx7Oh7WTpsmofDFpMA=="],
 
-    "@basalt-lab/basalt-logger": ["@basalt-lab/basalt-logger@1.13.0", "", { "peerDependencies": { "typescript": "^5.8.3" } }, "sha512-lK0nUGZTtPou5Pik5P7Az77rM6DgxXJsE/xUBofYVbtlMJHZMxGSZQzUrQSrtxE2dhE0Zk8q+a+AZxAuRAOPMg=="],
+    "@basalt-lab/basalt-logger": ["@basalt-lab/basalt-logger@1.13.1", "", { "peerDependencies": { "typescript": "^5.8.3" } }, "sha512-/nPpdZ5wpxKZlp999EkXlwnwqWoeDo/Wyu7y5i7iFjbxATlBf7NpiDbxA9jZFpumj6NVWfD35sizWRPB4ZkFlA=="],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.7.0", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-dyybb3AcajC7uha6CvhdVRJqaKyn7w2YKqKyAN37NKYgZT36w+iRb0Dymmc5qEJ549c/S31cMMSFd75bteCpCw=="],
 
