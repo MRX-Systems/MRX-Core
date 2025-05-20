@@ -331,7 +331,7 @@ const _addRoutes = <TInferedObject extends TObject>
                 response: `crud${tableName}${route === 'count' ? 'Count' : ''}Response200` as unknown as TObject,
                 hasAdvancedSearch: true as unknown as never,
                 hasDynamicDatabaseSelector: isDynamicDatabase as unknown as never,
-                needsOnePermission: [operationsPermissions[route]]
+                needsOnePermission: operationsPermissions[route] || []
             };
 
             app[method](path, (ctx) => handler(ctx, tableName), definition);
