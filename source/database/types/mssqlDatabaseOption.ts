@@ -80,5 +80,5 @@ export interface MSSQLDatabaseOptions {
      * });
      * ```
      */
-    pulse?: boolean;
+    isEventEnabled?: boolean;
 }
