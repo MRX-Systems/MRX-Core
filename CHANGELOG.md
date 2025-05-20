@@ -1,4 +1,17 @@
 
+## v2.3.5
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.5-canary-20250520-f78ef3f...v2.3.5)
+
+### 🦉 Chore
+
+- **🦉:** V2.3.5-canary-20250520-f78ef3f ([9dcef466](https://github.com/MRX-Systems/MRX-Core/commit/9dcef466))
+- **🦉:** V2.3.5-canary-20250520-f78ef3f ([84e1c9e5](https://github.com/MRX-Systems/MRX-Core/commit/84e1c9e5))
+
+### ❤️ Contributors
+
+- Github-actions <maxime.meriaux@mrxsys.com>
+
 ## v2.3.5-canary-20250520-f78ef3f
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.3.5-canary-20250516-ec25fa6...v2.3.5-canary-20250520-f78ef3f)
