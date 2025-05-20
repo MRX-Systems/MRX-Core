@@ -1,7 +1,7 @@
 // Export Database
 export * from './database';
 export * from './database/enums';
-export * from './database/events';
+export type * from './database/events';
 export type * from './database/types';
 
 // Export Elysia

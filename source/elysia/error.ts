@@ -30,6 +30,7 @@ export const errorPlugin = new Elysia({
         BasaltLoggerError
     })
     .onError(({ code, error, set }) => {
+        set.headers['content-type'] = 'application/json; charset=utf-8';
         switch (code) {
             case 'CoreError':
             case 'BasaltHelperError':

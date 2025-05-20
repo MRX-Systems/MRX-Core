@@ -1,9 +1,9 @@
-import { SingletonManager } from '@basalt-lab/basalt-helper/util';
+import { SingletonManager } from '@basalt-lab/basalt-helper/singletonManager';
 import type { Static, TObject, TSchema } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
-import { CoreError } from '#/error/coreError';
 import type { MSSQL } from '#/database/mssql';
+import { CoreError } from '#/error/coreError';
 import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 import type { SelectedFields } from '#/repository/types/selectedFields';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
@@ -272,7 +272,8 @@ const _addRoutes = <TInferedObject extends TObject>
     enabledRoutes: CRUDRoutes[],
     tableName: string,
     baseSchema: TInferedObject,
-    isDynamicDatabase: boolean
+    isDynamicDatabase: boolean,
+    operationsPermissions: Partial<Record<CRUDRoutes, string[]>>
 ) => (app: Elysia) => {
     const routesMethods: Partial<Record<CRUDRoutes, 'post' | 'get' | 'patch' | 'delete'>> = {
         insert: 'post',
@@ -329,7 +330,8 @@ const _addRoutes = <TInferedObject extends TObject>
 
                 response: `crud${tableName}${route === 'count' ? 'Count' : ''}Response200` as unknown as TObject,
                 hasAdvancedSearch: true as unknown as never,
-                hasDynamicDatabaseSelector: isDynamicDatabase as unknown as never
+                hasDynamicDatabaseSelector: isDynamicDatabase as unknown as never,
+                needsOnePermission: operationsPermissions[route] || []
             };
 
             app[method](path, (ctx) => handler(ctx, tableName), definition);
@@ -355,7 +357,8 @@ export const crudPlugin = <
             enabledRoutes,
             options.tableName,
             options.baseSchema,
-            !(typeof options.database === 'string')
+            !(typeof options.database === 'string'),
+            options.permissionConfig.operationsPermissions
         ));
     return app;
 };

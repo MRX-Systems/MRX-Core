@@ -1,11 +1,8 @@
-/* eslint-disable max-classes-per-file */
-import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+
+import { afterAll, beforeAll, describe, expect, mock, test } from 'bun:test';
 import { randomBytes } from 'crypto';
 import knex from 'knex';
 
-import { mssqlEvent } from '#/database/events/mssqlEvent';
-import { tableEvent } from '#/database/events/tableEvent';
-import type { MssqlEventLog } from '#/database/types/mssqlEventLog';
 import { Repository } from '#/repository/repository';
 
 const options = {
@@ -19,10 +16,7 @@ const options = {
     poolMax: 10
 };
 
-const nanoId = randomBytes(4).toString('hex');
-
-const testTable = `unit_test_mssql_${nanoId}`;
-
+// Create a connection pool to the database
 const knexInstance = knex({
     client: 'mssql',
     connection: {
@@ -31,9 +25,18 @@ const knexInstance = knex({
         port: options.port,
         user: options.user,
         password: options.password,
-        options: { encrypt: true }
+        options: { encrypt: true },
+        pool: {
+            min: options.poolMin,
+            max: options.poolMax
+        }
     }
 });
+
+
+// Create a name to use for the test table
+const nanoId = randomBytes(4).toString('hex');
+const testTable = `unit_test_mssql_${nanoId}`;
 
 describe('MSSQL', () => {
     beforeAll(async () => {
@@ -59,22 +62,248 @@ describe('MSSQL', () => {
             expect(mssql.isConnected).toBe(true);
         });
 
-        test('should add listener on all tables when pulse is true', async () => {
-            const { MSSQL } = await import('#/database/mssql');
-            const mssql = new MSSQL({ ...options, pulse: true });
-            await mssql.connect();
-
-            mssql.getTable(testTable)
-                .on(tableEvent.selected, (res) => {
-                    expect(res).toBeDefined();
-                });
-            await mssql.db(testTable).select('*').from(testTable);
-        });
-
         test('should throw an error when the connection fails', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL({ ...options, host: 'foo', connectionTimeout: 2500 });
             expect(mssql.connect()).rejects.toThrow(`Failed to connect to the database: "${options.databaseName}".`);
+        });
+
+        test('should trigger [MSSQL][query] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+            const foo = mock();
+
+            mssql.on('query', () => {
+                foo();
+            });
+            await mssql.db(testTable).select('*').from(testTable);
+            expect(foo).not.toHaveBeenCalled();
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.on('query', () => {
+                foo2();
+            });
+            await mssql2.db(testTable).select('*').from(testTable);
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger [MSSQL][query:error] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+            const foo = mock();
+
+            mssql.on('query:error', () => {
+                foo();
+            });
+            try {
+                await mssql.db(testTable).select('*').from('non_existent_table');
+            } catch {
+                // Ignore the error
+            }
+            expect(foo).not.toHaveBeenCalled();
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.on('query:error', () => {
+                foo2();
+            });
+            try {
+                await mssql2.db(testTable).select('*').from('non_existent_table');
+            } catch {
+                // Ignore the error
+            }
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger [MSSQL][query:response] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+            const foo = mock();
+
+            mssql.on('query:response', () => {
+                foo();
+            });
+            await mssql.db(testTable).select('*').from(testTable);
+            expect(foo).not.toHaveBeenCalled();
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.on('query:response', () => {
+                foo2();
+            });
+            await mssql2.db(testTable).select('*').from(testTable);
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger [Table][selected] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+            const foo = mock();
+
+            mssql.getTable(testTable).on('selected', () => {
+                foo();
+            });
+            await mssql.db(testTable).select('*').from(testTable);
+            expect(foo).not.toHaveBeenCalled();
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.getTable(testTable).on('selected', () => {
+                foo2();
+            });
+            await mssql2.db(testTable).select('*').from(testTable);
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger [Table][inserted] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+            const foo = mock();
+
+            mssql.getTable(testTable).on('inserted', () => {
+                foo();
+            });
+            await mssql.db(testTable).insert({ name: 'test' }).into(testTable);
+            expect(foo).not.toHaveBeenCalled();
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.getTable(testTable).on('inserted', () => {
+                foo2();
+            });
+            await mssql2.db(testTable).insert({ name: 'test' }).into(testTable);
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger [Table][updated] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+
+            // Insert a row to update
+            await mssql.db(testTable).insert({ name: 'test' }).into(testTable);
+
+            const foo = mock();
+
+            mssql.getTable(testTable).on('updated', () => {
+                foo();
+            });
+            await mssql.db(testTable).update({ name: 'test' }).into(testTable);
+            expect(foo).not.toHaveBeenCalled();
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.getTable(testTable).on('updated', () => {
+                foo2();
+            });
+            await mssql2.db(testTable).update({ name: 'test' }).into(testTable);
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger [Table][deleted] event listener only when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            // Test with isEventEnabled set to false
+            const mssql = new MSSQL({ ...options, isEventEnabled: false });
+            await mssql.connect();
+
+            // Insert a row to delete
+            await mssql.db(testTable).insert({ name: 'test' }).into(testTable);
+
+            const foo = mock();
+
+            mssql.getTable(testTable).on('deleted', () => {
+                foo();
+            });
+            await mssql.db(testTable).delete().from(testTable);
+            expect(foo).not.toHaveBeenCalled();
+
+            // Insert a row to delete
+            await mssql.db(testTable).insert({ name: 'test' }).into(testTable);
+
+            // Test with isEventEnabled set to true
+            const mssql2 = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql2.connect();
+            const foo2 = mock();
+            mssql2.getTable(testTable).on('deleted', () => {
+                foo2();
+            });
+            await mssql2.db(testTable).delete().from(testTable);
+            expect(foo2).toHaveBeenCalled();
+        });
+
+        test('should trigger events in the correct order when isEventEnabled is true', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+
+            const mssql = new MSSQL({ ...options, isEventEnabled: true });
+            await mssql.connect();
+
+            const eventOrder: string[] = [];
+
+            mssql.on('query', () => {
+                eventOrder.push('query');
+            });
+
+            mssql.on('query:response', () => {
+                eventOrder.push('query:response');
+            });
+
+            mssql.getTable(testTable).on('selected', () => {
+                eventOrder.push('selected');
+            });
+
+            mssql.on('query:error', () => {
+                eventOrder.push('query:error');
+            });
+
+            await mssql.db(testTable).select('*').from(testTable);
+            expect(eventOrder).toEqual([
+                'query',
+                'query:response',
+                'selected'
+            ]);
+
+            eventOrder.length = 0; // Clear the array for the next test
+
+            try {
+                await mssql.db(testTable).select('*').from('non_existent_table');
+            } catch {
+                // Ignore the error
+            }
+            expect(eventOrder).toEqual([
+                'query',
+                'query:error'
+            ]);
         });
     });
 
@@ -130,6 +359,28 @@ describe('MSSQL', () => {
         });
     });
 
+    describe('getTable', () => {
+        test('should return a table instance', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+            const mssql = new MSSQL(options);
+            await mssql.connect();
+            expect(mssql.getTable(testTable)).toBeDefined();
+        });
+
+        test('should throw an error when the database is not connected', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+            const mssql = new MSSQL(options);
+            expect(() => mssql.getTable(testTable)).toThrow(`Database "${options.databaseName}" is not connected.`);
+        });
+
+        test('should throw an error when the table is not found', async () => {
+            const { MSSQL } = await import('#/database/mssql');
+            const mssql = new MSSQL(options);
+            await mssql.connect();
+            expect(() => mssql.getTable('foo')).toThrow('Table not found: "foo".');
+        });
+    });
+
     describe('getters', () => {
         test('should return the database name', async () => {
             const { MSSQL } = await import('#/database/mssql');
@@ -168,60 +419,6 @@ describe('MSSQL', () => {
             const mssql = new MSSQL(options);
             await mssql.connect();
             expect(mssql.repositories).toBeDefined();
-        });
-    });
-
-    describe('table', () => {
-        test('should return a table instance', async () => {
-            const { MSSQL } = await import('#/database/mssql');
-            const mssql = new MSSQL(options);
-            await mssql.connect();
-            expect(mssql.getTable(testTable)).toBeDefined();
-        });
-
-        test('should throw an error when the database is not connected', async () => {
-            const { MSSQL } = await import('#/database/mssql');
-            const mssql = new MSSQL(options);
-            expect(() => mssql.getTable(testTable)).toThrow(`Database "${options.databaseName}" is not connected.`);
-        });
-
-        test('should throw an error when the table is not found', async () => {
-            const { MSSQL } = await import('#/database/mssql');
-            const mssql = new MSSQL(options);
-            await mssql.connect();
-            expect(() => mssql.getTable('foo')).toThrow('Table not found: "foo".');
-        });
-    });
-
-    describe('functionnal tests', () => {
-        describe('debug-events', () => {
-            test('should log events', async () => {
-                const { MSSQL } = await import('#/database/mssql');
-                const mssql = new MSSQL({ ...options, debug: true });
-                mssql.on(mssqlEvent.log, (event: MssqlEventLog) => {
-                    expect(event).toBeDefined();
-                    expect(event.bindings).toBeDefined();
-                    expect(event.database).toBeDefined();
-                    expect(event.method).toBeDefined();
-                    expect(event.queryUuid).toBeDefined();
-                    expect(event.queryUuid).toBeDefined();
-                    expect(event.sql).toBeDefined();
-                    expect(event.tables).toBeDefined();
-                });
-                await mssql.connect();
-            });
-        });
-
-        describe('query-event', () => {
-            test('should log select events by table', async () => {
-                const { MSSQL } = await import('#/database/mssql');
-                const mssql = new MSSQL(options);
-                await mssql.connect();
-                mssql.getTable(testTable).on(tableEvent.selected, (res) => {
-                    expect(res).toBeDefined();
-                });
-                await mssql.db(testTable).select('*').from(testTable);
-            });
         });
     });
 
