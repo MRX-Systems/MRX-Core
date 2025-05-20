@@ -272,7 +272,8 @@ const _addRoutes = <TInferedObject extends TObject>
     enabledRoutes: CRUDRoutes[],
     tableName: string,
     baseSchema: TInferedObject,
-    isDynamicDatabase: boolean
+    isDynamicDatabase: boolean,
+    operationsPermissions: Partial<Record<CRUDRoutes, string[]>>
 ) => (app: Elysia) => {
     const routesMethods: Partial<Record<CRUDRoutes, 'post' | 'get' | 'patch' | 'delete'>> = {
         insert: 'post',
@@ -329,7 +330,8 @@ const _addRoutes = <TInferedObject extends TObject>
 
                 response: `crud${tableName}${route === 'count' ? 'Count' : ''}Response200` as unknown as TObject,
                 hasAdvancedSearch: true as unknown as never,
-                hasDynamicDatabaseSelector: isDynamicDatabase as unknown as never
+                hasDynamicDatabaseSelector: isDynamicDatabase as unknown as never,
+                needsOnePermission: operationsPermissions[route] || []
             };
 
             app[method](path, (ctx) => handler(ctx, tableName), definition);
@@ -355,7 +357,8 @@ export const crudPlugin = <
             enabledRoutes,
             options.tableName,
             options.baseSchema,
-            !(typeof options.database === 'string')
+            !(typeof options.database === 'string'),
+            options.permissionConfig.operationsPermissions
         ));
     return app;
 };
