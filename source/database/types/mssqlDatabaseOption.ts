@@ -62,14 +62,6 @@ export interface MSSQLDatabaseOptions {
      */
     connectionTimeout?: number;
     /**
-     * Enables debug mode for logging database operations.
-     * When enabled, all SQL queries will be logged with their parameters,
-     * which is valuable for development but may impact performance.
-     *
-     * @defaultValue false
-     */
-    debug?: boolean;
-    /**
      * If set to true, adds basic event listeners for all tables.
      * This automatically sets up event listeners to track database operations
      * (select, create, update, delete) for all tables, allowing for easy monitoring
