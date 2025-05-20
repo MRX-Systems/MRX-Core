@@ -1,4 +1,6 @@
-import EventEmitter from 'events';
+import { TypedEventEmitter } from '@basalt-lab/basalt-helper/typedEventEmitter';
+
+import type { TableEventMap } from '#/database/events/tableEventMap';
 
 /**
  * Represents a database table and provides access to its metadata (name, fields, primary key).
@@ -12,7 +14,7 @@ import EventEmitter from 'events';
  * table.on('SELECTED', data => console.log(data));
  * ```
  */
-export class Table extends EventEmitter {
+export class Table extends TypedEventEmitter<TableEventMap> {
     /**
      * The name of the database that this table belongs to.
      */
