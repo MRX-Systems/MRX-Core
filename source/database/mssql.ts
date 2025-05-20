@@ -1,14 +1,13 @@
-import { EventEmitter } from 'events';
+import { TypedEventEmitter } from '@basalt-lab/basalt-helper/typedEventEmitter';
 import knex, { type Knex } from 'knex';
 
 import { CoreError } from '#/error/coreError';
 import { Repository } from '#/repository/repository';
 import { databaseKeyError } from './enums/databaseKeyError';
-import { mssqlEvent } from './events/mssqlEvent';
-import { tableEvent } from './events/tableEvent';
+import type { MssqlEventMap } from './events/mssqlEventMap';
 import { Table } from './table';
 import type { MSSQLDatabaseOptions } from './types/mssqlDatabaseOption';
-import type { MssqlEventLog } from './types/mssqlEventLog';
+import type { QueryContext } from './types/queryContext';
 
 /**
  * Manages the connection with an MSSQL database.
@@ -25,7 +24,7 @@ import type { MssqlEventLog } from './types/mssqlEventLog';
  * const users = await mssql.getRepository('users').find();
  * ```
  */
-export class MSSQL extends EventEmitter {
+export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
     /**
      * Indicates whether the database is connected.
      */
@@ -72,24 +71,8 @@ export class MSSQL extends EventEmitter {
         this._pulse = options.pulse ?? false;
         this._db = knex({
             client: 'mssql',
-            debug: options.debug ?? true,
             acquireConnectionTimeout: options.connectionTimeout ?? 20000,
-            log: {
-                debug: (debug): void => {
-                    if (options.debug) {
-                        const tables = this._extractTablesFromSqlQuery(debug.sql as string);
-                        const eventDebugLog: MssqlEventLog = {
-                            database: options.databaseName,
-                            tables,
-                            queryUuid: debug.__knexQueryUid,
-                            method: debug.method,
-                            sql: debug.sql,
-                            bindings: debug.bindings
-                        };
-                        this.emit(mssqlEvent.log, eventDebugLog);
-                    }
-                }
-            },
+            compileSqlOnError: true,
             connection: {
                 database: options.databaseName,
                 host: options.host,
@@ -355,23 +338,23 @@ export class MSSQL extends EventEmitter {
      * Handles the response from a query and emits the appropriate event based on the method.
      *
      * @param response - The response from the query.
-     * @param obj - The query object containing the method and SQL query string.
+     * @param queryContext - The query object containing the method and SQL query string.
      */
-    private _handleQueryResponse(response: unknown, obj: Record<string, unknown>): void {
-        const tables = this._extractTablesFromSqlQuery(obj.sql as string);
+    private _handleQueryResponse(response: unknown[], queryContext: QueryContext): void {
+        const tables = this._extractTablesFromSqlQuery(queryContext.sql);
         const table = this._tables.get(tables[0]);
-        switch (obj.method) {
+        switch (queryContext.method) {
             case 'select':
-                table?.emit(tableEvent.selected, response);
+                table?.emit('selected', response, queryContext);
                 break;
             case 'insert':
-                table?.emit(tableEvent.created, response);
+                table?.emit('inserted', response, queryContext);
                 break;
             case 'update':
-                table?.emit(tableEvent.updated, response);
+                table?.emit('updated', response, queryContext);
                 break;
             case 'delete':
-                table?.emit(tableEvent.deleted, response);
+                table?.emit('deleted', response, queryContext);
                 break;
             default:
                 break;
@@ -379,20 +362,18 @@ export class MSSQL extends EventEmitter {
     }
 
     /**
-     * Handles an error from a query and emits the `query:error` event.
-     *
-     * @param error - The error that occurred during the query.
-     * @param query - The query object containing the method and SQL query string.
-     */
-    private _handleQueryError(error: Error, query: Record<string, unknown>): void {
-        this.emit('query:error', error, query);
-    }
-
-    /**
      * Adds event listeners to the Knex instance to handle query responses and errors.
      */
     private _addEventKnex(): void {
-        this._db.on('query-error', this._handleQueryError.bind(this));
-        this._db.on('query-response', this._handleQueryResponse.bind(this));
+        this._db.on('query', (queryContext: QueryContext) => {
+            this.emit('query', queryContext);
+        });
+        this._db.on('query-error', (error: Error, queryContext: QueryContext) => {
+            this.emit('query:error', error, queryContext);
+        });
+        this._db.on('query-response', (response: unknown[], queryContext: QueryContext) => {
+            this.emit('query-response', response, queryContext);
+            this._handleQueryResponse(response, queryContext);
+        });
     }
 }
