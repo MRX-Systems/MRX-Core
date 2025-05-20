@@ -1,2 +1,2 @@
-export * from './mssqlEvent';
-export * from './tableEvent';
+export * from './mssqlEventMap';
+export * from './tableEventMap';
