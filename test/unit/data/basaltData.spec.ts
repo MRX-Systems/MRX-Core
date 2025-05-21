@@ -6,10 +6,10 @@ import {
     filterByValue,
     transformKeys
 } from '#/data/data';
-import { CamelCaseTransformer } from '#/data/transformer/camelCase';
-import { KebabCaseTransformer } from '#/data/transformer/kebabCase';
-import { PascalCaseTransformer } from '#/data/transformer/pascalCase';
-import { SnakeCaseTransformer } from '#/data/transformer/snakeCase';
+import { CamelCaseTransformer } from '#/data/transformers/camelCase';
+import { KebabCaseTransformer } from '#/data/transformers/kebabCase';
+import { PascalCaseTransformer } from '#/data/transformers/pascalCase';
+import { SnakeCaseTransformer } from '#/data/transformers/snakeCase';
 
 describe('Filter By Key Exclusion', () => {
     test('should return a filtered object', () => {
