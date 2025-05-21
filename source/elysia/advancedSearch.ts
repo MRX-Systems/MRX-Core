@@ -136,7 +136,7 @@ export const advancedSearchPlugin = <TInferedObject extends TObject>(
                     '$limit',
                     '$offset',
                     ...additionalExcludedProps
-                ], true);
+                ], true) as typeof rawAdvancedSearchQuery;
 
                 // Process property-specific where clauses (sanitized to AdvancedSearch[])
                 for (const [key, value] of Object.entries(rawAdvancedSearchQuery)) {
