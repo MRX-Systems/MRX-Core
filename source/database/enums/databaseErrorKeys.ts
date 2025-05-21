@@ -1,8 +1,4 @@
-/**
- * Database error key is a list of errors in the database context.
- * Each property represents a specific MSSQL error scenario.
- */
-export const databaseKeyError = {
+export const databaseErrorKeys = {
     /** Error when failing to connect to MSSQL database. */
     mssqlConnectionError: 'core.error.mssql.database.connection_error',
     /** Error when disconnecting from MSSQL database. */

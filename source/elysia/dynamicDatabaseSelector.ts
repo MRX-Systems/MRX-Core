@@ -3,7 +3,7 @@ import { Elysia, t } from 'elysia';
 import { MSSQL } from '#/database/mssql';
 import { CoreError } from '#/error/coreError';
 import { SingletonManager } from '#/singletonManager/singletonManager';
-import { elysiaKeyError } from './enums/elysiaKeyError';
+import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
 import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
 
 /**
@@ -69,7 +69,7 @@ export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPl
                 const databaseName = headers[options.headerKey || 'database-using'];
                 if (!databaseName)
                     throw new CoreError({
-                        key: elysiaKeyError.dynamicDatabaseKeyNotFound,
+                        key: elysiaErrorKeys.dynamicDatabaseKeyNotFound,
                         message: 'Dynamic Database key not found in the request headers.',
                         httpStatusCode: 400
                     });

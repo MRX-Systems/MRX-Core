@@ -37,12 +37,12 @@ const _validateDataIsObject = <TObject>(data: TObject): void => {
 };
 
 /**
- * Filters the provided data by excluding the specified keys. This method will create
- * a new object that contains all properties from the original data object except for
- * those keys that are provided to be excluded. Additionally, it can also exclude
- * properties with values of null or undefined if 'excludeNullUndefined' is set to true.
+ * Filters the provided data by excluding the specified keys, with an option to exclude null or undefined values.
+ * Uses a generic type parameter to control the return type based on the excludeNullUndefined flag.
  *
  * @template TObject - The type of the data object to filter, must be an object.
+ * @template TExcludedKeys - The keys to exclude from the data object.
+ * @template TExcludeNullUndefined - Boolean flag type to determine if properties with null or undefined values should be excluded.
  *
  * @param data - The data object to be filtered.
  * @param keys - The array of keys to exclude from the data object. (Can be empty)
@@ -51,43 +51,47 @@ const _validateDataIsObject = <TObject>(data: TObject): void => {
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  * @throws ({@link CoreError}) - Throws an error if the data is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
  *
- * @example
- * ```typescript
- * const object = { test: 'test', exclude: 'exclude' };
- * const filtered = filterByKeyExclusion(object, ['exclude']);
- * console.log(filtered); // { test: 'test' }
- * ```
- *
- * @example
- * ```typescript
- * const object = { test: 'test', exclude: null };
- * const filtered = filterByKeyExclusion(object, [], true);
- * console.log(filtered); // { test: 'test' }
- * ```
- *
  * @returns The filtered data object with the specified keys excluded. ({@link TObject})
  */
-export const filterByKeyExclusion = <TObject extends Readonly<object>>(
+export const filterByKeyExclusion = <
+    TObject extends Readonly<object>,
+    TExcludedKeys extends keyof TObject = never,
+    TExcludeNullUndefined extends boolean = false
+>(
     data: Readonly<TObject>,
-    keys: readonly (keyof TObject)[],
-    excludeNullUndefined = false
-): TObject => {
+    keys: readonly TExcludedKeys[],
+    excludeNullUndefined?: TExcludeNullUndefined
+): TExcludeNullUndefined extends true
+    ? Partial<Omit<TObject, TExcludedKeys>>
+    : Omit<TObject, TExcludedKeys> => {
     _validateDataNull(data);
     _validateDataIsObject(data);
-    const filteredData = {} as TObject;
+
+    // The result object will be Partial if excludeNullUndefined is true, otherwise Omit
+    const filteredData: Record<string, unknown> = {};
+
     Object.keys(data).forEach((key: string): void => {
         const typedKey = key as keyof TObject;
-        if (!keys.includes(typedKey) && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined)))
-            filteredData[typedKey] = data[typedKey];
+        if (
+            !(keys as readonly (keyof TObject)[]).includes(typedKey)
+            && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
+        )
+            filteredData[key] = data[typedKey];
     });
-    return filteredData;
+
+    // Type assertion is required due to conditional return type
+    return filteredData as TExcludeNullUndefined extends true
+        ? Partial<Omit<TObject, TExcludedKeys>>
+        : Omit<TObject, TExcludedKeys>;
 };
 
 /**
- * Filters the provided data by including only the specified keys. The resulting object
- * will only have properties that match the keys provided. Properties with null or undefined
- * values can optionally be excluded based on the 'excludeNullUndefined' flag.
+ * Filters the provided data by including only the specified keys, with an option to exclude null or undefined values.
+ * Uses a generic type parameter to control the return type based on the excludeNullUndefined flag.
+ *
  * @template TObject - The type of the data object to filter, must be an object.
+ * @template TIncludedKeys - The keys to include from the data object.
+ * @template TExcludeNullUndefined - Boolean flag type to determine if properties with null or undefined values should be excluded.
  *
  * @param data - The data object to be filtered.
  * @param keys - The array of keys to include in the resulting data object. (Can be empty)
@@ -112,19 +116,35 @@ export const filterByKeyExclusion = <TObject extends Readonly<object>>(
  *
  * @returns The filtered data object with only the specified keys included. ({@link TObject})
  */
-export const filterByKeyInclusion = <TObject extends Readonly<object>>(
+export const filterByKeyInclusion = <
+    TObject extends Readonly<object>,
+    TIncludedKeys extends keyof TObject = never,
+    TExcludeNullUndefined extends boolean = false
+>(
     data: Readonly<TObject>,
-    keys: readonly (keyof TObject)[],
-    excludeNullUndefined = false
-): TObject => {
+    keys: readonly TIncludedKeys[],
+    excludeNullUndefined?: TExcludeNullUndefined
+): TExcludeNullUndefined extends true
+    ? Partial<Pick<TObject, TIncludedKeys>>
+    : Pick<TObject, TIncludedKeys> => {
     _validateDataNull(data);
     _validateDataIsObject(data);
-    const filteredData = {} as TObject;
-    keys.forEach((key: keyof TObject): void => {
-        if (key in data && (!excludeNullUndefined || (data[key] !== null && data[key] !== undefined)))
-            filteredData[key] = data[key];
+
+    // The result object will be Partial if excludeNullUndefined is true, otherwise Pick
+    const filteredData: Record<string, unknown> = {};
+
+    (keys as readonly (keyof TObject)[]).forEach((key: keyof TObject): void => {
+        if (
+            key in data
+            && (!excludeNullUndefined || (data[key] !== null && data[key] !== undefined))
+        )
+            filteredData[key as string] = data[key];
     });
-    return filteredData;
+
+    // Type assertion is required due to conditional return type
+    return filteredData as TExcludeNullUndefined extends true
+        ? Partial<Pick<TObject, TIncludedKeys>>
+        : Pick<TObject, TIncludedKeys>;
 };
 
 /**

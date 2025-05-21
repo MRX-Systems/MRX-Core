@@ -1,8 +1,4 @@
-/**
- * Elysia error key is a list of errors in the elysia context.
- * Each property represents a specific Elysia error scenario.
- */
-export const elysiaKeyError = {
+export const elysiaErrorKeys = {
     /** Error when JWT signing fails. */
     jwtSignError: 'core.error.elysia.jwt_sign_error',
     /** Error when JWT secret is not found. */

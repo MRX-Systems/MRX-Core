@@ -21,7 +21,7 @@ export type * from './data/types/keyTransformer';
 export * from './database';
 
 // Database Enums
-export * from './database/enums/databaseKeyError';
+export * from './database/enums/databaseErrorKeys';
 export * from './database/enums/mssqlErrorCode';
 
 // Database Events
@@ -45,7 +45,7 @@ export * from './elysia/microservice';
 export * from './elysia/ratelimit';
 
 // Elysia Enums
-export * from './elysia/enums/elysiaKeyError';
+export * from './elysia/enums/elysiaErrorKeys';
 export * from './elysia/enums/httpStatusCode';
 
 // Elysia Schemas
@@ -96,7 +96,7 @@ export type * from './logger/types/strategyMap';
 export * from './mailer/smtp';
 
 // Mailer Enums
-export * from './mailer/enums/mailerKeyError';
+export * from './mailer/enums/mailerErrorKeys';
 
 // Mailer Types
 export type * from './mailer/types/smtpCredentials';

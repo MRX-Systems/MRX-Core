@@ -6,7 +6,7 @@ import {
 } from 'jose';
 
 import { CoreError } from '#/error/coreError';
-import { elysiaKeyError } from './enums/elysiaKeyError';
+import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
 import type { JWTOptions } from './types/jwtOptions';
 
 /**
@@ -25,7 +25,7 @@ export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOptions
     // Check if the secret is provided
     if (!options.secret)
         throw new CoreError({
-            key: elysiaKeyError.jwtSecretNotFound,
+            key: elysiaErrorKeys.jwtSecretNotFound,
             message: 'Secret key is required for JWT signing and verification.'
         });
 
@@ -63,7 +63,7 @@ export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOptions
                         .sign(key);
                 } catch {
                     throw new CoreError({
-                        key: elysiaKeyError.jwtSignError,
+                        key: elysiaErrorKeys.jwtSignError,
                         message: 'Error signing JWT.'
                     });
                 }

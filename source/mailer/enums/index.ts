@@ -1,1 +1,1 @@
-export * from './mailerKeyError';
+export * from './mailerErrorKeys';

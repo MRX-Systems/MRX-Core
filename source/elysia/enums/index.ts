@@ -1,2 +1,2 @@
-export * from './elysiaKeyError';
+export * from './elysiaErrorKeys';
 export * from './httpStatusCode';

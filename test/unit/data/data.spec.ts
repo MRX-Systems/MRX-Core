@@ -13,15 +13,17 @@ import { SnakeCaseTransformer } from '#/data/transformers/snakeCase';
 
 describe('Filter By Key Exclusion', () => {
     test('should return a filtered object', () => {
-        const object: Record<string, unknown> = { test: 'test', exclude: 'exclude' };
-        const filtered: Record<string, unknown> = filterByKeyExclusion(object, ['exclude']);
+        const object = { test: 'test', exclude: 'exclude' };
+        const filtered = filterByKeyExclusion(object, ['exclude']);
         expect(filtered).toEqual({ test: 'test' });
     });
 
     test('should return a filtered object excluding null and undefined values', () => {
-        const object: Record<string, unknown> = { test: 'test', exclude: null, exclude2: undefined };
-        const filtered: Record<string, unknown> = filterByKeyExclusion(object, [], true);
-        expect(filtered).toEqual({ test: 'test' });
+        const object = { test: 'test', exclude: null, exclude2: undefined };
+        const filtered = filterByKeyExclusion(object, [], true);
+        expect(filtered).toEqual({
+            test: 'test'
+        });
     });
 
     test('should throw an error when data is null', () => {
@@ -35,40 +37,40 @@ describe('Filter By Key Exclusion', () => {
     });
 
     test('should return original object when keys are empty', () => {
-        const object: Record<string, unknown> = { test: 'test' };
-        const filtered: Record<string, unknown> = filterByKeyExclusion(object, []);
+        const object = { test: 'test' };
+        const filtered = filterByKeyExclusion(object, []);
         expect(filtered).toEqual({ test: 'test' });
     });
 
     test('should return original object when keys are not found', () => {
         const object: Record<string, unknown> = { test: 'test' };
-        const filtered: Record<string, unknown> = filterByKeyExclusion(object, ['exclude']);
+        const filtered = filterByKeyExclusion(object, ['exclude']);
         expect(filtered).toEqual({ test: 'test' });
     });
 
     test('should return original object when keys are not found and excludeNullUndefined is true', () => {
         const object: Record<string, unknown> = { test: 'test' };
-        const filtered: Record<string, unknown> = filterByKeyExclusion(object, ['exclude'], true);
+        const filtered = filterByKeyExclusion(object, ['exclude'], true);
         expect(filtered).toEqual({ test: 'test' });
     });
 
     test('should return original object when keys are empty and excludeNullUndefined is true', () => {
         const object: Record<string, unknown> = { test: 'test' };
-        const filtered: Record<string, unknown> = filterByKeyExclusion(object, [], true);
+        const filtered = filterByKeyExclusion(object, [], true);
         expect(filtered).toEqual({ test: 'test' });
     });
 });
 
 describe('Filter By Key Inclusion', () => {
     test('should return a filtered object', () => {
-        const object: Record<string, unknown> = { test: 'test', exclude: 'exclude' };
-        const filtered: Record<string, unknown> = filterByKeyInclusion(object, ['test']);
+        const object = { test: 'test', exclude: 'exclude' };
+        const filtered = filterByKeyInclusion(object, ['test']);
         expect(filtered).toEqual({ test: 'test' });
     });
 
     test('should return a filtered object excluding null and undefined values', () => {
-        const object: Record<string, unknown> = { test: 'test', exclude: null, exclude2: undefined };
-        const filtered: Record<string, unknown> = filterByKeyInclusion(object, ['test'], true);
+        const object = { test: 'test', exclude: null, exclude2: undefined };
+        const filtered = filterByKeyInclusion(object, ['test'], true);
         expect(filtered).toEqual({ test: 'test' });
     });
 
