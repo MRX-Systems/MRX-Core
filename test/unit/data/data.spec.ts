@@ -166,6 +166,7 @@ describe('Transform Keys', () => {
 describe('Basalt Camel Case Transformer', () => {
     test('should transform a key to camel case', () => {
         const transformer = new CamelCaseTransformer();
+        expect(transformer.transformKey('myKeyName')).toBe('myKeyName');
         expect(transformer.transformKey('MyKeyName')).toBe('myKeyName');
         expect(transformer.transformKey('my-key-name')).toBe('myKeyName');
         expect(transformer.transformKey('my_key_name')).toBe('myKeyName');
@@ -175,6 +176,7 @@ describe('Basalt Camel Case Transformer', () => {
 describe('Basalt Kebab Case Transformer', () => {
     test('should transform a key to kebab case', () => {
         const transformer = new KebabCaseTransformer();
+        expect(transformer.transformKey('my-key-name')).toBe('my-key-name');
         expect(transformer.transformKey('myKeyName')).toBe('my-key-name');
         expect(transformer.transformKey('MyKeyName')).toBe('my-key-name');
         expect(transformer.transformKey('my_long_key_name')).toBe('my-long-key-name');
@@ -184,6 +186,7 @@ describe('Basalt Kebab Case Transformer', () => {
 describe('Basalt Pascal Case Transformer', () => {
     test('should transform a key to pascal case', () => {
         const transformer = new PascalCaseTransformer();
+        expect(transformer.transformKey('MyKeyName')).toBe('MyKeyName');
         expect(transformer.transformKey('myKeyName')).toBe('MyKeyName');
         expect(transformer.transformKey('my-key-name')).toBe('MyKeyName');
         expect(transformer.transformKey('my_key_name')).toBe('MyKeyName');
@@ -193,6 +196,7 @@ describe('Basalt Pascal Case Transformer', () => {
 describe('Basalt Snake Case Transformer', () => {
     test('should transform a key to snake case', () => {
         const transformer = new SnakeCaseTransformer();
+        expect(transformer.transformKey('my_key_name')).toBe('my_key_name');
         expect(transformer.transformKey('myKeyName')).toBe('my_key_name');
         expect(transformer.transformKey('MyKeyName')).toBe('my_key_name');
         expect(transformer.transformKey('my-long-key-name')).toBe('my_long_key_name');
