@@ -1,5 +1,22 @@
 // ------------------------------------------------------------------------
 
+// Data
+export * from './data/data';
+
+// Data Enums
+export * from './data/enums/dataErrorKeys';
+
+// Data Transformers
+export * from './data/transformers/camelCase';
+export * from './data/transformers/kebabCase';
+export * from './data/transformers/pascalCase';
+export * from './data/transformers/snakeCase';
+
+// Data Types
+export type * from './data/types/keyTransformer';
+
+// ------------------------------------------------------------------------
+
 // Database
 export * from './database';
 
@@ -52,6 +69,29 @@ export type * from './error/types/coreErrorOptions';
 
 // ------------------------------------------------------------------------
 
+// Logger
+export * from './logger/logger';
+
+// Logger Enums
+export * from './logger/enums/loggerErrorKeys';
+
+// Logger Events
+export type * from './logger/events/loggerEvents';
+
+// Logger Strategies
+export * from './logger/strategies/consoleLogger';
+export * from './logger/strategies/fileLogger';
+
+// Logger Types
+export type * from './logger/types/bodiesIntersection';
+export type * from './logger/types/logLevels';
+export type * from './logger/types/logStreamChunk';
+export type * from './logger/types/loggerStrategy';
+export type * from './logger/types/strategyBody';
+export type * from './logger/types/strategyMap';
+
+// ------------------------------------------------------------------------
+
 // Mailer
 export * from './mailer/smtp';
 
@@ -80,5 +120,21 @@ export type * from './repository/types/whereClause';
 
 // ------------------------------------------------------------------------
 
+// SingletonManager
+export * from './singletonManager/singletonManager';
+
+// SingletonManager Enums
+export * from './singletonManager/enums/singletonManagerErrorKeys';
+
+// ------------------------------------------------------------------------
+
 // Store
 export * from './store/redis';
+
+// ------------------------------------------------------------------------
+
+// TypedEventEmitter
+export * from './typedEventEmitter/typedEventEmitter';
+
+// TypedEventEmitter Types
+export type * from './typedEventEmitter/types/eventMap';
