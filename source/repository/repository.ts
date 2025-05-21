@@ -1,7 +1,7 @@
 import type { Knex } from 'knex';
 import { PassThrough } from 'stream';
 
-import { databaseKeyError } from '#/database/enums/databaseKeyError';
+import { databaseErrorKeys } from '#/database/enums/databaseErrorKeys';
 import { mssqlErrorCode } from '#/database/enums/mssqlErrorCode';
 import type { Table } from '#/database/table';
 import { CoreError } from '#/error/coreError';
@@ -157,7 +157,7 @@ export class Repository<TModel = unknown> {
         kStream.on('error', (error: unknown) => {
             const code = (error as { number: keyof typeof mssqlErrorCode })?.number || 0;
             passThrough.emit('error', new CoreError({
-                key: mssqlErrorCode[code] ?? databaseKeyError.mssqlQueryError,
+                key: mssqlErrorCode[code] ?? databaseErrorKeys.mssqlQueryError,
                 message: 'An error occurred while streaming the query results.',
                 cause: {
                     query: query.toSQL().sql,
@@ -178,8 +178,8 @@ export class Repository<TModel = unknown> {
      * @template KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search. ({@link QueryOptionsExtendPagination})
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseKeyError.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns An array of records matching the query options. ({@link KModel})
      *
@@ -255,8 +255,8 @@ export class Repository<TModel = unknown> {
      * @template KModel - The type of the object to retrieve.
      * @param options - The query options to apply to the search. ({@link QueryOptionsExtendPagination})
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseKeyError.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns A single record matching the query options. ({@link KModel})
      *
@@ -320,8 +320,8 @@ export class Repository<TModel = unknown> {
      * @template KModel - The type of the object to count.
      * @param options - The query options to apply to the search. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseKeyError.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns The count of records matching the query options.
      *
@@ -363,7 +363,7 @@ export class Repository<TModel = unknown> {
      * @param data - The data to insert. Can be a single object or an array of objects.
      * @param options - The query options to apply to the insertion. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns An array of inserted records.
      *
@@ -406,7 +406,7 @@ export class Repository<TModel = unknown> {
      * @param data - The data to update. Can be a single object or an array of objects.
      * @param options - The query options to apply to the update. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns An array of updated records.
      *
@@ -452,7 +452,7 @@ export class Repository<TModel = unknown> {
      * @template KModel - The type of the object to delete.
      * @param options - The query options to apply to the deletion. ({@link QueryOptions})
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns An array of deleted records.
      *
@@ -542,7 +542,7 @@ export class Repository<TModel = unknown> {
      * @param error - The error object thrown by Knex.js.
      * @param query - The Knex.js query builder that caused the error.
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns Never returns, always throws an error.
      */
@@ -551,7 +551,7 @@ export class Repository<TModel = unknown> {
             throw error;
         const code = (error as { number: keyof typeof mssqlErrorCode })?.number || 0;
         throw new CoreError({
-            key: mssqlErrorCode[code] ?? databaseKeyError.mssqlQueryError,
+            key: mssqlErrorCode[code] ?? databaseErrorKeys.mssqlQueryError,
             message: 'An error occurred while executing the query.',
             cause: {
                 query: query.toSQL().sql,
@@ -599,8 +599,8 @@ export class Repository<TModel = unknown> {
      * @param query - The Knex.js query builder to execute.
      * @param throwIfNoResult - Whether to throw an error if no records are found.
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseKeyError.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseKeyError})
+     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
      *
      * @returns An array of records returned by the query.
      */
@@ -609,7 +609,7 @@ export class Repository<TModel = unknown> {
             const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
                 throw new CoreError({
-                    key: databaseKeyError.mssqlNoResult,
+                    key: databaseErrorKeys.mssqlNoResult,
                     message: 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql

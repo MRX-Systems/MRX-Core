@@ -181,6 +181,7 @@ export default [
             '@typescript-eslint/no-confusing-void-expression': 'off',
             '@typescript-eslint/consistent-return': 'warn',
             '@typescript-eslint/prefer-for-of': 'off',
+            '@typescript-eslint/no-empty-object-type': 'off'
         }
     }
 ];

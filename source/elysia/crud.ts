@@ -1,4 +1,3 @@
-import { SingletonManager } from '@basalt-lab/basalt-helper/singletonManager';
 import type { Static, TObject, TSchema } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
@@ -6,9 +5,10 @@ import type { MSSQL } from '#/database/mssql';
 import { CoreError } from '#/error/coreError';
 import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 import type { SelectedFields } from '#/repository/types/selectedFields';
+import { SingletonManager } from '#/singletonManager/singletonManager';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
 import { dynamicDatabaseSelectorPlugin } from './dynamicDatabaseSelector';
-import { elysiaKeyError } from './enums/elysiaKeyError';
+import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
 import type { CrudOptions } from './types/crudOptions';
 import type { CRUDRoutes } from './types/crudRoutes';
 import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
@@ -188,7 +188,7 @@ const handlerDefinition = {
 
         if (!ctx.advancedSearch || (ctx.advancedSearch as AdvancedSearch<unknown>[]).length === 0 || !(ctx.advancedSearch as AdvancedSearch<unknown>[])[0])
             throw new CoreError({
-                key: elysiaKeyError.needAdvancedSearch,
+                key: elysiaErrorKeys.needAdvancedSearch,
                 message: 'You need to provide advanced search to update records. It\'s dangerous to update all records.',
                 httpStatusCode: 400
             });
@@ -230,7 +230,7 @@ const handlerDefinition = {
 
         if (!ctx.advancedSearch || (ctx.advancedSearch as AdvancedSearch<unknown>[]).length === 0 || !(ctx.advancedSearch as AdvancedSearch<unknown>[])[0])
             throw new CoreError({
-                key: elysiaKeyError.needAdvancedSearch,
+                key: elysiaErrorKeys.needAdvancedSearch,
                 message: 'You need to provide advanced search to delete records. It\'s dangerous to delete all records.',
                 httpStatusCode: 400
             });

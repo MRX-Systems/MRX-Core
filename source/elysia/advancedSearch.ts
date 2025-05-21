@@ -1,7 +1,7 @@
-import { filterByKeyExclusion } from '@basalt-lab/basalt-helper/data';
 import { TypeGuard, type Static, type TArray, type TObject, type TSchema, type TUnion } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
+import { filterByKeyExclusion } from '#/data/data';
 import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 
 const _createWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInferedSchema) => t.Object({
@@ -136,7 +136,7 @@ export const advancedSearchPlugin = <TInferedObject extends TObject>(
                     '$limit',
                     '$offset',
                     ...additionalExcludedProps
-                ], true);
+                ], true) as typeof rawAdvancedSearchQuery;
 
                 // Process property-specific where clauses (sanitized to AdvancedSearch[])
                 for (const [key, value] of Object.entries(rawAdvancedSearchQuery)) {
