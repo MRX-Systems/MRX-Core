@@ -40,6 +40,9 @@
     "./store": "./dist/store/index.js",
     "./typedEventEmitter": "./dist/typedEventEmitter/index.js",
     "./typedEventEmitter/types": "./dist/typedEventEmitter/types/index.js",
+    "./utils": "./dist/utils/index.js",
+    "./utils/enums": "./dist/utils/enums/index.js",
+    "./utils/types": "./dist/utils/types/index.js",
     ".": "./dist/index.js"
   },
   "scripts": {

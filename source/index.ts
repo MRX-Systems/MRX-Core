@@ -138,3 +138,16 @@ export * from './typedEventEmitter/typedEventEmitter';
 
 // TypedEventEmitter Types
 export type * from './typedEventEmitter/types/eventMap';
+
+// ------------------------------------------------------------------------
+
+// Utils
+export * from './utils/env';
+export * from './utils/isIsoDateString';
+export * from './utils/stream';
+
+// Utils Enums
+export * from './utils/enums/utilErrorKeys';
+
+// Utils Types
+export type * from './utils/types/streamWithAsyncIterable';

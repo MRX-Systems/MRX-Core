@@ -65,6 +65,11 @@ await Bun.build({
         './source/typedEventEmitter/index.ts',
         './source/typedEventEmitter/types/index.ts',
 
+        // Utils
+        './source/utils/index.ts',
+        './source/utils/enums/index.ts',
+        './source/utils/types/index.ts',
+
         './source/index.ts'
     ],
     outdir: './dist',
