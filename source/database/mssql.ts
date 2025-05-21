@@ -1,8 +1,8 @@
-import { TypedEventEmitter } from '@basalt-lab/basalt-helper/typedEventEmitter';
 import knex, { type Knex } from 'knex';
 
 import { CoreError } from '#/error/coreError';
 import { Repository } from '#/repository/repository';
+import { TypedEventEmitter } from '#/typedEventEmitter/typedEventEmitter';
 import { databaseKeyError } from './enums/databaseKeyError';
 import type { MssqlEventMap } from './events/mssqlEventMap';
 import { Table } from './table';

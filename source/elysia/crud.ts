@@ -1,4 +1,3 @@
-import { SingletonManager } from '@basalt-lab/basalt-helper/singletonManager';
 import type { Static, TObject, TSchema } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
@@ -6,6 +5,7 @@ import type { MSSQL } from '#/database/mssql';
 import { CoreError } from '#/error/coreError';
 import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 import type { SelectedFields } from '#/repository/types/selectedFields';
+import { SingletonManager } from '#/singletonManager/singletonManager';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
 import { dynamicDatabaseSelectorPlugin } from './dynamicDatabaseSelector';
 import { elysiaKeyError } from './enums/elysiaKeyError';

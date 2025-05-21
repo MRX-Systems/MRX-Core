@@ -1,8 +1,8 @@
-import { SingletonManager } from '@basalt-lab/basalt-helper/singletonManager';
 import { Elysia, t } from 'elysia';
 
 import { MSSQL } from '#/database/mssql';
 import { CoreError } from '#/error/coreError';
+import { SingletonManager } from '#/singletonManager/singletonManager';
 import { elysiaKeyError } from './enums/elysiaKeyError';
 import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
 

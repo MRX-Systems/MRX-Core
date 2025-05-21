@@ -1,6 +1,5 @@
-import { TypedEventEmitter } from '@basalt-lab/basalt-helper/typedEventEmitter';
-
 import type { TableEventMap } from '#/database/events/tableEventMap';
+import { TypedEventEmitter } from '#/typedEventEmitter/typedEventEmitter';
 
 /**
  * Represents a database table and provides access to its metadata (name, fields, primary key).
