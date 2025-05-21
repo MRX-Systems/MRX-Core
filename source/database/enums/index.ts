@@ -1,2 +1,2 @@
-export * from './databaseKeyError';
+export * from './databaseErrorKeys';
 export * from './mssqlErrorCode';

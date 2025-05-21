@@ -1,8 +1,4 @@
-/**
- * Mailer error key is a list of errors in the mailer context.
- * Each property represents a specific mailer error scenario.
- */
-export const mailerKeyError = {
+export const mailerErrorKeys = {
     /** Error when failing to connect to SMTP server. */
     smtpConnectionError: 'core.error.mailer.smtp.connection_error',
     /** Error when SMTP server is not connected. */

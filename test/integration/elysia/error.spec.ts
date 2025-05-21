@@ -1,5 +1,3 @@
-import { BasaltError as BasaltHelperError } from '@basalt-lab/basalt-helper/error';
-import { BasaltError as BasaltLoggerError } from '@basalt-lab/basalt-logger/error';
 import { describe, expect, test } from 'bun:test';
 import { Elysia, t } from 'elysia';
 
@@ -8,13 +6,11 @@ import { CoreError } from '#/error/coreError';
 
 describe('Error Plugin', () => {
     describe('onError', () => {
-        const errorCases: [string, typeof CoreError | typeof BasaltLoggerError | typeof BasaltHelperError][] = [
-            ['CoreError', CoreError],
-            ['BasaltLoggerError', BasaltLoggerError],
-            ['BasaltHelperError', BasaltHelperError]
+        const errorCases: [string, typeof CoreError][] = [
+            ['CoreError', CoreError]
         ];
 
-        test.each(errorCases)('should handle %s with status 500 and specific status', async (name, ErrorClass) => {
+        test.each(errorCases)('should handle %s with status 500 and specific status', async (_, ErrorClass) => {
             const app = new Elysia()
                 .use(errorPlugin)
                 .get('/throw', () => {
