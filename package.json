@@ -11,6 +11,10 @@
     "core"
   ],
   "exports": {
+    "./data": "./dist/data/index.js",
+    "./data/enums": "./dist/data/enums/index.js",
+    "./data/transformers": "./dist/data/transformers/index.js",
+    "./data/types": "./dist/data/types/index.js",
     "./database": "./dist/database/index.js",
     "./database/enums": "./dist/database/enums/index.js",
     "./database/events": "./dist/database/events/index.js",
@@ -21,12 +25,21 @@
     "./elysia/types": "./dist/elysia/types/index.js",
     "./error": "./dist/error/index.js",
     "./error/types": "./dist/error/types/index.js",
+    "./logger": "./dist/logger/index.js",
+    "./logger/enums": "./dist/logger/enums/index.js",
+    "./logger/events": "./dist/logger/events/index.js",
+    "./logger/strategies": "./dist/logger/strategies/index.js",
+    "./logger/types": "./dist/logger/types/index.js",
     "./mailer": "./dist/mailer/index.js",
     "./mailer/enums": "./dist/mailer/enums/index.js",
     "./mailer/types": "./dist/mailer/types/index.js",
     "./repository": "./dist/repository/index.js",
     "./repository/types": "./dist/repository/types/index.js",
+    "./singletonManager": "./dist/singletonManager/index.js",
+    "./singletonManager/enums": "./dist/singletonManager/enums/index.js",
     "./store": "./dist/store/index.js",
+    "./typedEventEmitter": "./dist/typedEventEmitter/index.js",
+    "./typedEventEmitter/types": "./dist/typedEventEmitter/types/index.js",
     ".": "./dist/index.js"
   },
   "scripts": {

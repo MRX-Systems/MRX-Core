@@ -16,6 +16,12 @@ await Bun.build({
     external: [...dependencies, ...devDependencies, ...peerDependencies],
     root: './source',
     entrypoints: [
+        // Data
+        './source/data/index.ts',
+        './source/data/enums/index.ts',
+        './source/data/transformers/index.ts',
+        './source/data/types/index.ts',
+
         // Database
         './source/database/index.ts',
         './source/database/enums/index.ts',
@@ -32,6 +38,13 @@ await Bun.build({
         './source/error/index.ts',
         './source/error/types/index.ts',
 
+        // Logger
+        './source/logger/index.ts',
+        './source/logger/enums/index.ts',
+        './source/logger/events/index.ts',
+        './source/logger/strategies/index.ts',
+        './source/logger/types/index.ts',
+
         // Mailer
         './source/mailer/index.ts',
         './source/mailer/enums/index.ts',
@@ -41,8 +54,16 @@ await Bun.build({
         './source/repository/index.ts',
         './source/repository/types/index.ts',
 
+        // SingletonManager
+        './source/singletonManager/index.ts',
+        './source/singletonManager/enums/index.ts',
+
         // Store
         './source/store/index.ts',
+
+        // TypedEventEmitter
+        './source/typedEventEmitter/index.ts',
+        './source/typedEventEmitter/types/index.ts',
 
         './source/index.ts'
     ],
