@@ -1,3 +1,4 @@
+import type { TObject, TString } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
 import { MSSQL } from '#/database/mssql';
@@ -54,36 +55,47 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  *   );
  * ```
  */
-export const dynamicDatabaseSelectorPlugin = (options: DynamicDatabaseSelectorPluginOptions) => new Elysia({
-    name: 'dynamicDatabaseSelectorPlugin'
-})
-    .model({
-        databaseUsingHeader: t.Object({
-            [options.headerKey || 'database-using']: t.String()
-        })
-    })
+export const dynamicDatabaseSelectorPlugin = <const THeaderKeyName extends string = 'database-using'>(options: DynamicDatabaseSelectorPluginOptions<THeaderKeyName>) => {
+    const keyName = (options.headerKey ?? 'database-using') as THeaderKeyName;
 
-    .macro({
-        hasDynamicDatabaseSelector: {
-            async resolve({ headers }) {
-                const databaseName = headers[options.headerKey || 'database-using'];
-                if (!databaseName)
-                    throw new CoreError({
-                        key: elysiaErrorKeys.dynamicDatabaseKeyNotFound,
-                        message: 'Dynamic Database key not found in the request headers.',
-                        httpStatusCode: 400
-                    });
-                if (!SingletonManager.has(`database:${databaseName}`)) {
-                    SingletonManager.register(`database:${databaseName}`, MSSQL, {
-                        ...options.baseDatabaseConfig,
-                        databaseName
-                    });
-                    await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
-                }
-                return {
-                    dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
-                };
-            }
-        }
+    return new Elysia({
+        name: 'dynamicDatabaseSelectorPlugin'
     })
-    .as('scoped');
+        .model({
+            databaseUsingHeader: t.Object({
+                [keyName]: t.String({
+                    description: 'Name of the database to use for the request',
+                    example: 'my_database'
+                })
+            }) as TObject<Record<THeaderKeyName, TString>>
+        })
+        .macro({
+            hasDynamicDatabaseSelector: {
+                async resolve({ headers }) {
+                    const databaseName = headers[keyName];
+                    if (!databaseName)
+                        throw new CoreError({
+                            key: elysiaErrorKeys.dynamicDatabaseKeyNotFound,
+                            message: 'Dynamic Database key not found in the request headers.',
+                            httpStatusCode: 400
+                        });
+                    if (!SingletonManager.has(`database:${databaseName}`)) {
+                        SingletonManager.register(`database:${databaseName}`, MSSQL, {
+                            ...options.baseDatabaseConfig,
+                            databaseName
+                        });
+                        await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
+                    }
+                    return {
+                        dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
+                    };
+                }
+            }
+        })
+        .guard({
+            schema: 'standalone',
+            headers: 'databaseUsingHeader'
+        })
+        .as('scoped');
+};
+
