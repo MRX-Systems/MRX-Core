@@ -25,7 +25,7 @@ import type {
  * };
  * ```
  */
-export interface JWTOptions<TPluginName extends string | undefined = 'jwt'> {
+export interface JWTOptions<TPluginName extends string = 'jwt'> {
     /**
      * JWT name to add in context with decorate.
      *
