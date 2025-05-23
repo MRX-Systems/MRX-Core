@@ -92,10 +92,6 @@ export const dynamicDatabaseSelectorPlugin = <const THeaderKeyName extends strin
                 }
             }
         })
-        .guard({
-            schema: 'standalone',
-            headers: 'databaseUsingHeader'
-        })
         .as('scoped');
 };
 
