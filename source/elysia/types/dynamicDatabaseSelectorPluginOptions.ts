@@ -17,7 +17,7 @@ import type { MSSQLDatabaseOptions } from '#/database/types';
  * };
  * ```
  */
-export interface DynamicDatabaseSelectorPluginOptions {
+export interface DynamicDatabaseSelectorPluginOptions<THeaderKeyName extends string = 'database-using'> {
     /**
      * Options for the database connection
      * @see {@link MSSQLDatabaseOptions}
@@ -26,7 +26,8 @@ export interface DynamicDatabaseSelectorPluginOptions {
     /**
      * The name of the key to be used in the header to select the database
      * @example 'x-database-name'
+     *
+     * @defaultValue 'database-using'
      */
-
-    headerKey?: string;
+    headerKey?: THeaderKeyName;
 }
