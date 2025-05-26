@@ -43,3 +43,25 @@ jobs:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
       KEY_SSH: ${{ secrets.KEY_SSH }}
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
+      STORE_HOST: ${{ secrets.STORE_HOST }}
+      STORE_KEY: ${{ secrets.STORE_KEY }}
+      STORE_PORT: ${{ secrets.STORE_PORT }}
+
+  integration-test:
+    needs: build
+    uses: ./.github/workflows/integration-test.yml
+    with:
+      branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
+      STORE_HOST: ${{ secrets.STORE_HOST }}
+      STORE_KEY: ${{ secrets.STORE_KEY }}
+      STORE_PORT: ${{ secrets.STORE_PORT }}

@@ -102,10 +102,35 @@ jobs:
       branch: ${{ needs.detect-context.outputs.branch }}
     secrets:
       KEY_SSH: ${{ secrets.KEY_SSH }}
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
+      STORE_HOST: ${{ secrets.STORE_HOST }}
+      STORE_KEY: ${{ secrets.STORE_KEY }}
+      STORE_PORT: ${{ secrets.STORE_PORT }}
+
+  integration-test:
+    needs:
+      - build
+      - detect-context
+    uses: ./.github/workflows/integration-test.yml
+    with:
+      branch: ${{ needs.detect-context.outputs.branch }}
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
+      STORE_HOST: ${{ secrets.STORE_HOST }}
+      STORE_KEY: ${{ secrets.STORE_KEY }}
+      STORE_PORT: ${{ secrets.STORE_PORT }}
 
   create-github-release:
     needs:
       - unit-test
+      - integration-test
       - detect-context
     uses: ./.github/workflows/create-github-release.yml
     with:
@@ -118,17 +143,17 @@ jobs:
       GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
       GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
 
-  # publish-npm:
-  #   needs:
-  #     - create-github-release
-  #     - detect-context
-  #   uses: ./.github/workflows/publish-npm.yml
-  #   with:
-  #     branch: ${{ needs.detect-context.outputs.branch }}
-  #     npmTag: ${{ needs.detect-context.outputs.npmTag }}
-  #   secrets:
-  #     KEY_SSH: ${{ secrets.KEY_SSH }}
-  #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish-npm:
+    needs:
+      - create-github-release
+      - detect-context
+    uses: ./.github/workflows/publish-npm.yml
+    with:
+      branch: ${{ needs.detect-context.outputs.branch }}
+      npmTag: ${{ needs.detect-context.outputs.npmTag }}
+    secrets:
+      KEY_SSH: ${{ secrets.KEY_SSH }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   doc:
     needs:
