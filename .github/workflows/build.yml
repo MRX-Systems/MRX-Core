@@ -1,4 +1,4 @@
-name: Reusable Build
+name: Build
 
 on:
   workflow_call:
@@ -31,41 +31,5 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Run Build and update Summary
-        id: build_step
-        run: |
-          start=$(date +%s%3N)
-          if bun run build; then
-            status="success"
-            exit_code=0
-          else
-            status="failed"
-            exit_code=1
-          fi
-          end=$(date +%s%3N)
-          duration_ms=$((end - start))
-          echo "status=$status" >> $GITHUB_OUTPUT
-          echo "duration_ms=$duration_ms" >> $GITHUB_OUTPUT
-          exit $exit_code
-
-      - name: Final Summary
-        run: |
-          status="${{ steps.build_step.outputs.status }}"
-          duration_ms="${{ steps.build_step.outputs.duration_ms }}"
-          if [ "$status" = "success" ]; then
-            status_icon="✅ Success"
-          else
-            status_icon="❌ Failed"
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🏗️ Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Status | Duration (ms) |" >> $GITHUB_STEP_SUMMARY
-          echo "|:------:|:-------------:|" >> $GITHUB_STEP_SUMMARY
-          echo "| $status_icon | $duration_ms |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "$status" = "success" ]; then
-            echo "Build completed successfully." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Build failed. See logs above for details." >> $GITHUB_STEP_SUMMARY
-          fi
+      - name: Run Build
+        run: bun run build

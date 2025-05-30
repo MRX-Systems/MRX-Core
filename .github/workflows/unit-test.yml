@@ -1,4 +1,4 @@
-name: Reusable Unit Test
+name: Unit Test
 
 on:
   workflow_call:
@@ -56,47 +56,4 @@ jobs:
 
       - name: Run Unit Tests and update Summary
         id: unit_test
-        run: |
-          start=$(date +%s%3N)
-          # Run tests and capture output
-          bun run test:unit > unit-test.log 2>&1
-          status_code=$?
-          end=$(date +%s%3N)
-          duration_ms=$((end - start))
-          # Extract pass/fail from output summary
-          pass=$(grep -Eo '([0-9]+) pass' unit-test.log | tail -1 | grep -Eo '[0-9]+' || echo 0)
-          fail=$(grep -Eo '([0-9]+) fail' unit-test.log | tail -1 | grep -Eo '[0-9]+' || echo 0)
-          if [ "$status_code" = "0" ]; then
-            status="success"
-          else
-            status="failed"
-          fi
-          echo "status=$status" >> $GITHUB_OUTPUT
-          echo "duration_ms=$duration_ms" >> $GITHUB_OUTPUT
-          echo "passed=$pass" >> $GITHUB_OUTPUT
-          echo "failed=$fail" >> $GITHUB_OUTPUT
-          exit $status_code
-
-      - name: Final Summary
-        run: |
-          status="${{ steps.unit_test.outputs.status }}"
-          duration_ms="${{ steps.unit_test.outputs.duration_ms }}"
-          passed="${{ steps.unit_test.outputs.passed }}"
-          failed="${{ steps.unit_test.outputs.failed }}"
-          if [ "$status" = "success" ]; then
-            status_icon="✅ Success"
-          else
-            status_icon="❌ Failed"
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🧪 Unit Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Status | Duration (ms) | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
-          echo "|:------:|:-------------:|:------:|:------:|" >> $GITHUB_STEP_SUMMARY
-          echo "| $status_icon | $duration_ms | $passed | $failed |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "$status" = "success" ]; then
-            echo "All unit tests passed." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Some unit tests failed. See logs above for details." >> $GITHUB_STEP_SUMMARY
-          fi
+        run: bun run test:unit
