@@ -1,5 +1,5 @@
-name: Release and Publish
-run-name: Release & Publish for "${{ github.ref_name }}" by "${{ github.actor }}"
+name: Deploy
+run-name: Deploy to "${{ github.ref_name }}" by "${{ github.actor }}"
 
 on:
   push:
