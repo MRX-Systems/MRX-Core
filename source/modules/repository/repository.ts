@@ -648,13 +648,13 @@ export class Repository<TModel = unknown> {
      *
      * @returns An array of records returned by the query.
      */
-    protected async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<KModel[]> {
+    protected async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult: boolean | string = false): Promise<KModel[]> {
         try {
             const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
                 throw new CoreError({
                     key: databaseErrorKeys.mssqlNoResult,
-                    message: 'No records found matching the specified query options.',
+                    message: typeof throwIfNoResult === 'string' ? throwIfNoResult : 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql
                     }
