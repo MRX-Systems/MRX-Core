@@ -549,6 +549,78 @@ describe('Repository', () => {
                 done();
             });
         });
+
+        test('should throw an error during async iteration when there are no results', async () => {
+            const stream = repository.findStream<Data>({
+                advancedSearch: {
+                    id: 100
+                },
+                throwIfNoResult: true
+            });
+
+            try {
+                for await (const data of stream)
+                    expect(data).not.toBeDefined();
+            } catch (error) {
+                expect(error).toBeInstanceOf(Error);
+                expect(error).toBeInstanceOf(CoreError);
+                expect(error).toHaveProperty('message');
+                expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
+            }
+        });
+
+        test('should throw an error during async iteration when there are no results with custom message', async () => {
+            const stream = repository.findStream<Data>({
+                advancedSearch: {
+                    id: 100
+                },
+                throwIfNoResult: 'Custom error message'
+            });
+
+            try {
+                for await (const data of stream)
+                    expect(data).not.toBeDefined();
+            } catch (error) {
+                expect(error).toBeInstanceOf(Error);
+                expect(error).toBeInstanceOf(CoreError);
+                expect(error).toHaveProperty('message');
+                expect((error as { message: string }).message).toBe('Custom error message');
+            }
+        });
+
+        test('should throw an error event when there are no results', (done) => {
+            const stream = repository.findStream<Data>({
+                advancedSearch: {
+                    id: 100
+                },
+                throwIfNoResult: true
+            });
+
+            stream.on('error', (error) => {
+                expect(error).toBeInstanceOf(Error);
+                expect(error).toBeInstanceOf(CoreError);
+                expect(error).toHaveProperty('message');
+                expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
+                done();
+            });
+        });
+
+        test('should throw an error event when there are no results with custom message', (done) => {
+            const stream = repository.findStream<Data>({
+                advancedSearch: {
+                    id: 100
+                },
+                throwIfNoResult: 'Custom error message'
+            });
+
+            stream.on('error', (error) => {
+                expect(error).toBeInstanceOf(Error);
+                expect(error).toBeInstanceOf(CoreError);
+                expect(error).toHaveProperty('message');
+                expect((error as { message: string }).message).toBe('Custom error message');
+                done();
+            });
+        });
     });
 
     describe('find', () => {
@@ -651,7 +723,7 @@ describe('Repository', () => {
             }
         });
 
-        test('should throw an error when they are no results with options { throwIfNoResult: true }', async () => {
+        test('should throw an error when they are no results', async () => {
             try {
                 await repository.find<Data>({
                     filters: {
@@ -664,6 +736,22 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
                 expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
+            }
+        });
+
+        test('should throw an error when they are no results with custom message', async () => {
+            try {
+                await repository.find<Data>({
+                    advancedSearch: {
+                        id: 100
+                    },
+                    throwIfNoResult: 'Custom error message'
+                });
+            } catch (error) {
+                expect(error).toBeInstanceOf(Error);
+                expect(error).toBeInstanceOf(CoreError);
+                expect(error).toHaveProperty('message');
+                expect((error as { message: string }).message).toBe('Custom error message');
             }
         });
     });
@@ -748,7 +836,7 @@ describe('Repository', () => {
             }
         });
 
-        test('should throw an error when they are no results with options { throwIfNoResult: true }', async () => {
+        test('should throw an error when they are no results', async () => {
             try {
                 await repository.findOne<Data>({
                     filters: {
@@ -761,6 +849,22 @@ describe('Repository', () => {
                 expect(error).toBeInstanceOf(CoreError);
                 expect(error).toHaveProperty('message');
                 expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
+            }
+        });
+
+        test('should throw an error when they are no results with custom message', async () => {
+            try {
+                await repository.findOne<Data>({
+                    advancedSearch: {
+                        id: 100
+                    },
+                    throwIfNoResult: 'Custom error message'
+                });
+            } catch (error) {
+                expect(error).toBeInstanceOf(Error);
+                expect(error).toBeInstanceOf(CoreError);
+                expect(error).toHaveProperty('message');
+                expect((error as { message: string }).message).toBe('Custom error message');
             }
         });
     });
