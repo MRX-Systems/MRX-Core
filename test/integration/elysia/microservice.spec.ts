@@ -37,7 +37,9 @@ describe('Microservice Plugin', () => {
         const response = await app.handle(new Request('http://localhost/microservice/nonexistent'));
 
         expect(response.status).toBe(404);
-    }); test('should handle different HTTP methods on ping endpoint', async () => {
+    });
+
+    test('should handle different HTTP methods on ping endpoint', async () => {
         // POST should return 404 (method not found)
         const postResponse = await app.handle(new Request('http://localhost/microservice/ping', {
             method: 'POST'
