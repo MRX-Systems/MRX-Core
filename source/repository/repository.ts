@@ -4,6 +4,7 @@ import { PassThrough } from 'stream';
 import { databaseErrorKeys } from '#/database/enums/databaseErrorKeys';
 import { mssqlErrorCode } from '#/database/enums/mssqlErrorCode';
 import type { Table } from '#/database/table';
+import { httpStatusCode } from '#/elysia/enums';
 import { CoreError } from '#/error/coreError';
 import { isIsoDateString } from '#/utils/isIsoDateString';
 import { makeStreamAsyncIterable } from '#/utils/stream';
@@ -613,7 +614,8 @@ export class Repository<TModel = unknown> {
                     message: typeof throwIfNoResult === 'string' ? throwIfNoResult : 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql
-                    }
+                    },
+                    httpStatusCode: httpStatusCode.notFound
                 });
             return result;
         } catch (error) {
