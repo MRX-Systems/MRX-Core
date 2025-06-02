@@ -1,10 +1,10 @@
 import type { Knex } from 'knex';
 import { PassThrough } from 'stream';
 
+import { CoreError } from '#/error/coreError';
 import { databaseErrorKeys } from '#/modules/database/enums/databaseErrorKeys';
 import { mssqlErrorCode } from '#/modules/database/enums/mssqlErrorCode';
 import type { Table } from '#/modules/database/table';
-import { CoreError } from '#/error/coreError';
 import { isDateString } from '#/utils/isDateString';
 import { makeStreamAsyncIterable } from '#/utils/stream';
 import type { StreamWithAsyncIterable } from '#/utils/types/streamWithAsyncIterable';
@@ -657,7 +657,8 @@ export class Repository<TModel = unknown> {
                     message: typeof throwIfNoResult === 'string' ? throwIfNoResult : 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql
-                    }
+                    },
+                    httpStatusCode: 404
                 });
             return result;
         } catch (error) {
