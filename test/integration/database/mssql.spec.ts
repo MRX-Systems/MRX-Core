@@ -877,7 +877,7 @@ describe('MSSQL', () => {
             
             // Perform rapid connect/disconnect cycles with different instances
             const cycles = [];
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 3; ++i) {
                 cycles.push(async () => {
                     const mssql = new MSSQL(databaseOptions);
                     await mssql.connect();

@@ -617,7 +617,7 @@ describe('Table', (): void => {
             table.on(testData.events.selected, listener);
 
             // Emit many events rapidly
-            for (let i = 0; i < 100; i++)
+            for (let i = 0; i < 100; ++i)
                 table.emit(testData.events.selected, { iteration: i }, testData.queryContexts.basic);
 
             expect(listener).toHaveBeenCalledTimes(100);

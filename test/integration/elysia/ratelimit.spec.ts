@@ -31,7 +31,7 @@ describe('Rate Limit Plugin', () => {
         const ip = '127.0.0.12';
 
         // Send 5 requests (within limit)
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; ++i) {
             const response = await app.handle(
                 new Request('http://localhost/', {
                     headers: { 'x-forwarded-for': ip }
@@ -55,7 +55,7 @@ describe('Rate Limit Plugin', () => {
     test('should block requests exceeding rate limit', async () => {
         const ip = '127.0.0.12';
 
-        for (let i = 0; i < 5; i++)
+        for (let i = 0; i < 5; ++i)
             await app.handle(
                 new Request('http://localhost/', {
                     headers: { 'x-forwarded-for': ip }
@@ -130,7 +130,7 @@ describe('Rate Limit Plugin', () => {
         const ip2 = '172.16.0.2';
 
         // IP1 makes 3 requests
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; ++i) {
             const response = await app.handle(new Request('http://localhost/', {
                 headers: { 'x-forwarded-for': ip1 }
             }));
@@ -138,7 +138,7 @@ describe('Rate Limit Plugin', () => {
         }
 
         // IP2 makes 2 requests
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; ++i) {
             const response = await app.handle(new Request('http://localhost/', {
                 headers: { 'x-forwarded-for': ip2 }
             }));
@@ -160,7 +160,7 @@ describe('Rate Limit Plugin', () => {
     test('should include correct rate limit headers in all responses', async () => {
         const ip = '203.0.113.1';
 
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 5; ++i) {
             const response = await app.handle(new Request('http://localhost/', {
                 headers: { 'x-forwarded-for': ip }
             }));
@@ -180,7 +180,7 @@ describe('Rate Limit Plugin', () => {
         const ip = '198.51.100.1';
 
         // Exhaust rate limit
-        for (let i = 0; i < 5; i++)
+        for (let i = 0; i < 5; ++i)
             await app.handle(new Request('http://localhost/', {
                 headers: { 'x-forwarded-for': ip }
             }));
@@ -203,7 +203,7 @@ describe('Rate Limit Plugin', () => {
             const promises: Promise<Response>[] = [];
 
             // Send 10 rapid requests simultaneously
-            for (let i = 0; i < 10; i++)
+            for (let i = 0; i < 10; ++i)
                 promises.push(
                     app.handle(new Request('http://localhost/', {
                         headers: { 'x-forwarded-for': ip }
@@ -281,7 +281,7 @@ describe('Rate Limit Plugin', () => {
 
             // Each IP makes exactly 5 requests
             testIps.forEach((ip) => {
-                for (let i = 0; i < 5; i++)
+                for (let i = 0; i < 5; ++i)
                     allPromises.push(
                         app.handle(new Request('http://localhost/', {
                             headers: { 'x-forwarded-for': ip }
@@ -336,7 +336,7 @@ describe('Rate Limit Plugin', () => {
             const promises: Promise<Response>[] = [];
 
             // Create a burst of requests from different IPs to test system performance
-            for (let i = 0; i < burstSize; i++) {
+            for (let i = 0; i < burstSize; ++i) {
                 const ip = `10.20.30.${i % 255}`;
                 promises.push(
                     app.handle(new Request('http://localhost/', {
@@ -397,7 +397,7 @@ describe('Rate Limit Plugin', () => {
             const ip = '203.0.113.250';
 
             // Make 10 requests
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 10; ++i) {
                 const response = await highLimitApp.handle(new Request('http://localhost/', {
                     headers: { 'x-forwarded-for': ip }
                 }));
@@ -470,7 +470,7 @@ describe('Rate Limit Plugin', () => {
             const promises: Promise<Response>[] = [];
 
             // Generate unique IPs to avoid rate limiting
-            for (let i = 0; i < numberOfRequests; i++) {
+            for (let i = 0; i < numberOfRequests; ++i) {
                 const ip = `192.168.${Math.floor(i / 256)}.${i % 256}`;
                 promises.push(
                     app.handle(new Request('http://localhost/', {

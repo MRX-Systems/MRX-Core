@@ -485,7 +485,7 @@ describe('Error Plugin', () => {
             const results = await Promise.all(concurrentPromises);
 
             // Verify all errors were processed correctly
-            for (let i = 0; i < results.length; i++) {
+            for (let i = 0; i < results.length; ++i) {
                 const result = results[i];
                 const data = await result.json() as Record<string, unknown>;
 
@@ -516,7 +516,7 @@ describe('Error Plugin', () => {
                 });
 
             // Process multiple large errors to test memory handling
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 20; ++i) {
                 const res = await app.handle(new Request('http://localhost/memory-test'));
                 const data = await res.json();
 
