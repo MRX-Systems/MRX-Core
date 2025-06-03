@@ -14,5 +14,9 @@ export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schem
 ]), {
     minItems: 1,
     description: 'Fields to select in the search results. Use "*" for all fields.',
-    default: ['*']
+    default: ['*'],
+    examples: [
+        [...Object.keys(schema.properties)],
+        ['*']
+    ]
 });
