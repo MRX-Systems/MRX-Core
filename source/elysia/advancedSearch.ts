@@ -4,6 +4,7 @@ import { Elysia, t } from 'elysia';
 import { filterByKeyExclusion } from '#/data/data';
 import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 import type { OrderBy } from '#/repository/types/orderBy';
+import type { AdvancedSearchOptions } from './types/advancedSearchOptions';
 
 /**
  * Creates a where clause schema with appropriate operators based on the property type.
@@ -206,11 +207,11 @@ export const createBaseSearchSchemaWithPagination = <TInferedObject extends TObj
 export const advancedSearchPlugin = <
     const TSchemaName extends string,
     TInferedObject extends TObject
->(
-    schemaName: TSchemaName,
-    baseSchema: TInferedObject,
-    additionalExcludedProps: string[] = []
-) => {
+>({
+    schemaName,
+    baseSchema,
+    additionalExcludedProps = []
+}: AdvancedSearchOptions<TSchemaName, TInferedObject>) => {
     const DEFAULT_LIMIT = 100;
     const DEFAULT_OFFSET = 0;
     const EXCLUDED_QUERY_PARAMS: readonly string[] = [
