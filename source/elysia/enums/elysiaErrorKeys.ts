@@ -5,8 +5,8 @@ export const elysiaErrorKeys = {
     jwtSecretNotFound: 'core.error.elysia.jwt_secret_not_found',
     /** Error when rate limit is exceeded. */
     rateLimitExceeded: 'core.error.elysia.rate_limit_exceeded',
-    /** Error when dynamic database key is not found in headers. */
-    dynamicDatabaseKeyNotFound: 'core.error.elysia.dynamic_database_key_not_found',
+    /** Error when database selector key is not found in headers. */
+    dbSelectorHeaderKeyNotFound: 'core.error.elysia.db_selector_header_key_not_found',
     /** Error when advanced search is required but not provided. */
     needAdvancedSearch: 'core.error.elysia.need_advanced_search'
 } as const;

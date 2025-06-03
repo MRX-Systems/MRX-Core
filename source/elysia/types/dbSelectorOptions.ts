@@ -6,7 +6,7 @@ import type { MSSQLDatabaseOptions } from '#/database/types';
  * @example
  * ```typescript
  * const options: DynamicDatabaseSelectorPluginOptions = {
- *   baseDatabaseConfig: {
+ *   connectionConfig: {
  *     host: 'localhost',
  *     port: 1433,
  *     user: 'sa',
@@ -17,12 +17,12 @@ import type { MSSQLDatabaseOptions } from '#/database/types';
  * };
  * ```
  */
-export interface DynamicDatabaseSelectorPluginOptions<THeaderKeyName extends string = 'database-using'> {
+export interface DbSelectorOptions<THeaderKeyName extends string = 'database-using'> {
     /**
      * Options for the database connection
      * @see {@link MSSQLDatabaseOptions}
      */
-    baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
+    connectionConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
     /**
      * The name of the key to be used in the header to select the database
      * @example 'x-database-name'

@@ -38,7 +38,7 @@ export type * from './database/types/queryContext';
 // Elysia Plugin
 export * from './elysia/advancedSearch';
 export * from './elysia/crud';
-export * from './elysia/dynamicDatabaseSelector';
+export * from './elysia/dbSelector';
 export * from './elysia/error';
 export * from './elysia/jwt';
 export * from './elysia/microservice';
@@ -55,7 +55,7 @@ export * from './elysia/schemas/ping';
 // Elysia Types
 export type * from './elysia/types/crudOptions';
 export type * from './elysia/types/crudRoutes';
-export type * from './elysia/types/dynamicDatabaseSelectorPluginOptions';
+export type * from './elysia/types/dbSelectorOptions';
 export type * from './elysia/types/jwtOptions';
 export type * from './elysia/types/rateLimitOptions';
 

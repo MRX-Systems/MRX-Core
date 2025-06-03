@@ -11,7 +11,7 @@ import { dynamicDatabaseSelectorPlugin } from './dynamicDatabaseSelector';
 import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
 import type { CrudOptions } from './types/crudOptions';
 import type { CRUDRoutes } from './types/crudRoutes';
-import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
+import type { DbSelectorOptions } from './types/dbSelectorOptions';
 
 
 export const createResponse200Schema = <TInferedObject extends TObject>(schema: TInferedObject) => {
@@ -104,7 +104,7 @@ const _getEnabledRoutes = (includedRoutes: CRUDRoutes[] = [], excludedRoutes: CR
         : enabledRoutes;
 };
 
-const _injectDynamicDbInContext = (database: string | DynamicDatabaseSelectorPluginOptions) => {
+const _injectDynamicDbInContext = (database: string | DbSelectorOptions) => {
     const plugin = new Elysia();
     const isDynamicDatabase = typeof database !== 'string';
 
@@ -116,7 +116,7 @@ const _injectDynamicDbInContext = (database: string | DynamicDatabaseSelectorPlu
     else
         // Dynamic database configuration
         plugin.use(dynamicDatabaseSelectorPlugin({
-            baseDatabaseConfig: database.baseDatabaseConfig,
+            baseDatabaseConfig: database.connectionConfig,
             headerKey: database.headerKey || 'database-using'
         }));
     return plugin.as('scoped');
