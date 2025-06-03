@@ -18,6 +18,11 @@ describe('createSelectedFieldsSchema', () => {
         expect(selectedFieldsSchema[Kind]).toBe('Array');
         expect(selectedFieldsSchema.type).toBe('array');
         expect(selectedFieldsSchema.default).toEqual(['*']);
+        expect(selectedFieldsSchema.minItems).toBe(1);
+        expect(selectedFieldsSchema.description).toBe('Fields to select in the search results. Use "*" for all fields.');
+        expect(selectedFieldsSchema.examples).toHaveLength(2);
+        expect(selectedFieldsSchema.examples[0]).toEqual(Object.keys(baseSchema.properties));
+        expect(selectedFieldsSchema.examples[1]).toEqual(['*']);
 
         expect(selectedFieldsSchema.items[Kind]).toBe('Union');
         expect(selectedFieldsSchema.items.anyOf).toBeDefined();
