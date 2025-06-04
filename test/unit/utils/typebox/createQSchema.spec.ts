@@ -13,57 +13,102 @@ const baseSchema = t.Object({
 
 
 describe('createQSchema', () => {
-    test('should have a correct structure for query schema', () => {
+    test('should create a union schema with correct basic structure', () => {
         const qSchema = createQSchema(baseSchema);
+
         expect(qSchema[Kind]).toBe('Union');
         expect(qSchema.anyOf).toBeDefined();
         expect(qSchema.anyOf).toHaveLength(4);
+    });
+
+    test('should have correct description and examples', () => {
+        const qSchema = createQSchema(baseSchema);
+
         expect(qSchema.description).toBe('Search query that can be a simple string, an object with selected fields and value, or a number.');
         expect(qSchema.examples).toHaveLength(3);
         expect(qSchema.examples[0]).toBe('search term');
         expect(qSchema.examples[1]).toEqual({ selectedFields: [Object.keys(baseSchema.properties)], value: 'search term' });
         expect(qSchema.examples[2]).toBe(42);
+    });
 
-        // Check each variant of the union
-        expect(qSchema.anyOf[0][Kind]).toBe('Undefined');
-        expect(qSchema.anyOf[0].type).toBe('undefined');
+    test('should include undefined as first union option', () => {
+        const qSchema = createQSchema(baseSchema);
 
-        expect(qSchema.anyOf[1][Kind]).toBe('Object');
-        expect(qSchema.anyOf[1].type).toBe('object');
+        const [undefinedOption] = qSchema.anyOf;
+        expect(undefinedOption[Kind]).toBe('Undefined');
+        expect(undefinedOption.type).toBe('undefined');
+    });
 
-        expect(qSchema.anyOf[1].required).toBeDefined();
-        expect(qSchema.anyOf[1].required).toHaveLength(2);
-        expect(qSchema.anyOf[1].required).toContain('selectedFields');
-        expect(qSchema.anyOf[1].required).toContain('value');
+    test('should include object with selectedFields and value as second union option', () => {
+        const qSchema = createQSchema(baseSchema);
 
-        expect(qSchema.anyOf[1].properties).toHaveProperty('selectedFields');
-        expect(qSchema.anyOf[1].properties).toHaveProperty('value');
+        const [, objectOption] = qSchema.anyOf;
+        expect(objectOption[Kind]).toBe('Object');
+        expect(objectOption.type).toBe('object');
+        expect(objectOption.required).toBeDefined();
+        expect(objectOption.required).toHaveLength(2);
+        expect(objectOption.required).toContain('selectedFields');
+        expect(objectOption.required).toContain('value');
+        expect(objectOption.properties).toHaveProperty('selectedFields');
+        expect(objectOption.properties).toHaveProperty('value');
+    });
 
-        expect(qSchema.anyOf[1].properties.selectedFields[Kind]).toBe('Array');
-        expect(qSchema.anyOf[1].properties.selectedFields.type).toBe('array');
-        expect(qSchema.anyOf[1].properties.selectedFields.description).toBe('Fields to select in the search results. Use "*" for all fields.');
-        expect(qSchema.anyOf[1].properties.selectedFields.minItems).toBe(1);
-        expect(qSchema.anyOf[1].properties.selectedFields.items).toBeDefined();
-        expect(qSchema.anyOf[1].properties.selectedFields.items[Kind]).toBe('Union');
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf).toBeDefined();
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf).toHaveLength(2);
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[0][Kind]).toBe('Union');
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[0].anyOf).toBeDefined();
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[0].anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
+    test('should have correct selectedFields structure in object option', () => {
+        const qSchema = createQSchema(baseSchema);
+
+        const [, objectOption] = qSchema.anyOf;
+        const { selectedFields } = objectOption.properties;
+
+        expect(selectedFields[Kind]).toBe('Array');
+        expect(selectedFields.type).toBe('array');
+        expect(selectedFields.description).toBe('Fields to select in the search results. Use "*" for all fields.');
+        expect(selectedFields.minItems).toBe(1);
+        expect(selectedFields.items).toBeDefined();
+    });
+
+    test('should have selectedFields items as union of schema keys and wildcard', () => {
+        const qSchema = createQSchema(baseSchema);
+
+        const [, objectOption] = qSchema.anyOf;
+        const { selectedFields } = objectOption.properties;
+
+        expect(selectedFields.items[Kind]).toBe('Union');
+        expect(selectedFields.items.anyOf).toBeDefined();
+        expect(selectedFields.items.anyOf).toHaveLength(2);
+
+        // Check schema keys union
+        const [schemaKeysUnion] = selectedFields.items.anyOf;
+        expect(schemaKeysUnion[Kind]).toBe('Union');
+        expect(schemaKeysUnion.anyOf).toBeDefined();
+        expect(schemaKeysUnion.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
+
         for (const key of Object.keys(baseSchema.properties))
-            expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[0].anyOf).toContainEqual({
+            expect(schemaKeysUnion.anyOf).toContainEqual({
                 [Kind]: 'Literal',
                 const: key,
                 type: 'string'
             });
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[1][Kind]).toBe('Literal');
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[1].const).toBe('*');
-        expect(qSchema.anyOf[1].properties.selectedFields.items.anyOf[1].type).toBe('string');
 
-        expect(qSchema.anyOf[2][Kind]).toBe('Number');
-        expect(qSchema.anyOf[2].type).toBe('number');
+        // Check wildcard literal
+        const [, wildcardLiteral] = selectedFields.items.anyOf;
+        expect(wildcardLiteral[Kind]).toBe('Literal');
+        expect(wildcardLiteral.const).toBe('*');
+        expect(wildcardLiteral.type).toBe('string');
+    });
 
-        expect(qSchema.anyOf[3][Kind]).toBe('String');
-        expect(qSchema.anyOf[3].type).toBe('string');
+    test('should include number as third union option', () => {
+        const qSchema = createQSchema(baseSchema);
+
+        const [,, numberOption] = qSchema.anyOf;
+        expect(numberOption[Kind]).toBe('Number');
+        expect(numberOption.type).toBe('number');
+    });
+
+    test('should include string as fourth union option', () => {
+        const qSchema = createQSchema(baseSchema);
+
+        const [,,, stringOption] = qSchema.anyOf;
+        expect(stringOption[Kind]).toBe('String');
+        expect(stringOption.type).toBe('string');
     });
 });

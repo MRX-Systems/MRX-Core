@@ -13,46 +13,63 @@ const baseSchema = t.Object({
 
 
 describe('createOrderBySchema', () => {
-    test('should have a correct structure for order by schema', () => {
+    test('should create a tuple schema with correct basic structure', () => {
         const orderBySchema = createOrderBySchema(baseSchema);
+
         expect(orderBySchema[Kind]).toBe('Tuple');
         expect(orderBySchema.type).toBe('array');
         expect(orderBySchema.minItems).toBe(2);
         expect(orderBySchema.maxItems).toBe(2);
         expect(orderBySchema.items).toHaveLength(2);
+    });
+
+    test('should have correct description and examples', () => {
+        const orderBySchema = createOrderBySchema(baseSchema);
+
         expect(orderBySchema.description).toBe('Field to order by and direction. Use "asc" for ascending or "desc" for descending order.');
         expect(orderBySchema.examples).toHaveLength(2);
         expect(orderBySchema.examples[0]).toEqual(['id', 'asc']);
         expect(orderBySchema.examples[1]).toEqual(['name', 'desc']);
+    });
 
-        // Check keyof type
-        if (orderBySchema.items) {
-            expect(orderBySchema.items[0][Kind]).toBe('Union');
+    test('should create first tuple element as union of schema property keys', () => {
+        const orderBySchema = createOrderBySchema(baseSchema);
 
-            expect(orderBySchema.items[0].anyOf).toBeDefined();
-            expect(orderBySchema.items[0].anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
-            for (const key of Object.keys(baseSchema.properties))
-                expect(orderBySchema.items[0].anyOf).toContainEqual({
-                    [Kind]: 'Literal',
-                    const: key,
-                    type: 'string'
-                });
+        if (!orderBySchema.items)
+            throw new Error('Expected orderBySchema.items to be defined');
 
+        const [firstElement] = orderBySchema.items;
+        expect(firstElement[Kind]).toBe('Union');
+        expect(firstElement.anyOf).toBeDefined();
+        expect(firstElement.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 
-            // check union literal type asc | desc
-            expect(orderBySchema.items[1][Kind]).toBe('Union');
-            expect(orderBySchema.items[1].anyOf).toBeDefined();
-            expect(orderBySchema.items[1].anyOf).toHaveLength(2);
-            expect(orderBySchema.items[1].anyOf).toContainEqual({
+        for (const key of Object.keys(baseSchema.properties))
+            expect(firstElement.anyOf).toContainEqual({
                 [Kind]: 'Literal',
-                const: 'asc',
+                const: key,
                 type: 'string'
             });
-            expect(orderBySchema.items[1].anyOf).toContainEqual({
-                [Kind]: 'Literal',
-                const: 'desc',
-                type: 'string'
-            });
-        }
+    });
+
+    test('should create second tuple element as union of asc and desc literals', () => {
+        const orderBySchema = createOrderBySchema(baseSchema);
+
+        if (!orderBySchema.items)
+            throw new Error('Expected orderBySchema.items to be defined');
+
+        const [, secondElement] = orderBySchema.items;
+        expect(secondElement[Kind]).toBe('Union');
+        expect(secondElement.anyOf).toBeDefined();
+        expect(secondElement.anyOf).toHaveLength(2);
+        expect(secondElement.anyOf).toContainEqual({
+            [Kind]: 'Literal',
+            const: 'asc',
+            type: 'string'
+        });
+        expect(secondElement.anyOf).toContainEqual({
+            [Kind]: 'Literal',
+            const: 'desc',
+            type: 'string'
+        });
     });
 });

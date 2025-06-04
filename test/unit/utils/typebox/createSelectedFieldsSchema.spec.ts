@@ -12,55 +12,59 @@ const baseSchema = t.Object({
 });
 
 describe('createSelectedFieldsSchema', () => {
-    test('should have a correct structure for selected fields schema', () => {
+    test('should create an array schema with correct basic structure', () => {
         const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
 
         expect(selectedFieldsSchema[Kind]).toBe('Array');
         expect(selectedFieldsSchema.type).toBe('array');
-        expect(selectedFieldsSchema.default).toEqual(['*']);
         expect(selectedFieldsSchema.minItems).toBe(1);
+    });
+
+    test('should have correct default value and description', () => {
+        const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
+
+        expect(selectedFieldsSchema.default).toEqual(['*']);
         expect(selectedFieldsSchema.description).toBe('Fields to select in the search results. Use "*" for all fields.');
+    });
+
+    test('should have correct examples', () => {
+        const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
+
         expect(selectedFieldsSchema.examples).toHaveLength(2);
         expect(selectedFieldsSchema.examples[0]).toEqual(Object.keys(baseSchema.properties));
         expect(selectedFieldsSchema.examples[1]).toEqual(['*']);
+    });
+
+    test('should create items as union of schema keys and wildcard', () => {
+        const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
 
         expect(selectedFieldsSchema.items[Kind]).toBe('Union');
         expect(selectedFieldsSchema.items.anyOf).toBeDefined();
         expect(selectedFieldsSchema.items.anyOf).toHaveLength(2);
+    });
 
-        // check KeyOf type
-        expect(selectedFieldsSchema.items.anyOf[0][Kind]).toBe('Union');
-        expect(selectedFieldsSchema.items.anyOf[0].anyOf).toBeDefined();
-        expect(selectedFieldsSchema.items.anyOf[0].anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
+    test('should include all schema property keys as union options', () => {
+        const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
+
+        const [schemaKeysUnion] = selectedFieldsSchema.items.anyOf;
+        expect(schemaKeysUnion[Kind]).toBe('Union');
+        expect(schemaKeysUnion.anyOf).toBeDefined();
+        expect(schemaKeysUnion.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 
         for (const key of Object.keys(baseSchema.properties))
-            expect(selectedFieldsSchema.items.anyOf[0].anyOf).toContainEqual({
+            expect(schemaKeysUnion.anyOf).toContainEqual({
                 [Kind]: 'Literal',
                 const: key,
                 type: 'string'
             });
-
-        // check literal type
-        expect(selectedFieldsSchema.items.anyOf[1][Kind]).toBe('Literal');
-        expect(selectedFieldsSchema.items.anyOf[1].const).toBe('*');
     });
 
-    test('should allow selecting all fields with "*" literal', () => {
+    test('should include wildcard "*" as literal option', () => {
         const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
-        expect(selectedFieldsSchema.items.anyOf).toContainEqual({
-            [Kind]: 'Literal',
-            const: '*',
-            type: 'string'
-        });
-    });
 
-    test('should have a minimum of one item in the array', () => {
-        const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
-        expect(selectedFieldsSchema.minItems).toBe(1);
-    });
-
-    test('should have a default value of ["*"]', () => {
-        const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
-        expect(selectedFieldsSchema.default).toEqual(['*']);
+        const [, wildcardLiteral] = selectedFieldsSchema.items.anyOf;
+        expect(wildcardLiteral[Kind]).toBe('Literal');
+        expect(wildcardLiteral.const).toBe('*');
+        expect(wildcardLiteral.type).toBe('string');
     });
 });
