@@ -59,11 +59,35 @@ const _createWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInfer
     if (TypeGuard.IsNumber(schema)
         || TypeGuard.IsInteger(schema)
         || TypeGuard.IsDate(schema)
+        || (
+            TypeGuard.IsString(schema)
+            && schema.format === 'date-time'
+        )
     ) {
-        operators.$lt = ({ ...schema, description: `Less than the specified value of type ${schema.type}`, examples: [], example: undefined });
-        operators.$lte = ({ ...schema, description: `Less than or equal to the specified value of type ${schema.type}`, examples: [], example: undefined });
-        operators.$gt = ({ ...schema, description: `Greater than the specified value of type ${schema.type}`, examples: [], example: undefined });
-        operators.$gte = ({ ...schema, description: `Greater than or equal to the specified value of type ${schema.type}`, examples: [], example: undefined });
+        operators.$lt = ({
+            ...schema,
+            description: `Less than the specified value of type ${schema.type}`,
+            examples: [],
+            example: undefined
+        });
+        operators.$lte = ({
+            ...schema,
+            description: `Less than or equal to the specified value of type ${schema.type}`,
+            examples: [],
+            example: undefined
+        });
+        operators.$gt = ({
+            ...schema,
+            description: `Greater than the specified value of type ${schema.type}`,
+            examples: [],
+            example: undefined
+        });
+        operators.$gte = ({
+            ...schema,
+            description: `Greater than or equal to the specified value of type ${schema.type}`,
+            examples: [],
+            example: undefined
+        });
         operators.$between = t.Tuple([schema, schema], {
             description: `Between two values for type ${schema.type}`
         });
