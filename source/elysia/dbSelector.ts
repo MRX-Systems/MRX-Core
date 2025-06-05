@@ -5,12 +5,10 @@ import { MSSQL } from '#/database/mssql';
 import { CoreError } from '#/error/coreError';
 import { SingletonManager } from '#/singletonManager/singletonManager';
 import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
-import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
+import type { DbSelectorOptions } from './types/dbSelectorOptions';
 
 /**
- * The `dynamicDatabaseSelectorPlugin` provides dynamic database selection capabilities for Elysia applications.
- * It enables switching between different MSSQL databases at runtime based on request headers, facilitating
- * multi-tenant or dynamically configurable database scenarios.
+ * The `dbSelectorPlugin` provides dynamic database selection capabilities.
  *
  * When a request is received with the configured database header, the plugin:
  * 1. Extracts the database name from the request header
@@ -21,7 +19,7 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  * The plugin uses a singleton pattern to efficiently manage database connections, ensuring
  * that connections are reused when possible rather than creating new connections for each request.
  *
- * @param options - The configuration options for the plugin
+ * @param options - The configuration options for the plugin ({@link DbSelectorOptions})
  *
  * @returns An {@link Elysia} plugin that adds dynamic database selection functionality
  *
@@ -41,28 +39,25 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  *   }))
  *
  *   // Use the dynamic database in a route handler
- *   .get('/data',
- *     async ({ hasDynamicDatabaseSelector }) => {
- *       const { dynamicDB } = await hasDynamicDatabaseSelector();
+ *   .get('/data', async ({ dynamicDB }) => {
  *       const users = await dynamicDB.getRepository('users').find();
  *       return users;
  *     },
  *     {
- *       headers: t.Object({
- *         'x-tenant-db': t.String()
- *       })
+ *       hasDynamicDatabaseSelector: true,
+ *       headers: 'dbSelectorHeader'
  *     }
  *   );
  * ```
  */
-export const dynamicDatabaseSelectorPlugin = <const THeaderKeyName extends string = 'database-using'>(options: DynamicDatabaseSelectorPluginOptions<THeaderKeyName>) => {
-    const keyName = (options.headerKey ?? 'database-using') as THeaderKeyName;
+export const dbSelectorPlugin = <const THeaderKeyName extends string = 'database-using'>(options: DbSelectorOptions<THeaderKeyName>) => {
+    const keyName = options.headerKey ?? 'database-using';
 
     return new Elysia({
-        name: 'dynamicDatabaseSelectorPlugin'
+        name: 'dbSelectorPlugin'
     })
         .model({
-            databaseUsingHeader: t.Object({
+            dbSelectorHeader: t.Object({
                 [keyName]: t.String({
                     description: 'Name of the database to use for the request',
                     example: 'my_database'
@@ -70,18 +65,18 @@ export const dynamicDatabaseSelectorPlugin = <const THeaderKeyName extends strin
             }) as TObject<Record<THeaderKeyName, TString>>
         })
         .macro({
-            hasDynamicDatabaseSelector: {
+            hasDbSelector: {
                 async resolve({ headers }) {
                     const databaseName = headers[keyName];
                     if (!databaseName)
                         throw new CoreError({
-                            key: elysiaErrorKeys.dynamicDatabaseKeyNotFound,
-                            message: 'Dynamic Database key not found in the request headers.',
+                            key: elysiaErrorKeys.dbSelectorHeaderKeyNotFound,
+                            message: 'Database Selector key not found in the request headers.',
                             httpStatusCode: 400
                         });
                     if (!SingletonManager.has(`database:${databaseName}`)) {
                         SingletonManager.register(`database:${databaseName}`, MSSQL, {
-                            ...options.baseDatabaseConfig,
+                            ...options.connectionConfig,
                             databaseName
                         });
                         await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();

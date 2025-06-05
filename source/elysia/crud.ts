@@ -7,11 +7,11 @@ import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 import type { SelectedFields } from '#/repository/types/selectedFields';
 import { SingletonManager } from '#/singletonManager/singletonManager';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
-import { dynamicDatabaseSelectorPlugin } from './dynamicDatabaseSelector';
+import { dbSelectorPlugin } from './dbSelector';
 import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
 import type { CrudOptions } from './types/crudOptions';
 import type { CRUDRoutes } from './types/crudRoutes';
-import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
+import type { DbSelectorOptions } from './types/dbSelectorOptions';
 
 
 export const createResponse200Schema = <TInferedObject extends TObject>(schema: TInferedObject) => {
@@ -104,7 +104,7 @@ const _getEnabledRoutes = (includedRoutes: CRUDRoutes[] = [], excludedRoutes: CR
         : enabledRoutes;
 };
 
-const _injectDynamicDbInContext = (database: string | DynamicDatabaseSelectorPluginOptions) => {
+const _injectDynamicDbInContext = (database: string | DbSelectorOptions) => {
     const plugin = new Elysia();
     const isDynamicDatabase = typeof database !== 'string';
 
@@ -115,8 +115,8 @@ const _injectDynamicDbInContext = (database: string | DynamicDatabaseSelectorPlu
         }));
     else
         // Dynamic database configuration
-        plugin.use(dynamicDatabaseSelectorPlugin({
-            baseDatabaseConfig: database.baseDatabaseConfig,
+        plugin.use(dbSelectorPlugin({
+            connectionConfig: database.connectionConfig,
             headerKey: database.headerKey || 'database-using'
         }));
     return plugin.as('scoped');
@@ -300,7 +300,10 @@ const _addRoutes = <TInferedObject extends TObject>
     const hasAdvancedSearch = enabledRoutes.includes('find') || enabledRoutes.includes('count') || enabledRoutes.includes('update') || enabledRoutes.includes('delete');
 
     if (hasAdvancedSearch)
-        app.use(advancedSearchPlugin(tableName, baseSchema));
+        app.use(advancedSearchPlugin({
+            schemaName: tableName,
+            baseSchema
+        }));
 
 
     for (const route of enabledRoutes) {
