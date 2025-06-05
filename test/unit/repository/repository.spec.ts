@@ -117,7 +117,7 @@ function advancedSearchTests(): AdvancedSearchTest<Data>[] {
             },
             4
         ],
-        // Lesst than or equal
+        // Less than or equal
         [
             { id: { $lte: 5 } },
             (data: Data | Data[]): void => {
@@ -405,6 +405,20 @@ describe('Repository', () => {
         test('should create a new instance', () => {
             expect(repository).toBeInstanceOf(Repository);
         });
+
+        test('should create an instance with null table (validation happens at runtime)', () => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+            const repo = new Repository(knexInstance, null as any);
+            expect(repo).toBeInstanceOf(Repository);
+            // The error will occur when trying to use the repository, not during construction
+        });
+
+        test('should create an instance with null knex (validation happens at runtime)', () => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+            const repo = new Repository(null as any, table);
+            expect(repo).toBeInstanceOf(Repository);
+            // The error will occur when trying to use the repository, not during construction
+        });
     });
 
     describe('findStream', () => {
@@ -505,6 +519,7 @@ describe('Repository', () => {
         test('should throw an error during async iteration when the query is invalid', async () => {
             const stream = repository.findStream<Data>({
                 advancedSearch: {
+                    // @ts-expect-error - Invalid query to trigger an error
                     error: '2'
                 }
             });
@@ -522,6 +537,7 @@ describe('Repository', () => {
         test('should emit an error event when the query is invalid', (done) => {
             const stream = repository.findStream<Data>({
                 advancedSearch: {
+                    // @ts-expect-error - Invalid query to trigger an error
                     error: '2'
                 }
             });
@@ -623,6 +639,7 @@ describe('Repository', () => {
             try {
                 await repository.find<Data>({
                     advancedSearch: {
+                        // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
                 });
@@ -719,6 +736,7 @@ describe('Repository', () => {
             try {
                 await repository.findOne<Data>({
                     advancedSearch: {
+                        // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
                 });
@@ -767,6 +785,7 @@ describe('Repository', () => {
             try {
                 await repository.count({
                     advancedSearch: {
+                        // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
                 });
@@ -989,6 +1008,7 @@ describe('Repository', () => {
             try {
                 await repository.delete({
                     advancedSearch: {
+                        // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
                 });
