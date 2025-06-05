@@ -300,7 +300,10 @@ const _addRoutes = <TInferedObject extends TObject>
     const hasAdvancedSearch = enabledRoutes.includes('find') || enabledRoutes.includes('count') || enabledRoutes.includes('update') || enabledRoutes.includes('delete');
 
     if (hasAdvancedSearch)
-        app.use(advancedSearchPlugin(tableName, baseSchema));
+        app.use(advancedSearchPlugin({
+            schemaName: tableName,
+            baseSchema
+        }));
 
 
     for (const route of enabledRoutes) {
