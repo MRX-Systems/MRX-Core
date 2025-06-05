@@ -7,7 +7,7 @@ import type { AdvancedSearch } from '#/repository/types/advancedSearch';
 import type { SelectedFields } from '#/repository/types/selectedFields';
 import { SingletonManager } from '#/singletonManager/singletonManager';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
-import { dynamicDatabaseSelectorPlugin } from './dynamicDatabaseSelector';
+import { dbSelectorPlugin } from './dbSelector';
 import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
 import type { CrudOptions } from './types/crudOptions';
 import type { CRUDRoutes } from './types/crudRoutes';
@@ -115,8 +115,8 @@ const _injectDynamicDbInContext = (database: string | DbSelectorOptions) => {
         }));
     else
         // Dynamic database configuration
-        plugin.use(dynamicDatabaseSelectorPlugin({
-            baseDatabaseConfig: database.connectionConfig,
+        plugin.use(dbSelectorPlugin({
+            connectionConfig: database.connectionConfig,
             headerKey: database.headerKey || 'database-using'
         }));
     return plugin.as('scoped');
