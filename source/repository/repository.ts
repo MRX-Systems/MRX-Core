@@ -4,6 +4,7 @@ import { PassThrough } from 'stream';
 import { databaseErrorKeys } from '#/database/enums/databaseErrorKeys';
 import { mssqlErrorCode } from '#/database/enums/mssqlErrorCode';
 import type { Table } from '#/database/table';
+import { httpStatusCode } from '#/elysia/enums';
 import { CoreError } from '#/error/coreError';
 import { isIsoDateString } from '#/utils/isIsoDateString';
 import { makeStreamAsyncIterable } from '#/utils/stream';
@@ -604,16 +605,17 @@ export class Repository<TModel = unknown> {
      *
      * @returns An array of records returned by the query.
      */
-    protected async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult = false): Promise<KModel[]> {
+    protected async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult: boolean | string = false): Promise<KModel[]> {
         try {
             const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
                 throw new CoreError({
                     key: databaseErrorKeys.mssqlNoResult,
-                    message: 'No records found matching the specified query options.',
+                    message: typeof throwIfNoResult === 'string' ? throwIfNoResult : 'No records found matching the specified query options.',
                     cause: {
                         query: query.toSQL().sql
-                    }
+                    },
+                    httpStatusCode: httpStatusCode.notFound
                 });
             return result;
         } catch (error) {
