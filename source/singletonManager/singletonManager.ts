@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { CoreError } from '#/error/coreError';
 import { singletonManagerErrorKeys } from './enums/singletonManagerErrorKeys';
 

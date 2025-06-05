@@ -20,23 +20,6 @@ const _validateDataNull = <TObject>(data: TObject): void => {
 };
 
 /**
- * Checks if the provided data is an object and throws an error if it is not.
- *
- * @template TObject - The type of the data to be validated.
- *
- * @param data - The data to be validated.
- *
- * @throws ({@link CoreError}) - Throws an error if the data is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
- */
-const _validateDataIsObject = <TObject>(data: TObject): void => {
-    if (typeof data !== 'object')
-        throw new CoreError({
-            key: dataErrorKeys.dataMustBeObject,
-            message: 'Data must be a plain object.'
-        });
-};
-
-/**
  * Filters the provided data by excluding the specified keys, with an option to exclude null or undefined values.
  * Uses a generic type parameter to control the return type based on the excludeNullUndefined flag.
  *
@@ -49,7 +32,6 @@ const _validateDataIsObject = <TObject>(data: TObject): void => {
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded.
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
- * @throws ({@link CoreError}) - Throws an error if the data is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
  *
  * @returns The filtered data object with the specified keys excluded. ({@link TObject})
  */
@@ -60,12 +42,13 @@ export const filterByKeyExclusion = <
 >(
     data: Readonly<TObject>,
     keys: readonly TExcludedKeys[],
-    excludeNullUndefined?: TExcludeNullUndefined
+    excludeNullUndefined?: TExcludeNullUndefined,
+    throwIfDataIsNull = true
 ): TExcludeNullUndefined extends true
     ? Partial<Omit<TObject, TExcludedKeys>>
     : Omit<TObject, TExcludedKeys> => {
-    _validateDataNull(data);
-    _validateDataIsObject(data);
+    if (throwIfDataIsNull)
+        _validateDataNull(data);
 
     // The result object will be Partial if excludeNullUndefined is true, otherwise Omit
     const filteredData: Record<string, unknown> = {};
@@ -86,6 +69,67 @@ export const filterByKeyExclusion = <
 };
 
 /**
+ * Recursively filters the provided data by excluding the specified keys, with an option to exclude null or undefined values.
+ * The keys to exclude can be any valid property key and will be applied recursively to all nested objects.
+ *
+ * @template TObject - The type of the data object to filter, must be an object.
+ * @template TExcludedKeys - The keys to exclude from the data object and all nested objects.
+ *
+ * @param data - The data object to be filtered.
+ * @param keys - The array of keys to exclude from the data object and all nested objects. (Can be empty)
+ * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded. Default is false.
+ * @param throwIfDataIsNull - Flag to determine if an error should be thrown when data is null or undefined. Default is true.
+ *
+ * @throws ({@link CoreError}) - Throws an error if the data is null or undefined and throwIfDataIsNull is true. ({@link dataErrorKeys.dataIsNull})
+ *
+ * @returns A new object with the specified keys excluded recursively.
+ */
+export const filterByKeyExclusionRecursive = <
+    TObject extends Readonly<object>,
+    TExcludedKeys extends PropertyKey = never
+>(
+    data: Readonly<TObject>,
+    keys: readonly TExcludedKeys[],
+    excludeNullUndefined = false,
+    throwIfDataIsNull = true
+): Record<string, unknown> => {
+    if (throwIfDataIsNull)
+        _validateDataNull(data);
+
+    const filteredData: Record<string, unknown> = {};
+
+    for (const key in data) {
+        const typedKey = key as keyof TObject;
+        if (
+            !(keys as readonly PropertyKey[]).includes(typedKey as PropertyKey)
+            && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
+        )
+            if (typeof data[typedKey] === 'object' && data[typedKey] !== null && !Array.isArray(data[typedKey]))
+                filteredData[key] = filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
+                    data[typedKey] as Readonly<object>,
+                    keys,
+                    excludeNullUndefined,
+                    false
+                );
+            else if (Array.isArray(data[typedKey]))
+                filteredData[key] = (data[typedKey] as unknown[]).map((item) => {
+                    if (typeof item === 'object' && item !== null && !Array.isArray(item))
+                        return filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
+                            item,
+                            keys,
+                            excludeNullUndefined,
+                            false
+                        );
+                    return item;
+                });
+            else
+                filteredData[key] = data[typedKey];
+    }
+
+    return filteredData;
+};
+
+/**
  * Filters the provided data by including only the specified keys, with an option to exclude null or undefined values.
  * Uses a generic type parameter to control the return type based on the excludeNullUndefined flag.
  *
@@ -98,7 +142,6 @@ export const filterByKeyExclusion = <
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded.
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
- * @throws ({@link CoreError}) - Throws an error if the data is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
  *
  * @example
  * ```typescript
@@ -123,12 +166,13 @@ export const filterByKeyInclusion = <
 >(
     data: Readonly<TObject>,
     keys: readonly TIncludedKeys[],
-    excludeNullUndefined?: TExcludeNullUndefined
+    excludeNullUndefined?: TExcludeNullUndefined,
+    throwIfDataIsNull = true
 ): TExcludeNullUndefined extends true
     ? Partial<Pick<TObject, TIncludedKeys>>
     : Pick<TObject, TIncludedKeys> => {
-    _validateDataNull(data);
-    _validateDataIsObject(data);
+    if (throwIfDataIsNull)
+        _validateDataNull(data);
 
     // The result object will be Partial if excludeNullUndefined is true, otherwise Pick
     const filteredData: Record<string, unknown> = {};
@@ -158,7 +202,6 @@ export const filterByKeyInclusion = <
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded. Default is false.
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
- * @throws ({@link CoreError}) - Throws an error if the data is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
  *
  * @example
  * ```typescript
@@ -179,10 +222,11 @@ export const filterByKeyInclusion = <
 export const filterByValue = <TObject extends Readonly<object>>(
     data: Readonly<TObject>,
     predicate: (value: TObject[keyof TObject]) => boolean,
-    excludeNullUndefined = false
+    excludeNullUndefined = false,
+    throwIfDataIsNull = true
 ): TObject => {
-    _validateDataNull(data);
-    _validateDataIsObject(data);
+    if (throwIfDataIsNull)
+        _validateDataNull(data);
     const filteredData = {} as TObject;
     for (const key in data)
         if (Object.hasOwn(data, key)) {
@@ -212,10 +256,11 @@ export const filterByValue = <TObject extends Readonly<object>>(
  */
 export const transformKeys= <TObject extends Readonly<object>>(
     data: Readonly<TObject>,
-    transformer: Readonly<KeyTransformer>
+    transformer: Readonly<KeyTransformer>,
+    throwIfDataIsNull = true
 ): TObject => {
-    _validateDataNull(data);
-    _validateDataIsObject(data);
+    if (throwIfDataIsNull)
+        _validateDataNull(data);
     const result = {} as TObject;
 
     for (const key in data)

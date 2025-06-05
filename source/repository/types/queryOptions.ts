@@ -26,7 +26,7 @@ export interface QueryOptions<TModel> {
      * Whether to throw an error if the query does not return any result.
      * @defaultValue false
      */
-    throwIfNoResult?: boolean;
+    throwIfNoResult?: boolean | string;
     /**
      * The transaction context for the query. ({@link Transaction})
      */

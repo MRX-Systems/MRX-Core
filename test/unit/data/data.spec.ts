@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 
 import {
     filterByKeyExclusion,
+    filterByKeyExclusionRecursive,
     filterByKeyInclusion,
     filterByValue,
     transformKeys
@@ -39,8 +40,7 @@ const testData = {
  * Error messages expected from the data functions.
  */
 const expectedErrorMessages = {
-    NULL_DATA: 'Data cannot be null or undefined.',
-    INVALID_OBJECT: 'Data must be a plain object.'
+    NULL_DATA: 'Data cannot be null or undefined.'
 } as const;
 
 /**
@@ -48,12 +48,6 @@ const expectedErrorMessages = {
  * @returns A null value cast as Record<string, unknown> for testing purposes.
  */
 const _createNullObject = (): Record<string, unknown> => null as unknown as Record<string, unknown>;
-
-/**
- * Helper function to create an invalid non-object for testing error cases.
- * @returns A primitive value cast as Record<string, unknown> for testing purposes.
- */
-const _createInvalidObject = (): Record<string, unknown> => 2 as unknown as Record<string, unknown>;
 
 describe('filterByKeyExclusion', () => {
     describe('when filtering with key exclusion', () => {
@@ -147,11 +141,84 @@ describe('filterByKeyExclusion', () => {
 
             expect(() => filterByKeyExclusion(nullObject, [])).toThrow(expectedErrorMessages.NULL_DATA);
         });
+    });
+});
 
-        test('should throw error when data is not a plain object', () => {
-            const invalidObject: Record<string, unknown> = _createInvalidObject();
+describe('filterByKeyExclusionRecursive', () => {
+    describe('when filtering with key exclusion recursively', () => {
+        test('should return object excluding specified keys recursively', () => {
+            const object = {
+                a: 'test',
+                b: 'exclude',
+                nested: {
+                    a: 'nestedTest',
+                    b: 'nestedExclude',
+                    foo: {
+                        a: 'nested2Test',
+                        b: 'nested2Exclude'
+                    }
+                },
+                nested2: {
+                    a: 'nested3Test',
+                    b: 'nested3Exclude',
+                    nested3: {
+                        foo: 'nested4Test'
+                    }
+                }
+            };
+            const filtered: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['foo']);
+            expect(filtered).toEqual({
+                a: 'test',
+                b: 'exclude',
+                nested: {
+                    a: 'nestedTest',
+                    b: 'nestedExclude'
+                },
+                nested2: {
+                    a: 'nested3Test',
+                    b: 'nested3Exclude',
+                    nested3: {}
+                }
+            });
 
-            expect(() => filterByKeyExclusion(invalidObject, [])).toThrow(expectedErrorMessages.INVALID_OBJECT);
+            console.log(JSON.stringify(filtered, null, 2));
+
+            const filtered2: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['nested3']);
+            expect(filtered2).toEqual({
+                a: 'test',
+                b: 'exclude',
+                nested: {
+                    a: 'nestedTest',
+                    b: 'nestedExclude',
+                    foo: {
+                        a: 'nested2Test',
+                        b: 'nested2Exclude'
+                    }
+                },
+                nested2: {
+                    a: 'nested3Test',
+                    b: 'nested3Exclude'
+                }
+            });
+            console.log(JSON.stringify(filtered2, null, 2));
+
+
+            const filtered3: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['a']);
+            expect(filtered3).toEqual({
+                b: 'exclude',
+                nested: {
+                    b: 'nestedExclude',
+                    foo: {
+                        b: 'nested2Exclude'
+                    }
+                },
+                nested2: {
+                    b: 'nested3Exclude',
+                    nested3: {
+                        foo: 'nested4Test'
+                    }
+                }
+            });
         });
     });
 });
@@ -237,12 +304,6 @@ describe('filterByKeyInclusion', () => {
             const nullObject: Record<string, unknown> = _createNullObject();
 
             expect(() => filterByKeyInclusion(nullObject, [])).toThrow(expectedErrorMessages.NULL_DATA);
-        });
-
-        test('should throw error when data is not a plain object', () => {
-            const invalidObject: Record<string, unknown> = _createInvalidObject();
-
-            expect(() => filterByKeyInclusion(invalidObject, [])).toThrow(expectedErrorMessages.INVALID_OBJECT);
         });
     });
 });
@@ -347,13 +408,6 @@ describe('filterByValue', () => {
             expect(() => filterByValue(nullObject, (): boolean => true))
                 .toThrow(expectedErrorMessages.NULL_DATA);
         });
-
-        test('should throw error when data is not a plain object', () => {
-            const invalidObject: Record<string, unknown> = _createInvalidObject();
-
-            expect(() => filterByValue(invalidObject, (): boolean => true))
-                .toThrow(expectedErrorMessages.INVALID_OBJECT);
-        });
     });
 });
 
@@ -430,13 +484,6 @@ describe('transformKeys', () => {
 
             expect(() => transformKeys(nullObject, new CamelCaseTransformer()))
                 .toThrow(expectedErrorMessages.NULL_DATA);
-        });
-
-        test('should throw error when data is not a plain object', () => {
-            const invalidObject: Record<string, unknown> = _createInvalidObject();
-
-            expect(() => transformKeys(invalidObject, new CamelCaseTransformer()))
-                .toThrow(expectedErrorMessages.INVALID_OBJECT);
         });
     });
 });
