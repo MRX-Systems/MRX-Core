@@ -85,7 +85,7 @@ class CustomTestRepository extends Repository<{ id: number; name: string; email?
      */
     public async findByNamePattern(pattern: string): Promise<Array<{ id: number; name: string; email?: string }>> {
         return this.find({
-            advancedSearch: {
+            filter: {
                 name: { $like: `%${pattern}%` }
             }
         });

@@ -2,9 +2,9 @@ import type { WhereClause } from './whereClause';
 import type { SelectedFields } from './selectedFields';
 
 /**
- * Defines an advanced search model using either plain partials of the model T or a {@link WhereClause} filter for more dynamic querying.
+ * Defines an filter model using either plain partials of the model TModel or a {@link WhereClause} filter for more dynamic querying.
  *
- * @template TModel - The model type to be used for the advanced search.
+ * @template TModel - The model type to be used for the filter.
  *
  * @example
  * ```typescript
@@ -19,26 +19,22 @@ import type { SelectedFields } from './selectedFields';
  *   products: Product[];
  * }
  *
- * const example1: AdvancedSearch<User> = {
+ * const example1: Filter<User> = {
  *     id: 1
  * };
  *
- * const example2: AdvancedSearch<User> = {
+ * const example2: Filter<User> = {
  *     name: {
  *         $eq: 'John'
  *     }
  * };
  *
- * const example3: AdvancedSearch<User> = {
+ * const example3: Filter<User> = {
  *    $q: 'John'
- * };
- *
- * const example4: AdvancedSearch<User & Basket> = {
- *   'basket.id': 1,
  * };
  * ```
  */
-export type AdvancedSearch<TModel> = {
+export type Filter<TModel> = {
     $q?: string | number | {
         selectedFields: SelectedFields<TModel>,
         value: string | number

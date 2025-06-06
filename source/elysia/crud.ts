@@ -3,7 +3,7 @@ import { Elysia, t } from 'elysia';
 
 import type { MSSQL } from '#/database/mssql';
 import { CoreError } from '#/error/coreError';
-import type { AdvancedSearch } from '#/repository/types/advancedSearch';
+import type { Filter } from '#/repository/types/filter';
 import type { SelectedFields } from '#/repository/types/selectedFields';
 import { SingletonManager } from '#/singletonManager/singletonManager';
 import { advancedSearchPlugin, createBaseSearchSchema } from './advancedSearch';
@@ -140,7 +140,7 @@ const handlerDefinition = {
         const repo = db.getRepository(tableName);
 
         const data = await repo.find({
-            advancedSearch: ctx.advancedSearch as AdvancedSearch<unknown>[],
+            filter: ctx.advancedSearch as Filter<unknown>[],
             selectedFields: ctx.selectedFields as SelectedFields<unknown>,
             limit: (ctx.pagination as { limit: number; offset: number }).limit,
             offset: (ctx.pagination as { limit: number; offset: number }).offset
@@ -160,9 +160,9 @@ const handlerDefinition = {
         const { id } = ctx.params as { id: string | number };
 
         const data = await repo.findOne({
-            advancedSearch: {
+            filter: {
                 [primary[0]]: id
-            } as AdvancedSearch<unknown>
+            } as Filter<unknown>
         });
         return {
             message: `Found record for ${tableName}`,
@@ -174,7 +174,7 @@ const handlerDefinition = {
         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
         const repo = db.getRepository(tableName);
         const count = await repo.count({
-            advancedSearch: ctx.advancedSearch as AdvancedSearch<unknown>[]
+            filter: ctx.advancedSearch as Filter<unknown>[]
         });
         return {
             message: `${count} records found for ${tableName}`,
@@ -186,7 +186,7 @@ const handlerDefinition = {
         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
         const repo = db.getRepository(tableName);
 
-        if (!ctx.advancedSearch || (ctx.advancedSearch as AdvancedSearch<unknown>[]).length === 0 || !(ctx.advancedSearch as AdvancedSearch<unknown>[])[0])
+        if (!ctx.advancedSearch || (ctx.advancedSearch as Filter<unknown>[]).length === 0 || !(ctx.advancedSearch as Filter<unknown>[])[0])
             throw new CoreError({
                 key: elysiaErrorKeys.needAdvancedSearch,
                 message: 'You need to provide advanced search to update records. It\'s dangerous to update all records.',
@@ -194,7 +194,7 @@ const handlerDefinition = {
             });
 
         const data = await repo.update((ctx.body as Record<string, unknown>), {
-            advancedSearch: ctx.advancedSearch as AdvancedSearch<unknown>[],
+            filter: ctx.advancedSearch as Filter<unknown>[],
             selectedFields: ctx.selectedField as SelectedFields<unknown>
         });
 
@@ -213,9 +213,9 @@ const handlerDefinition = {
         const { id } = ctx.params as { id: string | number };
 
         const data = await repo.update(ctx.body as Record<string, unknown>, {
-            advancedSearch: {
+            filter: {
                 [primary[0]]: id
-            } as AdvancedSearch<unknown>
+            } as Filter<unknown>
         });
 
         return {
@@ -228,7 +228,7 @@ const handlerDefinition = {
         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
         const repo = db.getRepository(tableName);
 
-        if (!ctx.advancedSearch || (ctx.advancedSearch as AdvancedSearch<unknown>[]).length === 0 || !(ctx.advancedSearch as AdvancedSearch<unknown>[])[0])
+        if (!ctx.advancedSearch || (ctx.advancedSearch as Filter<unknown>[]).length === 0 || !(ctx.advancedSearch as Filter<unknown>[])[0])
             throw new CoreError({
                 key: elysiaErrorKeys.needAdvancedSearch,
                 message: 'You need to provide advanced search to delete records. It\'s dangerous to delete all records.',
@@ -236,7 +236,7 @@ const handlerDefinition = {
             });
 
         const data = await repo.delete({
-            advancedSearch: ctx.advancedSearch as AdvancedSearch<unknown>[],
+            filter: ctx.advancedSearch as Filter<unknown>[],
             selectedFields: ctx.selectedFields as SelectedFields<unknown>
         });
 
@@ -255,9 +255,9 @@ const handlerDefinition = {
         const { id } = ctx.params as { id: string | number };
 
         const data = await repo.delete({
-            advancedSearch: {
+            filter: {
                 [primary[0]]: id
-            } as AdvancedSearch<unknown>
+            } as Filter<unknown>
         });
 
         return {

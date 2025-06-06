@@ -1,4 +1,4 @@
-import type { AdvancedSearch } from './advancedSearch';
+import type { Filter } from './filter';
 import type { OrderBy } from './orderBy';
 import type { SelectedFields } from './selectedFields';
 import type { Transaction } from './transaction';
@@ -10,10 +10,10 @@ import type { Transaction } from './transaction';
  */
 export interface QueryOptions<TModel> {
     /**
-     * The advanced search options to apply to the query. Can be a single object or an array of objects.
-     * @see {@link AdvancedSearch}
+     * The filter options to apply to the query. Can be a single object or an array of objects.
+     * @see {@link Filter}
      */
-    advancedSearch?: AdvancedSearch<NoInfer<TModel>> | AdvancedSearch<NoInfer<TModel>>[];
+    filter?: Filter<NoInfer<TModel>> | Filter<NoInfer<TModel>>[];
     /**
      * The fields to select in the query. If not provided, all fields are selected. ({@link SelectedFields})
      */

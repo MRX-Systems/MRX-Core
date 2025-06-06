@@ -6,7 +6,7 @@ import { PassThrough, Stream, Transform } from 'stream';
 import { Table } from '#/database/table';
 import { CoreError } from '#/error/coreError';
 import { Repository } from '#/repository/repository';
-import type { AdvancedSearch } from '#/repository/types/advancedSearch';
+import type { Filter } from '#/repository/types/filter';
 
 const options = {
     databaseName: process.env.MSSQL_DATABASE ?? '',
@@ -66,7 +66,7 @@ async function dropDataTable(): Promise<void> {
     await knexInstance.destroy();
 }
 
-type AdvancedSearchTest<T> = [AdvancedSearch<T> | AdvancedSearch<T>[], (data: T | T[]) => void, number];
+type AdvancedSearchTest<T> = [Filter<T> | Filter<T>[], (data: T | T[]) => void, number];
 
 function advancedSearchTests(): AdvancedSearchTest<Data>[] {
     const advancedSearchTest: AdvancedSearchTest<Data>[] = [
@@ -492,7 +492,7 @@ describe('Repository', () => {
             'should correctly apply advanced search filter %j and validate the results',
             async (filter, validator) => {
                 const stream = repository.findStream<Data>({
-                    advancedSearch: filter
+                    filter: filter
                 });
 
                 for await (const data of stream)
@@ -518,7 +518,7 @@ describe('Repository', () => {
 
         test('should throw an error during async iteration when the query is invalid', async () => {
             const stream = repository.findStream<Data>({
-                advancedSearch: {
+                filter: {
                     // @ts-expect-error - Invalid query to trigger an error
                     error: '2'
                 }
@@ -536,7 +536,7 @@ describe('Repository', () => {
 
         test('should emit an error event when the query is invalid', (done) => {
             const stream = repository.findStream<Data>({
-                advancedSearch: {
+                filter: {
                     // @ts-expect-error - Invalid query to trigger an error
                     error: '2'
                 }
@@ -578,7 +578,7 @@ describe('Repository', () => {
             const data = await repository.find<Data>({
                 limit: 5,
                 offset: 5,
-                advancedSearch: {
+                filter: {
                     id: { $gte: 10 }
                 }
             });
@@ -629,7 +629,7 @@ describe('Repository', () => {
             'should correctly apply advanced search filter %j and validate the results',
             async (filter, validator) => {
                 const data = await repository.find<Data>({
-                    advancedSearch: filter
+                    filter: filter
                 });
                 validator(data);
             }
@@ -638,7 +638,7 @@ describe('Repository', () => {
         test('should throw an error when the query is invalid', async () => {
             try {
                 await repository.find<Data>({
-                    advancedSearch: {
+                    filter: {
                         // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
@@ -654,7 +654,7 @@ describe('Repository', () => {
         test('should throw an error when they are no results with options { throwIfNoResult: true }', async () => {
             try {
                 await repository.find<Data>({
-                    advancedSearch: {
+                    filter: {
                         id: 100
                     },
                     throwIfNoResult: true
@@ -671,7 +671,7 @@ describe('Repository', () => {
     describe('findOne', () => {
         test('should return a single data', async () => {
             const data = await repository.findOne({
-                advancedSearch: {
+                filter: {
                     id: 1
                 }
             });
@@ -684,7 +684,7 @@ describe('Repository', () => {
 
         test('should return a single data with selected fields', async () => {
             const data = await repository.findOne<Data>({
-                advancedSearch: {
+                filter: {
                     id: 1
                 },
                 selectedFields: ['id', 'name']
@@ -699,7 +699,7 @@ describe('Repository', () => {
         test('should return a single data with correct order based on orderBy clause', async () => {
             const data1 = await repository.findOne<Data>({
                 orderBy: ['id', 'desc'],
-                advancedSearch: {
+                filter: {
                     id: { $lte: 20 }
                 }
             });
@@ -711,7 +711,7 @@ describe('Repository', () => {
 
             const data2 = await repository.findOne<Data>({
                 orderBy: ['id', 'asc'],
-                advancedSearch: {
+                filter: {
                     id: { $gte: 1 }
                 }
             });
@@ -726,7 +726,7 @@ describe('Repository', () => {
             'should correctly apply advanced search filter %j and validate the results',
             async (filter, validator) => {
                 const data = await repository.findOne<Data>({
-                    advancedSearch: filter
+                    filter: filter
                 });
                 validator(data);
             }
@@ -735,7 +735,7 @@ describe('Repository', () => {
         test('should throw an error when the query is invalid', async () => {
             try {
                 await repository.findOne<Data>({
-                    advancedSearch: {
+                    filter: {
                         // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
@@ -751,7 +751,7 @@ describe('Repository', () => {
         test('should throw an error when they are no results with options { throwIfNoResult: true }', async () => {
             try {
                 await repository.findOne<Data>({
-                    advancedSearch: {
+                    filter: {
                         id: 100
                     },
                     throwIfNoResult: true
@@ -775,7 +775,7 @@ describe('Repository', () => {
             'should correctly apply advanced search filter %j and validate the results',
             async (filter, _, countExpected) => {
                 const data = await repository.count<Data>({
-                    advancedSearch: filter
+                    filter: filter
                 });
                 expect(data).toBe(countExpected);
             }
@@ -784,7 +784,7 @@ describe('Repository', () => {
         test('should throw an error when the query is invalid', async () => {
             try {
                 await repository.count({
-                    advancedSearch: {
+                    filter: {
                         // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }
@@ -878,7 +878,7 @@ describe('Repository', () => {
                 bool: true
             };
             const items = await repository.update(data, {
-                advancedSearch: {
+                filter: {
                     id: 4
                 }
             });
@@ -903,7 +903,7 @@ describe('Repository', () => {
                 bool: true
             };
             const items = await repository.update(data, {
-                advancedSearch: {
+                filter: {
                     id: { $in: [5, 6] }
                 }
             });
@@ -929,7 +929,7 @@ describe('Repository', () => {
                 bool: true
             };
             const items = await repository.update(data, {
-                advancedSearch: {
+                filter: {
                     id: 7
                 },
                 selectedFields: ['id', 'name']
@@ -949,7 +949,7 @@ describe('Repository', () => {
                 await repository.update({
                     id: 1
                 }, {
-                    advancedSearch: {
+                    filter: {
                         id: -1
                     }
                 });
@@ -965,7 +965,7 @@ describe('Repository', () => {
     describe('delete', () => {
         test('should delete one row', async () => {
             const items = await repository.delete({
-                advancedSearch: {
+                filter: {
                     id: 1
                 }
             });
@@ -976,7 +976,7 @@ describe('Repository', () => {
 
         test('should delete multiple rows', async () => {
             const items = await repository.delete({
-                advancedSearch: {
+                filter: {
                     id: { $in: [2, 3] }
                 }
             });
@@ -989,7 +989,7 @@ describe('Repository', () => {
 
         test('should delete one row with selected fields', async () => {
             const items = await repository.delete({
-                advancedSearch: {
+                filter: {
                     id: 4
                 },
                 selectedFields: ['id', 'name']
@@ -1007,7 +1007,7 @@ describe('Repository', () => {
         test('should throw an error when the query is invalid', async () => {
             try {
                 await repository.delete({
-                    advancedSearch: {
+                    filter: {
                         // @ts-expect-error - Invalid query to trigger an error
                         error: '2'
                     }

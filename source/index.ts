@@ -109,7 +109,7 @@ export type * from './mailer/types/smtpPoolOptions';
 export * from './repository/repository';
 
 // Repository Types
-export type * from './repository/types/advancedSearch';
+export type * from './repository/types/filter';
 export type * from './repository/types/orderBy';
 export type * from './repository/types/queryOptions';
 export type * from './repository/types/queryOptionsExtendPagination';

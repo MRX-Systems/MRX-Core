@@ -8,7 +8,7 @@ import { CoreError } from '#/error/coreError';
 import { isIsoDateString } from '#/utils/isIsoDateString';
 import { makeStreamAsyncIterable } from '#/utils/stream';
 import type { StreamWithAsyncIterable } from '#/utils/types/streamWithAsyncIterable';
-import type { AdvancedSearch } from './types/advancedSearch';
+import type { Filter } from './types/filter';
 import type { QueryOptions } from './types/queryOptions';
 import type { QueryOptionsExtendPagination } from './types/queryOptionsExtendPagination';
 import type { QueryOptionsExtendStream } from './types/queryOptionsExtendStream';
@@ -50,7 +50,7 @@ const _operators: Record<keyof WhereClause<unknown>, OperatorFn> = ({
  * Provides a type-safe, extensible interface for database operations (CRUD, search, streaming) on a table.
  *
  * - Wraps Knex.js for query building and execution.
- * - Supports advanced search, pagination, field selection, and streaming.
+ * - Supports filter, pagination, field selection, and streaming.
  * - Centralizes error handling for MSSQL.
  *
  * @template TModel - The data model type handled by the repository.
@@ -138,8 +138,8 @@ export class Repository<TModel = unknown> {
     public findStream<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendStream<KModel>): StreamWithAsyncIterable<KModel[]> {
         const query = this._knex(this._table.name)
             .select(options?.selectedFields ?? '*');
-        if (options?.advancedSearch)
-            this._applySearch(query, options.advancedSearch);
+        if (options?.filter)
+            this._applyFilter(query, options.filter);
 
         const orderBy: [string, 'asc' | 'desc'] = [
             options?.orderBy?.[0] || this._table.primaryKey[0],
@@ -197,9 +197,9 @@ export class Repository<TModel = unknown> {
      *   selectedFields: ['id', 'firstName', 'lastName']
      * });
      *
-     * // With advanced filtering
+     * // With filter
      * const activeAdmins = await userRepository.find({
-     *   advancedSearch: {
+     *   filter: {
      *     role: 'admin',
      *     status: { $eq: 'active' },
      *     lastLogin: { $gte: new Date('2023-01-01') }
@@ -208,7 +208,7 @@ export class Repository<TModel = unknown> {
      *
      * // With OR conditions
      * const results = await userRepository.find({
-     *   advancedSearch: [
+     *   filter: [
      *     { department: 'engineering' },
      *     { department: 'design', role: 'lead' }
      *   ]
@@ -231,8 +231,8 @@ export class Repository<TModel = unknown> {
     public async find<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendPagination<KModel>): Promise<KModel[]> {
         const query = this._knex(this._table.name)
             .select(options?.selectedFields ?? '*');
-        if (options?.advancedSearch)
-            this._applySearch(query, options.advancedSearch);
+        if (options?.filter)
+            this._applyFilter(query, options.filter);
 
         const orderBy: [string, 'asc' | 'desc'] = [
             options?.orderBy?.[0] || this._table.primaryKey[0],
@@ -299,8 +299,8 @@ export class Repository<TModel = unknown> {
     public async findOne<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'advancedSearch'> & Required<Pick<QueryOptions<KModel>, 'advancedSearch'>>): Promise<KModel> {
         const query = this._knex(this._table.name)
             .select(options?.selectedFields ?? '*');
-        if (options?.advancedSearch)
-            this._applySearch(query, options.advancedSearch);
+        if (options?.filter)
+            this._applyFilter(query, options.filter);
 
         const orderBy: [string, 'asc' | 'desc'] = [
             options?.orderBy?.[0] || this._table.primaryKey[0],
@@ -348,8 +348,8 @@ export class Repository<TModel = unknown> {
     public async count<KModel extends TModel = NoInfer<TModel>>(options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>): Promise<number> {
         const query = this._knex(this._table.name)
             .count({ count: '*' });
-        if (options?.advancedSearch)
-            this._applySearch(query, options.advancedSearch);
+        if (options?.filter)
+            this._applyFilter(query, options.filter);
 
         return this._executeQuery<{ count: number }>(query, options?.throwIfNoResult)
             .then((result) => result[0].count);
@@ -439,8 +439,8 @@ export class Repository<TModel = unknown> {
         const query = this._knex(this._table.name)
             .update(data)
             .returning(options?.selectedFields ?? '*');
-        if (options?.advancedSearch)
-            this._applySearch(query, options.advancedSearch);
+        if (options?.filter)
+            this._applyFilter(query, options.filter);
 
         return this._executeQuery<KModel>(query);
     }
@@ -482,26 +482,26 @@ export class Repository<TModel = unknown> {
         const query = this._knex(this._table.name)
             .delete()
             .returning(options?.selectedFields ?? '*');
-        if (options?.advancedSearch)
-            this._applySearch(query, options.advancedSearch);
+        if (options?.filter)
+            this._applyFilter(query, options.filter);
 
         return this._executeQuery<KModel>(query);
     }
 
     /**
-     * Applies advanced search criteria to a Knex.js query builder. This method supports complex queries
+     * Applies filter criteria to a Knex.js query builder. This method supports complex queries
      * using operators like `$eq`, `$neq`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`, `$between`, `$nbetween`,
      * `$like`, `$nlike`, and `$isNull`. It also supports basic string searches and field selection.
      *
      * @template KModel - The type of the object to search for.
      * @param query - The Knex.js query builder to apply the search criteria to. ({@link Knex.QueryBuilder})
-     * @param search - The advanced search criteria to apply. Can be a single object or an array of objects. ({@link AdvancedSearch})
+     * @param search - The advanced search criteria to apply. Can be a single object or an array of objects. ({@link Filter})
      */
-    protected _applySearch<KModel>(
+    protected _applyFilter<KModel>(
         query: Knex.QueryBuilder,
-        search: AdvancedSearch<KModel> | AdvancedSearch<KModel>[]
+        search: Filter<KModel> | Filter<KModel>[]
     ): void {
-        const processing = (query: Knex.QueryBuilder, search: AdvancedSearch<KModel>): void => {
+        const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
             for (const [key, value] of Object.entries(search))
                 if (this._isComplexQuery(value)) {
                     const whereClause = value as WhereClause<unknown>;
@@ -530,7 +530,7 @@ export class Repository<TModel = unknown> {
                 }
         };
         if (Array.isArray(search))
-            search.reduce((acc, item) => acc.orWhere((q) => this._applySearch(q, item)), query);
+            search.reduce((acc, item) => acc.orWhere((q) => this._applyFilter(q, item)), query);
         else
             processing(query, search);
     }
