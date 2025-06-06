@@ -49,25 +49,21 @@ export const filterByKeyExclusion = <
 >(
     data: Readonly<TObject>,
     keys: readonly TExcludedKeys[],
-    excludeNullUndefined?: TExcludeNullUndefined,
-    throwIfDataIsNull = true
+    excludeNullUndefined?: TExcludeNullUndefined
 ): TExcludeNullUndefined extends true
     ? Partial<Omit<TObject, TExcludedKeys>>
     : Omit<TObject, TExcludedKeys> => {
-    if (throwIfDataIsNull)
-        _validateDataNull(data);
-
-    // The result object will be Partial if excludeNullUndefined is true, otherwise Omit
+    _validateDataNull(data);
     const filteredData: Record<string, unknown> = {};
 
-    Object.keys(data).forEach((key: string): void => {
+    for (const key in data) {
         const typedKey = key as keyof TObject;
         if (
-            !(keys as readonly (keyof TObject)[]).includes(typedKey)
+            !(keys as readonly PropertyKey[]).includes(typedKey as PropertyKey)
             && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
         )
             filteredData[key] = data[typedKey];
-    });
+    }
 
     return filteredData as TExcludeNullUndefined extends true
         ? Partial<Omit<TObject, TExcludedKeys>>
@@ -102,11 +98,9 @@ export const filterByKeyExclusionRecursive = <
 >(
     data: Readonly<TObject>,
     keys: readonly TExcludedKeys[],
-    excludeNullUndefined = false,
-    throwIfDataIsNull = true
+    excludeNullUndefined = false
 ): Record<string, unknown> => {
-    if (throwIfDataIsNull)
-        _validateDataNull(data);
+    _validateDataNull(data);
 
     const filteredData: Record<string, unknown> = {};
 
@@ -120,8 +114,7 @@ export const filterByKeyExclusionRecursive = <
                 filteredData[key] = filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
                     data[typedKey] as Readonly<object>,
                     keys,
-                    excludeNullUndefined,
-                    false
+                    excludeNullUndefined
                 );
             else if (Array.isArray(data[typedKey]))
                 filteredData[key] = (data[typedKey] as unknown[]).map((item) => {
@@ -129,8 +122,7 @@ export const filterByKeyExclusionRecursive = <
                         return filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
                             item,
                             keys,
-                            excludeNullUndefined,
-                            false
+                            excludeNullUndefined
                         );
                     return item;
                 });
@@ -181,15 +173,15 @@ export const filterByKeyInclusion = <
 
     const filteredData: Record<string, unknown> = {};
 
-    (keys as readonly (keyof TObject)[]).forEach((key: keyof TObject): void => {
+    for (const key of keys) {
+        const typedKey = key as keyof TObject;
         if (
-            key in data
-            && (!excludeNullUndefined || (data[key] !== null && data[key] !== undefined))
+            typedKey in data
+            && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
         )
-            filteredData[key as string] = data[key];
-    });
+            filteredData[key as string] = data[typedKey];
+    }
 
-    // Type assertion is required due to conditional return type
     return filteredData as TExcludeNullUndefined extends true
         ? Partial<Pick<TObject, TIncludedKeys>>
         : Pick<TObject, TIncludedKeys>;
@@ -253,7 +245,7 @@ export const filterByValue = <TObject extends Readonly<object>>(
  */
 export const transformKeys= <TObject extends Readonly<object>>(
     data: Readonly<TObject>,
-    transformer: Readonly<KeyTransformer>,
+    transformer: Readonly<CaseTransformer>,
     throwIfDataIsNull = true
 ): TObject => {
     if (throwIfDataIsNull)
@@ -262,7 +254,7 @@ export const transformKeys= <TObject extends Readonly<object>>(
 
     for (const key in data)
         if (Object.hasOwn(data, key)) {
-            const transformedKey: string = transformer.transformKey(key);
+            const transformedKey: string = transformer.convertCase(key);
             result[transformedKey as keyof TObject] = data[key as keyof TObject];
         }
     return result;
