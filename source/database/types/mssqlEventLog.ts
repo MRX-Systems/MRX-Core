@@ -3,7 +3,7 @@
  * Used to capture detailed information about database queries.
  *
  * @example
- * ```typescript
+ * ```ts
  * const mssql = new MSSQL(options);
  * mssql.on(EVENT_MSSQL.LOG, (log: MssqlEventLog) => {
  *     console.log(log);

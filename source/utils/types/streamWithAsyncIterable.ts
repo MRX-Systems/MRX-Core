@@ -8,7 +8,7 @@ import type { PassThrough } from 'stream';
  * @template TModel - The type of the object to retrieve.
  *
  * @example
- * ```typescript
+ * ```ts
  * interface User {
  *     id: string;
  *     name: string;

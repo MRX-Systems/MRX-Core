@@ -4,7 +4,7 @@
  * @template TModel - The type of the object to select fields from.
  *
  * @example
- * ```typescript
+ * ```ts
  * interface User {
  *     id: number;
  *     name: string;

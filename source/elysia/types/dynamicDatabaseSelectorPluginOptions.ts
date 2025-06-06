@@ -4,7 +4,7 @@ import type { MSSQLDatabaseOptions } from '#/database/types';
  * Options to configure the dynamic database selector plugin.
  *
  * @example
- * ```typescript
+ * ```ts
  * const options: DynamicDatabaseSelectorPluginOptions = {
  *   baseDatabaseConfig: {
  *     host: 'localhost',

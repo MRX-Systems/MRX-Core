@@ -18,7 +18,7 @@ import type { QueryContext } from './types/queryContext';
  * - Allows custom repository implementations per table.
  *
  * Example usage:
- * ```typescript
+ * ```ts
  * const mssql = new MSSQL(options);
  * await mssql.connect();
  * const users = await mssql.getRepository('users').find();

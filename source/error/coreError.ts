@@ -10,7 +10,7 @@ import type { CoreErrorOptions } from './types/coreErrorOptions';
  *
  * @example
  * The following example demonstrates how to throw and catch a CoreError.
- * ```typescript
+ * ```ts
  * try {
  *   throw new CoreError({
  *     message: 'An error occurred',
@@ -31,7 +31,7 @@ import type { CoreErrorOptions } from './types/coreErrorOptions';
  *
  * @example
  * The following example demonstrates how to create a CoreError with a custom cause type.
- * ```typescript
+ * ```ts
  * const coreError = new CoreError<{ foo: string }>({
  *     message: 'Custom error with cause',
  *     key: 'core-package.error.custom_error',

@@ -8,7 +8,7 @@ import { TypedEventEmitter } from '#/typedEventEmitter/typedEventEmitter';
  * - Used for query construction and event handling in the database layer.
  *
  * Example:
- * ```typescript
+ * ```ts
  * const table = new Table('db', 'users', ['id', 'name'], ['id', 'NUMBER']);
  * table.on('SELECTED', data => console.log(data));
  * ```

@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { CoreError } from '#/error/coreError';
 import { singletonManagerErrorKeys } from './enums/singletonManagerErrorKeys';
 
@@ -7,7 +6,7 @@ import { singletonManagerErrorKeys } from './enums/singletonManagerErrorKeys';
  * When a class is registered, the SingletonManagerSingleton creates a new instance of the class when it is requested.
  *
  * @example
- * ```typescript
+ * ```ts
  * class ExampleSingleton {
  *    private static _count = 0;
  *    private readonly _id: number;
@@ -134,7 +133,7 @@ class SingletonManagerSingleton {
  * When a class is registered, the SingletonManagerSingleton creates a new instance of the class when it is requested.
  *
  * @example
- * ```typescript
+ * ```ts
  * class ExampleSingleton {
  *    private static _count = 0;
  *    private readonly _id: number;

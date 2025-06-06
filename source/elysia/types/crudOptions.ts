@@ -46,7 +46,7 @@ export interface CrudOptions<
      * DynamicDatabaseSelectorPluginOptions object for dynamic database selection.
      *
      * @example
-     * ```typescript
+     * ```ts
      * // Static database connection
      * database: 'my_database'
      *
@@ -78,7 +78,7 @@ export interface CrudOptions<
      * while other properties will remain optional.
      *
      * @example
-     * ```typescript
+     * ```ts
      * // Makes name and email required for insertion, while other fields remain optional
      * insertPropertiesSchemaRequired: ['name', 'email']
      * ```
@@ -90,7 +90,7 @@ export interface CrudOptions<
      * @see {@link CRUDRoutes}
      *
      * @example
-     * ```typescript
+     * ```ts
      * // Only generate read-only routes
      * includedRoutes: ['find', 'findOne', 'count']
      * ```
@@ -102,7 +102,7 @@ export interface CrudOptions<
      * @see {@link CRUDRoutes}
      *
      * @example
-     * ```typescript
+     * ```ts
      * // Generate all routes except delete operations
      * excludedRoutes?: ['delete', 'deleteOne']
      * ```
