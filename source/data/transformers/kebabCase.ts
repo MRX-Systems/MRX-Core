@@ -1,16 +1,16 @@
-import type { KeyTransformer } from '#/data/types/keyTransformer';
+import type { CaseTransformer } from '#/data/types/keyTransformer';
 
 /**
- * Transforms string keys into kebab-case format.
- * Implements ({@link KeyTransformer}).
+ * Transforms string into kebab-case format.
+ * Implements ({@link CaseTransformer}).
  */
-export class KebabCaseTransformer implements KeyTransformer {
+export class KebabCaseTransformer implements CaseTransformer {
     /**
-     * Transforms a single key from any case to kebab-case.
+     * Transforms a single string from any case to kebab-case.
      *
-     * @param key - The key string to transform into kebab-case.
+     * @param str - The string to transform into kebab-case.
      *
-     * @returns The key string transformed into kebab-case, with all letters in lower case and words separated by hyphens.
+     * @returns The string transformed into kebab-case, with all letters in lower case and words separated by hyphens.
      *
      * @example
      * transformKey('myKeyName');
@@ -22,8 +22,8 @@ export class KebabCaseTransformer implements KeyTransformer {
      * transformKey('my_long_key_name');
      * Returns "my-long-key-name"
      */
-    public transformKey(key: string): string {
-        return key
+    public convertCase(str: string): string {
+        return str
             .replace(/_/gu, '-')
             .replace(/(?<=[a-z])(?=[A-Z])/gu, '-')
             .replace(/(?<=[A-Z]+)(?=[A-Z][a-z])/gu, '-')

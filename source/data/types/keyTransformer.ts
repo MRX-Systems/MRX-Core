@@ -1,11 +1,8 @@
-/**
- * Interface for Key transformer.
- */
-export interface KeyTransformer {
+export interface CaseTransformer {
     /**
-     * Transforms a single key from any case to another case.
-     * @param key - The key string to transform.
-     * @returns The key string transformed into the desired case.
+     * Transforms a single string from any case to another case.
+     * @param str - The string to transform.
+     * @returns The string transformed into the desired case.
      */
-    transformKey(key: string): string;
+    convertCase(str: string): string;
 }

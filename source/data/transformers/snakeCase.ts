@@ -1,16 +1,16 @@
-import type { KeyTransformer } from '#/data/types/keyTransformer';
+import type { CaseTransformer } from '#/data/types/keyTransformer';
 
 /**
- * Transforms string keys into snake_case format.
- * Implements ({@link KeyTransformer}).
+ * Transforms string into snake_case format.
+ * Implements ({@link CaseTransformer}).
  */
-export class SnakeCaseTransformer implements KeyTransformer {
+export class SnakeCaseTransformer implements CaseTransformer {
     /**
-     * Transforms a single key from any case to snake_case.
+     * Transforms a single string from any case to snake_case.
      *
-     * @param key - The key string to transform into snake_case.
+     * @param str - The string to transform into snake_case.
      *
-     * @returns The key string transformed into snake_case, with underscores between words.
+     * @returns The string transformed into snake_case, with underscores between words.
      *
      * @example
      * transformKey('myKeyName');
@@ -22,8 +22,8 @@ export class SnakeCaseTransformer implements KeyTransformer {
      * transformKey('My-Key-Name');
      * Returns "my_key_name"
      */
-    public transformKey(key: string): string {
-        return key
+    public convertCase(str: string): string {
+        return str
             .replace(/(?<lower>[a-z])(?<upper>[A-Z])/gu, '$<lower>_$<upper>')
             .replace(/[-\s]/gu, '_')
             .toLowerCase();

@@ -1,16 +1,16 @@
-import type { KeyTransformer } from '#/data/types/keyTransformer';
+import type { CaseTransformer } from '#/data/types/keyTransformer';
 
 /**
- * Transforms string keys into camelCase format.
- * Implements ({@link KeyTransformer}).
+ * Transforms string into camelCase format.
+ * Implements ({@link CaseTransformer}).
  */
-export class CamelCaseTransformer implements KeyTransformer {
+export class CamelCaseTransformer implements CaseTransformer {
     /**
-     * Transforms a single key from any case to camelCase.
+     * Transforms a string from any case to camelCase.
      *
-     * @param key - The key string to transform into camelCase.
+     * @param str - The string to transform into camelCase.
      *
-     * @returns The key string transformed into camelCase.
+     * @returns The string transformed into camelCase.
      *
      * @example
      * transformKey('MyKeyName');
@@ -22,8 +22,8 @@ export class CamelCaseTransformer implements KeyTransformer {
      * transformKey('my_key_name');
      * Returns "myKeyName"
      */
-    public transformKey(key: string): string {
-        return key
+    public convertCase(str: string): string {
+        return str
             .replace(/(?:[-_][a-z])/giu, (group: string) => (group[1]).toUpperCase())
             .replace(/^[A-Z]/u, (firstLetter: string) => firstLetter.toLowerCase());
     }

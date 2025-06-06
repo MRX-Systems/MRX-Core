@@ -1,17 +1,17 @@
 import { CoreError } from '#/error/coreError';
 import { dataErrorKeys } from './enums/dataErrorKeys';
-import type { KeyTransformer } from './types/keyTransformer';
+import type { CaseTransformer } from './types/keyTransformer';
 
 /**
  * Checks if the provided data is null or undefined and throws an error if it is.
  *
- * @template TObject - The type of the data to be validated.
+ * @template TObject - The type of the data to be validated. Must be an object.
  *
  * @param data - The data to be validated.
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  */
-const _validateDataNull = <TObject>(data: TObject): void => {
+const _validateDataNull = <TObject extends object>(data: TObject): void => {
     if (data === null || data === undefined)
         throw new CoreError({
             key: dataErrorKeys.dataIsNull,
@@ -34,6 +34,13 @@ const _validateDataNull = <TObject>(data: TObject): void => {
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  *
  * @returns The filtered data object with the specified keys excluded. ({@link TObject})
+ *
+ * @example
+ * ```typescript
+ * const object = { test: 'test', exclude: 'exclude' }; // type is { test: string, exclude: string }
+ * const filtered = filterByKeyExclusion(object, ['exclude']); // new type is { test: string } (add third parameter to exclude null/undefined values)
+ * console.log(filtered); // { test: 'test' }
+ * ```
  */
 export const filterByKeyExclusion = <
     TObject extends Readonly<object>,
@@ -62,7 +69,6 @@ export const filterByKeyExclusion = <
             filteredData[key] = data[typedKey];
     });
 
-    // Type assertion is required due to conditional return type
     return filteredData as TExcludeNullUndefined extends true
         ? Partial<Omit<TObject, TExcludedKeys>>
         : Omit<TObject, TExcludedKeys>;
@@ -78,11 +84,17 @@ export const filterByKeyExclusion = <
  * @param data - The data object to be filtered.
  * @param keys - The array of keys to exclude from the data object and all nested objects. (Can be empty)
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded. Default is false.
- * @param throwIfDataIsNull - Flag to determine if an error should be thrown when data is null or undefined. Default is true.
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined and throwIfDataIsNull is true. ({@link dataErrorKeys.dataIsNull})
  *
  * @returns A new object with the specified keys excluded recursively.
+ *
+ * @example
+ * ```typescript
+ * const object = { test: 'test', nested: { exclude: 'exclude', value: 'value' } };
+ * const filtered = filterByKeyExclusionRecursive(object, ['exclude']); // add third parameter to exclude null/undefined values
+ * console.log(filtered); // { test: 'test', nested: { value: 'value' } }
+ * ```
  */
 export const filterByKeyExclusionRecursive = <
     TObject extends Readonly<object>,
@@ -143,21 +155,14 @@ export const filterByKeyExclusionRecursive = <
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  *
- * @example
- * ```ts
- * const object = { test: 'test', exclude: 'exclude' };
- * const filtered = filterByKeyInclusion(object, ['test']);
- * console.log(filtered); // { test: 'test' }
- * ```
- *
- * @example
- * ```ts
- * const object = { test: 'test', exclude: null };
- * const filtered = filterByKeyInclusion(object, ['test'], true);
- * console.log(filtered); // { test: 'test' }
- * ```
- *
  * @returns The filtered data object with only the specified keys included. ({@link TObject})
+ *
+ * @example
+ * ```typescript
+ * const object = { test: 'test', exclude: 'exclude' }; // type is { test: string, exclude: string }
+ * const filtered = filterByKeyInclusion(object, ['test']); // new type is { test: string } (add third parameter to exclude null/undefined values)
+ * console.log(filtered); // { test: 'test' }
+ * ```
  */
 export const filterByKeyInclusion = <
     TObject extends Readonly<object>,
@@ -174,7 +179,6 @@ export const filterByKeyInclusion = <
     if (throwIfDataIsNull)
         _validateDataNull(data);
 
-    // The result object will be Partial if excludeNullUndefined is true, otherwise Pick
     const filteredData: Record<string, unknown> = {};
 
     (keys as readonly (keyof TObject)[]).forEach((key: keyof TObject): void => {
@@ -203,21 +207,14 @@ export const filterByKeyInclusion = <
  *
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  *
+ * @returns The filtered data object with properties satisfying the predicate. ({@link TObject})
+ *
  * @example
  * ```ts
  * const object = { test: 'test', exclude: 'exclude' };
- * const filtered = filterByValue(object, (value: unknown): boolean => value === 'test');
+ * const filtered = filterByValue(object, (value: unknown): boolean => value === 'test'); // you can also add third parameter to exclude null/undefined values
  * console.log(filtered); // { test: 'test' }
  * ```
- *
- * @example
- * ```ts
- * const object = { test: 'test', exclude: null };
- * const filtered = filterByValue(object, (value: unknown): boolean => value === 'test', true);
- * console.log(filtered); // { test: 'test' }
- * ```
- *
- * @returns The filtered data object with properties satisfying the predicate. ({@link TObject})
  */
 export const filterByValue = <TObject extends Readonly<object>>(
     data: Readonly<TObject>,
@@ -245,14 +242,14 @@ export const filterByValue = <TObject extends Readonly<object>>(
  *
  * @throws ({@link CoreError}) - If the provided data object is null or undefined. ({@link dataErrorKeys.dataIsNull})
  * @throws ({@link CoreError}) - If the provided data object is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
-*
+ *
+ * @returns A new object with transformed keys. ({@link TObject})
+ *
  * @example
  * ```ts
  * // Return { myKey: "value" }
  * transformKeys(\{ "my-key": "value" \}, new BasaltCamelCaseTransformer());
  * ```
- *
- * @returns A new object with transformed keys. ({@link TObject})
  */
 export const transformKeys= <TObject extends Readonly<object>>(
     data: Readonly<TObject>,

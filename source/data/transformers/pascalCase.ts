@@ -1,16 +1,16 @@
-import type { KeyTransformer } from '#/data/types/keyTransformer';
+import type { CaseTransformer } from '#/data/types/keyTransformer';
 
 /**
- * Transforms string keys into PascalCase format.
- * Implements ({@link KeyTransformer}).
+ * Transforms string into PascalCase format.
+ * Implements ({@link CaseTransformer}).
  */
-export class PascalCaseTransformer implements KeyTransformer {
+export class PascalCaseTransformer implements CaseTransformer {
     /**
-     * Transforms a single key from any case to PascalCase.
+     * Transforms a single string from any case to PascalCase.
      *
-     * @param key - The key string to transform into PascalCase.
+     * @param str - The string to transform into PascalCase.
      *
-     * @returns The key string transformed into PascalCase, with the first letter of each word capitalized.
+     * @returns The string transformed into PascalCase, with the first letter of each word capitalized.
      *
      * @example
      * transformKey('my_key_name');
@@ -22,8 +22,8 @@ export class PascalCaseTransformer implements KeyTransformer {
      * transformKey('myLongKeyName');
      * Returns "MyLongKeyName"
      */
-    public transformKey(key: string): string {
-        const camelCaseKey: string = key.replace(/(?:[-_][a-z])/giu, (group: string) => (group[1]).toUpperCase());
+    public convertCase(str: string): string {
+        const camelCaseKey: string = str.replace(/(?:[-_][a-z])/giu, (group: string) => (group[1]).toUpperCase());
         return camelCaseKey.charAt(0).toUpperCase() + camelCaseKey.slice(1);
     }
 }
