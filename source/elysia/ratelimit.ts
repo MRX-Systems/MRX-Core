@@ -26,7 +26,7 @@ import type { RateLimitOptions } from './types/rateLimitOptions';
  * @returns An {@link Elysia} plugin that adds rate limiting functionality
  *
  * @example
- * ```typescript
+ * ```ts
  * import { Elysia } from 'elysia';
  * import { Redis } from '#/core/store/redis';
  * import { rateLimitPlugin } from '#/core/elysia/plugin/ratelimit';

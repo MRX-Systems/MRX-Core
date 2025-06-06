@@ -2,7 +2,7 @@
  * Options to configure the MSSQL database connection.
  *
  * @example
- * ```typescript
+ * ```ts
  * const options: MSSQLDatabaseOptions = {
  *   databaseName: 'my_database',
  *   host: 'localhost',
@@ -12,8 +12,7 @@
  *   encrypt: true,
  *   poolMin: 5,
  *   poolMax: 20,
- *   debug: true,
- *   pulse: true
+ *   isEventEnabled: true
  * };
  * ```
  */
@@ -67,11 +66,9 @@ export interface MSSQLDatabaseOptions {
      * (select, create, update, delete) for all tables, allowing for easy monitoring
      * and event-driven programming.
      *
-     * [TODO] - Change this section when working on the AND-169 ticket.
-     *
      * @defaultValue false
      * @example
-     * ```typescript
+     * ```ts
      * const mssql = new MSSQL(options);
      * await mssql.connect();
      * // SELECTED, CREATED, UPDATED, DELETED

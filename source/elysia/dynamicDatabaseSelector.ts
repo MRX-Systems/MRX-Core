@@ -26,7 +26,7 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  * @returns An {@link Elysia} plugin that adds dynamic database selection functionality
  *
  * @example
- * ```typescript
+ * ```ts
  * // Create and register the plugin
  * const app = new Elysia()
  *   .use(dynamicDatabaseSelectorPlugin({

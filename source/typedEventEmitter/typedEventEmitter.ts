@@ -17,7 +17,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns Whether the event had listeners.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.emit('foo', 'hello');
@@ -36,7 +36,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.on('foo', payload => {
@@ -57,7 +57,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ bar: [number] }> {}
      * const emitter = new MyEmitter();
      * emitter.once('bar', payload => {
@@ -78,7 +78,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ baz: [boolean] }> {}
      * const emitter = new MyEmitter();
      * emitter.addListener('baz', payload => {
@@ -99,7 +99,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: string }> {}
      * const emitter = new MyEmitter();
      * const handler = (payload: string) => {};
@@ -120,7 +120,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * const handler = (payload: string) => {};
@@ -140,7 +140,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns The number of listeners.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.on('foo', () => {});
@@ -159,7 +159,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns An array of listener functions.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.on('foo', () => {});
@@ -178,7 +178,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns An array of raw listener functions.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.on('foo', () => {});
@@ -198,7 +198,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.prependListener('foo', payload => {
@@ -219,7 +219,7 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * @returns This instance for chaining.
      *
      * @example
-     * ```typescript
+     * ```ts
      * class MyEmitter extends TypedEventEmitter<{ foo: [string] }> {}
      * const emitter = new MyEmitter();
      * emitter.prependOnceListener('foo', payload => {

@@ -83,9 +83,9 @@ class CustomTestRepository extends Repository<{ id: number; name: string; email?
      * @param pattern - The name pattern to search for
      * @returns Promise resolving to matching records
      */
-    public async findByNamePattern(pattern: string): Promise<Array<{ id: number; name: string; email?: string }>> {
+    public async findByNamePattern(pattern: string): Promise<{ id: number; name: string; email?: string }[]> {
         return this.find({
-            filter: {
+            filters: {
                 name: { $like: `%${pattern}%` }
             }
         });
@@ -125,7 +125,7 @@ describe('MSSQL', () => {
         test('should create MSSQL instance with complete configuration', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
-            
+
             expect(mssql).toBeInstanceOf(MSSQL);
             expect(mssql.databaseName).toBe(databaseOptions.databaseName);
             expect(mssql.isConnected).toBe(false);
@@ -134,7 +134,7 @@ describe('MSSQL', () => {
         test('should create MSSQL instance with minimal configuration', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(minimalDatabaseOptions);
-            
+
             expect(mssql).toBeInstanceOf(MSSQL);
             expect(mssql.databaseName).toBe(minimalDatabaseOptions.databaseName);
             expect(mssql.isConnected).toBe(false);
@@ -143,7 +143,7 @@ describe('MSSQL', () => {
         test('should create MSSQL instance with event system disabled by default', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
-            
+
             expect(mssql).toBeInstanceOf(MSSQL);
             // Events should be disabled by default based on test behavior
         });
@@ -151,7 +151,7 @@ describe('MSSQL', () => {
         test('should create MSSQL instance with event system explicitly enabled', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
-            
+
             expect(mssql).toBeInstanceOf(MSSQL);
         });
 
@@ -163,7 +163,7 @@ describe('MSSQL', () => {
                 poolMax: 5
             };
             const mssql = new MSSQL(customOptions);
-            
+
             expect(mssql).toBeInstanceOf(MSSQL);
         });
     });
@@ -173,23 +173,23 @@ describe('MSSQL', () => {
             test('should establish connection to database with valid credentials', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 await mssql.connect();
-                
+
                 expect(mssql.isConnected).toBe(true);
                 expect(mssql.db).toBeDefined();
-                
+
                 await mssql.disconnect();
             });
 
             test('should maintain connection state after successful connection', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 expect(mssql.isConnected).toBe(false);
                 await mssql.connect();
                 expect(mssql.isConnected).toBe(true);
-                
+
                 await mssql.disconnect();
             });
 
@@ -197,12 +197,12 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql1 = new MSSQL(databaseOptions);
                 const mssql2 = new MSSQL(databaseOptions);
-                
+
                 await Promise.all([mssql1.connect(), mssql2.connect()]);
-                
+
                 expect(mssql1.isConnected).toBe(true);
                 expect(mssql2.isConnected).toBe(true);
-                
+
                 await Promise.all([mssql1.disconnect(), mssql2.disconnect()]);
             });
         });
@@ -211,8 +211,8 @@ describe('MSSQL', () => {
             test('should throw descriptive error for invalid host', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(invalidDatabaseOptions);
-                
-                await expect(mssql.connect()).rejects.toThrow(
+
+                expect(mssql.connect()).rejects.toThrow(
                     `Failed to connect to the database: "${databaseOptions.databaseName}".`
                 );
             });
@@ -226,8 +226,8 @@ describe('MSSQL', () => {
                     connectionTimeout: 2500
                 };
                 const mssql = new MSSQL(invalidCredentials);
-                
-                await expect(mssql.connect()).rejects.toThrow(
+
+                expect(mssql.connect()).rejects.toThrow(
                     `Failed to connect to the database: "${databaseOptions.databaseName}".`
                 );
             });
@@ -240,8 +240,8 @@ describe('MSSQL', () => {
                     connectionTimeout: 2500
                 };
                 const mssql = new MSSQL(invalidPort);
-                
-                await expect(mssql.connect()).rejects.toThrow(
+
+                expect(mssql.connect()).rejects.toThrow(
                     `Failed to connect to the database: "${databaseOptions.databaseName}".`
                 );
             });
@@ -253,8 +253,8 @@ describe('MSSQL', () => {
                     connectionTimeout: 1000
                 };
                 const mssql = new MSSQL(timeoutOptions);
-                
-                await expect(mssql.connect()).rejects.toThrow(
+
+                expect(mssql.connect()).rejects.toThrow(
                     `Failed to connect to the database: "${databaseOptions.databaseName}".`
                 );
             });
@@ -264,10 +264,10 @@ describe('MSSQL', () => {
             test('should successfully disconnect from established connection', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 await mssql.connect();
                 expect(mssql.isConnected).toBe(true);
-                
+
                 await mssql.disconnect();
                 expect(mssql.isConnected).toBe(false);
             });
@@ -275,8 +275,8 @@ describe('MSSQL', () => {
             test('should throw error when disconnecting without connection', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
-                await expect(mssql.disconnect()).rejects.toThrow(
+
+                expect(mssql.disconnect()).rejects.toThrow(
                     `Database "${databaseOptions.databaseName}" is not connected.`
                 );
             });
@@ -284,11 +284,11 @@ describe('MSSQL', () => {
             test('should handle multiple disconnect attempts gracefully', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 await mssql.connect();
                 await mssql.disconnect();
-                
-                await expect(mssql.disconnect()).rejects.toThrow(
+
+                expect(mssql.disconnect()).rejects.toThrow(
                     `Database "${databaseOptions.databaseName}" is not connected.`
                 );
             });
@@ -301,12 +301,12 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const queryEventSpy = mock();
                 mssql.on('query', queryEventSpy);
-                
+
                 await mssql.db(primaryTestTable).select('*').limit(1);
-                
+
                 expect(queryEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -315,12 +315,12 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: false });
                 await mssql.connect();
-                
+
                 const queryEventSpy = mock();
                 mssql.on('query', queryEventSpy);
-                
+
                 await mssql.db(primaryTestTable).select('*').limit(1);
-                
+
                 expect(queryEventSpy).not.toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -329,12 +329,12 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const responseEventSpy = mock();
                 mssql.on('query:response', responseEventSpy);
-                
+
                 await mssql.db(primaryTestTable).select('*').limit(1);
-                
+
                 expect(responseEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -343,16 +343,16 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const errorEventSpy = mock();
                 mssql.on('query:error', errorEventSpy);
-                
+
                 try {
                     await mssql.db('non_existent_table').select('*');
                 } catch {
                     // Expected error - ignore
                 }
-                
+
                 expect(errorEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -361,15 +361,15 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const eventSequence: string[] = [];
-                
+
                 mssql.on('query', () => eventSequence.push('query'));
                 mssql.on('query:response', () => eventSequence.push('query:response'));
                 mssql.getTable(primaryTestTable).on('selected', () => eventSequence.push('table:selected'));
-                
+
                 await mssql.db(primaryTestTable).select('*').limit(1);
-                
+
                 expect(eventSequence).toEqual(['query', 'query:response', 'table:selected']);
                 await mssql.disconnect();
             });
@@ -378,18 +378,18 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const eventSequence: string[] = [];
-                
+
                 mssql.on('query', () => eventSequence.push('query'));
                 mssql.on('query:error', () => eventSequence.push('query:error'));
-                
+
                 try {
                     await mssql.db('non_existent_table').select('*');
                 } catch {
                     // Expected error - ignore
                 }
-                
+
                 expect(eventSequence).toEqual(['query', 'query:error']);
                 await mssql.disconnect();
             });
@@ -400,12 +400,12 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const selectedEventSpy = mock();
                 mssql.getTable(primaryTestTable).on('selected', selectedEventSpy);
-                
+
                 await mssql.db(primaryTestTable).select('*').limit(1);
-                
+
                 expect(selectedEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -414,12 +414,12 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 const insertedEventSpy = mock();
                 mssql.getTable(primaryTestTable).on('inserted', insertedEventSpy);
-                
+
                 await mssql.db(primaryTestTable).insert({ name: 'test-insert', email: 'test@example.com' });
-                
+
                 expect(insertedEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -428,15 +428,15 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 // Insert a record to update
                 await mssql.db(primaryTestTable).insert({ name: 'test-update', email: 'update@example.com' });
-                
+
                 const updatedEventSpy = mock();
                 mssql.getTable(primaryTestTable).on('updated', updatedEventSpy);
-                
+
                 await mssql.db(primaryTestTable).where('name', 'test-update').update({ email: 'updated@example.com' });
-                
+
                 expect(updatedEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -445,15 +445,15 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
-                
+
                 // Insert a record to delete
                 await mssql.db(primaryTestTable).insert({ name: 'test-delete', email: 'delete@example.com' });
-                
+
                 const deletedEventSpy = mock();
                 mssql.getTable(primaryTestTable).on('deleted', deletedEventSpy);
-                
+
                 await mssql.db(primaryTestTable).where('name', 'test-delete').del();
-                
+
                 expect(deletedEventSpy).toHaveBeenCalled();
                 await mssql.disconnect();
             });
@@ -462,28 +462,28 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: false });
                 await mssql.connect();
-                
+
                 const selectedEventSpy = mock();
                 const insertedEventSpy = mock();
                 const updatedEventSpy = mock();
                 const deletedEventSpy = mock();
-                
+
                 mssql.getTable(primaryTestTable).on('selected', selectedEventSpy);
                 mssql.getTable(primaryTestTable).on('inserted', insertedEventSpy);
                 mssql.getTable(primaryTestTable).on('updated', updatedEventSpy);
                 mssql.getTable(primaryTestTable).on('deleted', deletedEventSpy);
-                
+
                 // Perform all operations
                 await mssql.db(primaryTestTable).select('*').limit(1);
                 await mssql.db(primaryTestTable).insert({ name: 'test-no-events', email: 'noevents@example.com' });
                 await mssql.db(primaryTestTable).where('name', 'test-no-events').update({ email: 'updated-noevents@example.com' });
                 await mssql.db(primaryTestTable).where('name', 'test-no-events').del();
-                
+
                 expect(selectedEventSpy).not.toHaveBeenCalled();
                 expect(insertedEventSpy).not.toHaveBeenCalled();
                 expect(updatedEventSpy).not.toHaveBeenCalled();
                 expect(deletedEventSpy).not.toHaveBeenCalled();
-                
+
                 await mssql.disconnect();
             });
         });
@@ -495,9 +495,9 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const repository = mssql.getRepository(primaryTestTable);
-                
+
                 expect(repository).toBeInstanceOf(Repository);
                 await mssql.disconnect();
             });
@@ -506,10 +506,10 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const repository1 = mssql.getRepository(primaryTestTable);
                 const repository2 = mssql.getRepository(primaryTestTable);
-                
+
                 expect(repository1).toBe(repository2);
                 await mssql.disconnect();
             });
@@ -517,7 +517,7 @@ describe('MSSQL', () => {
             test('should throw error when accessing repository without connection', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 expect(() => mssql.getRepository(primaryTestTable)).toThrow(
                     `Database "${databaseOptions.databaseName}" is not connected.`
                 );
@@ -527,7 +527,7 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 expect(() => mssql.getRepository('non_existent_table')).toThrow(
                     'Table not found: "non_existent_table".'
                 );
@@ -540,9 +540,9 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const repository = mssql.getRepository(primaryTestTable, CustomTestRepository);
-                
+
                 expect(repository).toBeInstanceOf(CustomTestRepository);
                 expect(repository.getTestValue()).toBe('custom-repository-test-value');
                 await mssql.disconnect();
@@ -552,20 +552,20 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Insert test data
                 await mssql.db(primaryTestTable).insert([
                     { name: 'John Test', email: 'john@test.com' },
                     { name: 'Jane Test', email: 'jane@test.com' },
                     { name: 'Bob Sample', email: 'bob@sample.com' }
                 ]);
-                
+
                 const repository = mssql.getRepository(primaryTestTable, CustomTestRepository);
                 const results = await repository.findByNamePattern('Test');
-                
+
                 expect(results).toHaveLength(2);
-                expect(results.every(r => r.name.includes('Test'))).toBe(true);
-                
+                expect(results.every((r) => r.name.includes('Test'))).toBe(true);
+
                 await mssql.disconnect();
             });
 
@@ -573,10 +573,10 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const repository1 = mssql.getRepository(primaryTestTable, CustomTestRepository);
                 const repository2 = mssql.getRepository(primaryTestTable, CustomTestRepository);
-                
+
                 expect(repository1).toBe(repository2);
                 expect(repository1).toBeInstanceOf(CustomTestRepository);
                 await mssql.disconnect();
@@ -586,14 +586,14 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const defaultRepo = mssql.getRepository(primaryTestTable);
                 const customRepo = mssql.getRepository(primaryTestTable, CustomTestRepository);
-                
+
                 expect(defaultRepo).toBeInstanceOf(Repository);
                 expect(customRepo).toBeInstanceOf(CustomTestRepository);
                 expect(defaultRepo).not.toBe(customRepo);
-                
+
                 await mssql.disconnect();
             });
         });
@@ -603,14 +603,14 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Create a repository to populate the collection
                 mssql.getRepository(primaryTestTable);
-                
-                const repositories = mssql.repositories;
+
+                const { repositories } = mssql;
                 expect(repositories).toBeDefined();
                 expect(typeof repositories).toBe('object');
-                
+
                 await mssql.disconnect();
             });
 
@@ -618,20 +618,20 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Create multiple repositories
                 const repo1 = mssql.getRepository(primaryTestTable);
                 const repo2 = mssql.getRepository(secondaryTestTable);
                 const repo3 = mssql.getRepository(complexTestTable);
-                
-                const repositories = mssql.repositories;
+
+                const { repositories } = mssql;
                 expect(repositories).toBeDefined();
-                
+
                 // Verify repositories are accessible
                 expect(repo1).toBeInstanceOf(Repository);
                 expect(repo2).toBeInstanceOf(Repository);
                 expect(repo3).toBeInstanceOf(Repository);
-                
+
                 await mssql.disconnect();
             });
         });
@@ -643,9 +643,9 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const table = mssql.getTable(primaryTestTable);
-                
+
                 expect(table).toBeDefined();
                 expect(typeof table).toBe('object');
                 await mssql.disconnect();
@@ -655,10 +655,10 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 const table1 = mssql.getTable(primaryTestTable);
                 const table2 = mssql.getTable(primaryTestTable);
-                
+
                 expect(table1).toBe(table2);
                 await mssql.disconnect();
             });
@@ -666,7 +666,7 @@ describe('MSSQL', () => {
             test('should throw error when accessing table without connection', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 expect(() => mssql.getTable(primaryTestTable)).toThrow(
                     `Database "${databaseOptions.databaseName}" is not connected.`
                 );
@@ -676,7 +676,7 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 expect(() => mssql.getTable('non_existent_table')).toThrow(
                     'Table not found: "non_existent_table".'
                 );
@@ -687,11 +687,11 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Test with underscore (our test tables have underscores)
                 const table = mssql.getTable(primaryTestTable);
                 expect(table).toBeDefined();
-                
+
                 await mssql.disconnect();
             });
         });
@@ -701,14 +701,14 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Access a table to populate the collection
                 mssql.getTable(primaryTestTable);
-                
-                const tables = mssql.tables;
+
+                const { tables } = mssql;
                 expect(tables).toBeDefined();
                 expect(typeof tables).toBe('object');
-                
+
                 await mssql.disconnect();
             });
 
@@ -716,20 +716,20 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Access multiple tables
                 const table1 = mssql.getTable(primaryTestTable);
                 const table2 = mssql.getTable(secondaryTestTable);
                 const table3 = mssql.getTable(complexTestTable);
-                
-                const tables = mssql.tables;
+
+                const { tables } = mssql;
                 expect(tables).toBeDefined();
-                
+
                 // Verify tables are accessible
                 expect(table1).toBeDefined();
                 expect(table2).toBeDefined();
                 expect(table3).toBeDefined();
-                
+
                 await mssql.disconnect();
             });
         });
@@ -741,19 +741,19 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
-                const db = mssql.db;
-                
+
+                const { db } = mssql;
+
                 expect(db).toBeDefined();
                 expect(typeof db).toBe('function'); // Knex instance is a function
-                
+
                 await mssql.disconnect();
             });
 
             test('should throw error when accessing database instance without connection', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 expect(() => mssql.db).toThrow(
                     `Database "${databaseOptions.databaseName}" is not connected.`
                 );
@@ -763,17 +763,17 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
+
                 // Insert test data
                 await mssql.db(primaryTestTable).insert({ name: 'db-test', email: 'db@test.com' });
-                
+
                 // Query through database instance
                 const results = await mssql.db(primaryTestTable).where('name', 'db-test').select('*');
-                
+
                 expect(results).toHaveLength(1);
                 expect(results[0].name).toBe('db-test');
                 expect(results[0].email).toBe('db@test.com');
-                
+
                 await mssql.disconnect();
             });
         });
@@ -782,24 +782,24 @@ describe('MSSQL', () => {
             test('should return correct database name', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 expect(mssql.databaseName).toBe(databaseOptions.databaseName);
             });
 
             test('should return correct connection status when not connected', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 expect(mssql.isConnected).toBe(false);
             });
 
             test('should return correct connection status when connected', async () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
-                
+
                 await mssql.connect();
                 expect(mssql.isConnected).toBe(true);
-                
+
                 await mssql.disconnect();
                 expect(mssql.isConnected).toBe(false);
             });
@@ -808,11 +808,11 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
-                const tables = mssql.tables;
+
+                const { tables } = mssql;
                 expect(tables).toBeDefined();
                 expect(typeof tables).toBe('object');
-                
+
                 await mssql.disconnect();
             });
 
@@ -820,11 +820,11 @@ describe('MSSQL', () => {
                 const { MSSQL } = await import('#/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
-                
-                const repositories = mssql.repositories;
+
+                const { repositories } = mssql;
                 expect(repositories).toBeDefined();
                 expect(typeof repositories).toBe('object');
-                
+
                 await mssql.disconnect();
             });
         });
@@ -834,87 +834,84 @@ describe('MSSQL', () => {
         test('should handle concurrent connections from multiple instances', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const instances = Array.from({ length: 5 }, () => new MSSQL(databaseOptions));
-            
+
             // Connect all instances concurrently
-            await Promise.all(instances.map(instance => instance.connect()));
-            
+            await Promise.all(instances.map((instance) => instance.connect()));
+
             // Verify all connections are established
-            instances.forEach(instance => {
+            instances.forEach((instance) => {
                 expect(instance.isConnected).toBe(true);
             });
-            
+
             // Disconnect all instances
-            await Promise.all(instances.map(instance => instance.disconnect()));
+            await Promise.all(instances.map((instance) => instance.disconnect()));
         });
 
         test('should handle concurrent database operations', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             // Perform multiple concurrent operations
-            const operations = Array.from({ length: 10 }, (_, index) => 
-                mssql.db(primaryTestTable).insert({ 
-                    name: `concurrent-test-${index}`, 
-                    email: `concurrent${index}@test.com` 
-                })
-            );
-            
+            const operations = Array.from({ length: 10 }, (_, index) => mssql.db(primaryTestTable).insert({
+                name: `concurrent-test-${index}`,
+                email: `concurrent${index}@test.com`
+            }));
+
             await Promise.all(operations);
-            
+
             // Verify all records were inserted
             const results = await mssql.db(primaryTestTable)
                 .where('name', 'like', 'concurrent-test-%')
                 .select('*');
-            
+
             expect(results).toHaveLength(10);
-            
+
             await mssql.disconnect();
         });
 
         test('should handle rapid connect/disconnect cycles', async () => {
             const { MSSQL } = await import('#/database/mssql');
-            
+
             // Perform rapid connect/disconnect cycles with different instances
             const cycles = [];
-            for (let i = 0; i < 3; ++i) {
+            for (let i = 0; i < 3; ++i)
                 cycles.push(async () => {
                     const mssql = new MSSQL(databaseOptions);
                     await mssql.connect();
                     expect(mssql.isConnected).toBe(true);
-                    
+
                     // Perform a simple operation to verify connection
                     await mssql.db.raw('SELECT 1 as test');
-                    
+
                     await mssql.disconnect();
                     expect(mssql.isConnected).toBe(false);
                 });
-            }
-            
+
+
             // Execute cycles sequentially to avoid connection pool conflicts
-            for (const cycle of cycles) {
+            for (const cycle of cycles)
                 await cycle();
-            }
         });
 
         test('should handle concurrent repository access', async () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             // Access repositories concurrently
             const repositoryPromises = [
                 Promise.resolve(mssql.getRepository(primaryTestTable)),
                 Promise.resolve(mssql.getRepository(secondaryTestTable)),
                 Promise.resolve(mssql.getRepository(complexTestTable))
             ];
-            
+
             const repositories = await Promise.all(repositoryPromises);
-            
-            repositories.forEach(repo => {
+
+            repositories.forEach((repo) => {
                 expect(repo).toBeInstanceOf(Repository);
             });
-            
+
             await mssql.disconnect();
         });
     });
@@ -924,13 +921,13 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             const results = await mssql.db(primaryTestTable)
                 .where('name', 'non-existent-record')
                 .select('*');
-            
+
             expect(results).toEqual([]);
-            
+
             await mssql.disconnect();
         });
 
@@ -938,22 +935,22 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             const complexData = {
-                large_text: 'This is a very long text that tests the text field capacity and handling.',
+                largeText: 'This is a very long text that tests the text field capacity and handling.',
                 price: 999.99,
-                is_active: true,
+                isActive: true,
                 metadata: { key: 'value', nested: { array: [1, 2, 3] } }
             };
-            
+
             const [insertedId] = await mssql.db(complexTestTable).insert(complexData).returning('id');
-            const results = await mssql.db(complexTestTable).where('id', insertedId.id).select('*');
-            
+            const results = await mssql.db(complexTestTable).where('id', (insertedId as { id: number }).id).select('*');
+
             expect(results).toHaveLength(1);
-            expect(results[0].large_text).toBe(complexData.large_text);
+            expect(results[0].large_text).toBe(complexData.largeText);
             expect(results[0].price).toBe(complexData.price);
-            expect(results[0].is_active).toBe(complexData.is_active);
-            
+            expect(results[0].is_active).toBe(complexData.isActive);
+
             await mssql.disconnect();
         });
 
@@ -961,21 +958,21 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             // Insert record with null values
-            await mssql.db(primaryTestTable).insert({ 
-                name: 'null-test', 
-                email: null 
+            await mssql.db(primaryTestTable).insert({
+                name: 'null-test',
+                email: null
             });
-            
+
             const results = await mssql.db(primaryTestTable)
                 .where('name', 'null-test')
                 .select('*');
-            
+
             expect(results).toHaveLength(1);
             expect(results[0].name).toBe('null-test');
             expect(results[0].email).toBeNull();
-            
+
             await mssql.disconnect();
         });
 
@@ -983,26 +980,26 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             try {
                 await mssql.db.transaction(async (trx) => {
                     // Insert valid record
                     await trx(primaryTestTable).insert({ name: 'transaction-test', email: 'tx@test.com' });
-                    
+
                     // Attempt invalid operation to trigger rollback
                     await trx('non_existent_table').insert({ name: 'invalid' });
                 });
-            } catch (error) {
+            } catch {
                 // Expected error - transaction should rollback
             }
-            
+
             // Verify the first insert was rolled back
             const results = await mssql.db(primaryTestTable)
                 .where('name', 'transaction-test')
                 .select('*');
-            
+
             expect(results).toHaveLength(0);
-            
+
             await mssql.disconnect();
         });
 
@@ -1010,20 +1007,20 @@ describe('MSSQL', () => {
             const { MSSQL } = await import('#/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
-            
+
             const specialData = {
-                name: "O'Reilly & Co. - 'Special' Characters",
+                name: 'O\'Reilly & Co. - \'Special\' Characters',
                 email: 'special+chars@example.com'
             };
-            
+
             await mssql.db(primaryTestTable).insert(specialData);
             const results = await mssql.db(primaryTestTable)
                 .where('email', specialData.email)
                 .select('*');
-            
+
             expect(results).toHaveLength(1);
             expect(results[0].name).toBe(specialData.name);
-            
+
             await mssql.disconnect();
         });
     });
@@ -1033,7 +1030,7 @@ describe('MSSQL', () => {
         await knexInstance.schema.dropTableIfExists(complexTestTable);
         await knexInstance.schema.dropTableIfExists(secondaryTestTable);
         await knexInstance.schema.dropTableIfExists(primaryTestTable);
-        
+
         // Close database connection
         await knexInstance.destroy();
     });

@@ -6,7 +6,7 @@
  * @template TModel - The type of the object to order by.
  *
  * @example
- * ```typescript
+ * ```ts
  * type User = {
  *   id: number;
  *   name: string;

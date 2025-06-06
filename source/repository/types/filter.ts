@@ -7,7 +7,7 @@ import type { SelectedFields } from './selectedFields';
  * @template TModel - The model type to be used for the filter.
  *
  * @example
- * ```typescript
+ * ```ts
  * interface User {
  *    id: number;
  *   name: string;

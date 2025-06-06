@@ -144,14 +144,14 @@ export const filterByKeyExclusionRecursive = <
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  *
  * @example
- * ```typescript
+ * ```ts
  * const object = { test: 'test', exclude: 'exclude' };
  * const filtered = filterByKeyInclusion(object, ['test']);
  * console.log(filtered); // { test: 'test' }
  * ```
  *
  * @example
- * ```typescript
+ * ```ts
  * const object = { test: 'test', exclude: null };
  * const filtered = filterByKeyInclusion(object, ['test'], true);
  * console.log(filtered); // { test: 'test' }
@@ -204,14 +204,14 @@ export const filterByKeyInclusion = <
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  *
  * @example
- * ```typescript
+ * ```ts
  * const object = { test: 'test', exclude: 'exclude' };
  * const filtered = filterByValue(object, (value: unknown): boolean => value === 'test');
  * console.log(filtered); // { test: 'test' }
  * ```
  *
  * @example
- * ```typescript
+ * ```ts
  * const object = { test: 'test', exclude: null };
  * const filtered = filterByValue(object, (value: unknown): boolean => value === 'test', true);
  * console.log(filtered); // { test: 'test' }
@@ -247,7 +247,7 @@ export const filterByValue = <TObject extends Readonly<object>>(
  * @throws ({@link CoreError}) - If the provided data object is not a plain object. ({@link dataErrorKeys.dataMustBeObject})
 *
  * @example
- * ```typescript
+ * ```ts
  * // Return { myKey: "value" }
  * transformKeys(\{ "my-key": "value" \}, new BasaltCamelCaseTransformer());
  * ```

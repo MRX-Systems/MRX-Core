@@ -11,7 +11,7 @@ import type { SMTPOptions } from './types/smtpOptions';
  * the Nodemailer library. It supports connection pooling and error handling ({@link CoreError}).
  *
  * @example
- * ```typescript
+ * ```ts
  * const smtp = new SMTP({
  *   host: 'smtp.example.com',
  *   credentials: { user: 'user', pass: 'pass' }

@@ -10,10 +10,10 @@ import type { Transaction } from './transaction';
  */
 export interface QueryOptions<TModel> {
     /**
-     * The filter options to apply to the query. Can be a single object or an array of objects.
+     * The filters options to apply to the query. Can be a single object or an array of objects.
      * @see {@link Filter}
      */
-    filter?: Filter<NoInfer<TModel>> | Filter<NoInfer<TModel>>[];
+    filters?: Filter<NoInfer<TModel>> | Filter<NoInfer<TModel>>[];
     /**
      * The fields to select in the query. If not provided, all fields are selected. ({@link SelectedFields})
      */

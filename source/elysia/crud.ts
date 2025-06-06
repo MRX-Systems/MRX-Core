@@ -140,7 +140,7 @@ const handlerDefinition = {
         const repo = db.getRepository(tableName);
 
         const data = await repo.find({
-            filter: ctx.advancedSearch as Filter<unknown>[],
+            filters: ctx.advancedSearch as Filter<unknown>[],
             selectedFields: ctx.selectedFields as SelectedFields<unknown>,
             limit: (ctx.pagination as { limit: number; offset: number }).limit,
             offset: (ctx.pagination as { limit: number; offset: number }).offset
@@ -160,7 +160,7 @@ const handlerDefinition = {
         const { id } = ctx.params as { id: string | number };
 
         const data = await repo.findOne({
-            filter: {
+            filters: {
                 [primary[0]]: id
             } as Filter<unknown>
         });
@@ -174,7 +174,7 @@ const handlerDefinition = {
         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
         const repo = db.getRepository(tableName);
         const count = await repo.count({
-            filter: ctx.advancedSearch as Filter<unknown>[]
+            filters: ctx.advancedSearch as Filter<unknown>[]
         });
         return {
             message: `${count} records found for ${tableName}`,
@@ -194,7 +194,7 @@ const handlerDefinition = {
             });
 
         const data = await repo.update((ctx.body as Record<string, unknown>), {
-            filter: ctx.advancedSearch as Filter<unknown>[],
+            filters: ctx.advancedSearch as Filter<unknown>[],
             selectedFields: ctx.selectedField as SelectedFields<unknown>
         });
 
@@ -213,7 +213,7 @@ const handlerDefinition = {
         const { id } = ctx.params as { id: string | number };
 
         const data = await repo.update(ctx.body as Record<string, unknown>, {
-            filter: {
+            filters: {
                 [primary[0]]: id
             } as Filter<unknown>
         });
@@ -236,7 +236,7 @@ const handlerDefinition = {
             });
 
         const data = await repo.delete({
-            filter: ctx.advancedSearch as Filter<unknown>[],
+            filters: ctx.advancedSearch as Filter<unknown>[],
             selectedFields: ctx.selectedFields as SelectedFields<unknown>
         });
 
@@ -255,7 +255,7 @@ const handlerDefinition = {
         const { id } = ctx.params as { id: string | number };
 
         const data = await repo.delete({
-            filter: {
+            filters: {
                 [primary[0]]: id
             } as Filter<unknown>
         });

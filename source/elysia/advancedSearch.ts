@@ -2,7 +2,7 @@ import { TypeGuard, type Static, type TArray, type TObject, type TSchema, type T
 import { Elysia, t } from 'elysia';
 
 import { filterByKeyExclusion } from '#/data/data';
-import type { AdvancedSearch } from '#/repository/types/advancedSearch';
+import type { Filter } from '#/repository/types/filter';
 import type { OrderBy } from '#/repository/types/orderBy';
 import type { AdvancedSearchOptions } from './types/advancedSearchOptions';
 
@@ -235,7 +235,7 @@ export const advancedSearchPlugin = <
                     let rawAdvancedSearchQuery = query as Static<ReturnType<typeof createBaseSearchSchemaWithPagination<typeof baseSchema>>>;
 
                     const result: {
-                        readonly advancedSearch: AdvancedSearch<Static<TInferedObject>>[];
+                        readonly advancedSearch: Filter<Static<TInferedObject>>[];
                         readonly selectedFields: (keyof Static<TInferedObject>)[];
                         readonly orderBy?: OrderBy<Static<TInferedObject>>;
                         readonly pagination?: {

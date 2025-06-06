@@ -4,7 +4,7 @@ import type { Redis } from '#/store/redis';
  * Options to configure the rate limit plugin.
  *
  * @example
- * ```typescript
+ * ```ts
  * const options: RateLimitOptions = {
  *   redis: redisInstance, // Your Redis instance
  *   limit: 100,          // Allow 100 requests
