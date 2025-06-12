@@ -5,6 +5,7 @@ import {
 import { t } from 'elysia';
 
 import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/types/adaptiveWhereClauseSchema';
+import { isDateFromElysiaTypeBox } from './isDateFromElysiaTypeBox';
 
 /**
  * Creates a where clause schema with appropriate operators based on the property type.
@@ -27,8 +28,7 @@ export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(
     // string, number, date
     const strNumDate = (TypeGuard.IsString(schema)
         || TypeGuard.IsNumber(schema)
-        || TypeGuard.IsInteger(schema)
-        || TypeGuard.IsDate(schema))
+        || isDateFromElysiaTypeBox(schema))
         ? {
             $in: t.Array(schema, { minItems: 1, uniqueItems: true }),
             $nin: t.Array(schema, { minItems: 1, uniqueItems: true }),
@@ -39,8 +39,7 @@ export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(
 
     // number, date
     const numDate = (TypeGuard.IsNumber(schema)
-        || TypeGuard.IsInteger(schema)
-        || TypeGuard.IsDate(schema))
+        || isDateFromElysiaTypeBox(schema))
         ? {
             $lt: schema,
             $lte: schema,
