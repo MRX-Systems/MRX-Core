@@ -13,13 +13,25 @@ const baseSchema = t.Object({
 
 
 describe('createOrderBySchema', () => {
-    test('should create a tuple schema with correct basic structure', () => {
+    test('should have correct Kind', () => {
         const orderBySchema = createOrderBySchema(baseSchema);
-
         expect(orderBySchema[Kind]).toBe('Tuple');
+    });
+
+    test('should have type array', () => {
+        const orderBySchema = createOrderBySchema(baseSchema);
         expect(orderBySchema.type).toBe('array');
+    });
+
+    test('should have correct minItems and maxItems', () => {
+        const orderBySchema = createOrderBySchema(baseSchema);
         expect(orderBySchema.minItems).toBe(2);
         expect(orderBySchema.maxItems).toBe(2);
+    });
+
+    test('should have two items in tuple', () => {
+        const orderBySchema = createOrderBySchema(baseSchema);
+        expect(orderBySchema.items).toBeDefined();
         expect(orderBySchema.items).toHaveLength(2);
     });
 
