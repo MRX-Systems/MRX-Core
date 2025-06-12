@@ -8,6 +8,17 @@ export default [
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylistic,
     {
+        ignores: [
+            '**/sandbox/**',
+            '**/docs/**',
+            '**/docs/**',
+            '**/dist/**',
+            '**/node_modules/**',
+            '**/coverage/**',
+            '**/benchmark/**',
+        ]
+    },
+    {
         plugins: {
             '@stylistic': stylistic
         },    

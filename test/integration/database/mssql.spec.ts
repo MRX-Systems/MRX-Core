@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, mock, test } from 'bun:test';
 import { randomBytes } from 'crypto';
 import knex from 'knex';
 
-import { Repository } from '#/repository/repository';
+import { Repository } from '#/modules/repository/repository';
 
 /**
  * Database connection options for MSSQL testing.
@@ -123,7 +123,7 @@ describe('MSSQL', () => {
 
     describe('Constructor and Initialization', () => {
         test('should create MSSQL instance with complete configuration', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
 
             expect(mssql).toBeInstanceOf(MSSQL);
@@ -132,7 +132,7 @@ describe('MSSQL', () => {
         });
 
         test('should create MSSQL instance with minimal configuration', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(minimalDatabaseOptions);
 
             expect(mssql).toBeInstanceOf(MSSQL);
@@ -141,7 +141,7 @@ describe('MSSQL', () => {
         });
 
         test('should create MSSQL instance with event system disabled by default', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
 
             expect(mssql).toBeInstanceOf(MSSQL);
@@ -149,14 +149,14 @@ describe('MSSQL', () => {
         });
 
         test('should create MSSQL instance with event system explicitly enabled', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
 
             expect(mssql).toBeInstanceOf(MSSQL);
         });
 
         test('should handle configuration with custom pool settings', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const customOptions = {
                 ...databaseOptions,
                 poolMin: 1,
@@ -171,7 +171,7 @@ describe('MSSQL', () => {
     describe('Connection Management', () => {
         describe('Successful Connection Scenarios', () => {
             test('should establish connection to database with valid credentials', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 await mssql.connect();
@@ -183,7 +183,7 @@ describe('MSSQL', () => {
             });
 
             test('should maintain connection state after successful connection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(mssql.isConnected).toBe(false);
@@ -194,7 +194,7 @@ describe('MSSQL', () => {
             });
 
             test('should allow multiple connections with different instances', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql1 = new MSSQL(databaseOptions);
                 const mssql2 = new MSSQL(databaseOptions);
 
@@ -209,7 +209,7 @@ describe('MSSQL', () => {
 
         describe('Connection Failure Scenarios', () => {
             test('should throw descriptive error for invalid host', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(invalidDatabaseOptions);
 
                 expect(mssql.connect()).rejects.toThrow(
@@ -218,7 +218,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error for invalid credentials', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const invalidCredentials = {
                     ...databaseOptions,
                     user: 'invalid_user',
@@ -233,7 +233,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error for invalid port', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const invalidPort = {
                     ...databaseOptions,
                     port: 99999,
@@ -247,7 +247,7 @@ describe('MSSQL', () => {
             });
 
             test('should handle connection timeout gracefully', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const timeoutOptions = {
                     ...invalidDatabaseOptions,
                     connectionTimeout: 1000
@@ -262,7 +262,7 @@ describe('MSSQL', () => {
 
         describe('Disconnection Management', () => {
             test('should successfully disconnect from established connection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 await mssql.connect();
@@ -273,7 +273,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error when disconnecting without connection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(mssql.disconnect()).rejects.toThrow(
@@ -282,7 +282,7 @@ describe('MSSQL', () => {
             });
 
             test('should handle multiple disconnect attempts gracefully', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 await mssql.connect();
@@ -298,7 +298,7 @@ describe('MSSQL', () => {
     describe('Event System Functionality', () => {
         describe('Query Event Management', () => {
             test('should emit query events when event system is enabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -312,7 +312,7 @@ describe('MSSQL', () => {
             });
 
             test('should not emit query events when event system is disabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: false });
                 await mssql.connect();
 
@@ -326,7 +326,7 @@ describe('MSSQL', () => {
             });
 
             test('should emit query response events for successful queries', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -340,7 +340,7 @@ describe('MSSQL', () => {
             });
 
             test('should emit query error events for failed queries', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -358,7 +358,7 @@ describe('MSSQL', () => {
             });
 
             test('should maintain correct event order for successful operations', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -375,7 +375,7 @@ describe('MSSQL', () => {
             });
 
             test('should maintain correct event order for failed operations', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -397,7 +397,7 @@ describe('MSSQL', () => {
 
         describe('Table-Level Event Management', () => {
             test('should emit table selected events when event system is enabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -411,7 +411,7 @@ describe('MSSQL', () => {
             });
 
             test('should emit table inserted events when event system is enabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -425,7 +425,7 @@ describe('MSSQL', () => {
             });
 
             test('should emit table updated events when event system is enabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -442,7 +442,7 @@ describe('MSSQL', () => {
             });
 
             test('should emit table deleted events when event system is enabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
                 await mssql.connect();
 
@@ -459,7 +459,7 @@ describe('MSSQL', () => {
             });
 
             test('should not emit table events when event system is disabled', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: false });
                 await mssql.connect();
 
@@ -492,7 +492,7 @@ describe('MSSQL', () => {
     describe('Repository Management', () => {
         describe('Default Repository Operations', () => {
             test('should return default repository instance for valid table', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -503,7 +503,7 @@ describe('MSSQL', () => {
             });
 
             test('should return same repository instance for repeated calls', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -515,7 +515,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error when accessing repository without connection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(() => mssql.getRepository(primaryTestTable)).toThrow(
@@ -524,7 +524,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error for non-existent table repository', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -537,7 +537,7 @@ describe('MSSQL', () => {
 
         describe('Custom Repository Operations', () => {
             test('should return custom repository instance for valid table', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -549,7 +549,7 @@ describe('MSSQL', () => {
             });
 
             test('should maintain custom repository methods functionality', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -570,7 +570,7 @@ describe('MSSQL', () => {
             });
 
             test('should return same custom repository instance for repeated calls', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -583,7 +583,7 @@ describe('MSSQL', () => {
             });
 
             test('should handle switching between default and custom repositories', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -600,7 +600,7 @@ describe('MSSQL', () => {
 
         describe('Repository Collection Management', () => {
             test('should provide access to repositories collection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -615,7 +615,7 @@ describe('MSSQL', () => {
             });
 
             test('should handle multiple repositories in collection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -640,7 +640,7 @@ describe('MSSQL', () => {
     describe('Table Management', () => {
         describe('Table Instance Operations', () => {
             test('should return table instance for valid table name', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -652,7 +652,7 @@ describe('MSSQL', () => {
             });
 
             test('should return same table instance for repeated calls', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -664,7 +664,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error when accessing table without connection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(() => mssql.getTable(primaryTestTable)).toThrow(
@@ -673,7 +673,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error for non-existent table', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -684,7 +684,7 @@ describe('MSSQL', () => {
             });
 
             test('should handle table names with special characters', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -698,7 +698,7 @@ describe('MSSQL', () => {
 
         describe('Table Collection Management', () => {
             test('should provide access to tables collection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -713,7 +713,7 @@ describe('MSSQL', () => {
             });
 
             test('should handle multiple tables in collection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -738,7 +738,7 @@ describe('MSSQL', () => {
     describe('Database Access and Getters', () => {
         describe('Database Instance Access', () => {
             test('should provide access to knex database instance when connected', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -751,7 +751,7 @@ describe('MSSQL', () => {
             });
 
             test('should throw error when accessing database instance without connection', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(() => mssql.db).toThrow(
@@ -760,7 +760,7 @@ describe('MSSQL', () => {
             });
 
             test('should allow database queries through knex instance', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -780,21 +780,21 @@ describe('MSSQL', () => {
 
         describe('Property Getters', () => {
             test('should return correct database name', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(mssql.databaseName).toBe(databaseOptions.databaseName);
             });
 
             test('should return correct connection status when not connected', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 expect(mssql.isConnected).toBe(false);
             });
 
             test('should return correct connection status when connected', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
 
                 await mssql.connect();
@@ -805,7 +805,7 @@ describe('MSSQL', () => {
             });
 
             test('should provide access to tables collection through getter', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -817,7 +817,7 @@ describe('MSSQL', () => {
             });
 
             test('should provide access to repositories collection through getter', async () => {
-                const { MSSQL } = await import('#/database/mssql');
+                const { MSSQL } = await import('#/modules/database/mssql');
                 const mssql = new MSSQL(databaseOptions);
                 await mssql.connect();
 
@@ -832,7 +832,7 @@ describe('MSSQL', () => {
 
     describe('Concurrent Operations and Stress Testing', () => {
         test('should handle concurrent connections from multiple instances', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const instances = Array.from({ length: 5 }, () => new MSSQL(databaseOptions));
 
             // Connect all instances concurrently
@@ -848,7 +848,7 @@ describe('MSSQL', () => {
         });
 
         test('should handle concurrent database operations', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 
@@ -871,7 +871,7 @@ describe('MSSQL', () => {
         });
 
         test('should handle rapid connect/disconnect cycles', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
 
             // Perform rapid connect/disconnect cycles with different instances
             const cycles = [];
@@ -895,7 +895,7 @@ describe('MSSQL', () => {
         });
 
         test('should handle concurrent repository access', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 
@@ -918,7 +918,7 @@ describe('MSSQL', () => {
 
     describe('Edge Cases and Error Handling', () => {
         test('should handle empty result sets gracefully', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 
@@ -932,14 +932,16 @@ describe('MSSQL', () => {
         });
 
         test('should handle complex data types in operations', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 
             const complexData = {
-                largeText: 'This is a very long text that tests the text field capacity and handling.',
+                // eslint-disable-next-line camelcase
+                large_text: 'This is a very long text that tests the text field capacity and handling.',
                 price: 999.99,
-                isActive: true,
+                // eslint-disable-next-line camelcase
+                is_active: true,
                 metadata: { key: 'value', nested: { array: [1, 2, 3] } }
             };
 
@@ -947,15 +949,15 @@ describe('MSSQL', () => {
             const results = await mssql.db(complexTestTable).where('id', (insertedId as { id: number }).id).select('*');
 
             expect(results).toHaveLength(1);
-            expect(results[0].large_text).toBe(complexData.largeText);
+            expect(results[0].large_text).toBe(complexData.large_text);
             expect(results[0].price).toBe(complexData.price);
-            expect(results[0].is_active).toBe(complexData.isActive);
+            expect(results[0].is_active).toBe(complexData.is_active);
 
             await mssql.disconnect();
         });
 
         test('should handle null and undefined values properly', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 
@@ -977,7 +979,7 @@ describe('MSSQL', () => {
         });
 
         test('should handle transactions rollback on error', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 
@@ -1004,7 +1006,7 @@ describe('MSSQL', () => {
         });
 
         test('should handle special characters in data', async () => {
-            const { MSSQL } = await import('#/database/mssql');
+            const { MSSQL } = await import('#/modules/database/mssql');
             const mssql = new MSSQL(databaseOptions);
             await mssql.connect();
 

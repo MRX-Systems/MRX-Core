@@ -1,4 +1,4 @@
 export * from './env';
-export * from './isIsoDateString';
+export * from './isDateString';
 export * from './stream';
 
