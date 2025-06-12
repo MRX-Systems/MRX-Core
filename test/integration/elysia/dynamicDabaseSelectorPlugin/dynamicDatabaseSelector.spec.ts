@@ -99,7 +99,7 @@ describe('Database Switcher Plugin', () => {
             const res = await app.handle(new Request('http://localhost:3000/'));
             const data = await res.json();
             expect(data).toEqual({
-                key: 'core.error.elysia.dynamic_database_key_not_found',
+                key: 'core.error.elysia.dynamicDatabaseSelector.key_not_found',
                 message: 'Dynamic Database key not found in the request headers.'
             });
             expect(res.status).toBe(400);

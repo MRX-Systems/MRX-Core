@@ -164,7 +164,14 @@ describe('filterByKeyExclusionRecursive', () => {
                     nested3: {
                         foo: 'nested4Test'
                     }
-                }
+                },
+                nested3: [
+                    {
+                        a: 'nested4Test',
+                        b: 'nested4Exclude',
+                        foo: 'e'
+                    }
+                ]
             };
             const filtered: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['foo']);
             expect(filtered).toEqual({
@@ -178,10 +185,14 @@ describe('filterByKeyExclusionRecursive', () => {
                     a: 'nested3Test',
                     b: 'nested3Exclude',
                     nested3: {}
-                }
+                },
+                nested3: [
+                    {
+                        a: 'nested4Test',
+                        b: 'nested4Exclude'
+                    }
+                ]
             });
-
-            console.log(JSON.stringify(filtered, null, 2));
 
             const filtered2: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['nested3']);
             expect(filtered2).toEqual({
@@ -200,7 +211,6 @@ describe('filterByKeyExclusionRecursive', () => {
                     b: 'nested3Exclude'
                 }
             });
-            console.log(JSON.stringify(filtered2, null, 2));
 
 
             const filtered3: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['a']);
@@ -217,7 +227,13 @@ describe('filterByKeyExclusionRecursive', () => {
                     nested3: {
                         foo: 'nested4Test'
                     }
-                }
+                },
+                nested3: [
+                    {
+                        b: 'nested4Exclude',
+                        foo: 'e'
+                    }
+                ]
             });
         });
     });

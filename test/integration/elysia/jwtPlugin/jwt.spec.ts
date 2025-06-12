@@ -180,7 +180,7 @@ describe('JWT Plugin', () => {
             const signData = await signRes.json();
             expect(signRes.status).toEqual(500);
             expect(signData).toEqual({
-                key: 'core.error.elysia.jwt_sign_error',
+                key: 'core.error.elysia.jwt.sign_error',
                 message: 'Error signing JWT.'
             });
             mock.restore();
