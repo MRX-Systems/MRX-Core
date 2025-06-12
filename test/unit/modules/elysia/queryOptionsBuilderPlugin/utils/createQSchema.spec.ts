@@ -13,17 +13,19 @@ const baseSchema = t.Object({
 
 
 describe('createQSchema', () => {
-    test('should create a union schema with correct basic structure', () => {
+    test('should have correct Kind', () => {
         const qSchema = createQSchema(baseSchema);
-
         expect(qSchema[Kind]).toBe('Union');
+    });
+
+    test('should have a good anyOf structure', () => {
+        const qSchema = createQSchema(baseSchema);
         expect(qSchema.anyOf).toBeDefined();
         expect(qSchema.anyOf).toHaveLength(3);
     });
 
     test('should have correct description', () => {
         const qSchema = createQSchema(baseSchema);
-
         expect(qSchema.description).toBe('Search query that can be a simple string, an object with selected fields and value, or a number.');
     });
 
