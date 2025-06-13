@@ -56,14 +56,12 @@ export class SMTP {
      * @throws ({@link CoreError}): If the connection or verification fails. ({@link mailerErrorKeys.smtpConnectionError})
      */
     public async connect(): Promise<void> {
-        // If already connected, throw an error.
         if (this._transporter)
             throw new CoreError({
                 key: mailerErrorKeys.smtpAlreadyConnected,
                 message: 'SMTP transporter is already connected.'
             });
 
-        // Create a Nodemailer transporter with pooling and authentication.
         this._transporter = createTransport({
             host: this._config.host,
             port: this._config.port,
@@ -76,10 +74,8 @@ export class SMTP {
             maxConnections: this._config.pool?.maxConnections ?? 5
         });
         try {
-            // Attempt to verify the SMTP connection.
             await this._transporter.verify();
         } catch (error) {
-            // Wrap and throw connection errors as CoreError for consistent error handling.
             throw new CoreError({
                 key: mailerErrorKeys.smtpConnectionError,
                 message: 'An error occurred while connecting to the SMTP server',
