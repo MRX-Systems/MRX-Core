@@ -1,4 +1,10 @@
+import type { CoreError } from '#/error';
+
 export interface LoggerEvent {
-    error: [Error];
+    error: [CoreError<{
+        strategyName: string;
+        object: unknown;
+        error: Error;
+    }>];
     end: [];
 }

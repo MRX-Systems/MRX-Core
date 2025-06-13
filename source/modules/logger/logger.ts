@@ -53,7 +53,9 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      * Construct a Logger.
      *
      * @template TStrategies - The map of strategy names to LoggerStrategy types.
+     *
      * @param strategies - Initial strategies map.
+     *
      * @param maxPendingLogs - Maximum number of logs in the queue (default: 10_000)
      */
     public constructor(strategies: TStrategies = {} as TStrategies, maxPendingLogs = 10_000) {
@@ -66,7 +68,11 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
                 this._executeStrategies(chunk.level, new Date(chunk.date), chunk.object, chunk.strategiesNames)
                     .then(() => callback())
                     .catch((error: unknown) => {
-                        this.emit('error', error as Error);
+                        this.emit('error', error as CoreError<{
+                            strategyName: string;
+                            object: unknown;
+                            error: Error;
+                        }>);
                         callback();
                     });
             }
@@ -78,6 +84,9 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template Key - The name of the strategy.
      * @template Strategy - The strategy type.
+     *
+     * @param name - The name of the strategy.
+     * @param strategy - The strategy to add. It must implement {@link LoggerStrategy}.
      *
      * @throws ({@link CoreError}): If the strategy is already added. ({@link loggerErrorKeys.stategyAlreadyAdded})
      *
@@ -104,6 +113,8 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template Key - The name of the strategy.
      *
+     * @param name - The name of the strategy to remove.
+     *
      * @throws ({@link CoreError}): If the strategy is not found. ({@link loggerErrorKeys.strategyNotFound})
      *
      * @returns A new Logger instance without the removed strategy.
@@ -127,6 +138,8 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template TNew - The new strategies to add.
      *
+     * @param strategies - An array of tuples where each tuple contains the strategy name and the strategy instance.
+     *
      * @throws ({@link CoreError}): If any strategy is already added. ({@link loggerErrorKeys.stategyAlreadyAdded})
      *
      * @returns A new Logger instance with the added strategies.
@@ -143,6 +156,8 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      * Unregister multiple strategies at once.
      *
      * @template Keys - The names of the strategies to remove.
+     *
+     * @param names - An array of strategy names to remove.
      *
      * @throws ({@link CoreError}): If any strategy is not found. ({@link loggerErrorKeys.strategyNotFound})
      *
@@ -255,6 +270,11 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      * Internal: execute all strategies for a log event.
      *
      * @template TLogObject - The type of the log object.
+     *
+     * @param level - The log level. ({@link LogLevels})
+     * @param date - The date of the log event.
+     * @param object - The object to log.
+     * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
      * @throws ({@link CoreError}): If a strategy throws. ({@link loggerErrorKeys.loggerStrategyError})
      */
