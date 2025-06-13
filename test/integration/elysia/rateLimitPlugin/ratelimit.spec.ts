@@ -490,7 +490,6 @@ describe('Rate Limit Plugin', () => {
 
             // Performance check: should complete within reasonable time
             expect(totalTime).toBeLessThan(5000); // 5 seconds max
-            console.log(`Processed ${numberOfRequests} requests in ${totalTime}ms`);
         });
 
         test('should handle header injection attempts', async () => {
