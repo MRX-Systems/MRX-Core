@@ -56,6 +56,7 @@ class SingletonManagerSingleton {
      *
      * @template TClass - The type of the class.
      * @template TArgs - The tuple type of the constructor arguments.
+     *
      * @param name - The name of the class.
      * @param constructor - The constructor of the class.
      * @param args - The arguments to pass to the constructor of the class.
@@ -100,6 +101,7 @@ class SingletonManagerSingleton {
      * Gets the singleton instance of the class. If the class is not registered, it throws an error.
      *
      * @template TClass - The type of the class.
+     *
      * @param name - The name of the class to get the singleton instance.
      *
      * @throws ({@link CoreError}) If the class is not registered, it throws an error. ({@link singletonManagerErrorKeys.classConstructorNotRegistered})
