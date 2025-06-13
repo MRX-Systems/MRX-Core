@@ -19,3 +19,6 @@ node_modules/
 # === IDE/editor files and directories ===
 .idea
 .vscode
+
+# === Sandboxes and temporary files ===
+sandbox/
