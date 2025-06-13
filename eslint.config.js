@@ -11,7 +11,6 @@ export default [
         ignores: [
             '**/sandbox/**',
             '**/docs/**',
-            '**/docs/**',
             '**/dist/**',
             '**/node_modules/**',
             '**/coverage/**',
