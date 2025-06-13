@@ -141,14 +141,14 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
     /**
      * Retrieves a repository for a specific table.
      *
+     * @template TModel - The type of the model for the repository.
+     * @template TRepo - The repository to retrieve extends {@link Repository}.
+     *
      * @param tableName - The name of the table to retrieve the repository for.
      * @param customRepository - Optional custom repository class to use for the table. The class must extend {@link Repository}.
      *
      * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link databaseErrorKeys.mssqlNotConnected})
      * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link databaseErrorKeys.mssqlTableNotFound})
-     *
-     * @template TModel - The type of the model for the repository.
-     * @template TRepo - The repository to retrieve extends {@link Repository}.
      *
      * @returns The {@link Repository} for the specified table.
      */
