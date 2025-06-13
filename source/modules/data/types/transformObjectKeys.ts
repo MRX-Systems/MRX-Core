@@ -1,7 +1,7 @@
-import type { CamelCaseTransformer } from '#/data/transformers/camelCase';
-import type { KebabCaseTransformer } from '#/data/transformers/kebabCase';
-import type { PascalCaseTransformer } from '#/data/transformers/pascalCase';
-import type { SnakeCaseTransformer } from '#/data/transformers/snakeCase';
+import type { CamelCaseTransformer } from '#/modules/data/transformers/camelCase';
+import type { KebabCaseTransformer } from '#/modules/data/transformers/kebabCase';
+import type { PascalCaseTransformer } from '#/modules/data/transformers/pascalCase';
+import type { SnakeCaseTransformer } from '#/modules/data/transformers/snakeCase';
 import type { TransformKeysCamelCase } from './transformKeysCamelCase';
 import type { TransformKeysKebabCase } from './transformKeysKebabCase';
 import type { TransformKeysPascalCase } from './transformKeysPascalCase';
