@@ -11,7 +11,7 @@ import type {
 } from 'elysia';
 
 import type { CRUDRoutes } from './crudRoutes';
-import type { DynamicDatabaseSelectorPluginOptions } from '#/modules/elysia/dynamicDatabaseSelectorPlugin/types/dynamicDatabaseSelectorPluginOptions';
+import type { DbSelectorOptions } from '#/modules/elysia/dbSelectorPlugin/types/dbSelectorOptions';
 
 /**
  * Options for the CRUD plugin
@@ -64,10 +64,10 @@ export interface CrudOptions<
      * }
      * ```
      *
-     * @see {@link DynamicDatabaseSelectorPluginOptions}
+     * @see {@link DbSelectorOptions}
      *
      */
-    database: string | DynamicDatabaseSelectorPluginOptions;
+    database: string | DbSelectorOptions;
     /**
      * The schema to be used for the CRUD operations {@link TInferedObject}
      * [TODO] - improve this description when working on the AND-188 ticket
