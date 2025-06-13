@@ -53,9 +53,10 @@ export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOpti
         message
     }
 })
-    .onRequest(async ({ set, request }) => {
+    .onRequest(async ({ set, request, server }) => {
         const ip = request.headers.get('x-forwarded-for')
             || request.headers.get('x-real-ip')
+            || server?.requestIP(request)?.address // get IP from socket directly
             || '127.0.0.1';
 
         const key = `ratelimit:${ip}`;
