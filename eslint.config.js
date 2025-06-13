@@ -8,13 +8,10 @@ export default [
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylistic,
     {
-        ignores: [
-            '**/sandbox/**',
-            '**/docs/**',
-            '**/dist/**',
-            '**/node_modules/**',
-            '**/coverage/**',
-            '**/benchmark/**',
+        files: [
+            'source/**/*.{js,mjs,cjs,ts,cts,mts}',
+            'tests/**/*.{js,mjs,cjs,ts,cts,mts}',
+            'builder.ts'
         ]
     },
     {
