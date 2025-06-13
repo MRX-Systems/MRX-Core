@@ -1,6 +1,3 @@
-/**
- * Represents the options for the Core error.
- */
 export interface CoreErrorOptions<T = unknown> {
     /**
      * The error message describing what went wrong.

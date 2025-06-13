@@ -8,6 +8,13 @@ export default [
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylistic,
     {
+        files: [
+            'source/**/*.{js,mjs,cjs,ts,cts,mts}',
+            'tests/**/*.{js,mjs,cjs,ts,cts,mts}',
+            'builder.ts'
+        ]
+    },
+    {
         plugins: {
             '@stylistic': stylistic
         },    
