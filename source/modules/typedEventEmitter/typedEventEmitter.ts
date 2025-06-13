@@ -12,8 +12,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Emits an event with the specified payload.
      *
      * @template KEvent - The type of event to emit.
+     *
      * @param event - The event name to emit.
      * @param payload - The data to send with the event.
+     *
      * @returns Whether the event had listeners.
      *
      * @example
@@ -31,8 +33,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Registers an event listener for the specified event.
      *
      * @template KEvent - The type of event to listen for.
+     *
      * @param event - The event name to listen for.
      * @param listener - The callback function that handles the event.
+     *
      * @returns This instance for chaining.
      *
      * @example
@@ -52,8 +56,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Registers a one-time event listener for the specified event.
      *
      * @template KEvent - The type of event to listen for.
+     *
      * @param event - The event name to listen for.
      * @param listener - The callback function that handles the event.
+     *
      * @returns This instance for chaining.
      *
      * @example
@@ -73,8 +79,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Registers an event listener for the specified event (alias for on).
      *
      * @template KEvent - The type of event to listen for.
+     *
      * @param event - The event name to listen for.
      * @param listener - The callback function that handles the event.
+     *
      * @returns This instance for chaining.
      *
      * @example
@@ -94,8 +102,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Removes an event listener for the specified event.
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
      * @param listener - The callback function to remove.
+     *
      * @returns This instance for chaining.
      *
      * @example
@@ -115,8 +125,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Removes an event listener for the specified event (alias for removeListener).
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
      * @param listener - The callback function to remove.
+     *
      * @returns This instance for chaining.
      *
      * @example
@@ -136,7 +148,9 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Returns the number of listeners for the specified event.
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
+     *
      * @returns The number of listeners.
      *
      * @example
@@ -155,7 +169,9 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Returns a copy of the array of listeners for the specified event.
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
+     *
      * @returns An array of listener functions.
      *
      * @example
@@ -174,7 +190,9 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Returns a copy of the array of raw listeners for the specified event.
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
+     *
      * @returns An array of raw listener functions.
      *
      * @example
@@ -193,8 +211,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Adds a listener to the beginning of the listeners array for the specified event.
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
      * @param listener - The callback function to add.
+     *
      * @returns This instance for chaining.
      *
      * @example
@@ -214,8 +234,10 @@ export class TypedEventEmitter<TEvents extends EventMap> extends EventEmitter {
      * Adds a one-time listener to the beginning of the listeners array for the specified event.
      *
      * @template KEvent - The type of event.
+     *
      * @param event - The event name.
      * @param listener - The callback function to add.
+     *
      * @returns This instance for chaining.
      *
      * @example
