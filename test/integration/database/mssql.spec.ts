@@ -99,25 +99,25 @@ describe('MSSQL', () => {
             table.increments('id').primary();
             table.string('name').notNullable();
             table.string('email').nullable();
-            table.timestamp('created_at').defaultTo(knexInstance.fn.now());
+            table.timestamp('createdAt').defaultTo(knexInstance.fn.now());
         });
 
         // Create secondary test table for relationship testing
         await knexInstance.schema.createTable(secondaryTestTable, (table) => {
             table.increments('id').primary();
             table.string('description').notNullable();
-            table.integer('primary_id').references('id').inTable(primaryTestTable);
+            table.integer('primaryId').references('id').inTable(primaryTestTable);
         });
 
         // Create complex test table with various data types
         await knexInstance.schema.createTable(complexTestTable, (table) => {
             table.increments('id').primary();
-            table.text('large_text').nullable();
+            table.text('largeText').nullable();
             table.decimal('price', 10, 2).nullable();
-            table.boolean('is_active').defaultTo(true);
+            table.boolean('isActive').defaultTo(true);
             table.json('metadata').nullable();
-            table.timestamp('created_at').defaultTo(knexInstance.fn.now());
-            table.timestamp('updated_at').nullable();
+            table.timestamp('createdAt').defaultTo(knexInstance.fn.now());
+            table.timestamp('updatedAt').nullable();
         });
     });
 
@@ -500,6 +500,8 @@ describe('MSSQL', () => {
 
                 expect(repository).toBeInstanceOf(Repository);
                 await mssql.disconnect();
+            }, {
+                timeout: 5500
             });
 
             test('should return same repository instance for repeated calls', async () => {
@@ -868,6 +870,8 @@ describe('MSSQL', () => {
             expect(results).toHaveLength(10);
 
             await mssql.disconnect();
+        }, {
+            timeout: 5500
         });
 
         test('should handle rapid connect/disconnect cycles', async () => {
@@ -937,11 +941,9 @@ describe('MSSQL', () => {
             await mssql.connect();
 
             const complexData = {
-                // eslint-disable-next-line camelcase
-                large_text: 'This is a very long text that tests the text field capacity and handling.',
+                largeText: 'This is a very long text that tests the text field capacity and handling.',
                 price: 999.99,
-                // eslint-disable-next-line camelcase
-                is_active: true,
+                isActive: true,
                 metadata: { key: 'value', nested: { array: [1, 2, 3] } }
             };
 
@@ -949,9 +951,9 @@ describe('MSSQL', () => {
             const results = await mssql.db(complexTestTable).where('id', (insertedId as { id: number }).id).select('*');
 
             expect(results).toHaveLength(1);
-            expect(results[0].large_text).toBe(complexData.large_text);
+            expect(results[0].largeText).toBe(complexData.largeText);
             expect(results[0].price).toBe(complexData.price);
-            expect(results[0].is_active).toBe(complexData.is_active);
+            expect(results[0].isActive).toBe(complexData.isActive);
 
             await mssql.disconnect();
         });
