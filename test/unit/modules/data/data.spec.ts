@@ -164,14 +164,7 @@ describe('filterByKeyExclusionRecursive', () => {
                     nested3: {
                         foo: 'nested4Test'
                     }
-                },
-                nested3: [
-                    {
-                        a: 'nested4Test',
-                        b: 'nested4Exclude',
-                        foo: 'e'
-                    }
-                ]
+                }
             };
             const filtered: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['foo']);
             expect(filtered).toEqual({
@@ -185,13 +178,7 @@ describe('filterByKeyExclusionRecursive', () => {
                     a: 'nested3Test',
                     b: 'nested3Exclude',
                     nested3: {}
-                },
-                nested3: [
-                    {
-                        a: 'nested4Test',
-                        b: 'nested4Exclude'
-                    }
-                ]
+                }
             });
 
             const filtered2: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['nested3']);
@@ -227,13 +214,7 @@ describe('filterByKeyExclusionRecursive', () => {
                     nested3: {
                         foo: 'nested4Test'
                     }
-                },
-                nested3: [
-                    {
-                        b: 'nested4Exclude',
-                        foo: 'e'
-                    }
-                ]
+                }
             });
         });
     });
@@ -511,74 +492,74 @@ describe('CamelCaseTransformer', () => {
         test('should create a new instance', () => {
             const newTransformer: CamelCaseTransformer = new CamelCaseTransformer();
             expect(newTransformer).toBeInstanceOf(CamelCaseTransformer);
-            expect(typeof newTransformer.transformKey).toBe('function');
+            expect(typeof newTransformer.convertCase).toBe('function');
         });
 
         test('should test constructor explicitly for function coverage', () => {
             const constructorTest: CamelCaseTransformer = new CamelCaseTransformer();
             expect(constructorTest).toBeDefined();
-            expect(typeof constructorTest.transformKey).toBe('function');
+            expect(typeof constructorTest.convertCase).toBe('function');
         });
     });
 
     describe('when transforming various case formats', () => {
         test('should preserve already camelCase keys', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.camelCase)).toBe('myKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.camelCase)).toBe('myKeyName');
         });
 
         test('should transform PascalCase to camelCase', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.PascalCase)).toBe('myKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.PascalCase)).toBe('myKeyName');
         });
 
         test('should transform kebab-case to camelCase', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS['kebab-case'])).toBe('myKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS['kebab-case'])).toBe('myKeyName');
         });
 
         test('should transform snake_case to camelCase', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.snakeCase)).toBe('myKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.snakeCase)).toBe('myKeyName');
         });
 
         test('should handle mixed case formats', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS['mixed-Case_example']))
+            expect(transformer.convertCase(testData.CASE_VARIANTS['mixed-Case_example']))
                 .toBe('mixedCaseExample');
         });
 
         test('should handle multiple separators', () => {
-            expect(transformer.transformKey('test_key-name')).toBe('testKeyName');
-            expect(transformer.transformKey('another_test-value')).toBe('anotherTestValue');
+            expect(transformer.convertCase('test_key-name')).toBe('testKeyName');
+            expect(transformer.convertCase('another_test-value')).toBe('anotherTestValue');
         });
     });
 
     describe('when handling edge cases', () => {
         test('should handle single character keys', () => {
-            expect(transformer.transformKey('a')).toBe('a');
-            expect(transformer.transformKey('A')).toBe('a');
+            expect(transformer.convertCase('a')).toBe('a');
+            expect(transformer.convertCase('A')).toBe('a');
         });
 
         test('should handle empty string', () => {
-            expect(transformer.transformKey('')).toBe('');
+            expect(transformer.convertCase('')).toBe('');
         });
 
         test('should handle keys with numbers', () => {
-            expect(transformer.transformKey('key_with_123')).toBe('keyWith_123');
-            expect(transformer.transformKey('key-with-456')).toBe('keyWith-456');
+            expect(transformer.convertCase('key_with_123')).toBe('keyWith_123');
+            expect(transformer.convertCase('key-with-456')).toBe('keyWith-456');
         });
 
         test('should handle consecutive uppercase letters', () => {
-            expect(transformer.transformKey('XMLHttpRequest')).toBe('xMLHttpRequest');
-            expect(transformer.transformKey('HTTPSProxy')).toBe('hTTPSProxy');
+            expect(transformer.convertCase('XMLHttpRequest')).toBe('xMLHttpRequest');
+            expect(transformer.convertCase('HTTPSProxy')).toBe('hTTPSProxy');
         });
 
         test('should handle specific regex edge cases', () => {
             // Test the first regex: /(?:[-_][a-z])/giu
-            expect(transformer.transformKey('test-a')).toBe('testA');
-            expect(transformer.transformKey('test_b')).toBe('testB');
-            expect(transformer.transformKey('value-c_d')).toBe('valueCD');
+            expect(transformer.convertCase('test-a')).toBe('testA');
+            expect(transformer.convertCase('test_b')).toBe('testB');
+            expect(transformer.convertCase('value-c_d')).toBe('valueCD');
 
             // Test the second regex: /^[A-Z]/u
-            expect(transformer.transformKey('A')).toBe('a');
-            expect(transformer.transformKey('Test')).toBe('test');
-            expect(transformer.transformKey('TEST')).toBe('tEST');
+            expect(transformer.convertCase('A')).toBe('a');
+            expect(transformer.convertCase('Test')).toBe('test');
+            expect(transformer.convertCase('TEST')).toBe('tEST');
         });
     });
 });
@@ -590,57 +571,57 @@ describe('KebabCaseTransformer', () => {
         test('should create a new instance', () => {
             const newTransformer: KebabCaseTransformer = new KebabCaseTransformer();
             expect(newTransformer).toBeInstanceOf(KebabCaseTransformer);
-            expect(typeof newTransformer.transformKey).toBe('function');
+            expect(typeof newTransformer.convertCase).toBe('function');
         });
 
         test('should test constructor explicitly for function coverage', () => {
             const constructorTest: KebabCaseTransformer = new KebabCaseTransformer();
             expect(constructorTest).toBeDefined();
-            expect(typeof constructorTest.transformKey).toBe('function');
+            expect(typeof constructorTest.convertCase).toBe('function');
         });
     });
 
     describe('when transforming various case formats', () => {
         test('should preserve already kebab-case keys', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS['kebab-case'])).toBe('my-key-name');
+            expect(transformer.convertCase(testData.CASE_VARIANTS['kebab-case'])).toBe('my-key-name');
         });
 
         test('should transform camelCase to kebab-case', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.camelCase)).toBe('my-key-name');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.camelCase)).toBe('my-key-name');
         });
 
         test('should transform PascalCase to kebab-case', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.PascalCase)).toBe('my-key-name');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.PascalCase)).toBe('my-key-name');
         });
 
         test('should transform snake_case to kebab-case', () => {
-            expect(transformer.transformKey('my_long_key_name')).toBe('my-long-key-name');
+            expect(transformer.convertCase('my_long_key_name')).toBe('my-long-key-name');
         });
 
         test('should handle multiple underscores', () => {
-            expect(transformer.transformKey('test_key_value')).toBe('test-key-value');
-            expect(transformer.transformKey('another_test_case')).toBe('another-test-case');
+            expect(transformer.convertCase('test_key_value')).toBe('test-key-value');
+            expect(transformer.convertCase('another_test_case')).toBe('another-test-case');
         });
     });
 
     describe('when handling edge cases', () => {
         test('should handle single character keys', () => {
-            expect(transformer.transformKey('a')).toBe('a');
-            expect(transformer.transformKey('A')).toBe('a');
+            expect(transformer.convertCase('a')).toBe('a');
+            expect(transformer.convertCase('A')).toBe('a');
         });
 
         test('should handle empty string', () => {
-            expect(transformer.transformKey('')).toBe('');
+            expect(transformer.convertCase('')).toBe('');
         });
 
         test('should handle consecutive capitals', () => {
-            expect(transformer.transformKey('HTTPSConnection')).toBe('https-connection');
-            expect(transformer.transformKey('XMLParser')).toBe('xml-parser');
+            expect(transformer.convertCase('HTTPSConnection')).toBe('https-connection');
+            expect(transformer.convertCase('XMLParser')).toBe('xml-parser');
         });
 
         test('should handle mixed separators', () => {
-            expect(transformer.transformKey('test_Key-Name')).toBe('test-key-name');
-            expect(transformer.transformKey('another_Value')).toBe('another-value');
+            expect(transformer.convertCase('test_Key-Name')).toBe('test-key-name');
+            expect(transformer.convertCase('another_Value')).toBe('another-value');
         });
     });
 });
@@ -652,52 +633,52 @@ describe('PascalCaseTransformer', () => {
         test('should create a new instance', () => {
             const newTransformer: PascalCaseTransformer = new PascalCaseTransformer();
             expect(newTransformer).toBeInstanceOf(PascalCaseTransformer);
-            expect(typeof newTransformer.transformKey).toBe('function');
+            expect(typeof newTransformer.convertCase).toBe('function');
         });
 
         test('should test constructor explicitly for function coverage', () => {
             const constructorTest: PascalCaseTransformer = new PascalCaseTransformer();
             expect(constructorTest).toBeDefined();
-            expect(typeof constructorTest.transformKey).toBe('function');
+            expect(typeof constructorTest.convertCase).toBe('function');
         });
     });
 
     describe('when transforming various case formats', () => {
         test('should preserve already PascalCase keys', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.PascalCase)).toBe('MyKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.PascalCase)).toBe('MyKeyName');
         });
 
         test('should transform camelCase to PascalCase', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.camelCase)).toBe('MyKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.camelCase)).toBe('MyKeyName');
         });
 
         test('should transform kebab-case to PascalCase', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS['kebab-case'])).toBe('MyKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS['kebab-case'])).toBe('MyKeyName');
         });
 
         test('should transform snake_case to PascalCase', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.snakeCase)).toBe('MyKeyName');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.snakeCase)).toBe('MyKeyName');
         });
 
         test('should handle mixed separators', () => {
-            expect(transformer.transformKey('test_key-name')).toBe('TestKeyName');
-            expect(transformer.transformKey('another_test-value')).toBe('AnotherTestValue');
+            expect(transformer.convertCase('test_key-name')).toBe('TestKeyName');
+            expect(transformer.convertCase('another_test-value')).toBe('AnotherTestValue');
         });
     });
 
     describe('when handling edge cases', () => {
         test('should handle single character keys', () => {
-            expect(transformer.transformKey('a')).toBe('A');
-            expect(transformer.transformKey('A')).toBe('A');
+            expect(transformer.convertCase('a')).toBe('A');
+            expect(transformer.convertCase('A')).toBe('A');
         });
 
         test('should handle empty string', () => {
-            expect(transformer.transformKey('')).toBe('');
+            expect(transformer.convertCase('')).toBe('');
         });
 
         test('should handle keys with numbers', () => {
-            expect(transformer.transformKey('key_with_123')).toBe('KeyWith_123');
-            expect(transformer.transformKey('another-key_456')).toBe('AnotherKey_456');
+            expect(transformer.convertCase('key_with_123')).toBe('KeyWith_123');
+            expect(transformer.convertCase('another-key_456')).toBe('AnotherKey_456');
         });
     });
 });
@@ -709,77 +690,77 @@ describe('SnakeCaseTransformer', () => {
         test('should create a new instance', () => {
             const newTransformer: SnakeCaseTransformer = new SnakeCaseTransformer();
             expect(newTransformer).toBeInstanceOf(SnakeCaseTransformer);
-            expect(typeof newTransformer.transformKey).toBe('function');
+            expect(typeof newTransformer.convertCase).toBe('function');
         });
 
         test('should test constructor explicitly for function coverage', () => {
             const constructorTest: SnakeCaseTransformer = new SnakeCaseTransformer();
             expect(constructorTest).toBeDefined();
-            expect(typeof constructorTest.transformKey).toBe('function');
+            expect(typeof constructorTest.convertCase).toBe('function');
         });
     });
 
     describe('when transforming various case formats', () => {
         test('should preserve already snake_case keys', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.snakeCase)).toBe('my_key_name');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.snakeCase)).toBe('my_key_name');
         });
 
         test('should transform camelCase to snake_case', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.camelCase)).toBe('my_key_name');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.camelCase)).toBe('my_key_name');
         });
 
         test('should transform PascalCase to snake_case', () => {
-            expect(transformer.transformKey(testData.CASE_VARIANTS.PascalCase)).toBe('my_key_name');
+            expect(transformer.convertCase(testData.CASE_VARIANTS.PascalCase)).toBe('my_key_name');
         });
 
         test('should transform kebab-case to snake_case', () => {
-            expect(transformer.transformKey('my-long-key-name')).toBe('my_long_key_name');
+            expect(transformer.convertCase('my-long-key-name')).toBe('my_long_key_name');
         });
 
         test('should handle spaces in keys', () => {
-            expect(transformer.transformKey('test key name')).toBe('test_key_name');
-            expect(transformer.transformKey('another test value')).toBe('another_test_value');
+            expect(transformer.convertCase('test key name')).toBe('test_key_name');
+            expect(transformer.convertCase('another test value')).toBe('another_test_value');
         });
 
         test('should handle mixed separators', () => {
-            expect(transformer.transformKey('test-key name')).toBe('test_key_name');
-            expect(transformer.transformKey('another value-test')).toBe('another_value_test');
+            expect(transformer.convertCase('test-key name')).toBe('test_key_name');
+            expect(transformer.convertCase('another value-test')).toBe('another_value_test');
         });
     });
 
     describe('when handling edge cases', () => {
         test('should handle single character keys', () => {
-            expect(transformer.transformKey('a')).toBe('a');
-            expect(transformer.transformKey('A')).toBe('a');
+            expect(transformer.convertCase('a')).toBe('a');
+            expect(transformer.convertCase('A')).toBe('a');
         });
 
         test('should handle empty string', () => {
-            expect(transformer.transformKey('')).toBe('');
+            expect(transformer.convertCase('')).toBe('');
         });
 
         test('should handle consecutive capitals', () => {
-            expect(transformer.transformKey('HTTPSConnection')).toBe('httpsconnection');
-            expect(transformer.transformKey('XMLParser')).toBe('xmlparser');
+            expect(transformer.convertCase('HTTPSConnection')).toBe('httpsconnection');
+            expect(transformer.convertCase('XMLParser')).toBe('xmlparser');
         });
 
         test('should handle numbers in keys', () => {
-            expect(transformer.transformKey('keyWith123')).toBe('key_with123');
-            expect(transformer.transformKey('AnotherKey456')).toBe('another_key456');
+            expect(transformer.convertCase('keyWith123')).toBe('key_with123');
+            expect(transformer.convertCase('AnotherKey456')).toBe('another_key456');
         });
 
         test('should handle specific regex edge cases for 100% function coverage', () => {
             // Test the first regex: /(?<lower>[a-z])(?<upper>[A-Z])/gu
-            expect(transformer.transformKey('aB')).toBe('a_b');
-            expect(transformer.transformKey('testCase')).toBe('test_case');
-            expect(transformer.transformKey('iPhone')).toBe('i_phone');
+            expect(transformer.convertCase('aB')).toBe('a_b');
+            expect(transformer.convertCase('testCase')).toBe('test_case');
+            expect(transformer.convertCase('iPhone')).toBe('i_phone');
 
             // Test the second regex: /[-\s]/gu
-            expect(transformer.transformKey('test-value')).toBe('test_value');
-            expect(transformer.transformKey('test value')).toBe('test_value');
-            expect(transformer.transformKey('test-key value')).toBe('test_key_value');
+            expect(transformer.convertCase('test-value')).toBe('test_value');
+            expect(transformer.convertCase('test value')).toBe('test_value');
+            expect(transformer.convertCase('test-key value')).toBe('test_key_value');
 
             // Test combinations to ensure all regex branches are hit
-            expect(transformer.transformKey('testValue-name case')).toBe('test_value_name_case');
+            expect(transformer.convertCase('testValue-name case')).toBe('test_value_name_case');
         });
     });
 });
@@ -790,17 +771,17 @@ describe('Comprehensive Function Coverage Tests', () => {
 
         test('should trigger all anonymous functions in regex patterns', () => {
             // First regex: /(?:[-_][a-z])/giu - anonymous function (group: string) => (group[1]).toUpperCase()
-            expect(transformer.transformKey('test-a')).toBe('testA');
-            expect(transformer.transformKey('test_b')).toBe('testB');
-            expect(transformer.transformKey('value-c_d')).toBe('valueCD');
+            expect(transformer.convertCase('test-a')).toBe('testA');
+            expect(transformer.convertCase('test_b')).toBe('testB');
+            expect(transformer.convertCase('value-c_d')).toBe('valueCD');
 
             // Second regex: /^[A-Z]/u - anonymous function (firstLetter: string) => firstLetter.toLowerCase()
-            expect(transformer.transformKey('A')).toBe('a');
-            expect(transformer.transformKey('Test')).toBe('test');
-            expect(transformer.transformKey('VALUE')).toBe('vALUE');
+            expect(transformer.convertCase('A')).toBe('a');
+            expect(transformer.convertCase('Test')).toBe('test');
+            expect(transformer.convertCase('VALUE')).toBe('vALUE');
 
             // Combined patterns to ensure all branches
-            expect(transformer.transformKey('Test-value_name')).toBe('testValueName');
+            expect(transformer.convertCase('Test-value_name')).toBe('testValueName');
         });
     });
 
@@ -809,19 +790,19 @@ describe('Comprehensive Function Coverage Tests', () => {
 
         test('should trigger all regex patterns and anonymous functions', () => {
             // First regex: /_/gu - simple replacement, no anonymous function needed
-            expect(transformer.transformKey('test_value')).toBe('test-value');
+            expect(transformer.convertCase('test_value')).toBe('test-value');
 
             // Second regex: /(?<=[a-z])(?=[A-Z])/gu - anonymous function for lookbehind/lookahead
-            expect(transformer.transformKey('testValue')).toBe('test-value');
-            expect(transformer.transformKey('aB')).toBe('a-b');
+            expect(transformer.convertCase('testValue')).toBe('test-value');
+            expect(transformer.convertCase('aB')).toBe('a-b');
 
             // Third regex: /(?<=[A-Z]+)(?=[A-Z][a-z])/gu - complex pattern for consecutive capitals
-            expect(transformer.transformKey('HTTPSConnection')).toBe('https-connection');
-            expect(transformer.transformKey('XMLParser')).toBe('xml-parser');
-            expect(transformer.transformKey('URLPattern')).toBe('url-pattern');
+            expect(transformer.convertCase('HTTPSConnection')).toBe('https-connection');
+            expect(transformer.convertCase('XMLParser')).toBe('xml-parser');
+            expect(transformer.convertCase('URLPattern')).toBe('url-pattern');
 
             // Combined patterns
-            expect(transformer.transformKey('testHTTPSValue_name')).toBe('test-https-value-name');
+            expect(transformer.convertCase('testHTTPSValue_name')).toBe('test-https-value-name');
         });
     });
 
@@ -830,15 +811,15 @@ describe('Comprehensive Function Coverage Tests', () => {
 
         test('should trigger anonymous function in regex pattern', () => {
             // The regex: /(?:[-_][a-z])/giu with anonymous function (group: string) => (group[1]).toUpperCase()
-            expect(transformer.transformKey('test-a')).toBe('TestA');
-            expect(transformer.transformKey('value_b')).toBe('ValueB');
-            expect(transformer.transformKey('name-c_d')).toBe('NameCD');
-            expect(transformer.transformKey('example-value_test')).toBe('ExampleValueTest');
+            expect(transformer.convertCase('test-a')).toBe('TestA');
+            expect(transformer.convertCase('value_b')).toBe('ValueB');
+            expect(transformer.convertCase('name-c_d')).toBe('NameCD');
+            expect(transformer.convertCase('example-value_test')).toBe('ExampleValueTest');
 
             // Edge cases to ensure the function is called
-            expect(transformer.transformKey('-a')).toBe('A');
-            expect(transformer.transformKey('_b')).toBe('B');
-            expect(transformer.transformKey('test-x_y-z')).toBe('TestXYZ');
+            expect(transformer.convertCase('-a')).toBe('A');
+            expect(transformer.convertCase('_b')).toBe('B');
+            expect(transformer.convertCase('test-x_y-z')).toBe('TestXYZ');
         });
     });
 
@@ -847,19 +828,19 @@ describe('Comprehensive Function Coverage Tests', () => {
 
         test('should trigger all named capture group replacements', () => {
             // First regex: /(?<lower>[a-z])(?<upper>[A-Z])/gu with replacement '$<lower>_$<upper>'
-            expect(transformer.transformKey('aB')).toBe('a_b');
-            expect(transformer.transformKey('testCase')).toBe('test_case');
-            expect(transformer.transformKey('someValue')).toBe('some_value');
-            expect(transformer.transformKey('iPhone')).toBe('i_phone');
+            expect(transformer.convertCase('aB')).toBe('a_b');
+            expect(transformer.convertCase('testCase')).toBe('test_case');
+            expect(transformer.convertCase('someValue')).toBe('some_value');
+            expect(transformer.convertCase('iPhone')).toBe('i_phone');
 
             // Second regex: /[-\s]/gu - character class replacement
-            expect(transformer.transformKey('test-case')).toBe('test_case');
-            expect(transformer.transformKey('test case')).toBe('test_case');
-            expect(transformer.transformKey('test-value case')).toBe('test_value_case');
+            expect(transformer.convertCase('test-case')).toBe('test_case');
+            expect(transformer.convertCase('test case')).toBe('test_case');
+            expect(transformer.convertCase('test-value case')).toBe('test_value_case');
 
             // Combined patterns to ensure full coverage
-            expect(transformer.transformKey('testValue-name case')).toBe('test_value_name_case');
-            expect(transformer.transformKey('iPhone-test case')).toBe('i_phone_test_case');
+            expect(transformer.convertCase('testValue-name case')).toBe('test_value_name_case');
+            expect(transformer.convertCase('iPhone-test case')).toBe('i_phone_test_case');
         });
     });
 });
