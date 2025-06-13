@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { Elysia, t } from 'elysia';
 
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssqlDatabaseOption';
-import { dynamicDatabaseSelectorPlugin } from '#/modules/elysia/dynamicDatabaseSelectorPlugin/dynamicDatabaseSelector';
+import { dbSelectorPlugin } from '#/modules/elysia/dbSelectorPlugin/dbSelector';
 import { errorPlugin } from '#/modules/elysia/errorPlugin/error';
 
 const baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'> = {
@@ -17,13 +17,13 @@ const baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'> = {
 
 const databaseName = 'auth_dev';
 
-describe('Database Switcher Plugin', () => {
+describe('dbSelector Plugin', () => {
     describe('Macro', () => {
-        test('should not add dynamicDB to context when hasDynamicDatabaseSelector is not provided', async () => {
+        test('should not add dynamicDB to context when hasDbSelector is not provided', async () => {
             const app = new Elysia()
                 .use(errorPlugin)
-                .use(dynamicDatabaseSelectorPlugin({
-                    baseDatabaseConfig
+                .use(dbSelectorPlugin({
+                    connectionConfig: baseDatabaseConfig
                 }))
                 .get('/', ({ dynamicDB }: { dynamicDB: unknown }) => ({ dynamicDB }));
             const res = await app.handle(new Request('http://localhost:3000/'));
@@ -31,25 +31,25 @@ describe('Database Switcher Plugin', () => {
             expect(data).toEqual({});
         });
 
-        test('should not add dynamicDB to context when hasDynamicDatabaseSelector is false', async () => {
+        test('should not add dynamicDB to context when hasDbSelector is false', async () => {
             const app = new Elysia()
                 .use(errorPlugin)
-                .use(dynamicDatabaseSelectorPlugin({
-                    baseDatabaseConfig
+                .use(dbSelectorPlugin({
+                    connectionConfig: baseDatabaseConfig
                 }))
-                .get('/', ({ dynamicDB }: { dynamicDB: unknown }) => ({ dynamicDB }), { hasDynamicDatabaseSelector: false });
+                .get('/', ({ dynamicDB }: { dynamicDB: unknown }) => ({ dynamicDB }), { hasDbSelector: false });
             const res = await app.handle(new Request('http://localhost:3000/'));
             const data = await res.json();
             expect(data).toEqual({});
         });
 
-        test('should add dynamicDB to context when hasDynamicDatabaseSelector is true', async () => {
+        test('should add dynamicDB to context when hasDbSelector is true', async () => {
             const app = new Elysia()
                 .use(errorPlugin)
-                .use(dynamicDatabaseSelectorPlugin({
-                    baseDatabaseConfig
+                .use(dbSelectorPlugin({
+                    connectionConfig: baseDatabaseConfig
                 }))
-                .get('/', ({ dynamicDB }) => ({ dynamicDB }), { hasDynamicDatabaseSelector: true });
+                .get('/', ({ dynamicDB }) => ({ dynamicDB }), { hasDbSelector: true });
             const res = await app.handle(new Request('http://localhost:3000/', { headers: { 'database-using': databaseName } }));
             const data = await res.json() as { dynamicDB: unknown };
             expect(data).toEqual({ dynamicDB: expect.any(Object) });
@@ -64,14 +64,14 @@ describe('Database Switcher Plugin', () => {
             }) });
         });
 
-        test('should add dynamicDB to context when hasDynamicDatabaseSelector is true and with specific headerKey', async () => {
+        test('should add dynamicDB to context when hasDbSelector is true and with specific headerKey', async () => {
             const app = new Elysia()
                 .use(errorPlugin)
-                .use(dynamicDatabaseSelectorPlugin({
-                    baseDatabaseConfig,
+                .use(dbSelectorPlugin({
+                    connectionConfig: baseDatabaseConfig,
                     headerKey: 'x-database-using'
                 }))
-                .get('/', ({ dynamicDB }) => ({ dynamicDB }), { hasDynamicDatabaseSelector: true });
+                .get('/', ({ dynamicDB }) => ({ dynamicDB }), { hasDbSelector: true });
             const res = await app.handle(new Request('http://localhost:3000/', { headers: { 'x-database-using': databaseName } }));
             const data = await res.json();
             expect(data).toEqual({ dynamicDB: expect.any(Object) });
@@ -89,18 +89,18 @@ describe('Database Switcher Plugin', () => {
         test('should throw error when databaseName key not found in headers', async () => {
             const app = new Elysia()
                 .use(errorPlugin)
-                .use(dynamicDatabaseSelectorPlugin({
-                    baseDatabaseConfig
+                .use(dbSelectorPlugin({
+                    connectionConfig: baseDatabaseConfig
                 }))
                 .get('/', ({ dynamicDB }: { dynamicDB: unknown }) => ({ dynamicDB }), {
-                    hasDynamicDatabaseSelector: true,
+                    hasDbSelector: true,
                     headers: t.Partial(t.Object({}))
                 });
             const res = await app.handle(new Request('http://localhost:3000/'));
             const data = await res.json();
             expect(data).toEqual({
-                key: 'core.error.elysia.dynamicDatabaseSelector.key_not_found',
-                message: 'Dynamic Database key not found in the request headers.'
+                key: 'core.error.elysia.dDSelector.key_not_found',
+                message: 'Database Selector key not found in the request headers.'
             });
             expect(res.status).toBe(400);
         });
