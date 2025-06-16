@@ -1,0 +1,1 @@
+export const isDateString = (v: unknown): v is string => typeof v === 'string' && new Date(v).toString() !== 'Invalid Date';
