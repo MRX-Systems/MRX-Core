@@ -1,10 +1,10 @@
 import type { CoreError } from '#/error';
 
 export interface LoggerEvent {
-    error: [CoreError<{
+    readonly error: [CoreError<{
         strategyName: string;
         object: unknown;
         error: Error;
     }>];
-    end: [];
+    readonly end: [];
 }

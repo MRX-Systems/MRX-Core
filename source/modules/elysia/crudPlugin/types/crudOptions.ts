@@ -31,14 +31,14 @@ export interface CrudOptions<
      *
      * @defaultValue ''
      */
-    prefix?: string;
+    readonly prefix?: string;
     /**
      * The name of the table this CRUD interface will manage.
      *
      * This should match the database table name and will be used to identify
      * the repository and models in the generated API.
      */
-    tableName: string;
+    readonly tableName: string;
     /**
      * Database configuration for the CRUD operations.
      *
@@ -67,12 +67,12 @@ export interface CrudOptions<
      * @see {@link DbSelectorOptions}
      *
      */
-    database: string | DbSelectorOptions;
+    readonly database: string | DbSelectorOptions;
     /**
      * The schema to be used for the CRUD operations {@link TInferedObject}
      * [TODO] - improve this description when working on the AND-188 ticket
      */
-    baseSchema: TInferedObject;
+    readonly baseSchema: TInferedObject;
     /**
      * Array of property names from the schema that should be required in insert operations.
      *
@@ -84,7 +84,7 @@ export interface CrudOptions<
      * insertPropertiesSchemaRequired: ['name', 'email']
      * ```
      */
-    insertPropertiesSchemaRequired?: (keyof Static<TInferedObject>)[];
+    readonly insertPropertiesSchemaRequired?: (keyof Static<TInferedObject>)[];
     /**
      * Array of route types to include in the generated API.
      *
@@ -96,7 +96,7 @@ export interface CrudOptions<
      * includedRoutes: ['find', 'findOne', 'count']
      * ```
      */
-    includedRoutes?: CRUDRoutes[];
+    readonly includedRoutes?: CRUDRoutes[];
     /**
      * Array of route types to exclude from the generated API.
      *
@@ -108,9 +108,9 @@ export interface CrudOptions<
      * excludedRoutes?: ['delete', 'deleteOne']
      * ```
      */
-    excludedRoutes?: CRUDRoutes[];
+    readonly excludedRoutes?: CRUDRoutes[];
     /** This allows configuring permissions for each CRUD route. */
-    permissionConfig: {
+    readonly permissionConfig: {
         /**
         * A bit tricky: this should be an instance of {@link Elysia} that must have two macros
         * called `needsOnePermission` and `needsMultiplePermissions`, each taking an array of permissions {@link KEnumPermission}
@@ -144,6 +144,6 @@ export interface CrudOptions<
          * @see {@link CRUDRoutes}
          * @see {@link KEnumPermission}
          */
-        operationsPermissions: Partial<Record<CRUDRoutes, KEnumPermission[]>>;
+        readonly operationsPermissions: Partial<Record<CRUDRoutes, KEnumPermission[]>>;
     }
 }
