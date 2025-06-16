@@ -35,7 +35,7 @@ export class SMTP {
     /**
      * Creates an instance of the SMTP class.
      *
-     * @param config - The configuration options for the SMTP connection. (see {@link SMTPOptions}).
+     * @param config - The configuration options for the SMTP connection.
      */
     public constructor(config: SMTPOptions) {
         this._config = {
@@ -52,8 +52,8 @@ export class SMTP {
      * It enables connection pooling for efficient resource usage and sets the maximum number of
      * concurrent connections as specified in the configuration (default: 5).
      *
-     * @throws ({@link CoreError}): If the transporter is already connected. ({@link mailerErrorKeys.smtpAlreadyConnected})
-     * @throws ({@link CoreError}): If the connection or verification fails. ({@link mailerErrorKeys.smtpConnectionError})
+     * @throws ({@link CoreError}): If the transporter is already connected.
+     * @throws ({@link CoreError}): If the connection or verification fails.
      */
     public async connect(): Promise<void> {
         if (this._transporter)
@@ -101,7 +101,7 @@ export class SMTP {
      *
      * @param options - The mail options, such as recipient, subject, and content.
      *
-     * @throws ({@link CoreError}) - If the transporter is not connected. ({@link mailerErrorKeys.smtpNotConnected})
+     * @throws ({@link CoreError}) - If the transporter is not connected.
      *
      * @returns A promise resolving to the result of the send operation.
      */
