@@ -163,7 +163,14 @@ describe('filterByKeyExclusionRecursive', () => {
                     b: 'nested3Exclude',
                     nested3: {
                         foo: 'nested4Test'
-                    }
+                    },
+                    nested4: [
+                        {
+                            a: 'nested4Test',
+                            b: 'nested4Exclude',
+                            foo: 'nested4Foo'
+                        }
+                    ]
                 }
             };
             const filtered: Record<string, unknown> = filterByKeyExclusionRecursive(object, ['foo']);
@@ -177,7 +184,13 @@ describe('filterByKeyExclusionRecursive', () => {
                 nested2: {
                     a: 'nested3Test',
                     b: 'nested3Exclude',
-                    nested3: {}
+                    nested3: {},
+                    nested4: [
+                        {
+                            a: 'nested4Test',
+                            b: 'nested4Exclude'
+                        }
+                    ]
                 }
             });
 
@@ -195,7 +208,14 @@ describe('filterByKeyExclusionRecursive', () => {
                 },
                 nested2: {
                     a: 'nested3Test',
-                    b: 'nested3Exclude'
+                    b: 'nested3Exclude',
+                    nested4: [
+                        {
+                            a: 'nested4Test',
+                            b: 'nested4Exclude',
+                            foo: 'nested4Foo'
+                        }
+                    ]
                 }
             });
 
@@ -213,7 +233,13 @@ describe('filterByKeyExclusionRecursive', () => {
                     b: 'nested3Exclude',
                     nested3: {
                         foo: 'nested4Test'
-                    }
+                    },
+                    nested4: [
+                        {
+                            b: 'nested4Exclude',
+                            foo: 'nested4Foo'
+                        }
+                    ]
                 }
             });
         });
