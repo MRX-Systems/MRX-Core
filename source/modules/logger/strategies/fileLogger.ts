@@ -4,7 +4,7 @@ import type { LoggerStrategy } from '#/modules/logger/types/loggerStrategy';
 import type { LogLevels } from '#/modules/logger/types/logLevels';
 
 /**
- * FileLoggerStrategy implements LoggerStrategy to provide logging functionality to the file system. ({@link LoggerStrategy})
+ * FileLoggerStrategy implements {@link LoggerStrategy} to provide logging functionality to the file system.
  */
 export class FileLoggerStrategy implements LoggerStrategy {
     /**
@@ -24,7 +24,7 @@ export class FileLoggerStrategy implements LoggerStrategy {
     /**
      * Logs a message to the file system with the specified log level.
      *
-     * @param level - The log level at which the message should be logged. {@link LogLevels}
+     * @param level - The log level at which the message should be logged.
      * @param date - The date at which the message was logged.
      * @param object - The object to log.
      */

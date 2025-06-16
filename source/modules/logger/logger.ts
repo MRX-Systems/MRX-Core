@@ -15,7 +15,7 @@ import type { StrategyMap } from './types/strategyMap';
  * Logger provides a flexible, type-safe logging system that allows multiple strategies for log output.
  * The logger uses a transform stream to process log entries and execute the logging strategies.
  *
- * Logger extends the {@link TypedEventEmitter} class to emit typed events when an error occurs or when the logger ends.
+ * Logger extends the {@link TypedEventEmitter}<{@link LoggerEvent}> class to emit typed events when an error occurs or when the logger ends.
  * The logger can log messages with different levels: error, warn, info, debug, and log.
  *
  * @template TStrategies - The map of strategy names to LoggerStrategy types.
@@ -88,7 +88,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      * @param name - The name of the strategy.
      * @param strategy - The strategy to add. It must implement {@link LoggerStrategy}.
      *
-     * @throws ({@link CoreError}): If the strategy is already added. ({@link loggerErrorKeys.stategyAlreadyAdded})
+     * @throws ({@link CoreError}): If the strategy is already added.
      *
      * @returns A new Logger instance with the added strategy.
      */
@@ -115,7 +115,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @param name - The name of the strategy to remove.
      *
-     * @throws ({@link CoreError}): If the strategy is not found. ({@link loggerErrorKeys.strategyNotFound})
+     * @throws ({@link CoreError}): If the strategy is not found.
      *
      * @returns A new Logger instance without the removed strategy.
      */
@@ -140,7 +140,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @param strategies - An array of tuples where each tuple contains the strategy name and the strategy instance.
      *
-     * @throws ({@link CoreError}): If any strategy is already added. ({@link loggerErrorKeys.stategyAlreadyAdded})
+     * @throws ({@link CoreError}): If any strategy is already added.
      *
      * @returns A new Logger instance with the added strategies.
      */
@@ -159,7 +159,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @param names - An array of strategy names to remove.
      *
-     * @throws ({@link CoreError}): If any strategy is not found. ({@link loggerErrorKeys.strategyNotFound})
+     * @throws ({@link CoreError}): If any strategy is not found.
      *
      * @returns A new Logger instance without the removed strategies.
      */
@@ -186,10 +186,10 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template SNames - The names of the strategies to use.
      *
-     * @param object - The object to log. ({@link BodiesIntersection})
+     * @param object - The object to log.
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If no strategy is added. ({@link loggerErrorKeys.noStrategyAdded})
+     * @throws ({@link CoreError}): If no strategy is added.
      */
     public error<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
         object: BodiesIntersection<TStrategies, SNames[number]>,
@@ -203,10 +203,10 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template SNames - The names of the strategies to use.
      *
-     * @param object - The object to log. ({@link BodiesIntersection})
+     * @param object - The object to log.
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If no strategy is added. ({@link loggerErrorKeys.noStrategyAdded})
+     * @throws ({@link CoreError}): If no strategy is added.
      */
     public warn<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
         object: BodiesIntersection<TStrategies, SNames[number]>,
@@ -220,10 +220,10 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template SNames - The names of the strategies to use.
      *
-     * @param object - The object to log. ({@link BodiesIntersection})
+     * @param object - The object to log.
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If no strategy is added. ({@link loggerErrorKeys.noStrategyAdded})
+     * @throws ({@link CoreError}): If no strategy is added.
      */
     public info<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
         object: BodiesIntersection<TStrategies, SNames[number]>,
@@ -237,10 +237,10 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template SNames - The names of the strategies to use.
      *
-     * @param object - The object to log. ({@link BodiesIntersection})
+     * @param object - The object to log.
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If no strategy is added. ({@link loggerErrorKeys.noStrategyAdded})
+     * @throws ({@link CoreError}): If no strategy is added.
      */
     public debug<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
         object: BodiesIntersection<TStrategies, SNames[number]>,
@@ -257,7 +257,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      * @param object - The object to log. ({@link BodiesIntersection})
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If no strategy is added. ({@link loggerErrorKeys.noStrategyAdded})
+     * @throws ({@link CoreError}): If no strategy is added.
      */
     public log<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
         object: BodiesIntersection<TStrategies, SNames[number]>,
@@ -271,12 +271,12 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template TLogObject - The type of the log object.
      *
-     * @param level - The log level. ({@link LogLevels})
+     * @param level - The log level.
      * @param date - The date of the log event.
      * @param object - The object to log.
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If a strategy throws. ({@link loggerErrorKeys.loggerStrategyError})
+     * @throws ({@link CoreError}): If a strategy throws.
      */
     private async _executeStrategies<TLogObject>(
         level: LogLevels,
@@ -302,11 +302,11 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
      *
      * @template TLogObject - The type of the log object.
      *
-     * @param level - The log level. ({@link LogLevels})
+     * @param level - The log level.
      * @param object - The object to log.
      * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
      *
-     * @throws ({@link CoreError}): If no strategy is added. ({@link loggerErrorKeys.noStrategyAdded})
+     * @throws ({@link CoreError}): If no strategy is added.
      */
     private _out<TLogObject>(
         level: LogLevels,
