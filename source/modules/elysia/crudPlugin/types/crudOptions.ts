@@ -46,11 +46,13 @@ export interface CrudOptions<
      * DynamicDatabaseSelectorPluginOptions object for dynamic database selection.
      *
      * @example
+     * Static database connection
      * ```ts
-     * // Static database connection
      * database: 'my_database'
-     *
-     * // Dynamic database selection
+     * ```
+     * @example
+     * Dynamic database selection
+     * ```ts
      * database: {
      *   baseDatabaseConfig: {
      *     host: 'localhost',
@@ -77,9 +79,8 @@ export interface CrudOptions<
      * When specified, these properties will be required in the body of insert requests,
      * while other properties will remain optional.
      *
-     * @example
+     * @example Makes name and email required for insertion, while other fields remain optional
      * ```ts
-     * // Makes name and email required for insertion, while other fields remain optional
      * insertPropertiesSchemaRequired: ['name', 'email']
      * ```
      */
@@ -90,8 +91,8 @@ export interface CrudOptions<
      * @see {@link CRUDRoutes}
      *
      * @example
+     * Only generate read-only routes
      * ```ts
-     * // Only generate read-only routes
      * includedRoutes: ['find', 'findOne', 'count']
      * ```
      */
@@ -102,8 +103,8 @@ export interface CrudOptions<
      * @see {@link CRUDRoutes}
      *
      * @example
+     * Generate all routes except delete operations
      * ```ts
-     * // Generate all routes except delete operations
      * excludedRoutes?: ['delete', 'deleteOne']
      * ```
      */

@@ -5,11 +5,11 @@ export interface QueryOptionsBuilderOptions<
     TInferedObject extends TObject
 > {
     /**
-     * The name of the schema to be used for advanced search.
+     * The name of the schema to be used for referencing the query options model.
      */
     schemaName: TSchemaName;
     /**
-     * The base schema that defines the structure of the advanced search options.
+     * The base schema that defines the structure of the query options model.
      */
     baseSchema: TInferedObject;
 }

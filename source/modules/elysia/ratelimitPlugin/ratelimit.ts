@@ -9,11 +9,6 @@ import type { RateLimitOptions } from './types/rateLimitOptions';
  * protecting APIs from excessive use and potential abuse. It tracks request rates by client IP
  * and enforces configurable limits based on a sliding time window.
  *
- * The plugin uses Redis for tracking request counts, making it suitable for distributed
- * environments where multiple server instances may be handling requests from the same client.
- * When a client exceeds the configured request limit, the plugin returns a 429 Too Many Requests
- * response with appropriate headers indicating the limit and reset time.
- *
  * ### Rate Limit Headers:
  * The plugin adds the following headers to all responses:
  * - `X-RateLimit-Limit`: The maximum number of requests allowed in the window
@@ -26,10 +21,6 @@ import type { RateLimitOptions } from './types/rateLimitOptions';
  *
  * @example
  * ```ts
- * import { Elysia } from 'elysia';
- * import { Redis } from '#/core/store/redis';
- * import { rateLimitPlugin } from '#/core/elysia/plugin/ratelimit';
- *
  * // Create Redis instance
  * const redis = new Redis({
  *   host: 'localhost',
