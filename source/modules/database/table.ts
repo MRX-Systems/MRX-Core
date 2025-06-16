@@ -3,14 +3,14 @@ import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter
 
 /**
  * Represents a database table and provides access to its metadata (name, fields, primary key).
+ * The class extends `TypedEventEmitter`<{@link TableEventMap}> to allow for event-driven programming.
  *
- * - Emits events for table operations (e.g., SELECTED, CREATED, UPDATED, DELETED).
- * - Used for query construction and event handling in the database layer.
+ * Can emit events for table operations (e.g., SELECTED, CREATED, UPDATED, DELETED). when is attach to {@link MSSQL} class.
  *
  * Example:
  * ```ts
  * const table = new Table('db', 'users', ['id', 'name'], ['id', 'NUMBER']);
- * table.on('SELECTED', data => console.log(data));
+ * table.on('selected', data => console.log(data));
  * ```
  */
 export class Table extends TypedEventEmitter<TableEventMap> {

@@ -11,13 +11,13 @@ import type { QueryContext } from './types/queryContext';
 
 /**
  * Manages the connection with an MSSQL database.
- * The class extends {@link EventEmitter}.
+ * The class extends {@link TypedEventEmitter}<{@link MssqlEventMap}>.
  *
- * - Emits events for logging and table operations.
+ * - Emits events.
  * - Automatically generates repositories and tables for CRUD operations.
  * - Allows custom repository implementations per table.
  *
- * Example usage:
+ * @example
  * ```ts
  * const mssql = new MSSQL(options);
  * await mssql.connect();
@@ -56,14 +56,14 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 
     /**
      * Indicates whether to add basic event listeners for all tables.
-     * @default false
+     * @defaultValue false
      */
     private readonly _isEventEnabled: boolean;
 
     /**
      * Create a new instance of `MSSQL` with the specified options.
+     *
      * @param options - The configuration options for the MSSQL database connection.
-     * @see {@link MSSQLDatabaseOptions}
      */
     public constructor(options: MSSQLDatabaseOptions) {
         super();
@@ -97,7 +97,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
      * If the connection is successful, introspection is performed to retrieve information about tables, columns(fields), and primary keys.
      * This information is used to create instances of {@link Table} and {@link Repository} for each table in the database.
      *
-     * @throws ({@link CoreError}) Thrown if an error occurs during the connection process. ({@link databaseErrorKeys.mssqlConnectionError})
+     * @throws ({@link CoreError}) Thrown if an error occurs during the connection process.
      */
     public async connect(): Promise<void> {
         try {
@@ -117,8 +117,8 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
     /**
      * Closes the connection to the MSSQL database.
      *
-     * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link databaseErrorKeys.mssqlNotConnected})
-     * @throws ({@link CoreError}) Thrown if an error occurs during the disconnection process. ({@link databaseErrorKeys.mssqlDisconnectError})
+     * @throws ({@link CoreError}) Thrown if the database is not connected.
+     * @throws ({@link CoreError}) Thrown if an error occurs during the disconnection process.
      */
     public async disconnect(): Promise<void> {
         if (!this._isConnected)
@@ -147,8 +147,8 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
      * @param tableName - The name of the table to retrieve the repository for.
      * @param customRepository - Optional custom repository class to use for the table. The class must extend {@link Repository}.
      *
-     * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link databaseErrorKeys.mssqlNotConnected})
-     * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link databaseErrorKeys.mssqlTableNotFound})
+     * @throws ({@link CoreError}) Thrown if the database is not connected.
+     * @throws ({@link CoreError}) Thrown if the specified table is not found.
      *
      * @returns The {@link Repository} for the specified table.
      */
@@ -193,8 +193,8 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
      *
      * @param tableName - The name of the table to retrieve.
      *
-     * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link databaseErrorKeys.mssqlNotConnected})
-     * @throws ({@link CoreError}) Thrown if the specified table is not found. ({@link databaseErrorKeys.mssqlTableNotFound})
+     * @throws ({@link CoreError}) Thrown if the database is not connected.
+     * @throws ({@link CoreError}) Thrown if the specified table is not found.
      *
      * @returns The {@link Table} object for the specified table.
     */
@@ -252,7 +252,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
     /**
      * Retrieves the Knex instance for the database connection.
      *
-     * @throws ({@link CoreError}) Thrown if the database is not connected. ({@link databaseErrorKeys.mssqlNotConnected})
+     * @throws ({@link CoreError}) Thrown if the database is not connected.
      *
      * @returns The {@link Knex} instance for the database connection.
      */
