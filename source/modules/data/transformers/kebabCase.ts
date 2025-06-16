@@ -2,28 +2,25 @@ import type { CaseTransformer } from '#/modules/data/types/caseTransformer';
 import type { KebabCase } from '#/modules/data/types/kebabCase';
 
 /**
- * Transforms string into kebab-case format.
+ * Transforms string into `kebab-case` format.
  * Implements ({@link CaseTransformer}).
  */
 export class KebabCaseTransformer implements CaseTransformer {
     /**
-     * Transforms a single string from any case to kebab-case.
+     * Transforms a single string from any case to `kebab-case`.
      *
      * @template S - The string type to be transformed.
      *
-     * @param str - The string to transform into kebab-case.
+     * @param str - The string to transform into `kebab-case`.
      *
-     * @returns The string transformed into kebab-case, with all letters in lower case and words separated by hyphens.
+     * @returns The string transformed into `kebab-case`, with all letters in lower case and words separated by hyphens.
      *
      * @example
-     * transformKey('myKeyName');
-     * Returns "my-key-name"
+     * convertCase('myKeyName'); // "my-key-name"
      * @example
-     * transformKey('MyKeyName');
-     * Returns "my-key-name"
+     * convertCase('MyKeyName'); // "my-key-name"
      * @example
-     * transformKey('my_long_key_name');
-     * Returns "my-long-key-name"
+     * convertCase('my_long_key_name'); // "my-long-key-name"
      */
     public convertCase<S extends string>(str: S): KebabCase<S> {
         return str

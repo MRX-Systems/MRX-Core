@@ -21,8 +21,7 @@ const _validateDataNull = <TObject extends object>(data: TObject): void => {
 };
 
 /**
- * Filters the provided data by excluding the specified keys, with an option to exclude null or undefined values.
- * Uses a generic type parameter to control the return type based on the excludeNullUndefined flag.
+ * Filters the provided data by excluding the specified keys.
  *
  * @template TObject - The type of the data object to filter, must be an object.
  * @template TExcludedKeys - The keys to exclude from the data object.
@@ -32,14 +31,21 @@ const _validateDataNull = <TObject extends object>(data: TObject): void => {
  * @param keys - The array of keys to exclude from the data object. (Can be empty)
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded.
  *
- * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
+ * @throws ({@link CoreError}) - Throws an error if the data is null or undefined.
  *
- * @returns The filtered data object with the specified keys excluded. ({@link TObject})
+ * @returns The filtered data object with the specified keys excluded.
  *
  * @example
- * ```typescript
+ * Excludes the specified keys from the data object and returns a new object with the remaining properties.
+ * ```ts
  * const object = { test: 'test', exclude: 'exclude' }; // type is { test: string, exclude: string }
- * const filtered = filterByKeyExclusion(object, ['exclude']); // new type is { test: string } (add third parameter to exclude null/undefined values)
+ * const filtered = filterByKeyExclusion(object, ['exclude']); // new type is { test: string }
+ * ```
+ * @example
+ * Excludes the specified keys from the data object and returns a new object with the remaining properties, excluding null or undefined values.
+ * ```ts
+ * const object = { test: 'test', exclude: 'exclude', nullValue: null, undefinedValue: undefined }; // type is { test: string, exclude: string, nullValue: null, undefinedValue: undefined }
+ * const filtered = filterByKeyExclusion(object, ['exclude'], true); // new type is { test: string }
  * ```
  */
 export const filterByKeyExclusion = <
@@ -81,7 +87,7 @@ export const filterByKeyExclusion = <
  * @param keys - The array of keys to exclude from the data object and all nested objects. (Can be empty)
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded. Default is false.
  *
- * @throws ({@link CoreError}) - Throws an error if the data is null or undefined and throwIfDataIsNull is true. ({@link dataErrorKeys.dataIsNull})
+ * @throws ({@link CoreError}) - Throws an error if the data is null or undefined and throwIfDataIsNull is true.
  *
  * @returns A new object with the specified keys excluded recursively.
  *
@@ -134,7 +140,6 @@ export const filterByKeyExclusionRecursive = <
 
 /**
  * Filters the provided data by including only the specified keys, with an option to exclude null or undefined values.
- * Uses a generic type parameter to control the return type based on the excludeNullUndefined flag.
  *
  * @template TObject - The type of the data object to filter, must be an object.
  * @template TIncludedKeys - The keys to include from the data object.
