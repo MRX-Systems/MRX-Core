@@ -17,8 +17,8 @@
     "./database": "./dist/modules/database/index.js",
     "./database/events": "./dist/modules/database/events/index.js",
     "./database/types": "./dist/modules/database/types/index.js",
-    "./elysia/dynamicDatabaseSelectorPlugin": "./dist/modules/elysia/dynamicDatabaseSelectorPlugin/index.js",
-    "./elysia/dynamicDatabaseSelectorPlugin/types": "./dist/modules/elysia/dynamicDatabaseSelectorPlugin/types/index.js",
+    "./elysia/dbSelectorPlugin": "./dist/modules/elysia/dbSelectorPlugin/index.js",
+    "./elysia/dbSelectorPlugin/types": "./dist/modules/elysia/dbSelectorPlugin/types/index.js",
     "./elysia/errorPlugin": "./dist/modules/elysia/errorPlugin/index.js",
     "./elysia/jwtPlugin": "./dist/modules/elysia/jwtPlugin/index.js",
     "./elysia/jwtPlugin/types": "./dist/modules/elysia/jwtPlugin/types/index.js",
@@ -55,6 +55,7 @@
     "test": "bun test --coverage --timeout 5500"
   },
   "devDependencies": {
+    "@elysiajs/swagger": "^1.3.0",
     "@eslint/js": "^9.29.0",
     "@stylistic/eslint-plugin": "^4.4.1",
     "@types/bun": "^1.2.16",
