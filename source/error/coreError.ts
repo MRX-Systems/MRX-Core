@@ -33,10 +33,10 @@ import type { CoreErrorOptions } from './types/coreErrorOptions';
  * The following example demonstrates how to create a CoreError with a custom cause type.
  * ```ts
  * const coreError = new CoreError<{ foo: string }>({
- *     message: 'Custom error with cause',
- *     key: 'core-package.error.custom_error',
- *     httpStatusCode: 500,
- *     cause: { foo: 'bar' },
+ *   message: 'Custom error with cause',
+ *   key: 'core-package.error.custom_error',
+ *   httpStatusCode: 500,
+ *   cause: { foo: 'bar' },
  * });
  * console.log(coreError.cause); // { foo: 'bar' }
  * ```
@@ -71,7 +71,7 @@ export class CoreError<const T = unknown> extends Error {
     /**
      * Creates a new instance of the CoreError class.
      *
-     * @param coreErrorOptions - The options for the Core error. ({@link CoreErrorOptions})
+     * @param coreErrorOptions - The options for the Core error.
      */
     public constructor(coreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
         super(coreErrorOptions?.message);
