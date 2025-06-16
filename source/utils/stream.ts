@@ -7,7 +7,7 @@ import type { Stream } from 'stream';
  * @template KStream - The type of the stream.
  * @param stream - The stream to make async iterable.
  *
- * @returns The stream as an async iterable. ({@link KStream} extends {@link Stream} & {@link AsyncIterable})
+ * @returns The stream as an async iterable.
  *
  * @example
  * ```typescript
