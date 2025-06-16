@@ -13,5 +13,5 @@ export interface QueryOptionsExtendStream<TModel> extends QueryOptions<TModel> {
      * @param encoding - The encoding of the chunk.
      * @param callback - The callback to call when the transformation is complete.
      */
-    transform?: (chunk: NoInfer<TModel>, encoding: string, callback: (error?: Error | null, data?: NoInfer<TModel>) => void) => void;
+    readonly transform?: (chunk: NoInfer<TModel>, encoding: string, callback: (error?: Error | null, data?: NoInfer<TModel>) => void) => void;
 }

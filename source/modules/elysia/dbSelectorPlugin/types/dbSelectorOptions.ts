@@ -21,12 +21,12 @@ export interface DbSelectorOptions<THeaderKeyName extends string = 'database-usi
     /**
      * Options for the database connection
      */
-    connectionConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
+    readonly connectionConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
     /**
      * The name of the key to be used in the header to select the database
      * @example 'x-database-name'
      *
      * @defaultValue 'database-using'
      */
-    headerKey?: THeaderKeyName;
+    readonly headerKey?: THeaderKeyName;
 }

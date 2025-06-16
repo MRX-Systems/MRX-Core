@@ -7,9 +7,9 @@ export interface QueryOptionsBuilderOptions<
     /**
      * The name of the schema to be used for referencing the query options model.
      */
-    schemaName: TSchemaName;
+    readonly schemaName: TSchemaName;
     /**
      * The base schema that defines the structure of the query options model.
      */
-    baseSchema: TInferedObject;
+    readonly baseSchema: TInferedObject;
 }

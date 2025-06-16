@@ -5,27 +5,27 @@ export interface SMTPOptions {
     /**
      * The hostname or IP address of the SMTP server.
      */
-    host: string;
+    readonly host: string;
 
     /**
      * The port number to connect to.
      * @defaultValue 587
      */
-    port?: number;
+    readonly port?: number;
 
     /**
      * Whether to use a secure (TLS) connection.
      * @defaultValue false
      */
-    secure?: boolean;
+    readonly secure?: boolean;
 
     /**
      * The credentials for SMTP authentication.
      */
-    credentials: SMTPCredentials;
+    readonly credentials: SMTPCredentials;
 
     /**
      * Optional pool configuration.
      */
-    pool?: SMTPPoolOptions;
+    readonly pool?: SMTPPoolOptions;
 }

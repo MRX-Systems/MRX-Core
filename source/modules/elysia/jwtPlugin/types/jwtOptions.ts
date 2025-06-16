@@ -35,7 +35,7 @@ export interface JWTOptions<TPluginName extends string = 'jwt'> {
      *
      * @defaultValue 'jwt'
      */
-    name?: TPluginName;
+    readonly name?: TPluginName;
     /**
      * Secret key used to sign and verify JWTs.
      *
@@ -48,7 +48,7 @@ export interface JWTOptions<TPluginName extends string = 'jwt'> {
      * secret: process.env.JWT_SECRET
      * ```
      */
-    secret: string;
+    readonly secret: string;
     /**
      * JWT expiration setting. Applies as the default expiration for tokens.
      *
@@ -74,13 +74,13 @@ export interface JWTOptions<TPluginName extends string = 'jwt'> {
      * exp: 3600
      * ```
      */
-    exp?: number | string | Date;
+    readonly exp?: number | string | Date;
     /**
      * Default JWT header parameters to include in every JWT.
      *
      * This allows you to specify additional metadata about the token.
      */
-    header?: JWSHeaderParameters;
+    readonly header?: JWSHeaderParameters;
     /**
      * Default payload values to include in every JWT.
      *
@@ -96,5 +96,5 @@ export interface JWTOptions<TPluginName extends string = 'jwt'> {
      * }
      * ```
      */
-    payload?: JWTPayload;
+    readonly payload?: JWTPayload;
 }

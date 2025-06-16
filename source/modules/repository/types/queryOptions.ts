@@ -12,23 +12,23 @@ export interface QueryOptions<TModel> {
     /**
      * The fields to select in the query. If not provided, all fields are selected. ({@link SelectedFields})
      */
-    selectedFields?: SelectedFields<NoInfer<TModel>>;
+    readonly selectedFields?: SelectedFields<NoInfer<TModel>>;
     /**
      * The filters options to apply to the query. Can be a single object or an array of objects.
      * @see {@link Filter}
      */
-    filters?: Filter<NoInfer<TModel>> | Filter<NoInfer<TModel>>[];
+    readonly filters?: Filter<NoInfer<TModel>> | Filter<NoInfer<TModel>>[];
     /**
      * Order the results by a specific column and direction. ({@link OrderBy})
      */
-    orderBy?: OrderBy<NoInfer<TModel>>;
+    readonly orderBy?: OrderBy<NoInfer<TModel>>;
     /**
      * Whether to throw an error if the query does not return any result.
      * @defaultValue false
      */
-    throwIfNoResult?: boolean | string;
+    readonly throwIfNoResult?: boolean | string;
     /**
      * The transaction context for the query. ({@link Transaction})
      */
-    transaction?: Transaction;
+    readonly transaction?: Transaction;
 }
