@@ -243,6 +243,12 @@ describe('filterByKeyExclusionRecursive', () => {
                 }
             });
         });
+
+        test('should return object with all symbol of original object', () => {
+            const object = { [Symbol.for('test')]: 'test' };
+            const filtered: Record<string, unknown> = filterByKeyExclusionRecursive(object, []);
+            expect(filtered).toEqual({ [Symbol.for('test')]: 'test' });
+        });
     });
 });
 
