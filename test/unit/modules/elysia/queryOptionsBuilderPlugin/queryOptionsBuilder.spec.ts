@@ -5,7 +5,7 @@ import { queryOptionsBuilderPlugin } from '#/modules/elysia/queryOptionsBuilderP
 
 describe('queryOptionsBuilderPlugin', () => {
     describe('Model', () => {
-        describe('queryOptionsBuilderTestSchema', () => {
+        describe('TestSchemaSearch', () => {
             const plugin = queryOptionsBuilderPlugin({
                 schemaName: 'TestSchema',
                 baseSchema: t.Object({
@@ -19,7 +19,7 @@ describe('queryOptionsBuilderPlugin', () => {
 
 
             test('should contain the query options builder schema', () => {
-                expect(plugin['definitions'].type).toHaveProperty('queryOptionsBuilderTestSchema');
+                expect(plugin['definitions'].type).toHaveProperty('TestSchemaSearch');
             });
         });
     });
