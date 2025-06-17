@@ -107,7 +107,7 @@ export const filterByKeyExclusionRecursive = <
 ): Record<string, unknown> => {
     _validateDataNull(data);
 
-    const filteredData: Record<string, unknown> = {};
+    const filteredData: Record<PropertyKey, unknown> = {};
 
     for (const key in data) {
         const typedKey = key as keyof TObject;
@@ -134,6 +134,9 @@ export const filterByKeyExclusionRecursive = <
             else
                 filteredData[key] = data[typedKey];
     }
+
+    for (const symbol of Object.getOwnPropertySymbols(data))
+        filteredData[symbol] = (data as Record<symbol, unknown>)[symbol];
 
     return filteredData;
 };
