@@ -137,5 +137,5 @@ export const queryOptionsBuilderPlugin = <
     name: `queryOptionsBuilderPlugin-${schemaName}`,
     seed: baseSchema
 })
-    .model((`queryOptionsBuilder${schemaName}` as const), _createSearchSchema(baseSchema))
+    .model((`${schemaName}Search` as const), _createSearchSchema(baseSchema))
     .as('scoped');
