@@ -6,6 +6,7 @@ import type {
 import { Elysia, t } from 'elysia';
 
 import { filterByKeyExclusionRecursive } from '#/modules/data/data';
+import type { AdaptiveWhereClauseSchema } from './types/adaptiveWhereClauseSchema';
 import type { QueryOptionsBuilderOptions } from './types/queryOptionsBuilderOptions';
 import { createAdaptiveWhereClauseSchema } from './utils/createAdaptiveWhereClauseSchema';
 import { createOrderBySchema } from './utils/createOrderBySchema';
@@ -25,7 +26,7 @@ const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInfere
     const { properties } = schema;
     const clauseSchema = {} as {
         [K in keyof Static<TInferedObject>]: TUnion<[
-            ReturnType<typeof createAdaptiveWhereClauseSchema<TInferedObject['properties'][K]>>,
+            AdaptiveWhereClauseSchema<TInferedObject['properties'][K]>,
             TInferedObject['properties'][K]
         ]>
     };
@@ -102,7 +103,7 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
             selectedFields: createSelectedFieldsSchema(sanitizedSchema),
             orderBy: createOrderBySchema(sanitizedSchema),
             filters: t.Union([
-                t.Partial(_createFiltersSchema(sanitizedSchema)),
+                // t.Partial(_createFiltersSchema(sanitizedSchema)),
                 t.Array(t.Partial(_createFiltersSchema(sanitizedSchema)))
             ]),
             limit: t.Number({
