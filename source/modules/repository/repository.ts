@@ -10,6 +10,7 @@ import { makeStreamAsyncIterable } from '#/utils/stream';
 import type { StreamWithAsyncIterable } from '#/utils/types/streamWithAsyncIterable';
 import type { AdaptiveWhereClause } from './types/adaptiveWhereClause';
 import type { Filter } from './types/filter';
+import type { OrderByItem } from './types/orderByItem';
 import type { QueryOptions } from './types/queryOptions';
 import type { QueryOptionsExtendPagination } from './types/queryOptionsExtendPagination';
 import type { QueryOptionsExtendStream } from './types/queryOptionsExtendStream';
@@ -47,6 +48,32 @@ const _operators: Record<string, OperatorFn> = ({
 });
 
 /**
+ * Valid operator keys for complex query detection.
+ * Using a Set for O(1) lookup performance.
+ */
+const _validOperatorKeys = new Set<string>([
+    '$eq',
+    '$neq',
+    '$lt',
+    '$lte',
+    '$gt',
+    '$gte',
+    '$in',
+    '$nin',
+    '$between',
+    '$nbetween',
+    '$like',
+    '$nlike',
+    '$isNull'
+]);
+
+/**
+ * Default pagination constants.
+ */
+const _DEFAULT_LIMIT = 100;
+const _DEFAULT_OFFSET = 0;
+
+/**
  * Repository allowing interaction with a database table using Knex.js fully typed.
  *
  * @template TModel - The data model type handled by the repository.
@@ -65,7 +92,6 @@ export class Repository<TModel = unknown> {
 
     /**
      * The table associated with this repository.
-     * @see {@link Table}
      */
     protected readonly _table: Table;
 
@@ -103,11 +129,37 @@ export class Repository<TModel = unknown> {
      * }
      * ```
      * @example
-     * With ordering and field selection
+     * With single field selection
      * ```ts
      * const stream = userRepository.findStream({
-     *     selectedFields: ['id', 'name', 'email'],
-     *     orderBy: ['createdDate', 'desc']
+     *    selectedFields: 'name'
+     * });
+     * ```
+     * @example
+     * With multiple fields selection
+     * ```ts
+     * const stream = userRepository.findStream({
+     *    selectedFields: ['id', 'name', 'email']
+     * });
+     * ```
+     * @example
+     * With single order by field
+     * ```ts
+     * const stream = userRepository.findStream({
+     *     orderBy: {
+     *         selectedField: 'createdAt',
+     *         direction: 'desc'
+     *     }
+     * });
+     * ```
+     * @example
+     * With multiple order by fields
+     * ```ts
+     * const stream = userRepository.findStream({
+     *     orderBy: [
+     *         { selectedField: 'createdAt', direction: 'desc' },
+     *         { selectedField: 'name', direction: 'asc' }
+     *     ]
      * });
      * ```
      * @example
@@ -144,18 +196,30 @@ export class Repository<TModel = unknown> {
      *     }
      * });
      * ```
+     * @example
+     * With timeout and custom buffer size for large datasets
+     * ```ts
+     * const stream = userRepository.findStream({
+     *     timeout: 30000, // 30 seconds timeout (default is 5 minutes)
+     *     highWaterMark: 64, // Larger buffer for better throughput
+     *     filters: { isActive: true }
+     * });
+     * ```
+     * @example
+     * Disable timeout for long-running streams
+     * ```ts
+     * const stream = userRepository.findStream({
+     *     timeout: 0, // No timeout - use with caution!
+     *     filters: { department: 'analytics' }
+     * });
+     * ```
      */
-    public findStream<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendStream<KModel>): StreamWithAsyncIterable<KModel[]> {
-        const query = this._knex(this._table.name)
-            .select(options?.selectedFields ?? '*');
-        if (options?.filters)
-            this._applyFilter(query, options.filters);
+    public findStream<KModel extends TModel = NoInfer<TModel>>(
+        options?: QueryOptionsExtendStream<KModel>
+    ): StreamWithAsyncIterable<KModel> {
+        const query = this._knex(this._table.name);
 
-        const orderBy: [string, 'asc' | 'desc'] = [
-            options?.orderBy?.[0] || this._table.primaryKey[0],
-            options?.orderBy?.[1] || 'asc'
-        ];
-        query.orderBy(orderBy[0], orderBy[1]);
+        this._applyQueryOptions<KModel>(query, options);
 
         const kStream: StreamWithAsyncIterable<KModel> = query.stream();
 
@@ -164,6 +228,15 @@ export class Repository<TModel = unknown> {
             ...options?.transform && { transform: options.transform }
         });
 
+        // Cleanup function to properly destroy streams and clear resources
+        const cleanup = (): void => {
+            if (!kStream.destroyed)
+                kStream.destroy();
+            if (!passThrough.destroyed)
+                passThrough.destroy();
+        };
+
+        // Handle source stream errors
         kStream.on('error', (error: unknown) => {
             const code = (error as { number: keyof typeof mssqlErrorCode })?.number || 0;
             passThrough.emit('error', new CoreError({
@@ -176,8 +249,14 @@ export class Repository<TModel = unknown> {
             }));
         });
 
+        // Handle passThrough close - cleanup source stream
+        passThrough.on('close', cleanup);
+
+        // Handle passThrough errors - cleanup
+        passThrough.on('error', cleanup);
+
         kStream.pipe(passThrough);
-        return makeStreamAsyncIterable<KModel, PassThrough>(passThrough);
+        return makeStreamAsyncIterable<KModel, PassThrough>(passThrough) as StreamWithAsyncIterable<KModel>;
     }
 
     /**
@@ -246,97 +325,19 @@ export class Repository<TModel = unknown> {
      * });
      * ```
      */
-    public async find<KModel extends TModel = NoInfer<TModel>>(options?: QueryOptionsExtendPagination<KModel>): Promise<KModel[]> {
-        const query = this._knex(this._table.name)
-            .select(options?.selectedFields ?? '*');
-        if (options?.filters)
-            this._applyFilter(query, options.filters);
+    public async find<KModel extends TModel = NoInfer<TModel>>(
+        options?: QueryOptionsExtendPagination<KModel>
+    ): Promise<KModel[]> {
+        const query = this._knex(this._table.name);
 
-        const orderBy: [string, 'asc' | 'desc'] = [
-            options?.orderBy?.[0] || this._table.primaryKey[0],
-            options?.orderBy?.[1] || 'asc'
-        ];
-        const limit = options?.limit || 100;
-        const offset = options?.offset || 0;
+        this._applyQueryOptions<KModel>(query, options);
 
-        query.orderBy(orderBy[0], orderBy[1])
+        const limit = options?.limit || _DEFAULT_LIMIT;
+        const offset = options?.offset || _DEFAULT_OFFSET;
+        query
             .limit(limit)
             .offset(offset);
-
         return this._executeQuery<KModel>(query, options?.throwIfNoResult);
-    }
-
-    /**
-     * Finds a single record in the database based on the specified query options and returns the result.
-     * This method supports comprehensive filtering, field selection, and sorting to provide flexible data retrieval capabilities.
-     *
-     * @template KModel - The type of the object to retrieve.
-     *
-     * @param options - The query options to apply to the search.
-     *
-     * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
-     *
-     * @returns A single record matching the query options.
-     *
-     * @example
-     * Basic usage
-     * ```ts
-     * const user = await userRepository.findOne({
-     *     filters: { id: 1 }
-     * });
-     * ```
-     * @example
-     * With field selection
-     * ```ts
-     * const user = await userRepository.findOne({
-     *     selectedFields: ['id', 'firstName', 'lastName'],
-     *     filters: { id: 1 }
-     * });
-     * ```
-     * @example
-     * With filtering
-     * ```ts
-     * const user = await userRepository.findOne({
-     *     filters: {
-     *         role: 'admin',
-     *         isActive: { $eq: true },
-     *     }
-     * });
-     * ```
-     * @example
-     * With sorting
-     * ```ts
-     * const user = await userRepository.findOne({
-     *     orderBy: ['lastName', 'asc']
-     * });
-     * ```
-     * @example
-     * Using a transaction
-     * ```ts
-     * await knex.transaction(async (trx) => {
-     *     const user = await userRepository.findOne({
-     *         filters: { department: 'finance' },
-     *         transaction: trx
-     *     });
-     * });
-     * ```
-     */
-    public async findOne<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>): Promise<KModel> {
-        const query = this._knex(this._table.name)
-            .select(options?.selectedFields ?? '*');
-        if (options?.filters)
-            this._applyFilter(query, options.filters);
-
-        const orderBy: [string, 'asc' | 'desc'] = [
-            options?.orderBy?.[0] || this._table.primaryKey[0],
-            options?.orderBy?.[1] || 'asc'
-        ];
-
-        query.orderBy(orderBy[0], orderBy[1]);
-
-        return this._executeQuery<KModel>(query, options?.throwIfNoResult)
-            .then((result) => result[0]);
     }
 
     /**
@@ -375,11 +376,12 @@ export class Repository<TModel = unknown> {
      * });
      * ```
      */
-    public async count<KModel extends TModel = NoInfer<TModel>>(options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>): Promise<number> {
+    public async count<KModel extends TModel = NoInfer<TModel>>(
+        options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>
+    ): Promise<number> {
         const query = this._knex(this._table.name)
             .count({ count: '*' });
-        if (options?.filters)
-            this._applyFilter(query, options.filters);
+        this._applyFilter(query, options?.filters);
 
         return this._executeQuery<{ count: number }>(query, options?.throwIfNoResult)
             .then((result) => result[0].count);
@@ -475,10 +477,9 @@ export class Repository<TModel = unknown> {
         options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
     ): Promise<KModel[]> {
         const query = this._knex(this._table.name)
-            .update(data)
-            .returning(options?.selectedFields ?? '*');
-        if (options?.filters)
-            this._applyFilter(query, options.filters);
+            .update(data);
+
+        this._applyQueryOptions<KModel>(query, options);
 
         return this._executeQuery<KModel>(query);
     }
@@ -520,14 +521,40 @@ export class Repository<TModel = unknown> {
      * });
      * ```
      */
-    public async delete<KModel extends TModel = NoInfer<TModel>>(options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>): Promise<KModel[]> {
+    public async delete<KModel extends TModel = NoInfer<TModel>>(
+        options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
+    ): Promise<KModel[]> {
         const query = this._knex(this._table.name)
-            .delete()
-            .returning(options?.selectedFields ?? '*');
-        if (options?.filters)
-            this._applyFilter(query, options.filters);
+            .delete();
+
+        this._applyQueryOptions<KModel>(query, options);
 
         return this._executeQuery<KModel>(query);
+    }
+
+    /**
+     * Applies selected fields to a Knex.js query builder. This method supports both single and multiple field selections.
+     * It is used to specify which fields should be returned in the query results.
+     *
+     * @template KModel - The type of the object for query options.
+     *
+     * @param query - The Knex.js query builder to apply the selected fields to.
+     * @param selectedFields - The fields to select. Can be a single field or an array of fields.
+     */
+    protected _applySelectedFields<KModel>(
+        query: Knex.QueryBuilder,
+        selectedFields: QueryOptions<KModel>['selectedFields'] | undefined
+    ): void {
+        const qMethod = (query as unknown as { _method: string })._method;
+
+        if (
+            qMethod === 'del'
+            || qMethod === 'update'
+            || qMethod === 'insert'
+        )
+            query.returning(selectedFields ?? '*');
+        else
+            query.select(selectedFields ?? '*');
     }
 
     /**
@@ -542,7 +569,7 @@ export class Repository<TModel = unknown> {
      */
     protected _applyFilter<KModel>(
         query: Knex.QueryBuilder,
-        search: Filter<KModel> | Filter<KModel>[]
+        search: Filter<KModel> | Filter<KModel>[] | undefined
     ): void {
         const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
             for (const [key, value] of Object.entries(search))
@@ -560,22 +587,70 @@ export class Repository<TModel = unknown> {
                 } else if (key === '$q' && typeof value === 'object' && 'selectedFields' in value) {
                     const { selectedFields, value: searchValue } = value;
                     const isNumber = typeof searchValue === 'number';
-                    const operator = isNumber ? '=' : 'like';
+                    const operator = isNumber ? '=' : 'like'; // todo remove on peut like number
                     const formattedValue = isNumber ? searchValue : `%${searchValue}%`;
 
-                    selectedFields.forEach((field) => {
-                        query.orWhere(field, operator, formattedValue);
-                    });
+                    if (Array.isArray(selectedFields))
+                        selectedFields.forEach((field) => {
+                            query.orWhere(field, operator, formattedValue);
+                        });
+                    else
+                        query.orWhere(selectedFields, operator, formattedValue);
                 } else {
-                    if (typeof value === 'object' && Object.keys(value).length === 0)
+                    if (typeof value === 'object' && value !== null && Object.keys(value).length === 0)
                         continue;
                     query.where(key, value);
                 }
         };
-        if (Array.isArray(search))
+        if (search && Array.isArray(search))
             search.reduce((acc, item) => acc.orWhere((q) => this._applyFilter(q, item)), query);
-        else
+        else if (search)
             processing(query, search);
+    }
+
+    /**
+     * Applies order by criteria to a Knex.js query builder. This method supports both single and multiple order by items.
+     * It is used to specify the sorting order of the query results.
+     *
+     * @template KModel - The type of the object for query options.
+     *
+     * @param query - The Knex.js query builder to apply the order by criteria to.
+     * @param orderBy - The order by criteria. Can be a single item or an array of items.
+     */
+    protected _applyOrderBy<KModel>(
+        query: Knex.QueryBuilder,
+        orderBy: OrderByItem<KModel> | OrderByItem<KModel>[] | undefined
+    ): void {
+        const qMethod = (query as unknown as { _method: string })._method;
+
+        if (!(qMethod === 'select'))
+            return;
+        if (!orderBy)
+            query.orderBy(this._table.primaryKey[0], 'asc');
+        else if (Array.isArray(orderBy))
+            orderBy.forEach((item) => {
+                query.orderBy(item.selectedField, item.direction);
+            });
+        else
+            query.orderBy(orderBy.selectedField, orderBy.direction);
+    }
+
+    /**
+     * Applies query options such as filters, orderBy, and transaction to a Knex.js query builder.
+     *
+     * @template KModel - The type of the object for query options.
+     *
+     * @param query - The Knex.js query builder to apply the options to.
+     * @param options - The query options to apply.
+     */
+    protected _applyQueryOptions<KModel>(
+        query: Knex.QueryBuilder,
+        options?: Omit<QueryOptions<KModel>, 'throwIfNoResult'>
+    ): void {
+        this._applyFilter<KModel>(query, options?.filters);
+        this._applyOrderBy<KModel>(query, options?.orderBy);
+        this._applySelectedFields<KModel>(query, options?.selectedFields);
+        // transaction
     }
 
     /**
@@ -589,7 +664,10 @@ export class Repository<TModel = unknown> {
      *
      * @returns Never returns, always throws an error.
      */
-    protected _handleError(error: unknown, query: Knex.QueryBuilder): never {
+    protected _handleError(
+        error: unknown,
+        query: Knex.QueryBuilder
+    ): never {
         if (error instanceof CoreError)
             throw error;
         const code = (error as { number: keyof typeof mssqlErrorCode })?.number || 0;
@@ -611,26 +689,11 @@ export class Repository<TModel = unknown> {
      * @returns True if the data is a WhereClause, false otherwise.
      */
     private _isComplexQuery(data: unknown): data is AdaptiveWhereClause<unknown> {
-        const validKeys = new Set<string>([
-            '$eq',
-            '$neq',
-            '$lt',
-            '$lte',
-            '$gt',
-            '$gte',
-            '$in',
-            '$nin',
-            '$between',
-            '$nbetween',
-            '$like',
-            '$nlike',
-            '$isNull'
-        ]);
         return Boolean(
             data
             && typeof data === 'object'
             && !Array.isArray(data)
-            && Object.keys(data).some((key) => validKeys.has(key))
+            && Object.keys(data).some((key) => _validOperatorKeys.has(key))
         );
     }
 
@@ -648,7 +711,10 @@ export class Repository<TModel = unknown> {
      *
      * @returns An array of records returned by the query.
      */
-    protected async _executeQuery<KModel>(query: Knex.QueryBuilder, throwIfNoResult: boolean | string = false): Promise<KModel[]> {
+    protected async _executeQuery<KModel>(
+        query: Knex.QueryBuilder,
+        throwIfNoResult: QueryOptions<KModel>['throwIfNoResult'] = false
+    ): Promise<KModel[]> {
         try {
             const result: KModel[] = await query;
             if (throwIfNoResult && result.length === 0)
