@@ -572,32 +572,43 @@ export class Repository<TModel = unknown> {
         search: Filter<KModel> | Filter<KModel>[] | undefined
     ): void {
         const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
-            for (const [key, value] of Object.entries(search))
-                if (this._isComplexQuery(value)) {
-                    const whereClause = value as AdaptiveWhereClause<unknown>;
-                    for (const [operator, opValue] of Object.entries(whereClause))
-                        if (operator in _operators) {
-                            const func = _operators[operator as keyof AdaptiveWhereClause<unknown>];
-                            func(query, key, opValue);
-                        }
-                } else if (key === '$q' && (typeof value === 'string' || typeof value === 'number')) {
+            for (const key in search) {
+                const prop = search[key as keyof Filter<KModel>];
+                if (this._filterIsAdaptiveWhereClause(prop)) {
+                    for (const operator in prop)
+                        if (operator in _operators)
+                            _operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
+                } else if (
+                    key === '$q'
+                    && prop !== null
+                    && (typeof prop === 'string' || typeof prop === 'number')
+                ) {
                     for (const field of this._table.fields)
-                        if (value)
-                            query.orWhere(field, 'like', `%${value}%`); // TODO add table in prefix
-                } else if (key === '$q' && typeof value === 'object' && 'selectedFields' in value) {
-                    const { selectedFields, value: searchValue } = value;
-
+                        if (prop)
+                            query.orWhere(field, 'like', `%${prop}%`);
+                } else if (
+                    key === '$q'
+                    && prop !== null
+                    && typeof prop === 'object'
+                    && 'selectedFields' in prop
+                    && 'value' in prop
+                ) {
+                    const { selectedFields, value } = prop as {
+                        selectedFields: string | string[];
+                        value: string | number;
+                    };
                     if (Array.isArray(selectedFields))
-                        selectedFields.forEach((field) => {
-                            query.orWhere(field, 'like', `%${searchValue}%`);
-                        });
+                        for (const field of selectedFields)
+                            query.orWhere(field, 'like', `%${value}%`);
                     else
-                        query.orWhere(selectedFields, 'like', `%${searchValue}%`);
+                        query.orWhere(selectedFields, 'like', `%${value}%`);
                 } else {
-                    if (value !== null && typeof value === 'object' && Object.keys(value).length === 0)
+                    if (prop !== null && typeof prop === 'object' && Object.keys(prop).length === 0)
                         continue;
-                    query.where(key, value);
+                    if (prop !== undefined)
+                        query.where(key, prop);
                 }
+            }
         };
         if (search && Array.isArray(search))
             search.reduce((acc, item) => acc.orWhere((q) => this._applyFilter(q, item)), query);
@@ -685,7 +696,7 @@ export class Repository<TModel = unknown> {
      *
      * @returns True if the data is a WhereClause, false otherwise.
      */
-    private _isComplexQuery(data: unknown): data is AdaptiveWhereClause<unknown> {
+    private _filterIsAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
         return Boolean(
             data
             && typeof data === 'object'
