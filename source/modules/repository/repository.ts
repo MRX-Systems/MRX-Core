@@ -586,18 +586,15 @@ export class Repository<TModel = unknown> {
                             query.orWhere(field, 'like', `%${value}%`); // TODO add table in prefix
                 } else if (key === '$q' && typeof value === 'object' && 'selectedFields' in value) {
                     const { selectedFields, value: searchValue } = value;
-                    const isNumber = typeof searchValue === 'number';
-                    const operator = isNumber ? '=' : 'like'; // todo remove on peut like number
-                    const formattedValue = isNumber ? searchValue : `%${searchValue}%`;
 
                     if (Array.isArray(selectedFields))
                         selectedFields.forEach((field) => {
-                            query.orWhere(field, operator, formattedValue);
+                            query.orWhere(field, 'like', `%${searchValue}%`);
                         });
                     else
-                        query.orWhere(selectedFields, operator, formattedValue);
+                        query.orWhere(selectedFields, 'like', `%${searchValue}%`);
                 } else {
-                    if (typeof value === 'object' && value !== null && Object.keys(value).length === 0)
+                    if (value !== null && typeof value === 'object' && Object.keys(value).length === 0)
                         continue;
                     query.where(key, value);
                 }
