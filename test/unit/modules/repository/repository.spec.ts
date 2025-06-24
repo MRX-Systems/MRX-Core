@@ -3,8 +3,8 @@ import { randomBytes } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
-import { Table } from '#/modules/database/table';
 import { CoreError } from '#/error/coreError';
+import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
 import type { Filter } from '#/modules/repository/types/filter';
 
@@ -66,325 +66,381 @@ async function dropDataTable(): Promise<void> {
     await knexInstance.destroy();
 }
 
-type AdvancedSearchTest<T> = [Filter<T> | Filter<T>[], (data: T | T[]) => void, number];
 
-function advancedSearchTests(): AdvancedSearchTest<Data>[] {
-    const advancedSearchTest: AdvancedSearchTest<Data>[] = [
-        /**
-         * Single advanced search tests with one condition
-         */
-        // Equal
-        [
-            { id: 10 },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).toBe(10));
-                else
-                    expect(data.id).toBe(10);
+interface FilterTest<Data> {
+    filters: Filter<Data> | Filter<Data>[];
+    validator: (data: Data[], expectedCount: number) => void;
+    expectedCount: number;
+}
+
+const filtersTests: [string, FilterTest<Data>][] = [
+    [
+        'Literal Equal',
+        {
+            filters: { id: 10 },
+            validator: (data, expectedCount) => {
+                expect(data).toHaveLength(expectedCount);
+                expect(data[0].id).toBe(10);
             },
-            1
-        ],
-        // Equal
-        [
-            { id: { $eq: 2 } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).toBe(2));
-                else
-                    expect(data.id).toBe(2);
+            expectedCount: 1
+        }
+    ],
+    [
+        'Literal Equal OR Literal Equal',
+        {
+            filters: [
+                { id: 10 },
+                { id: 20 }
+            ],
+            validator: (data, expectedCount) => {
+                expect(data).toHaveLength(expectedCount);
+                expect(data).toContainEqual(expect.objectContaining({ id: 10 }));
+                expect(data).toContainEqual(expect.objectContaining({ id: 20 }));
             },
-            1
-        ],
-        // Not equal
-        [
-            { id: { $neq: 2 } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).not.toBe(2));
-                else
-                    expect(data.id).not.toBe(2);
+            expectedCount: 2
+        }
+    ],
+    [
+        'Equal',
+        {
+            filters: { id: { $eq: 10 } },
+            validator: (data, expectedCount) => {
+                expect(data).toHaveLength(expectedCount);
+                expect(data).toContainEqual(expect.objectContaining({ id: 10 }));
             },
-            19
-        ],
-        // Less than
-        [
-            { id: { $lt: 5 } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).toBeLessThan(5));
-                else
-                    expect(data.id).toBeLessThan(5);
+            expectedCount: 1
+        }
+    ],
+    [
+        'Equal OR Equal',
+        {
+            filters: [
+                { id: { $eq: 10 } },
+                { id: { $eq: 20 } }
+            ],
+            validator: (data, expectedCount) => {
+                expect(data).toHaveLength(expectedCount);
+                expect(data).toContainEqual(expect.objectContaining({ id: 10 }));
+                expect(data).toContainEqual(expect.objectContaining({ id: 20 }));
             },
-            4
-        ],
-        // Less than or equal
-        [
-            { id: { $lte: 5 } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).toBeLessThanOrEqual(5));
-                else
-                    expect(data.id).toBeLessThanOrEqual(5);
+            expectedCount: 2
+        }
+    ],
+    [
+        'Not Equal',
+        {
+            filters: { id: { $neq: 10 } },
+            validator: (data, expectedCount) => {
+                expect(data).toHaveLength(expectedCount);
+                expect(data).not.toContainEqual(expect.objectContaining({ id: 10 }));
             },
-            5
-        ],
-        // Greater than
-        [
-            { id: { $gt: 5 } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).toBeGreaterThan(5));
-                else
-                    expect(data.id).toBeGreaterThan(5);
+            expectedCount: 19
+        }
+    ],
+    [
+        'Less Than',
+        {
+            filters: { id: { $lt: 5 } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.id).toBeLessThan(5));
             },
-            15
-        ],
-        // Greater than or equal
-        [
-            { id: { $gte: 5 } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.id).toBeGreaterThanOrEqual(5));
-                else
-                    expect(data.id).toBeGreaterThanOrEqual(5);
+            expectedCount: 4
+        }
+    ],
+    [
+        'Less Than or Equal',
+        {
+            filters: { id: { $lte: 5 } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.id).toBeLessThanOrEqual(5));
             },
-            16
-        ],
-        // In
-        [
-            { id: { $in: [2, 3] } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect([2, 3]).toContain(item.id));
-                else
-                    expect([2, 3]).toContain(data.id);
+            expectedCount: 5
+        }
+    ],
+    [
+        'Greater Than',
+        {
+            filters: { id: { $gt: 5 } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.id).toBeGreaterThan(5));
             },
-            2
-        ],
-        // Not in
-        [
-            { id: { $nin: [2, 3] } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect([2, 3]).not.toContain(item.id));
-                else
-                    expect([2, 3]).not.toContain(data.id);
+            expectedCount: 15
+        }
+    ],
+    [
+        'Greater Than or Equal',
+        {
+            filters: { id: { $gte: 5 } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.id).toBeGreaterThanOrEqual(5));
             },
-            18
-        ],
-        // Between
-        [
-            { id: { $between: [2, 5] } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data)) {
-                    data.forEach((item) => {
-                        expect(item.id).toBeGreaterThanOrEqual(2);
-                        expect(item.id).toBeLessThanOrEqual(5);
-                    });
-                } else {
-                    expect(data.id).toBeGreaterThanOrEqual(2);
-                    expect(data.id).toBeLessThanOrEqual(5);
-                }
+            expectedCount: 16
+        }
+    ],
+    [
+        'In',
+        {
+            filters: { id: { $in: [2, 3] } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect([2, 3]).toContain(item.id));
             },
-            4
-        ],
-        // Not between
-        [
-            { id: { $nbetween: [3, 5] } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        if (item.id <= 3)
-                            expect(item.id).toBeLessThanOrEqual(3);
-                        else
-                            expect(item.id).toBeGreaterThanOrEqual(5);
-                    });
-                else
-                    if (data.id < 3)
-                        expect(data.id).toBeLessThan(3);
+            expectedCount: 2
+        }
+    ],
+    [
+        'Not In',
+        {
+            filters: { id: { $nin: [2, 3] } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect([2, 3]).not.toContain(item.id));
+            },
+            expectedCount: 18
+        }
+    ],
+    [
+        'Between',
+        {
+            filters: { id: { $between: [2, 5] } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => {
+                    expect(item.id).toBeGreaterThanOrEqual(2);
+                    expect(item.id).toBeLessThanOrEqual(5);
+                });
+            },
+            expectedCount: 4
+        }
+    ],
+    [
+        'Not Between',
+        {
+            filters: { id: { $nbetween: [3, 5] } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => {
+                    if (item.id <= 3)
+                        expect(item.id).toBeLessThanOrEqual(3);
                     else
-                        expect(data.id).toBeGreaterThan(5);
+                        expect(item.id).toBeGreaterThanOrEqual(5);
+                });
             },
-            17
-        ],
-        // Like
-        [
-            { name: { $like: 'Repository::' } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.name).toMatch(/^Repository::/));
-                else
-                    expect(data.name).toMatch(/^Repository::/);
+            expectedCount: 17
+        }
+    ],
+    [
+        'Like',
+        {
+            filters: { name: { $like: 'Repository::' } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.name).toMatch(/^Repository::/));
             },
-            20
-        ],
-        // Not like
-        [
-            { name: { $nlike: 'zRepositoryz' } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.name).not.toMatch(/:zRepositoryz/));
-                else
-                    expect(data.name).not.toMatch(/zRepositoryz/);
+            expectedCount: 20
+        }
+    ],
+    [
+        'Not Like',
+        {
+            filters: { name: { $nlike: 'zRepositoryz' } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.name).not.toMatch(/zRepositoryz/));
             },
-            20
-        ],
-        // Is null
-        [
-            { n: { $isNull: true } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.n).toBeNull());
-                else
-                    expect(data.n).toBeNull();
+            expectedCount: 20
+        }
+    ],
+    [
+        'Is Null',
+        {
+            filters: { n: { $isNull: true } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.n).toBeNull());
             },
-            7
-        ],
-        // Is not null
-        [
-            { n: { $isNull: false } },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => expect(item.n).not.toBeNull());
-                else
-                    expect(data.n).not.toBeNull();
+            expectedCount: 7
+        }
+    ],
+    [
+        'Is Not Null',
+        {
+            filters: { n: { $isNull: false } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => expect(item.n).not.toBeNull());
             },
-            13
-        ],
-        // Test $q operator with simple string search across all fields
-        [
-            {
-                $q: 'Repository::'
+            expectedCount: 13
+        }
+    ],
+    [
+        'Q operator string literal',
+        {
+            filters: { $q: 'Repository::' },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
             },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data)) {
-                    data.forEach((item) => {
-                        expect(item).toBeDefined();
-                        expect(item.name).toContain('Repository::');
-                    });
-                } else {
-                    expect(data).toBeDefined();
-                    expect(data.name).toContain('Repository::');
-                }
+            expectedCount: 20
+        }
+    ],
+    [
+        'Q operator numeric literal',
+        {
+            filters: { $q: 15 },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
             },
-            20
-        ],
-        // Test $q operator with numeric value search across all fields
-        [
-            {
-                $q: 15
+            expectedCount: 2
+        }
+    ],
+    [
+        'Q operator with specified fields and string value',
+        {
+            filters: { $q: { selectedFields: ['name'], value: 'Repository::' } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
             },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        expect(item).toBeDefined();
-                        const stringifiedItem = JSON.stringify(item);
-                        expect(stringifiedItem).toContain('15');
-                    });
+            expectedCount: 20
+        }
+    ],
+    [
+        'Q operator with specified fields and numeric value',
+        {
+            filters: { $q: { selectedFields: ['age'], value: 15 } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
             },
-            2
-        ],
-        // Test $q operator with search on selected field
-        [
-            {
-                $q: {
-                    selectedFields: ['name'],
-                    value: 'Repository::'
-                }
+            expectedCount: 1
+        }
+    ],
+    [
+        'Q operator with specified fields and string/numeric value',
+        {
+            filters: { $q: { selectedFields: ['name', 'id'], value: '15' } },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
             },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        expect(item).toBeDefined();
-                        expect(item.name).toContain('Repository::');
-                    });
-            },
-            20
-        ],
-        // Verify the $q operator with an operator and selected fields
-        [
-            {
-                $q: {
-                    selectedFields: ['age'],
-                    value: 15
-                }
-            },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        expect(item).toBeDefined();
-                        expect(item.age).toBe(15);
-                    });
-            },
-            1
-        ],
-        // Test $q operator with a string and numeric value search across selected fields
-        [
-            {
-                $q: {
-                    selectedFields: ['name', 'age'],
-                    value: '15'
-                }
-            },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        expect(item).toBeDefined();
-                        const stringifiedItem = JSON.stringify(item);
-                        expect(stringifiedItem).toContain('15');
-                    });
-            },
-            1
-        ],
-        /**
-         * Single advanced search tests with multiple conditions (AND)
-         */
-        [
-            {
+            expectedCount: 2
+        }
+    ],
+    [
+        'Multiple conditions with AND',
+        {
+            filters: {
                 id: { $gt: 2 },
                 name: { $like: 'Repository::' },
                 birth: { $between: [new Date('2021-01-01'), new Date('2021-01-10')] }
             },
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data)) {
-                    data.forEach((item) => {
-                        expect(item.id).toBeGreaterThan(2);
-                        expect(item.name).toMatch(/^Repository::/);
-                        expect(item.birth.getTime()).toBeGreaterThanOrEqual(new Date('2021-01-01').getTime());
-                        expect(item.birth.getTime()).toBeLessThanOrEqual(new Date('2021-01-10').getTime());
-                    });
-                } else {
-                    expect(data.id).toBeGreaterThan(2);
-                    expect(data.name).toMatch(/^Repository::/);
-                    expect(data.birth.getTime()).toBeGreaterThanOrEqual(new Date('2021-01-01').getTime());
-                    expect(data.birth.getTime()).toBeLessThanOrEqual(new Date('2021-01-10').getTime());
-                }
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => {
+                    expect(item.id).toBeGreaterThan(2);
+                    expect(item.name).toMatch(/^Repository::/);
+                    expect(item.birth.getTime()).toBeGreaterThanOrEqual(new Date('2021-01-01').getTime());
+                    expect(item.birth.getTime()).toBeLessThanOrEqual(new Date('2021-01-10').getTime());
+                });
             },
-            8
-        ],
-        // Multiple advanced search tests (OR)
-        [
-            [
-                {
-                    id: { $eq: 2 }
-                },
-                {
-                    id: { $eq: 5 }
-                }
-            ],
-            (data: Data | Data[]): void => {
-                if (Array.isArray(data))
-                    data.forEach((item) => {
-                        expect(item.id).toBeOneOf([2, 5]);
-                    });
-                else
-                    expect(data.id).toBeOneOf([2, 5]);
+            expectedCount: 8
+        }
+    ],
+    [
+        'Filter with empty object should be ignored',
+        {
+            filters: {
+                id: { $gt: 2 },
+                // @ts-expect-error - Testing empty object filter
+                emptyFilter: {},
+                name: { $like: 'Repository::' }
             },
-            2
-        ]
-    ];
-    return advancedSearchTest;
-}
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => {
+                    expect(item.id).toBeGreaterThan(2);
+                    expect(item.name).toMatch(/^Repository::/);
+                });
+            },
+            expectedCount: 18
+        }
+    ],
+    [
+        'Q operator with falsy value should not add conditions',
+        {
+            filters: {
+                $q: '',
+                id: { $lte: 5 }
+            },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => {
+                    expect(item.id).toBeLessThanOrEqual(5);
+                });
+            },
+            expectedCount: 5
+        }
+    ],
+    [
+        'Filter with null value should work as literal comparison',
+        {
+            filters: {
+                n: null
+            },
+            validator: (data, expectedCount) => {
+                if (!Array.isArray(data))
+                    throw new Error('Data should be an array');
+                expect(data).toHaveLength(expectedCount);
+                data.forEach((item) => {
+                    expect(item.n).toBeNull();
+                });
+            },
+            expectedCount: 7
+        }
+    ]
+];
+
 
 const repository = new Repository<Data>(knexInstance, table);
 
@@ -468,7 +524,10 @@ describe('Repository', () => {
 
         test('should iterate asynchronously over data with correct order based on orderBy clause', async () => {
             const stream1 = repository.findStream<Data>({
-                orderBy: ['id', 'desc']
+                orderBy: {
+                    selectedField: 'id',
+                    direction: 'desc'
+                }
             });
             let previousId = Number.MAX_SAFE_INTEGER;
             for await (const data of stream1) {
@@ -478,7 +537,10 @@ describe('Repository', () => {
             }
 
             const stream2 = repository.findStream<Data>({
-                orderBy: ['id', 'asc']
+                orderBy: {
+                    selectedField: 'id',
+                    direction: 'asc'
+                }
             });
             previousId = Number.MIN_SAFE_INTEGER;
             for await (const data of stream2) {
@@ -488,15 +550,18 @@ describe('Repository', () => {
             }
         });
 
-        test.each(advancedSearchTests())(
-            'should correctly apply advanced search filter %j and validate the results',
-            async (filter, validator) => {
+        test.each(filtersTests)(
+            'should correctly apply filter <%s>',
+            async (_, item) => {
                 const stream = repository.findStream<Data>({
-                    filters: filter
-                });
+                    filters: item.filters
+                }) as AsyncIterable<Data>;
+
+                const res = [];
 
                 for await (const data of stream)
-                    validator(data);
+                    res.push(data);
+                item.validator(res, item.expectedCount);
             }
         );
 
@@ -505,7 +570,7 @@ describe('Repository', () => {
                 transform: (chunk, _, callback) => {
                     callback(null, { ...chunk, name: chunk.name.toUpperCase() });
                 }
-            });
+            }) as AsyncIterable<Data>;
             for await (const data of stream) {
                 expect(data).toHaveProperty('id');
                 expect(data).toHaveProperty('name');
@@ -574,7 +639,7 @@ describe('Repository', () => {
             expect(data).toHaveLength(5);
         });
 
-        test('should return an array of data with limit and offset and advanced search', async () => {
+        test('should return an array of data with limit and offset and filters', async () => {
             const data = await repository.find<Data>({
                 limit: 5,
                 offset: 5,
@@ -605,7 +670,10 @@ describe('Repository', () => {
 
         test('should return an array of data with correct order based on orderBy clause', async () => {
             const data1 = await repository.find<Data>({
-                orderBy: ['id', 'desc']
+                orderBy: {
+                    selectedField: 'id',
+                    direction: 'desc'
+                }
             });
             let previousId = Number.MAX_SAFE_INTEGER;
             data1.forEach((item) => {
@@ -615,7 +683,10 @@ describe('Repository', () => {
             });
 
             const data2 = await repository.find<Data>({
-                orderBy: ['id', 'asc']
+                orderBy: {
+                    selectedField: 'id',
+                    direction: 'asc'
+                }
             });
             previousId = Number.MIN_SAFE_INTEGER;
             data2.forEach((item) => {
@@ -625,13 +696,13 @@ describe('Repository', () => {
             });
         });
 
-        test.each(advancedSearchTests())(
-            'should correctly apply advanced search filter %j and validate the results',
-            async (filter, validator) => {
+        test.each(filtersTests)(
+            'should correctly apply filter <%s>',
+            async (_, item) => {
                 const data = await repository.find<Data>({
-                    filters: filter
+                    filters: item.filters
                 });
-                validator(data);
+                item.validator(data, item.expectedCount);
             }
         );
 
@@ -670,120 +741,7 @@ describe('Repository', () => {
         test('should throw an error when they are no results with custom message', async () => {
             try {
                 await repository.find<Data>({
-                    advancedSearch: {
-                        id: 100
-                    },
-                    throwIfNoResult: 'Custom error message'
-                });
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-                expect(error).toBeInstanceOf(CoreError);
-                expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toBe('Custom error message');
-            }
-        });
-    });
-
-    describe('findOne', () => {
-        test('should return a single data', async () => {
-            const data = await repository.findOne({
-                filters: {
-                    id: 1
-                }
-            });
-            expect(data).toHaveProperty('id');
-            expect(data).toHaveProperty('name');
-            expect(data).toHaveProperty('age');
-            expect(data).toHaveProperty('birth');
-            expect(data).toHaveProperty('bool');
-        });
-
-        test('should return a single data with selected fields', async () => {
-            const data = await repository.findOne<Data>({
-                filters: {
-                    id: 1
-                },
-                selectedFields: ['id', 'name']
-            });
-            expect(data).toHaveProperty('id');
-            expect(data).toHaveProperty('name');
-            expect(data).not.toHaveProperty('age');
-            expect(data).not.toHaveProperty('birth');
-            expect(data).not.toHaveProperty('bool');
-        });
-
-        test('should return a single data with correct order based on orderBy clause', async () => {
-            const data1 = await repository.findOne<Data>({
-                orderBy: ['id', 'desc'],
-                filters: {
-                    id: { $lte: 20 }
-                }
-            });
-            let previousId = Number.MAX_SAFE_INTEGER;
-            expect(data1).toHaveProperty('id');
-            expect(data1.id).toBeLessThanOrEqual(previousId);
-            expect(data1.id).toBe(20);
-            previousId = data1.id;
-
-            const data2 = await repository.findOne<Data>({
-                orderBy: ['id', 'asc'],
-                filters: {
-                    id: { $gte: 1 }
-                }
-            });
-            previousId = Number.MIN_SAFE_INTEGER;
-            expect(data2).toHaveProperty('id');
-            expect(data2.id).toBeGreaterThanOrEqual(previousId);
-            expect(data2.id).toBe(1);
-            previousId = data2.id;
-        });
-
-        test.each(advancedSearchTests())(
-            'should correctly apply advanced search filter %j and validate the results',
-            async (filter, validator) => {
-                const data = await repository.findOne<Data>({
-                    filters: filter
-                });
-                validator(data);
-            }
-        );
-
-        test('should throw an error when the query is invalid', async () => {
-            try {
-                await repository.findOne<Data>({
                     filters: {
-                        // @ts-expect-error - Invalid query to trigger an error
-                        error: '2'
-                    }
-                });
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-                expect(error).toBeInstanceOf(CoreError);
-                expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
-            }
-        });
-
-        test('should throw an error when they are no results', async () => {
-            try {
-                await repository.findOne<Data>({
-                    filters: {
-                        id: 100
-                    },
-                    throwIfNoResult: true
-                });
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-                expect(error).toBeInstanceOf(CoreError);
-                expect(error).toHaveProperty('message');
-                expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
-            }
-        });
-
-        test('should throw an error when they are no results with custom message', async () => {
-            try {
-                await repository.findOne<Data>({
-                    advancedSearch: {
                         id: 100
                     },
                     throwIfNoResult: 'Custom error message'
@@ -803,13 +761,13 @@ describe('Repository', () => {
             expect(count).toBe(20);
         });
 
-        test.each(advancedSearchTests())(
-            'should correctly apply advanced search filter %j and validate the results',
-            async (filter, _, countExpected) => {
+        test.each(filtersTests)(
+            'should correctly apply filter <%s>',
+            async (_, item) => {
                 const data = await repository.count<Data>({
-                    filters: filter
+                    filters: item.filters
                 });
-                expect(data).toBe(countExpected);
+                expect(data).toBe(item.expectedCount);
             }
         );
 
