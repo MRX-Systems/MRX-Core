@@ -17,7 +17,8 @@ export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schem
         t.KeyOf(schema),
         t.Literal('*')
     ]), {
-        minItems: 1
+        minItems: 1,
+        uniqueItems: true
     })
 ], {
     description: 'Selected fields can be a single field, a wildcard "*", or an array of fields and/or wildcard "*".'
