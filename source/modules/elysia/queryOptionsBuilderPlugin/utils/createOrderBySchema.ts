@@ -19,7 +19,8 @@ export const createOrderBySchema = <TInferedObject extends TObject>(schema: TInf
         selectedField: t.KeyOf(schema),
         direction: t.Union([t.Literal('asc'), t.Literal('desc')])
     }), {
-        minItems: 1
+        minItems: 1,
+        uniqueItems: true
     })
 ], {
     description: 'Order by is an item or array of items with a field to order by and direction. Use "asc" for ascending or "desc" for descending order.'
