@@ -18,7 +18,7 @@ describe('createQSchema', () => {
         expect(qSchema[Kind]).toBe('Union');
     });
 
-    test('should have a good anyOf structure', () => {
+    test('should have a anyOf', () => {
         const qSchema = createQSchema(baseSchema);
         expect(qSchema.anyOf).toBeDefined();
         expect(qSchema.anyOf).toHaveLength(3);
@@ -34,35 +34,40 @@ describe('createQSchema', () => {
 
         const [firstElement] = qSchema.anyOf;
         expect(firstElement[Kind]).toBe('Object');
+        expect(firstElement.type).toBe('object');
         expect(firstElement.properties).toBeDefined();
         expect(firstElement.required).toContain('selectedFields');
         expect(firstElement.required).toContain('value');
 
         const { selectedFields, value } = firstElement.properties;
-        expect(selectedFields.minItems).toBe(1);
-        expect(selectedFields.type).toBe('array');
-        expect(selectedFields.items).toBeDefined();
-        expect(selectedFields.items[Kind]).toBe('Union');
-        expect(selectedFields.items.anyOf).toBeDefined();
-        expect(selectedFields.items.anyOf).toHaveLength(2);
 
+        expect(selectedFields[Kind]).toBe('Union');
+        expect(selectedFields.anyOf).toBeDefined();
+        expect(selectedFields.anyOf).toHaveLength(2);
 
-        expect(selectedFields.items.anyOf[0][Kind]).toBe('Union');
-        expect(selectedFields.items.anyOf[0].anyOf).toBeDefined();
-        expect(selectedFields.items.anyOf[0].anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
+        expect(selectedFields.anyOf[0][Kind]).toBe('Union');
+        expect(selectedFields.anyOf[0].anyOf).toBeDefined();
+        expect(selectedFields.anyOf[0].anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
         for (const key of Object.keys(baseSchema.properties))
-            expect(selectedFields.items.anyOf[0].anyOf).toContainEqual({
+            expect(selectedFields.anyOf[0].anyOf).toContainEqual({
                 [Kind]: 'Literal',
                 const: key,
                 type: 'string'
             });
 
-        expect(selectedFields.items.anyOf[1]).toBeDefined();
-        expect(selectedFields.items.anyOf[1].const).toBe('*');
-        expect(selectedFields.items.anyOf[1][Kind]).toBe('Literal');
-        expect(selectedFields.items.anyOf[1].type).toBe('string');
-
-        expect(selectedFields[Kind]).toBe('Array');
+        expect(selectedFields.anyOf[1][Kind]).toBe('Array');
+        expect(selectedFields.anyOf[1].type).toBe('array');
+        expect(selectedFields.anyOf[1].minItems).toBe(1);
+        expect(selectedFields.anyOf[1].uniqueItems).toBe(true);
+        expect(selectedFields.anyOf[1].items).toBeDefined();
+        expect(selectedFields.anyOf[1].items[Kind]).toBe('Union');
+        expect(selectedFields.anyOf[1].items.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
+        for (const key of Object.keys(baseSchema.properties))
+            expect(selectedFields.anyOf[1].items.anyOf).toContainEqual({
+                [Kind]: 'Literal',
+                const: key,
+                type: 'string'
+            });
 
         expect(value[Kind]).toBe('Union');
         expect(value.anyOf).toBeDefined();
