@@ -70,6 +70,7 @@ describe('createOrderBySchema', () => {
         expect(secondElement[Kind]).toBe('Array');
         expect(secondElement.type).toBe('array');
         expect(secondElement.minItems).toBe(1);
+        expect(secondElement.uniqueItems).toBe(true);
         expect(secondElement.items).toBeDefined();
         expect(secondElement.items[Kind]).toBe('Object');
         expect(secondElement.items.type).toBe('object');
