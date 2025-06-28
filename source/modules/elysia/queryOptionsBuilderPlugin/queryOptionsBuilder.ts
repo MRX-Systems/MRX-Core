@@ -103,7 +103,7 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
             selectedFields: createSelectedFieldsSchema(sanitizedSchema),
             orderBy: createOrderBySchema(sanitizedSchema),
             filters: t.Union([
-                // t.Partial(_createFiltersSchema(sanitizedSchema)),
+                t.Partial(_createFiltersSchema(sanitizedSchema)),
                 t.Array(t.Partial(_createFiltersSchema(sanitizedSchema)))
             ]),
             limit: t.Number({
