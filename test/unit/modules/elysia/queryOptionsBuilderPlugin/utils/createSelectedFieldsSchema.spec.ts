@@ -57,6 +57,7 @@ describe('createSelectedFieldsSchema', () => {
         expect(thirdElement[Kind]).toBe('Array');
         expect(thirdElement.type).toBe('array');
         expect(thirdElement.minItems).toBe(1);
+        expect(thirdElement.uniqueItems).toBe(true);
         expect(thirdElement.items).toBeDefined();
         expect(thirdElement.items[Kind]).toBe('Union');
         expect(thirdElement.items.anyOf).toBeDefined();
