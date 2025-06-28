@@ -12,12 +12,13 @@ import { t } from 'elysia/type-system';
  */
 export const createQSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
     t.Object({
-        selectedFields: t.Array(t.Union([
+        selectedFields: t.Union([
             t.KeyOf(schema),
-            t.Literal('*')
-        ]), {
-            minItems: 1
-        }),
+            t.Array(t.KeyOf(schema), {
+                minItems: 1,
+                uniqueItems: true
+            })
+        ]),
         value: t.Union([
             t.Number(),
             t.String()
