@@ -11,6 +11,8 @@ import type { Transaction } from './transaction';
 export interface QueryOptions<TModel> {
     /**
      * The fields to select in the query. If not provided, all fields are selected. ({@link SelectedFields})
+     *
+     * @defaultValue If not provided, all fields are selected.
      */
     readonly selectedFields?: SelectedFields<NoInfer<TModel>>
     /**
