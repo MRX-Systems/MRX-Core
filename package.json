@@ -55,15 +55,16 @@
     "test": "bun test --coverage --timeout 5500"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
-    "@stylistic/eslint-plugin": "^5.0.0",
+    "@elysiajs/swagger": "^1.3.1",
+    "@eslint/js": "^9.30.1",
+    "@stylistic/eslint-plugin": "^5.1.0",
     "@types/bun": "^1.2.17",
     "@types/nodemailer": "^6.4.17",
-    "eslint": "^9.29.0",
-    "globals": "^16.2.0",
+    "eslint": "^9.30.1",
+    "globals": "^16.3.0",
     "tsc-alias": "^1.8.16",
-    "typedoc": "^0.28.5",
-    "typescript-eslint": "^8.35.0"
+    "typedoc": "^0.28.7",
+    "typescript-eslint": "^8.35.1"
   },
   "peerDependencies": {
     "@sinclair/typebox": "0.34.37",
@@ -72,7 +73,7 @@
     "jose": "^6.0.11",
     "knex": "^3.1.0",
     "mssql": "^11.0.1",
-    "nodemailer": "^7.0.3",
+    "nodemailer": "^7.0.4",
     "typescript": "^5.8.3"
   },
   "changelog": {

@@ -13,13 +13,13 @@ import { utilErrorKeys } from './enums/utilErrorKeys';
  * @throws ({@link CoreError}): If the environment variables are invalid based on the schema.
  */
 export const validateEnv = (schema: TSchema, env: Record<string, unknown> = process.env): void => {
-    try {
-        // Parse and assert the environment variables using the provided schema
-        Value.Assert(schema, Value.Parse(schema, env));
-    } catch (error) {
-        throw new CoreError({
-            key: utilErrorKeys.invalidEnvironment,
-            cause: error
-        });
-    }
+	try {
+		// Parse and assert the environment variables using the provided schema
+		Value.Assert(schema, Value.Parse(schema, env));
+	} catch (error) {
+		throw new CoreError({
+			key: utilErrorKeys.invalidEnvironment,
+			cause: error
+		});
+	}
 };

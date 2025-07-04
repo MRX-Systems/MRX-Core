@@ -2,24 +2,24 @@
  * Options to configure the MSSQL database connection.
  */
 export interface MSSQLDatabaseOptions {
-    /** The name of the database to connect to. */
-    readonly databaseName: string;
-    /** The host of the database server. */
-    readonly host: string;
-    /** The port number for the database connection. */
-    readonly port: number;
-    /** The username for authenticating with the database. */
-    readonly user: string;
-    /** The password for authenticating with the database. */
-    readonly password: string;
-    /**
+	/** The name of the database to connect to. */
+	readonly databaseName: string;
+	/** The host of the database server. */
+	readonly host: string;
+	/** The port number for the database connection. */
+	readonly port: number;
+	/** The username for authenticating with the database. */
+	readonly user: string;
+	/** The password for authenticating with the database. */
+	readonly password: string;
+	/**
      * Whether to encrypt the database connection.
      * When enabled, communication between the client and server will be encrypted,
      *
      * @defaultValue true
      */
-    readonly encrypt?: boolean;
-    /**
+	readonly encrypt?: boolean;
+	/**
      * Minimum number of connections in the connection pool.
      * This represents the minimum number of connections that will be maintained in the pool,
      * even when there is no activity. Higher values can reduce connection latency
@@ -27,8 +27,8 @@ export interface MSSQLDatabaseOptions {
      *
      * @defaultValue 2
      */
-    readonly poolMin?: number;
-    /**
+	readonly poolMin?: number;
+	/**
      * Maximum number of connections in the connection pool.
      * This limits how many concurrent connections can be established to the database.
      * Setting this too low might cause connection timeouts during high load,
@@ -36,15 +36,15 @@ export interface MSSQLDatabaseOptions {
      *
      * @defaultValue 10
      */
-    readonly poolMax?: number;
-    /**
+	readonly poolMax?: number;
+	/**
      * The timeout in milliseconds for acquiring a connection.
      * If a connection cannot be acquired within this timeframe, an error will be thrown.
      *
      * @defaultValue 20000
      */
-    readonly connectionTimeout?: number;
-    /**
+	readonly connectionTimeout?: number;
+	/**
      * If set to true, emits events for database operations.
      * (select, create, update, delete) for all tables.
      *
@@ -59,5 +59,5 @@ export interface MSSQLDatabaseOptions {
      * });
      * ```
      */
-    readonly isEventEnabled?: boolean;
+	readonly isEventEnabled?: boolean;
 }

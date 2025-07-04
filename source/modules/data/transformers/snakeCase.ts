@@ -6,7 +6,7 @@ import type { SnakeCase } from '#/modules/data/types/snakeCase';
  * Implements ({@link CaseTransformer}).
  */
 export class SnakeCaseTransformer implements CaseTransformer {
-    /**
+	/**
      * Transforms a single string from any case to `snake_case`.
      *
      * @template S - The string type to be transformed.
@@ -22,10 +22,10 @@ export class SnakeCaseTransformer implements CaseTransformer {
      * @example
      * convertCase('My-Key-Name'); // "my_key_name"
      */
-    public convertCase<S extends string>(str: S): SnakeCase<S> {
-        return str
-            .replace(/(?<lower>[a-z])(?<upper>[A-Z])/gu, '$<lower>_$<upper>')
-            .replace(/[-\s]/gu, '_')
-            .toLowerCase() as SnakeCase<S>;
-    }
+	public convertCase<S extends string>(str: S): SnakeCase<S> {
+		return str
+			.replace(/(?<lower>[a-z])(?<upper>[A-Z])/gu, '$<lower>_$<upper>')
+			.replace(/[-\s]/gu, '_')
+			.toLowerCase() as SnakeCase<S>;
+	}
 }

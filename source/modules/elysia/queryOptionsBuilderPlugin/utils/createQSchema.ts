@@ -11,21 +11,21 @@ import { t } from 'elysia/type-system';
  * @returns A union schema for search queries
  */
 export const createQSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
-    t.Object({
-        selectedFields: t.Union([
-            t.KeyOf(schema),
-            t.Array(t.KeyOf(schema), {
-                minItems: 1,
-                uniqueItems: true
-            })
-        ]),
-        value: t.Union([
-            t.Number(),
-            t.String()
-        ])
-    }),
-    t.Number(),
-    t.String()
+	t.Object({
+		selectedFields: t.Union([
+			t.KeyOf(schema),
+			t.Array(t.KeyOf(schema), {
+				minItems: 1,
+				uniqueItems: true
+			})
+		]),
+		value: t.Union([
+			t.Number(),
+			t.String()
+		])
+	}),
+	t.Number(),
+	t.String()
 ], {
-    description: 'Search query that can be a simple string, an object with selected fields and value, or a number.'
+	description: 'Search query that can be a simple string, an object with selected fields and value, or a number.'
 });

@@ -30,13 +30,13 @@ import { singletonManagerErrorKeys } from './enums/singletonManagerErrorKeys';
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class SingletonManager {
-    /**
+	/**
      * _registry is a private static property that holds the class instances that are registered
      * in the SingletonManager. The key is the name of the class and the value is the instance of the class.
      */
-    private static readonly _registry = new Map<string, unknown>();
+	private static readonly _registry = new Map<string, unknown>();
 
-    /**
+	/**
      * Registers a class constructor in the SingletonManager.
      *
      * @template TClass - The type of the class.
@@ -48,41 +48,41 @@ export class SingletonManager {
      *
      * @throws ({@link CoreError}) If the class constructor is already registered, it throws an error.
      */
-    public static register<
-        TClass extends object,
-        TArgs extends unknown[]
-    >(
-        name: string,
-        constructor: new (...args: TArgs) => TClass,
-        ...args: TArgs
-    ): void {
-        if (this._registry.has(name))
-            throw new CoreError({
-                key: singletonManagerErrorKeys.classConstructorAlreadyRegistered,
-                message: 'Class constructor is already registered.',
-                cause: { name }
-            });
-        this._registry.set(name, new constructor(...args));
-    }
+	public static register<
+		TClass extends object,
+		TArgs extends unknown[]
+	>(
+		name: string,
+		constructor: new (...args: TArgs) => TClass,
+		...args: TArgs
+	): void {
+		if (this._registry.has(name))
+			throw new CoreError({
+				key: singletonManagerErrorKeys.classConstructorAlreadyRegistered,
+				message: 'Class constructor is already registered.',
+				cause: { name }
+			});
+		this._registry.set(name, new constructor(...args));
+	}
 
-    /**
+	/**
      * Unregisters a class from the SingletonManager.
      *
      * @param name - The name of the class to unregister.
      *²
      * @throws ({@link CoreError}) If the class constructor is not registered, it throws an error.
      */
-    public static unregister(name: string): void {
-        if (!this._registry.has(name))
-            throw new CoreError({
-                key: singletonManagerErrorKeys.classConstructorNotRegistered,
-                message: 'Class constructor is not registered.',
-                cause: { name }
-            });
-        this._registry.delete(name);
-    }
+	public static unregister(name: string): void {
+		if (!this._registry.has(name))
+			throw new CoreError({
+				key: singletonManagerErrorKeys.classConstructorNotRegistered,
+				message: 'Class constructor is not registered.',
+				cause: { name }
+			});
+		this._registry.delete(name);
+	}
 
-    /**
+	/**
      * Gets the singleton instance of the class. If the class is not registered, it throws an error.
      *
      * @template TClass - The type of the class.
@@ -93,24 +93,24 @@ export class SingletonManager {
      *
      * @returns The singleton instance of the class.
      */
-    public static get<TClass>(name: string): TClass {
-        if (!this._registry.has(name))
-            throw new CoreError({
-                key: singletonManagerErrorKeys.classConstructorNotRegistered,
-                message: 'Class constructor is not registered.',
-                cause: { name }
-            });
-        return this._registry.get(name) as TClass;
-    }
+	public static get<TClass>(name: string): TClass {
+		if (!this._registry.has(name))
+			throw new CoreError({
+				key: singletonManagerErrorKeys.classConstructorNotRegistered,
+				message: 'Class constructor is not registered.',
+				cause: { name }
+			});
+		return this._registry.get(name) as TClass;
+	}
 
-    /**
+	/**
      * Checks if the class is registered in the SingletonManager.
      *
      * @param name - The name of the class to check if it is registered.
      *
      * @returns True if the class is registered, otherwise false.
      */
-    public static has(name: string): boolean {
-        return this._registry.has(name);
-    }
+	public static has(name: string): boolean {
+		return this._registry.has(name);
+	}
 }

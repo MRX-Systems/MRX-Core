@@ -6,7 +6,7 @@ import type { KebabCase } from '#/modules/data/types/kebabCase';
  * Implements ({@link CaseTransformer}).
  */
 export class KebabCaseTransformer implements CaseTransformer {
-    /**
+	/**
      * Transforms a single string from any case to `kebab-case`.
      *
      * @template S - The string type to be transformed.
@@ -22,11 +22,11 @@ export class KebabCaseTransformer implements CaseTransformer {
      * @example
      * convertCase('my_long_key_name'); // "my-long-key-name"
      */
-    public convertCase<S extends string>(str: S): KebabCase<S> {
-        return str
-            .replace(/_/gu, '-')
-            .replace(/(?<=[a-z])(?=[A-Z])/gu, '-')
-            .replace(/(?<=[A-Z]+)(?=[A-Z][a-z])/gu, '-')
-            .toLowerCase() as KebabCase<S>;
-    }
+	public convertCase<S extends string>(str: S): KebabCase<S> {
+		return str
+			.replace(/_/gu, '-')
+			.replace(/(?<=[a-z])(?=[A-Z])/gu, '-')
+			.replace(/(?<=[A-Z]+)(?=[A-Z][a-z])/gu, '-')
+			.toLowerCase() as KebabCase<S>;
+	}
 }

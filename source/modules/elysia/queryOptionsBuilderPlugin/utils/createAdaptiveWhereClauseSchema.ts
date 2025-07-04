@@ -1,6 +1,6 @@
 import {
-    TypeGuard,
-    type TSchema
+	TypeGuard,
+	type TSchema
 } from '@sinclair/typebox';
 import { t } from 'elysia';
 
@@ -18,37 +18,37 @@ import { isDateFromElysiaTypeBox } from './isDateFromElysiaTypeBox';
  * @returns A TypeBox object schema with where clause operators
  */
 export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInferedSchema) => {
-    // all
-    const common = {
-        $eq: schema,
-        $neq: schema,
-        $isNull: t.Boolean()
-    } as const;
+	// all
+	const common = {
+		$eq: schema,
+		$neq: schema,
+		$isNull: t.Boolean()
+	} as const;
 
-    // string, number, date
-    const strNumDate = (TypeGuard.IsString(schema)
-        || TypeGuard.IsNumber(schema)
-        || isDateFromElysiaTypeBox(schema))
-        ? {
-            $in: t.Array(schema, { minItems: 1, uniqueItems: true }),
-            $nin: t.Array(schema, { minItems: 1, uniqueItems: true }),
-            $like: t.String(),
-            $nlike: t.String()
-        } as const
-        : {};
+	// string, number, date
+	const strNumDate = (TypeGuard.IsString(schema)
+		|| TypeGuard.IsNumber(schema)
+		|| isDateFromElysiaTypeBox(schema))
+		? {
+			$in: t.Array(schema, { minItems: 1, uniqueItems: true }),
+			$nin: t.Array(schema, { minItems: 1, uniqueItems: true }),
+			$like: t.String(),
+			$nlike: t.String()
+		} as const
+		: {};
 
-    // number, date
-    const numDate = (TypeGuard.IsNumber(schema)
-        || isDateFromElysiaTypeBox(schema))
-        ? {
-            $lt: schema,
-            $lte: schema,
-            $gt: schema,
-            $gte: schema,
-            $between: t.Tuple([schema, schema]),
-            $nbetween: t.Tuple([schema, schema])
-        } as const
-        : {};
+	// number, date
+	const numDate = (TypeGuard.IsNumber(schema)
+		|| isDateFromElysiaTypeBox(schema))
+		? {
+			$lt: schema,
+			$lte: schema,
+			$gt: schema,
+			$gte: schema,
+			$between: t.Tuple([schema, schema]),
+			$nbetween: t.Tuple([schema, schema])
+		} as const
+		: {};
 
-    return t.Partial(t.Object({ ...common, ...strNumDate, ...numDate })) as unknown as AdaptiveWhereClauseSchema<TInferedSchema>;
+	return t.Partial(t.Object({ ...common, ...strNumDate, ...numDate })) as unknown as AdaptiveWhereClauseSchema<TInferedSchema>;
 };

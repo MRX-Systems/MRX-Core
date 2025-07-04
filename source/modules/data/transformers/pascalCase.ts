@@ -6,7 +6,7 @@ import type { PascalCase } from '#/modules/data/types/pascalCase';
  * Implements ({@link CaseTransformer}).
  */
 export class PascalCaseTransformer implements CaseTransformer {
-    /**
+	/**
      * Transforms a single string from any case to `PascalCase`.
      *
      * @template S - The string type to be transformed.
@@ -22,8 +22,8 @@ export class PascalCaseTransformer implements CaseTransformer {
      * @example
      * convertCase('myLongKeyName'); // "MyKeyName"
      */
-    public convertCase<S extends string>(str: S): PascalCase<S> {
-        const camelCaseKey: string = str.replace(/(?:[-_][a-z])/giu, (group: string) => (group[1]).toUpperCase());
-        return camelCaseKey.charAt(0).toUpperCase() + camelCaseKey.slice(1) as PascalCase<S>;
-    }
+	public convertCase<S extends string>(str: S): PascalCase<S> {
+		const camelCaseKey: string = str.replace(/(?:[-_][a-z])/giu, (group: string) => (group[1]).toUpperCase());
+		return camelCaseKey.charAt(0).toUpperCase() + camelCaseKey.slice(1) as PascalCase<S>;
+	}
 }

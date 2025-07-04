@@ -11,15 +11,15 @@ import { t } from 'elysia/type-system';
  * @returns A TypeBox union schema for selected fields
  */
 export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
-    t.KeyOf(schema),
-    t.Literal('*'),
-    t.Array(t.Union([
-        t.KeyOf(schema),
-        t.Literal('*')
-    ]), {
-        minItems: 1,
-        uniqueItems: true
-    })
+	t.KeyOf(schema),
+	t.Literal('*'),
+	t.Array(t.Union([
+		t.KeyOf(schema),
+		t.Literal('*')
+	]), {
+		minItems: 1,
+		uniqueItems: true
+	})
 ], {
-    description: 'Selected fields can be a single field, a wildcard "*", or an array of fields and/or wildcard "*".'
+	description: 'Selected fields can be a single field, a wildcard "*", or an array of fields and/or wildcard "*".'
 });

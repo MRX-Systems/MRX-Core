@@ -35,4 +35,4 @@
  * ```
  */
 export type SelectedFields<TModel> = (keyof TModel extends string ? keyof TModel : string)
-    | (keyof TModel extends string ? keyof TModel : string)[];
+	| (keyof TModel extends string ? keyof TModel : string)[];

@@ -1,7 +1,7 @@
 import type {
-    Static,
-    TObject,
-    TUnion
+	Static,
+	TObject,
+	TUnion
 } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
@@ -23,20 +23,20 @@ import { createSelectedFieldsSchema } from './utils/createSelectedFieldsSchema';
  * @returns Record of property schemas with union types
  */
 const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInferedObject) => {
-    const { properties } = schema;
-    const clauseSchema = {} as {
-        [K in keyof Static<TInferedObject>]: TUnion<[
-            AdaptiveWhereClauseSchema<TInferedObject['properties'][K]>,
-            TInferedObject['properties'][K]
-        ]>
-    };
-    for (const [key, propertySchema] of Object.entries(properties))
-        // @ts-expect-error // Generic can't be indexed
-        clauseSchema[key] = t.Union([
-            createAdaptiveWhereClauseSchema(propertySchema), // Array of where clauses: [{ $gt: 18 }, { $lt: 65 }]
-            propertySchema // Array of values: ["john", "jane"]
-        ]);
-    return t.Object(clauseSchema);
+	const { properties } = schema;
+	const clauseSchema = {} as {
+		[K in keyof Static<TInferedObject>]: TUnion<[
+			AdaptiveWhereClauseSchema<TInferedObject['properties'][K]>,
+			TInferedObject['properties'][K]
+		]>
+	};
+	for (const [key, propertySchema] of Object.entries(properties))
+	// @ts-expect-error // Generic can't be indexed
+		clauseSchema[key] = t.Union([
+			createAdaptiveWhereClauseSchema(propertySchema), // Array of where clauses: [{ $gt: 18 }, { $lt: 65 }]
+			propertySchema // Array of values: ["john", "jane"]
+		]);
+	return t.Object(clauseSchema);
 };
 
 /**
@@ -49,10 +49,10 @@ const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInfere
  * @returns A TypeBox object schema for filters
  */
 const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Composite([
-    t.Object({
-        $q: createQSchema(schema)
-    }),
-    _createPropertiesSchema(schema)
+	t.Object({
+		$q: createQSchema(schema)
+	}),
+	_createPropertiesSchema(schema)
 ]);
 
 /**
@@ -65,59 +65,59 @@ const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedOb
  * @returns A TypeBox object schema for search with selected fields, order by, filters, limit, and offset
  */
 const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject) => {
-    const sanitizedSchema = filterByKeyExclusionRecursive(
-        schema,
-        [
-            'minLength',
-            'maxLength',
-            'pattern',
-            'format',
-            'minimum',
-            'maximum',
-            'exclusiveMinimum',
-            'exclusiveMaximum',
-            'multipleOf',
-            'minItems',
-            'maxItems',
-            'maxContains',
-            'minContains',
-            'minProperties',
-            'maxProperties',
-            'uniqueItems',
-            'minimumTimestamp',
-            'maximumTimestamp',
-            'exclusiveMinimumTimestamp',
-            'exclusiveMaximumTimestamp',
-            'multipleOfTimestamp',
-            'required',
-            'examples',
-            'example',
-            'default',
-            'title',
-            'description'
-        ]
-    ) as TInferedObject;
+	const sanitizedSchema = filterByKeyExclusionRecursive(
+		schema,
+		[
+			'minLength',
+			'maxLength',
+			'pattern',
+			'format',
+			'minimum',
+			'maximum',
+			'exclusiveMinimum',
+			'exclusiveMaximum',
+			'multipleOf',
+			'minItems',
+			'maxItems',
+			'maxContains',
+			'minContains',
+			'minProperties',
+			'maxProperties',
+			'uniqueItems',
+			'minimumTimestamp',
+			'maximumTimestamp',
+			'exclusiveMinimumTimestamp',
+			'exclusiveMaximumTimestamp',
+			'multipleOfTimestamp',
+			'required',
+			'examples',
+			'example',
+			'default',
+			'title',
+			'description'
+		]
+	) as TInferedObject;
 
-    return t.Partial(t.Object({
-        queryOptions: t.Partial(t.Object({
-            selectedFields: createSelectedFieldsSchema(sanitizedSchema),
-            orderBy: createOrderBySchema(sanitizedSchema),
-            filters: t.Union([
-                t.Partial(_createFiltersSchema(sanitizedSchema)),
-                t.Array(t.Partial(_createFiltersSchema(sanitizedSchema)))
-            ]),
-            limit: t.Number({
-                description: 'Maximum number of results to return',
-                default: 100,
-                minimum: 1
-            }),
-            offset: t.Number({
-                description: 'Number of results to skip before starting to collect the result set',
-                default: 0,
-                minimum: 0
-            })
-        }))
-    }));
+	return t.Partial(t.Object({
+		queryOptions: t.Partial(t.Object({
+			selectedFields: createSelectedFieldsSchema(sanitizedSchema),
+			orderBy: createOrderBySchema(sanitizedSchema),
+			filters: t.Union([
+				t.Partial(_createFiltersSchema(sanitizedSchema)),
+				t.Array(t.Partial(_createFiltersSchema(sanitizedSchema)))
+			]),
+			limit: t.Number({
+				description: 'Maximum number of results to return',
+				default: 100,
+				minimum: 1
+			}),
+			offset: t.Number({
+				description: 'Number of results to skip before starting to collect the result set',
+				default: 0,
+				minimum: 0
+			})
+		}))
+	}));
 };
 
 /**
@@ -129,14 +129,14 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
  * @returns Configured Elysia plugin with a search model
  */
 export const queryOptionsBuilderPlugin = <
-    const TSchemaName extends string,
-    TInferedObject extends TObject
+	const TSchemaName extends string,
+	TInferedObject extends TObject
 >({
-    schemaName,
-    baseSchema
+	schemaName,
+	baseSchema
 }: QueryOptionsBuilderOptions<TSchemaName, TInferedObject>) => new Elysia({
-    name: `queryOptionsBuilderPlugin-${schemaName}`,
-    seed: baseSchema
+	name: `queryOptionsBuilderPlugin-${schemaName}`,
+	seed: baseSchema
 })
-    .model((`${schemaName}Search` as const), _createSearchSchema(baseSchema))
-    .as('scoped');
+	.model((`${schemaName}Search` as const), _createSearchSchema(baseSchema))
+	.as('scoped');

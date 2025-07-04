@@ -1,5 +1,5 @@
 export interface CaseTransformer<TTransform extends string = string> {
-    /**
+	/**
      * Transforms a single string from any case to another case.
      *
      * @template TTransform - The type of the transformed string.
@@ -9,5 +9,5 @@ export interface CaseTransformer<TTransform extends string = string> {
      *
      * @returns The string transformed into the desired case.
      */
-    convertCase<S extends string>(str: S): TTransform;
+	convertCase<S extends string>(str: S): TTransform;
 }

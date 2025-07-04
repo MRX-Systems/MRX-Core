@@ -45,52 +45,52 @@ import type { RateLimitOptions } from './types/rateLimitOptions';
  * ```
  */
 export const rateLimitPlugin = ({ redis, limit, window, message }: RateLimitOptions) => new Elysia({
-    name: 'rateLimitPlugin',
-    seed: {
-        redis,
-        limit,
-        window,
-        message
-    }
+	name: 'rateLimitPlugin',
+	seed: {
+		redis,
+		limit,
+		window,
+		message
+	}
 })
-    .onRequest(async ({ set, request, server }) => {
-        const ip = request.headers.get('x-forwarded-for')
-            || request.headers.get('x-real-ip')
-            || server?.requestIP(request)?.address // get IP from socket directly
-            || '127.0.0.1';
+	.onRequest(async ({ set, request, server }) => {
+		const ip = request.headers.get('x-forwarded-for')
+			|| request.headers.get('x-real-ip')
+			|| server?.requestIP(request)?.address // get IP from socket directly
+			|| '127.0.0.1';
 
-        const key = `ratelimit:${ip}`;
+		const key = `ratelimit:${ip}`;
 
-        const current = await redis.client.get(key);
-        const count = current ? parseInt(current) : 0;
+		const current = await redis.client.get(key);
+		const count = current ? parseInt(current) : 0;
 
-        if (count === 0)
-            await redis.client.setex(key, window, '1');
-        else
-            await redis.client.incr(key);
+		if (count === 0)
+			await redis.client.setex(key, window, '1');
+		else
+			await redis.client.incr(key);
 
-        const newCount = await redis.client.get(key);
-        const currentCount = newCount ? parseInt(newCount) : 0;
+		const newCount = await redis.client.get(key);
+		const currentCount = newCount ? parseInt(newCount) : 0;
 
-        if (currentCount > limit) {
-            set.status = 429;
-            throw new CoreError({
-                key: errorKeys.rateLimitExceeded,
-                message: message || 'Rate limit exceeded',
-                httpStatusCode: 429,
-                cause: {
-                    limit,
-                    window,
-                    remaining: 0,
-                    reset: await redis.client.ttl(key)
-                }
-            });
-        }
+		if (currentCount > limit) {
+			set.status = 429;
+			throw new CoreError({
+				key: errorKeys.rateLimitExceeded,
+				message: message || 'Rate limit exceeded',
+				httpStatusCode: 429,
+				cause: {
+					limit,
+					window,
+					remaining: 0,
+					reset: await redis.client.ttl(key)
+				}
+			});
+		}
 
-        set.headers = {
-            'X-RateLimit-Limit': limit.toString(),
-            'X-RateLimit-Remaining': Math.max(0, limit - currentCount).toString(),
-            'X-RateLimit-Reset': (await redis.client.ttl(key)).toString()
-        };
-    })
-    .as('scoped');
+		set.headers = {
+			'X-RateLimit-Limit': limit.toString(),
+			'X-RateLimit-Remaining': Math.max(0, limit - currentCount).toString(),
+			'X-RateLimit-Reset': (await redis.client.ttl(key)).toString()
+		};
+	})
+	.as('scoped');
