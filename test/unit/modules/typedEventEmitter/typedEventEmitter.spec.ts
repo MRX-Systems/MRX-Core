@@ -4,8 +4,8 @@ import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter
 import type { EventMap } from '#/modules/typedEventEmitter/types/eventMap';
 
 /**
-* Test data constants for consistent testing across all test suites.
-*/
+ * Test data constants for consistent testing across all test suites.
+ */
 const testData = {
 	eventNames: {
 		testEvent: 'testEvent',
@@ -23,8 +23,8 @@ const testData = {
 } as const;
 
 /**
-* Event map interfaces for type safety in tests.
-*/
+ * Event map interfaces for type safety in tests.
+ */
 interface NoPayloadEventMap extends EventMap {
 	testEvent: [];
 }
@@ -43,8 +43,8 @@ interface MultiEventMap extends EventMap {
 }
 
 /**
-* Helper function to create a new TypedEventEmitter instance.
-*/
+ * Helper function to create a new TypedEventEmitter instance.
+ */
 function createEmitter<TEvents extends EventMap>(): TypedEventEmitter<TEvents> {
 	return new TypedEventEmitter<TEvents>();
 }

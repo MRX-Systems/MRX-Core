@@ -7,9 +7,9 @@ import { utilErrorKeys } from '#/utils/enums/utilErrorKeys';
 
 describe('validateEnv', () => {
 	/**
-	* Test data containing various environment variable configurations
-	* for testing different validation scenarios.
-	*/
+	 * Test data containing various environment variable configurations
+	 * for testing different validation scenarios.
+	 */
 	const _testEnvironments = {
 		validNumericPort: { port: 3000 },
 		invalidStringPort: { port: 'not a number' },
@@ -33,9 +33,9 @@ describe('validateEnv', () => {
 	} as const;
 
 	/**
-	* Common schemas used across multiple test cases
-	* to avoid duplication and improve maintainability.
-	*/
+	 * Common schemas used across multiple test cases
+	 * to avoid duplication and improve maintainability.
+	 */
 	const _testSchemas = {
 		simplePort: Type.Object({
 			port: Type.Number()

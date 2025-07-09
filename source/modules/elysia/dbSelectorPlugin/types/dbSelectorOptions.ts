@@ -19,14 +19,14 @@ import type { MSSQLDatabaseOptions } from '#/modules/database/types';
  */
 export interface DbSelectorOptions<THeaderKeyName extends string = 'database-using'> {
 	/**
-     * Options for the database connection
-     */
+	 * Options for the database connection
+	 */
 	readonly connectionConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
 	/**
-     * The name of the key to be used in the header to select the database
-     * @example 'x-database-name'
-     *
-     * @defaultValue 'database-using'
-     */
+	 * The name of the key to be used in the header to select the database
+	 * @example 'x-database-name'
+	 *
+	 * @defaultValue 'database-using'
+	 */
 	readonly headerKey?: THeaderKeyName;
 }

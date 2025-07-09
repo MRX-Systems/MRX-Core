@@ -7,21 +7,21 @@ import type { SnakeCase } from '#/modules/data/types/snakeCase';
  */
 export class SnakeCaseTransformer implements CaseTransformer {
 	/**
-     * Transforms a single string from any case to `snake_case`.
-     *
-     * @template S - The string type to be transformed.
-     *
-     * @param str - The string to transform into `snake_case`.
-     *
-     * @returns The string transformed into `snake_case`, with underscores between words.
-     *
-     * @example
-     * convertCase('myKeyName'); // "my_key_name"
-     * @example
-     * convertCase('MyKeyName'); // "my_key_name"
-     * @example
-     * convertCase('My-Key-Name'); // "my_key_name"
-     */
+	 * Transforms a single string from any case to `snake_case`.
+	 *
+	 * @template S - The string type to be transformed.
+	 *
+	 * @param str - The string to transform into `snake_case`.
+	 *
+	 * @returns The string transformed into `snake_case`, with underscores between words.
+	 *
+	 * @example
+	 * convertCase('myKeyName'); // "my_key_name"
+	 * @example
+	 * convertCase('MyKeyName'); // "my_key_name"
+	 * @example
+	 * convertCase('My-Key-Name'); // "my_key_name"
+	 */
 	public convertCase<S extends string>(str: S): SnakeCase<S> {
 		return str
 			.replace(/(?<lower>[a-z])(?<upper>[A-Z])/gu, '$<lower>_$<upper>')

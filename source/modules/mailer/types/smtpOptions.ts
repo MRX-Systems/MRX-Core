@@ -3,29 +3,29 @@ import type { SMTPPoolOptions } from './smtpPoolOptions';
 
 export interface SMTPOptions {
 	/**
-     * The hostname or IP address of the SMTP server.
-     */
+	 * The hostname or IP address of the SMTP server.
+	 */
 	readonly host: string;
 
 	/**
-     * The port number to connect to.
-     * @defaultValue 587
-     */
+	 * The port number to connect to.
+	 * @defaultValue 587
+	 */
 	readonly port?: number;
 
 	/**
-     * Whether to use a secure (TLS) connection.
-     * @defaultValue false
-     */
+	 * Whether to use a secure (TLS) connection.
+	 * @defaultValue false
+	 */
 	readonly secure?: boolean;
 
 	/**
-     * The credentials for SMTP authentication.
-     */
+	 * The credentials for SMTP authentication.
+	 */
 	readonly credentials: SMTPCredentials;
 
 	/**
-     * Optional pool configuration.
-     */
+	 * Optional pool configuration.
+	 */
 	readonly pool?: SMTPPoolOptions;
 }

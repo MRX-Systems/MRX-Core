@@ -4,8 +4,8 @@ import { Table } from '#/modules/database/table';
 import type { QueryContext } from '#/modules/database/types/queryContext';
 
 /**
-* Test data for Table class tests.
-*/
+ * Test data for Table class tests.
+ */
 const testData = {
 	databases: {
 		valid: 'test_database',

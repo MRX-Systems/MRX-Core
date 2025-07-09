@@ -5,9 +5,9 @@ import knex from 'knex';
 import { Repository } from '#/modules/repository/repository';
 
 /**
-* Database connection options for MSSQL testing.
-* Configuration is pulled from environment variables for security.
-*/
+ * Database connection options for MSSQL testing.
+ * Configuration is pulled from environment variables for security.
+ */
 const databaseOptions = {
 	databaseName: process.env.MSSQL_DATABASE ?? '',
 	host: process.env.MSSQL_HOST ?? '',
@@ -20,8 +20,8 @@ const databaseOptions = {
 };
 
 /**
-* Invalid database connection options for error testing scenarios.
-*/
+ * Invalid database connection options for error testing scenarios.
+ */
 const invalidDatabaseOptions = {
 	...databaseOptions,
 	host: 'invalid-host-name-for-testing',
@@ -29,8 +29,8 @@ const invalidDatabaseOptions = {
 };
 
 /**
-* Minimal database connection options for edge case testing.
-*/
+ * Minimal database connection options for edge case testing.
+ */
 const minimalDatabaseOptions = {
 	databaseName: databaseOptions.databaseName,
 	host: databaseOptions.host,
@@ -40,8 +40,8 @@ const minimalDatabaseOptions = {
 };
 
 /**
-* Create a connection pool to the database for test setup and teardown.
-*/
+ * Create a connection pool to the database for test setup and teardown.
+ */
 const knexInstance = knex({
 	client: 'mssql',
 	connection: {
@@ -59,30 +59,30 @@ const knexInstance = knex({
 });
 
 /**
-* Generate unique table names for each test run to avoid conflicts.
-*/
+ * Generate unique table names for each test run to avoid conflicts.
+ */
 const nanoId = randomBytes(4).toString('hex');
 const primaryTestTable = `unit_test_mssql_primary_${nanoId}`;
 const secondaryTestTable = `unit_test_mssql_secondary_${nanoId}`;
 const complexTestTable = `unit_test_mssql_complex_${nanoId}`;
 
 /**
-* Custom repository class for testing repository functionality.
-*/
+ * Custom repository class for testing repository functionality.
+ */
 class CustomTestRepository extends Repository<{ id: number; name: string; email?: string }> {
 	/**
-	* Custom method to test repository extension capabilities.
-	* @returns A test string value
-	*/
+	 * Custom method to test repository extension capabilities.
+	 * @returns A test string value
+	 */
 	public getTestValue(): string {
 		return 'custom-repository-test-value';
 	}
 
 	/**
-	* Find records by name pattern.
-	* @param pattern - The name pattern to search for
-	* @returns Promise resolving to matching records
-	*/
+	 * Find records by name pattern.
+	 * @param pattern - The name pattern to search for
+	 * @returns Promise resolving to matching records
+	 */
 	public async findByNamePattern(pattern: string): Promise<{ id: number; name: string; email?: string }[]> {
 		return this.find({
 			filters: {

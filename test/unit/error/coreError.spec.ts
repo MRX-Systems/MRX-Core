@@ -4,8 +4,8 @@ import { CoreError } from '#/error/coreError';
 import type { CoreErrorOptions } from '#/error/types/coreErrorOptions';
 
 /**
-* Test data constants for consistent testing across all test suites.
-*/
+ * Test data constants for consistent testing across all test suites.
+ */
 const testData = {
 	completeErrorOptions: {
 		message: 'An example error occurred',
@@ -31,8 +31,8 @@ const testData = {
 } as const;
 
 /**
-* Custom type definitions for testing purposes.
-*/
+ * Custom type definitions for testing purposes.
+ */
 interface DatabaseErrorCause {
 	readonly connectionString: string;
 	readonly timeoutMs: number;
@@ -45,21 +45,21 @@ interface ValidationErrorCause {
 }
 
 /**
-* Helper function to create a CoreError with complete options for testing purposes.
-* @returns A CoreError instance with all properties set.
-*/
+ * Helper function to create a CoreError with complete options for testing purposes.
+ * @returns A CoreError instance with all properties set.
+ */
 const _createCompleteError = (): CoreError<typeof testData.completeErrorOptions.cause> => new CoreError(testData.completeErrorOptions);
 
 /**
-* Helper function to create a minimal CoreError for testing purposes.
-* @returns A CoreError instance with minimal configuration.
-*/
+ * Helper function to create a minimal CoreError for testing purposes.
+ * @returns A CoreError instance with minimal configuration.
+ */
 const _createMinimalError = (): CoreError => new CoreError(testData.minimalErrorOptions);
 
 /**
-* Helper function to get current timestamp for date comparison tests.
-* @returns Current timestamp in milliseconds.
-*/
+ * Helper function to get current timestamp for date comparison tests.
+ * @returns Current timestamp in milliseconds.
+ */
 const _getCurrentTimestamp = (): number => Date.now();
 
 describe('CoreError', () => {

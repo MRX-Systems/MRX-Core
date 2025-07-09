@@ -13,8 +13,8 @@ import { PascalCaseTransformer } from '#/modules/data/transformers/pascalCase';
 import { SnakeCaseTransformer } from '#/modules/data/transformers/snakeCase';
 
 /**
-* Test data constants for consistent testing across all test suites.
-*/
+ * Test data constants for consistent testing across all test suites.
+ */
 const testData = {
 	SIMPLE_OBJECT: { test: 'test', exclude: 'exclude' } as const,
 	OBJECT_WITH_NULLS: { test: 'test', exclude: null, exclude2: undefined } as const,
@@ -37,16 +37,16 @@ const testData = {
 } as const;
 
 /**
-* Error messages expected from the data functions.
-*/
+ * Error messages expected from the data functions.
+ */
 const expectedErrorMessages = {
 	NULL_DATA: 'Data cannot be null or undefined.'
 } as const;
 
 /**
-* Helper function to create a null object for testing error cases.
-* @returns A null value cast as Record<string, unknown> for testing purposes.
-*/
+ * Helper function to create a null object for testing error cases.
+ * @returns A null value cast as Record<string, unknown> for testing purposes.
+ */
 const _createNullObject = (): Record<string, unknown> => null as unknown as Record<string, unknown>;
 
 describe('filterByKeyExclusion', () => {

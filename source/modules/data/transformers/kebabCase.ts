@@ -7,21 +7,21 @@ import type { KebabCase } from '#/modules/data/types/kebabCase';
  */
 export class KebabCaseTransformer implements CaseTransformer {
 	/**
-     * Transforms a single string from any case to `kebab-case`.
-     *
-     * @template S - The string type to be transformed.
-     *
-     * @param str - The string to transform into `kebab-case`.
-     *
-     * @returns The string transformed into `kebab-case`, with all letters in lower case and words separated by hyphens.
-     *
-     * @example
-     * convertCase('myKeyName'); // "my-key-name"
-     * @example
-     * convertCase('MyKeyName'); // "my-key-name"
-     * @example
-     * convertCase('my_long_key_name'); // "my-long-key-name"
-     */
+	 * Transforms a single string from any case to `kebab-case`.
+	 *
+	 * @template S - The string type to be transformed.
+	 *
+	 * @param str - The string to transform into `kebab-case`.
+	 *
+	 * @returns The string transformed into `kebab-case`, with all letters in lower case and words separated by hyphens.
+	 *
+	 * @example
+	 * convertCase('myKeyName'); // "my-key-name"
+	 * @example
+	 * convertCase('MyKeyName'); // "my-key-name"
+	 * @example
+	 * convertCase('my_long_key_name'); // "my-long-key-name"
+	 */
 	public convertCase<S extends string>(str: S): KebabCase<S> {
 		return str
 			.replace(/_/gu, '-')

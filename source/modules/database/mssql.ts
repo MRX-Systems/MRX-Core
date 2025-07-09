@@ -26,45 +26,45 @@ import type { QueryContext } from './types/queryContext';
  */
 export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	/**
-     * Indicates whether the database is connected.
-     */
+	 * Indicates whether the database is connected.
+	 */
 	private _isConnected = false;
 
 	/**
-     * The name of the database.
-     */
+	 * The name of the database.
+	 */
 	private readonly _databaseName: string;
 
 	/**
-     * A map of tables in the database.
-     * @see {@link Table}
-     */
+	 * A map of tables in the database.
+	 * @see {@link Table}
+	 */
 	private readonly _tables = new Map<string, Table>();
 
 	/**
-     * A map of repositories for each table.
-     * @see {@link Repository}
-     */
+	 * A map of repositories for each table.
+	 * @see {@link Repository}
+	 */
 	private readonly _repositories = new Map<string, Repository>();
 
 	/**
-     * The Knex instance for the database connection.
-     * @see {@link Knex}
-     * @see https://knexjs.org/
-     */
+	 * The Knex instance for the database connection.
+	 * @see {@link Knex}
+	 * @see https://knexjs.org/
+	 */
 	private readonly _db: Knex;
 
 	/**
-     * Indicates whether to add basic event listeners for all tables.
-     * @defaultValue false
-     */
+	 * Indicates whether to add basic event listeners for all tables.
+	 * @defaultValue false
+	 */
 	private readonly _isEventEnabled: boolean;
 
 	/**
-     * Create a new instance of `MSSQL` with the specified options.
-     *
-     * @param options - The configuration options for the MSSQL database connection.
-     */
+	 * Create a new instance of `MSSQL` with the specified options.
+	 *
+	 * @param options - The configuration options for the MSSQL database connection.
+	 */
 	public constructor(options: MSSQLDatabaseOptions) {
 		super();
 		this._databaseName = options.databaseName;
@@ -92,13 +92,13 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Establishes a connection to the MSSQL database.
-     *
-     * If the connection is successful, introspection is performed to retrieve information about tables, columns(fields), and primary keys.
-     * This information is used to create instances of {@link Table} and {@link Repository} for each table in the database.
-     *
-     * @throws ({@link CoreError}) Thrown if an error occurs during the connection process.
-     */
+	 * Establishes a connection to the MSSQL database.
+	 *
+	 * If the connection is successful, introspection is performed to retrieve information about tables, columns(fields), and primary keys.
+	 * This information is used to create instances of {@link Table} and {@link Repository} for each table in the database.
+	 *
+	 * @throws ({@link CoreError}) Thrown if an error occurs during the connection process.
+	 */
 	public async connect(): Promise<void> {
 		try {
 			await this._introspectDatabase();
@@ -115,11 +115,11 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Closes the connection to the MSSQL database.
-     *
-     * @throws ({@link CoreError}) Thrown if the database is not connected.
-     * @throws ({@link CoreError}) Thrown if an error occurs during the disconnection process.
-     */
+	 * Closes the connection to the MSSQL database.
+	 *
+	 * @throws ({@link CoreError}) Thrown if the database is not connected.
+	 * @throws ({@link CoreError}) Thrown if an error occurs during the disconnection process.
+	 */
 	public async disconnect(): Promise<void> {
 		if (!this._isConnected)
 			throw new CoreError({
@@ -139,19 +139,19 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Retrieves a repository for a specific table.
-     *
-     * @template TModel - The type of the model for the repository.
-     * @template TRepo - The repository to retrieve extends {@link Repository}.
-     *
-     * @param tableName - The name of the table to retrieve the repository for.
-     * @param customRepository - Optional custom repository class to use for the table. The class must extend {@link Repository}.
-     *
-     * @throws ({@link CoreError}) Thrown if the database is not connected.
-     * @throws ({@link CoreError}) Thrown if the specified table is not found.
-     *
-     * @returns The {@link Repository} for the specified table.
-     */
+	 * Retrieves a repository for a specific table.
+	 *
+	 * @template TModel - The type of the model for the repository.
+	 * @template TRepo - The repository to retrieve extends {@link Repository}.
+	 *
+	 * @param tableName - The name of the table to retrieve the repository for.
+	 * @param customRepository - Optional custom repository class to use for the table. The class must extend {@link Repository}.
+	 *
+	 * @throws ({@link CoreError}) Thrown if the database is not connected.
+	 * @throws ({@link CoreError}) Thrown if the specified table is not found.
+	 *
+	 * @returns The {@link Repository} for the specified table.
+	 */
 	public getRepository<TModel, TRepo extends Repository<TModel>>(
 		tableName: string,
 		customRepository: new (knex: Knex, table: Table) => TRepo
@@ -189,15 +189,15 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Retrieves a table by name.
-     *
-     * @param tableName - The name of the table to retrieve.
-     *
-     * @throws ({@link CoreError}) Thrown if the database is not connected.
-     * @throws ({@link CoreError}) Thrown if the specified table is not found.
-     *
-     * @returns The {@link Table} object for the specified table.
-    */
+	 * Retrieves a table by name.
+	 *
+	 * @param tableName - The name of the table to retrieve.
+	 *
+	 * @throws ({@link CoreError}) Thrown if the database is not connected.
+	 * @throws ({@link CoreError}) Thrown if the specified table is not found.
+	 *
+	 * @returns The {@link Table} object for the specified table.
+	 */
 	public getTable(tableName: string): Table {
 		if (!this._isConnected)
 			throw new CoreError({
@@ -214,48 +214,48 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Retrieves the name of the database.
-     *
-     * @returns The name of the database.
-     */
+	 * Retrieves the name of the database.
+	 *
+	 * @returns The name of the database.
+	 */
 	public get databaseName(): string {
 		return this._databaseName;
 	}
 
 	/**
-     * Retrieves the map of tables in the database.
-     *
-     * @returns A map of table names to {@link Table} instances.
-     */
+	 * Retrieves the map of tables in the database.
+	 *
+	 * @returns A map of table names to {@link Table} instances.
+	 */
 	public get tables(): Map<string, Table> {
 		return this._tables;
 	}
 
 	/**
-     * Retrieves the map of repositories for each table.
-     *
-     * @returns A map of table names to {@link Repository} instances.
-     */
+	 * Retrieves the map of repositories for each table.
+	 *
+	 * @returns A map of table names to {@link Repository} instances.
+	 */
 	public get repositories(): Map<string, Repository> {
 		return this._repositories;
 	}
 
 	/**
-     * Indicates whether the database is connected.
-     *
-     * @returns `true` if the database is connected, `false` otherwise.
-     */
+	 * Indicates whether the database is connected.
+	 *
+	 * @returns `true` if the database is connected, `false` otherwise.
+	 */
 	public get isConnected(): boolean {
 		return this._isConnected;
 	}
 
 	/**
-     * Retrieves the Knex instance for the database connection.
-     *
-     * @throws ({@link CoreError}) Thrown if the database is not connected.
-     *
-     * @returns The {@link Knex} instance for the database connection.
-     */
+	 * Retrieves the Knex instance for the database connection.
+	 *
+	 * @throws ({@link CoreError}) Thrown if the database is not connected.
+	 *
+	 * @returns The {@link Knex} instance for the database connection.
+	 */
 	public get db(): Knex {
 		if (!this._isConnected)
 			throw new CoreError({
@@ -266,9 +266,9 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Introspects the database to retrieve information about tables, columns(fields), and primary keys.
-     * Creates instances of {@link Table} and {@link Repository} for each table in the database.
-     */
+	 * Introspects the database to retrieve information about tables, columns(fields), and primary keys.
+	 * Creates instances of {@link Table} and {@link Repository} for each table in the database.
+	 */
 	private async _introspectDatabase(): Promise<void> {
 		interface RawColumns {
 			tableName: string,
@@ -322,12 +322,12 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Extracts table names from a SQL query.
-     *
-     * @param sql - The SQL query string to extract table names from.
-     *
-     * @returns An array of table names found in the SQL query.
-     */
+	 * Extracts table names from a SQL query.
+	 *
+	 * @param sql - The SQL query string to extract table names from.
+	 *
+	 * @returns An array of table names found in the SQL query.
+	 */
 	private _extractTablesFromSqlQuery(sql: string): string[] {
 		const tableRegex = /(?:update|insert\s+into|delete\s+from|from|join|with)\s+\[?([^\]\s]+)\]?/gi;
 		const matches = [...sql.matchAll(tableRegex)].map((match) => match[1]);
@@ -335,11 +335,11 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Handles the response from a query and emits the appropriate event based on the method.
-     *
-     * @param response - The response from the query.
-     * @param queryContext - The query object containing the method and SQL query string.
-     */
+	 * Handles the response from a query and emits the appropriate event based on the method.
+	 *
+	 * @param response - The response from the query.
+	 * @param queryContext - The query object containing the method and SQL query string.
+	 */
 	private _handleQueryResponse(response: unknown[], queryContext: QueryContext): void {
 		const tables = this._extractTablesFromSqlQuery(queryContext.sql);
 		const table = this._tables.get(tables[0]);
@@ -362,8 +362,8 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	}
 
 	/**
-     * Adds event listeners to the Knex instance to handle query responses and errors.
-     */
+	 * Adds event listeners to the Knex instance to handle query responses and errors.
+	 */
 	private _addEventKnex(): void {
 		this._db.on('query', (queryContext: QueryContext) => {
 			this.emit('query', queryContext);

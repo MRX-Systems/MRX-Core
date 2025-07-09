@@ -1,11 +1,11 @@
 export interface SMTPCredentials {
 	/**
-     * The username for SMTP authentication.
-     */
+	 * The username for SMTP authentication.
+	 */
 	readonly user: string;
 
 	/**
-     * The password for SMTP authentication.
-     */
+	 * The password for SMTP authentication.
+	 */
 	readonly pass: string;
 }

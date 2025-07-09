@@ -5,9 +5,9 @@ import { makeStreamAsyncIterable } from '#/utils/stream';
 
 describe('makeStreamAsyncIterable', () => {
 	/**
-	* Test data containing various stream configurations
-	* for testing different async iteration scenarios.
-	*/
+	 * Test data containing various stream configurations
+	 * for testing different async iteration scenarios.
+	 */
 	const _testData = {
 		singleChunk: 'single data chunk',
 		binaryData: Buffer.from('binary data'),
@@ -16,13 +16,13 @@ describe('makeStreamAsyncIterable', () => {
 	} as const;
 
 	/**
-	* Helper factory for creating readable streams with different configurations
-	* to reduce code duplication across test cases.
-	*/
+	 * Helper factory for creating readable streams with different configurations
+	 * to reduce code duplication across test cases.
+	 */
 	const _createTestStreams = {
 		/**
-		* Creates a readable stream that emits a single data chunk and ends.
-		*/
+		 * Creates a readable stream that emits a single data chunk and ends.
+		 */
 		singleChunk: (data: string | Buffer): Readable => {
 			const stream = new Readable({
 				read(): void {
@@ -38,8 +38,8 @@ describe('makeStreamAsyncIterable', () => {
 		},
 
 		/**
-		* Creates a readable stream that immediately ends without emitting data.
-		*/
+		 * Creates a readable stream that immediately ends without emitting data.
+		 */
 		empty: (): Readable => {
 			const stream = new Readable({
 				read(): void {
@@ -54,8 +54,8 @@ describe('makeStreamAsyncIterable', () => {
 		},
 
 		/**
-		* Creates a readable stream that emits an error.
-		*/
+		 * Creates a readable stream that emits an error.
+		 */
 		withError: (errorMessage: string): Readable => new Readable({
 			read(): void {
 				this.emit('error', new Error(errorMessage));
@@ -63,8 +63,8 @@ describe('makeStreamAsyncIterable', () => {
 		}),
 
 		/**
-		* Creates a transform stream for testing different stream types.
-		*/
+		 * Creates a transform stream for testing different stream types.
+		 */
 		transform: (): Transform => new Transform({
 			transform(chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null, data?: Buffer) => void): void {
 				callback(null, Buffer.from(chunk.toString().toUpperCase()));
@@ -72,8 +72,8 @@ describe('makeStreamAsyncIterable', () => {
 		}),
 
 		/**
-		* Creates a pass-through stream for testing stream composition.
-		*/
+		 * Creates a pass-through stream for testing stream composition.
+		 */
 		passThrough: (): PassThrough => new PassThrough()
 	} as const;
 
@@ -93,8 +93,8 @@ describe('makeStreamAsyncIterable', () => {
 	});
 
 	/**
-	* Helper function to track streams for cleanup.
-	*/
+	 * Helper function to track streams for cleanup.
+	 */
 	const _trackStream = <TStream extends NodeJS.ReadableStream>(stream: TStream): TStream => {
 		_activeStreams.push(stream);
 		return stream;

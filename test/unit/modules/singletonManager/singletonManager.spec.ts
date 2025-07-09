@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { SingletonManager } from '#/modules/singletonManager/singletonManager';
 
 /**
-* Test singleton class without constructor parameters
-*/
+ * Test singleton class without constructor parameters
+ */
 class ExampleSingleton {
 	private static _instanceCount = 0;
 
@@ -34,8 +34,8 @@ class ExampleSingleton {
 }
 
 /**
-* Test singleton class with one constructor parameter
-*/
+ * Test singleton class with one constructor parameter
+ */
 class ExampleSingleton2 {
 	private readonly _name: string;
 
@@ -49,8 +49,8 @@ class ExampleSingleton2 {
 }
 
 /**
-* Test singleton class with multiple constructor parameters
-*/
+ * Test singleton class with multiple constructor parameters
+ */
 class ExampleSingleton3 {
 	private readonly _name: string;
 
@@ -71,8 +71,8 @@ class ExampleSingleton3 {
 }
 
 /**
-* Test singleton class with complex constructor behavior
-*/
+ * Test singleton class with complex constructor behavior
+ */
 class ExampleSingleton4 {
 	private readonly _config: Record<string, unknown>;
 
@@ -86,8 +86,8 @@ class ExampleSingleton4 {
 }
 
 /**
-* Test constants for singleton names
-*/
+ * Test constants for singleton names
+ */
 const singletonNames = {
 	EXAMPLE: 'ExampleSingleton',
 	EXAMPLE_2: 'ExampleSingleton2',
@@ -97,8 +97,8 @@ const singletonNames = {
 } as const;
 
 /**
-* Helper function to clean up all registered singletons
-*/
+ * Helper function to clean up all registered singletons
+ */
 function cleanupSingletons(): void {
 	for (const name of Object.values(singletonNames))
 		if (SingletonManager.has(name))

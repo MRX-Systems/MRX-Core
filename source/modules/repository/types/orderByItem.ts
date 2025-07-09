@@ -32,11 +32,11 @@
  */
 export interface OrderByItem<TModel> {
 	/**
-     * The field to order by. Must be a key of the model or a string.
-     */
+	 * The field to order by. Must be a key of the model or a string.
+	 */
 	selectedField: (keyof TModel extends string ? keyof TModel : string);
 	/**
-     * The direction of the ordering: 'asc' for ascending, 'desc' for descending.
-     */
+	 * The direction of the ordering: 'asc' for ascending, 'desc' for descending.
+	 */
 	direction: 'asc' | 'desc';
 }
