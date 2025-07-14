@@ -23,5 +23,6 @@ export const databaseErrorKeys = {
 	mssqlDatabaseDataTooLarge: 'core.error.mssql.database.data_too_large',
 	mssqlDatabasePermissionDenied: 'core.error.mssql.database.permission_denied',
 	mssqlDatabaseIdentityInsertNotAllowed: 'core.error.mssql.database.identity_insert_not_allowed',
-	mssqlDatabaseCannotUpdateIdentityColumn: 'core.error.mssql.database.cannot_update_identity_column'
+	mssqlDatabaseCannotUpdateIdentityColumn: 'core.error.mssql.database.cannot_update_identity_column',
+	mssqlDatabaseConversionFailed: 'core.error.mssql.database.conversion_failed'
 } as const;

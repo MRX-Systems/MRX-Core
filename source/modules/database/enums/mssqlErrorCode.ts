@@ -22,5 +22,6 @@ export const mssqlErrorCode = {
 	8152: databaseErrorKeys.mssqlDatabaseDataTooLarge,
 	229: databaseErrorKeys.mssqlDatabasePermissionDenied,
 	544: databaseErrorKeys.mssqlDatabaseIdentityInsertNotAllowed,
-	8102: databaseErrorKeys.mssqlDatabaseCannotUpdateIdentityColumn
+	8102: databaseErrorKeys.mssqlDatabaseCannotUpdateIdentityColumn,
+	8169: databaseErrorKeys.mssqlDatabaseConversionFailed
 } as const;
