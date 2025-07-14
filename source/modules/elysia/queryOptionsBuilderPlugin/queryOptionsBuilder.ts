@@ -71,7 +71,7 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
 			'minLength',
 			'maxLength',
 			'pattern',
-			'format',
+			// 'format', // removed because t.date needs it
 			'minimum',
 			'maximum',
 			'exclusiveMinimum',
