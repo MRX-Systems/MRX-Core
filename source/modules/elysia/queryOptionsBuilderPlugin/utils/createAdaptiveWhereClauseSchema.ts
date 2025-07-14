@@ -17,7 +17,7 @@ import { isDateFromElysiaTypeBox } from './isDateFromElysiaTypeBox';
  *
  * @returns A TypeBox object schema with where clause operators
  */
-export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInferedSchema) => {
+export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInferedSchema): AdaptiveWhereClauseSchema<TInferedSchema> => {
 	// all
 	const common = {
 		$eq: schema,
