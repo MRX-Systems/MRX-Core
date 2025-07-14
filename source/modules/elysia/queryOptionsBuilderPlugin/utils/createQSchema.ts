@@ -1,6 +1,8 @@
 import type { TObject } from '@sinclair/typebox';
 import { t } from 'elysia/type-system';
 
+import type { QSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/types/qSchema';
+
 /**
  * Creates a search query schema
  *
@@ -10,7 +12,7 @@ import { t } from 'elysia/type-system';
  *
  * @returns A union schema for search queries
  */
-export const createQSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
+export const createQSchema = <TInferedObject extends TObject>(schema: TInferedObject): QSchema<TInferedObject> => t.Union([
 	t.Object({
 		selectedFields: t.Union([
 			t.KeyOf(schema),
