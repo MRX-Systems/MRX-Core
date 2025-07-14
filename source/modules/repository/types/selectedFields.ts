@@ -34,5 +34,7 @@
  * const selection3: SelectedFields<User> = ['id', 'fullName'];
  * ```
  */
-export type SelectedFields<TModel> = (keyof TModel extends string ? keyof TModel : string)
+export type SelectedFields<TModel>
+= (keyof TModel extends string ? keyof TModel : string)
+	| '*'
 	| (keyof TModel extends string ? keyof TModel : string)[];
