@@ -33,8 +33,8 @@ const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInfere
 	for (const [key, propertySchema] of Object.entries(properties))
 	// @ts-expect-error // Generic can't be indexed
 		clauseSchema[key] = t.Union([
-			createAdaptiveWhereClauseSchema(propertySchema), // Array of where clauses: [{ $gt: 18 }, { $lt: 65 }]
-			propertySchema // Array of values: ["john", "jane"]
+			createAdaptiveWhereClauseSchema(propertySchema),
+			propertySchema
 		]);
 	return t.Object(clauseSchema);
 };
