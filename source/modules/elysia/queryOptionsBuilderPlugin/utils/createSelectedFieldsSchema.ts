@@ -13,10 +13,7 @@ import { t } from 'elysia/type-system';
 export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
 	t.KeyOf(schema),
 	t.Literal('*'),
-	t.Array(t.Union([
-		t.KeyOf(schema),
-		t.Literal('*')
-	]), {
+	t.Array(t.KeyOf(schema), {
 		minItems: 1,
 		uniqueItems: true
 	})
