@@ -42,8 +42,8 @@ export type AdaptiveWhereClauseSchema<TValue extends TSchema> = TPartial<(
 				$nbetween: TTuple<[TValue, TValue]>;
 			}>
 			: TObject<{
-				$eq: TValue;
-				$neq: TValue;
+				$eq: TBoolean;
+				$neq: TBoolean;
 				$isNull: TBoolean;
 			}>
 )>;
