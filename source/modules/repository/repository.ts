@@ -574,9 +574,11 @@ export class Repository<TModel = unknown> {
 		const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
 			for (const key in search) {
 				const prop = search[key as keyof Filter<KModel>];
-				if (this._filterIsAdaptiveWhereClause(prop)) {
+				if (prop === undefined || prop === null) {
+					continue;
+				} else if (this._filterIsAdaptiveWhereClause(prop)) {
 					for (const operator in prop)
-						if (operator in _operators)
+						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>])
 							_operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
 				} else if (
 					key === '$q'
@@ -729,9 +731,11 @@ export class Repository<TModel = unknown> {
 				throw new CoreError({
 					key: databaseErrorKeys.mssqlNoResult,
 					message: typeof throwIfNoResult === 'string' ? throwIfNoResult : 'No records found matching the specified query options.',
-					cause: {
-						query: query.toSQL().sql
-					},
+					cause: !process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
+						? {
+							query: query.toSQL().sql
+						}
+						: undefined,
 					httpStatusCode: 404
 				});
 			return result;
