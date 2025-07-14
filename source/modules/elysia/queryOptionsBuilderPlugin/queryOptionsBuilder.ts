@@ -1,15 +1,20 @@
 import type {
 	Static,
+	TArray,
+	TComposite,
+	TNumber,
 	TObject,
+	TPartial,
 	TUnion
 } from '@sinclair/typebox';
-import { Elysia, t } from 'elysia';
+import { Elysia, t, type MetadataBase, type RouteBase, type SingletonBase } from 'elysia';
 
 import { filterByKeyExclusionRecursive } from '#/modules/data/data';
-import type { AdaptiveWhereClauseSchema } from './types/adaptiveWhereClauseSchema';
+import type { EphemeralType, MergeSchema, Prettify, PrettifySchema } from 'elysia/types';
+import type { QSchema } from './types/qSchema';
 import type { QueryOptionsBuilderOptions } from './types/queryOptionsBuilderOptions';
 import { createAdaptiveWhereClauseSchema } from './utils/createAdaptiveWhereClauseSchema';
-import { createOrderBySchema } from './utils/createOrderBySchema';
+import { createOrderSchema } from './utils/createOrderSchema';
 import { createQSchema } from './utils/createQSchema';
 import { createSelectedFieldsSchema } from './utils/createSelectedFieldsSchema';
 
@@ -22,11 +27,16 @@ import { createSelectedFieldsSchema } from './utils/createSelectedFieldsSchema';
  *
  * @returns Record of property schemas with union types
  */
-const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInferedObject) => {
+const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInferedObject): TObject<{
+	[K in keyof Static<TInferedObject>]: TUnion<[
+		ReturnType<typeof createAdaptiveWhereClauseSchema<TInferedObject['properties'][K]>>,
+		TInferedObject['properties'][K]
+	]>
+}> => {
 	const { properties } = schema;
 	const clauseSchema = {} as {
 		[K in keyof Static<TInferedObject>]: TUnion<[
-			AdaptiveWhereClauseSchema<TInferedObject['properties'][K]>,
+			ReturnType<typeof createAdaptiveWhereClauseSchema<TInferedObject['properties'][K]>>,
 			TInferedObject['properties'][K]
 		]>
 	};
@@ -48,7 +58,12 @@ const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInfere
  *
  * @returns A TypeBox object schema for filters
  */
-const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Composite([
+const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedObject): TComposite<[
+	TObject<{
+		$q: QSchema<TInferedObject>
+	}>,
+	ReturnType<typeof _createPropertiesSchema<TInferedObject>>
+]> => t.Composite([
 	t.Object({
 		$q: createQSchema(schema)
 	}),
@@ -64,7 +79,18 @@ const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedOb
  *
  * @returns A TypeBox object schema for search with selected fields, order by, filters, limit, and offset
  */
-const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject) => {
+const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject): TPartial<TObject<{
+	queryOptions: TPartial<TObject<{
+		selectedFields: ReturnType<typeof createSelectedFieldsSchema>;
+		orderBy: ReturnType<typeof createOrderSchema>;
+		filters: TUnion<[
+			TPartial<ReturnType<typeof _createFiltersSchema<TInferedObject>>>,
+			TArray<TPartial<ReturnType<typeof _createFiltersSchema<TInferedObject>>>>
+		]>;
+		limit: TNumber;
+		offset: TNumber;
+	}>>
+}>> => {
 	const sanitizedSchema = filterByKeyExclusionRecursive(
 		schema,
 		[
@@ -101,7 +127,7 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
 	return t.Partial(t.Object({
 		queryOptions: t.Partial(t.Object({
 			selectedFields: createSelectedFieldsSchema(sanitizedSchema),
-			orderBy: createOrderBySchema(sanitizedSchema),
+			orderBy: createOrderSchema(sanitizedSchema),
 			filters: t.Union([
 				t.Partial(_createFiltersSchema(sanitizedSchema)),
 				t.Array(t.Partial(_createFiltersSchema(sanitizedSchema)))
@@ -131,10 +157,33 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
 export const queryOptionsBuilderPlugin = <
 	const TSchemaName extends string,
 	TInferedObject extends TObject
->({
-	schemaName,
-	baseSchema
-}: QueryOptionsBuilderOptions<TSchemaName, TInferedObject>) => new Elysia({
+>(
+	{
+		schemaName,
+		baseSchema
+	}: QueryOptionsBuilderOptions<TSchemaName, TInferedObject>
+): Elysia<
+	TSchemaName,
+	SingletonBase,
+	{
+		typebox: Record<`${TSchemaName}Search`, ReturnType<typeof _createSearchSchema<TInferedObject>>>;
+		error: {};
+	},
+	MetadataBase,
+	RouteBase,
+	{
+		derive: Prettify<EphemeralType['derive']>;
+		resolve: Prettify<EphemeralType['resolve']>;
+		schema: MergeSchema<EphemeralType['schema'], EphemeralType['schema']>;
+		standaloneSchema: PrettifySchema<EphemeralType['standaloneSchema']>;
+	},
+	{
+		derive: {};
+		resolve: {};
+		schema: {};
+		standaloneSchema: {};
+	}
+> => new Elysia<TSchemaName>({
 	name: `queryOptionsBuilderPlugin-${schemaName}`,
 	seed: baseSchema
 })
