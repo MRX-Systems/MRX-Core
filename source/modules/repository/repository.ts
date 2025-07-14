@@ -574,11 +574,9 @@ export class Repository<TModel = unknown> {
 		const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
 			for (const key in search) {
 				const prop = search[key as keyof Filter<KModel>];
-				if (prop === undefined || prop === null) {
-					continue;
-				} else if (this._filterIsAdaptiveWhereClause(prop)) {
+				if (this._filterIsAdaptiveWhereClause(prop)) {
 					for (const operator in prop)
-						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>])
+						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>] !== undefined)
 							_operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
 				} else if (
 					key === '$q'

@@ -438,6 +438,38 @@ const filtersTests: [string, FilterTest<Data>][] = [
 			},
 			expectedCount: 7
 		}
+	],
+	[
+		'With AdaptiveWhereClause - undefined operator',
+		{
+			filters: {
+				// @ts-expect-error - Testing undefined operator
+				age: {
+					$eq: undefined,
+					$neq: undefined,
+					$between: undefined,
+					$nbetween: undefined,
+					$gt: undefined,
+					$gte: undefined,
+					$lt: undefined,
+					$lte: undefined,
+					$in: undefined,
+					$nin: undefined,
+					$like: undefined,
+					$nlike: undefined,
+					$isNull: undefined
+				}
+			},
+			validator: (data, expectedCount) => {
+				if (!Array.isArray(data))
+					throw new Error('Data should be an array');
+				expect(data).toHaveLength(expectedCount);
+				data.forEach((item) => {
+					expect(item.age).toBeDefined();
+				});
+			},
+			expectedCount: 20
+		}
 	]
 ];
 
