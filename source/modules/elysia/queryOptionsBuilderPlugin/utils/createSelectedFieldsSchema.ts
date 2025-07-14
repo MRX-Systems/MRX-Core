@@ -1,6 +1,8 @@
 import type { TObject } from '@sinclair/typebox';
 import { t } from 'elysia/type-system';
 
+import type { SelectedFieldsSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/types/selectedFieldSchema';
+
 /**
  * Creates a schema for field selection in search results.
  *
@@ -10,7 +12,7 @@ import { t } from 'elysia/type-system';
  *
  * @returns A TypeBox union schema for selected fields
  */
-export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
+export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TInferedObject): SelectedFieldsSchema<TInferedObject> => t.Union([
 	t.KeyOf(schema),
 	t.Literal('*'),
 	t.Array(t.KeyOf(schema), {
