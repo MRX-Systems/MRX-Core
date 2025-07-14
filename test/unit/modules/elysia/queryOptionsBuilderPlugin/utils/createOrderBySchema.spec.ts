@@ -2,7 +2,7 @@ import { Kind } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
-import { createOrderBySchema } from '#/modules/elysia/queryOptionsBuilderPlugin/utils/createOrderBySchema';
+import { createOrderSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/utils/createOrderSchema';
 
 const baseSchema = t.Object({
 	id: t.Number(),
@@ -14,23 +14,23 @@ const baseSchema = t.Object({
 
 describe('createOrderBySchema', () => {
 	test('should have correct Kind', () => {
-		const orderBySchema = createOrderBySchema(baseSchema);
+		const orderBySchema = createOrderSchema(baseSchema);
 		expect(orderBySchema[Kind]).toBe('Union');
 	});
 
 	test('should have a anyOf', () => {
-		const orderBySchema = createOrderBySchema(baseSchema);
+		const orderBySchema = createOrderSchema(baseSchema);
 		expect(orderBySchema.anyOf).toBeDefined();
 		expect(orderBySchema.anyOf).toHaveLength(2);
 	});
 
 	test('should have correct description', () => {
-		const orderBySchema = createOrderBySchema(baseSchema);
+		const orderBySchema = createOrderSchema(baseSchema);
 		expect(orderBySchema.description).toBe('Order by is an item or array of items with a field to order by and direction. Use "asc" for ascending or "desc" for descending order.');
 	});
 
 	test('should have a good first element (Object with selectedField and direction)', () => {
-		const orderBySchema = createOrderBySchema(baseSchema);
+		const orderBySchema = createOrderSchema(baseSchema);
 		const [firstElement] = orderBySchema.anyOf;
 		expect(firstElement[Kind]).toBe('Object');
 		expect(firstElement.type).toBe('object');
@@ -65,7 +65,7 @@ describe('createOrderBySchema', () => {
 	});
 
 	test('should have a good second element (Array of Object with selectedField and direction)', () => {
-		const orderBySchema = createOrderBySchema(baseSchema);
+		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 		expect(secondElement[Kind]).toBe('Array');
 		expect(secondElement.type).toBe('array');
