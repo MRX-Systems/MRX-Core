@@ -1,1 +1,1 @@
-export * from './microservice';
+export { microservicePlugin } from './microservice';

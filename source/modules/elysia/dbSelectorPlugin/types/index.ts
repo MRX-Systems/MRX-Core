@@ -1,1 +1,1 @@
-export type * from './dbSelectorOptions';
+export type { DbSelectorOptions } from './dbSelectorOptions';

@@ -1,367 +1,383 @@
-// import type { Static, TObject, TSchema } from '@sinclair/typebox';
-// import { Elysia, t } from 'elysia';
-//
-// import type { MSSQL } from '#/database/mssql';
-// import { CoreError } from '#/error/coreError';
-// import type { Filter } from '#/repository/types/filter';
-// import type { SelectedFields } from '#/repository/types/selectedFields';
-// import { SingletonManager } from '#/singletonManager/singletonManager';
-// import { queryOptionsBuilderPlugin } from './queryOptionsBuilder';
-// import { dynamicDatabaseSelectorPlugin } from './dynamicDatabaseSelector';
-// import { elysiaErrorKeys } from './enums/elysiaErrorKeys';
-// import type { CrudOptions } from './types/crudOptions';
-// import type { CRUDRoutes } from './types/crudRoutes';
-// import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
-//
-//
-// export const createResponse200Schema = <TInferedObject extends TObject>(schema: TInferedObject) => {
-//     const { properties } = schema;
-//
-//     const contentSchema = {} as Record<string, TSchema>;
-//
-//     for (const key in properties)
-//         contentSchema[key] = t.Union([
-//             properties[key],
-//             t.Undefined(),
-//             t.Null(),
-//             t.Literal('')
-//         ]);
-//
-//     return t.Object({
-//         message: t.String(),
-//         content: t.Array(t.Partial(t.Object(contentSchema)))
-//     });
-// };
-//
-// export const createInsertBodySchema = <TInferedObject extends TObject>(schema: TInferedObject, requiredPropertiesSchema?: (keyof Static<TInferedObject>)[]) => {
-//     const { properties } = schema;
-//
-//     const contentSchema = {} as Record<string, TSchema>;
-//
-//     for (const key in properties)
-//         contentSchema[key] = requiredPropertiesSchema?.includes(key)
-//             ? properties[key]
-//             : t.Optional(properties[key]);
-//
-//     return t.Object(contentSchema);
-// };
-//
-// const _addModels = <TInferedObject extends TObject, KEnumPermission extends string>(enabledRoutes: CRUDRoutes[], options: CrudOptions<TInferedObject, KEnumPermission>) => {
-//     const { baseSchema, tableName, insertPropertiesSchemaRequired } = options;
-//
-//     // Initialize plugin with common response schema
-//     const plugin = new Elysia().model({
-//         [`crud${tableName}Response200`]: createResponse200Schema(baseSchema)
-//     });
-//
-//     // Map of route types to their corresponding model definitions
-//     const routeModelMap: Partial<Record<CRUDRoutes, () => void>> = {
-//         insert: () => plugin.model({
-//             [`crud${tableName}InsertBody`]: createInsertBodySchema(baseSchema, insertPropertiesSchemaRequired)
-//         }),
-//         update: () => plugin.model({
-//             [`crud${tableName}UpdateBody`]: t.Partial(baseSchema)
-//         }),
-//         count: () => plugin.model({
-//             [`crud${tableName}CountResponse200`]: t.Object({
-//                 message: t.String(),
-//                 content: t.Number()
-//             })
-//         })
-//     };
-//
-//     // Add route-specific models
-//     enabledRoutes.forEach((route) => {
-//         if (route in routeModelMap)
-//             routeModelMap[route]?.();
-//     });
-//
-//     // Routes that require ID parameter
-//     const routesWithIdParam = ['findOne', 'deleteOne', 'updateOne'] as const;
-//
-//     // Add ID parameter model if any route requires it
-//     if (routesWithIdParam.some((route) => enabledRoutes.includes(route)))
-//         plugin.model({
-//             [`crud${tableName}IdParam`]: t.Object({
-//                 id: t.Union([t.String(), t.Number()])
-//             })
-//         });
-//     return plugin;
-// };
-//
-// const _getEnabledRoutes = (includedRoutes: CRUDRoutes[] = [], excludedRoutes: CRUDRoutes[] = []): CRUDRoutes[] => {
-//     // Define all available routes as a constant to improve maintainability
-//     const allRoutes: CRUDRoutes[] = ['insert', 'find', 'findOne', 'update', 'updateOne', 'delete', 'deleteOne', 'count'];
-//
-//     // Start with either the included routes or all routes
-//     const enabledRoutes = includedRoutes.length > 0
-//         ? includedRoutes
-//         : allRoutes;
-//
-//     // Filter out excluded routes
-//     return excludedRoutes.length > 0
-//         ? enabledRoutes.filter((route) => !excludedRoutes.includes(route))
-//         : enabledRoutes;
-// };
-//
-// const _injectDynamicDbInContext = (database: string | DynamicDatabaseSelectorPluginOptions) => {
-//     const plugin = new Elysia();
-//     const isDynamicDatabase = typeof database !== 'string';
-//
-//     if (!isDynamicDatabase)
-//         // Static database configuration
-//         plugin.resolve(() => ({
-//             dynamicDB: SingletonManager.get<MSSQL>(`database:${database}`)
-//         }));
-//     else
-//         // Dynamic database configuration
-//         plugin.use(dynamicDatabaseSelectorPlugin({
-//             baseDatabaseConfig: database.baseDatabaseConfig,
-//             headerKey: database.headerKey || 'database-using'
-//         }));
-//     return plugin.as('scoped');
-// };
-//
-// const handlerDefinition = {
-//     insertHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//
-//         const { body } = ctx as { body: Partial<unknown> };
-//         const data = await repo.insert(body);
-//         return {
-//             message: `Inserted record for ${tableName}`,
-//             content: data
-//         };
-//     },
-//
-//     findHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//
-//         const data = await repo.find({
-//             filters: ctx.advancedSearch as Filter<unknown>[],
-//             selectedFields: ctx.selectedFields as SelectedFields<unknown>,
-//             limit: (ctx.pagination as { limit: number; offset: number }).limit,
-//             offset: (ctx.pagination as { limit: number; offset: number }).offset
-//         });
-//         return {
-//             message: `Found ${data.length} records for ${tableName}`,
-//             content: data
-//         };
-//     },
-//
-//     findOneHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as unknown as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//         const table = db.getTable(tableName);
-//         const primary = table.primaryKey;
-//
-//         const { id } = ctx.params as { id: string | number };
-//
-//         const data = await repo.findOne({
-//             filters: {
-//                 [primary[0]]: id
-//             } as Filter<unknown>
-//         });
-//         return {
-//             message: `Found record for ${tableName}`,
-//             content: data
-//         };
-//     },
-//
-//     countHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//         const count = await repo.count({
-//             filters: ctx.advancedSearch as Filter<unknown>[]
-//         });
-//         return {
-//             message: `${count} records found for ${tableName}`,
-//             content: count
-//         };
-//     },
-//
-//     updateHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//
-//         if (!ctx.advancedSearch || (ctx.advancedSearch as Filter<unknown>[]).length === 0 || !(ctx.advancedSearch as Filter<unknown>[])[0])
-//             throw new CoreError({
-//                 key: elysiaErrorKeys.needAdvancedSearch,
-//                 message: 'You need to provide advanced search to update records. It\'s dangerous to update all records.',
-//                 httpStatusCode: 400
-//             });
-//
-//         const data = await repo.update((ctx.body as Record<string, unknown>), {
-//             filters: ctx.advancedSearch as Filter<unknown>[],
-//             selectedFields: ctx.selectedField as SelectedFields<unknown>
-//         });
-//
-//         return {
-//             message: `Updated ${data.length} records for ${tableName}`,
-//             content: data
-//         };
-//     },
-//
-//     updateOneHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//         const table = db.getTable(tableName);
-//         const primary = table.primaryKey;
-//
-//         const { id } = ctx.params as { id: string | number };
-//
-//         const data = await repo.update(ctx.body as Record<string, unknown>, {
-//             filters: {
-//                 [primary[0]]: id
-//             } as Filter<unknown>
-//         });
-//
-//         return {
-//             message: `Updated record for ${tableName}`,
-//             content: data
-//         };
-//     },
-//
-//     deleteHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//
-//         if (!ctx.advancedSearch || (ctx.advancedSearch as Filter<unknown>[]).length === 0 || !(ctx.advancedSearch as Filter<unknown>[])[0])
-//             throw new CoreError({
-//                 key: elysiaErrorKeys.needAdvancedSearch,
-//                 message: 'You need to provide advanced search to delete records. It\'s dangerous to delete all records.',
-//                 httpStatusCode: 400
-//             });
-//
-//         const data = await repo.delete({
-//             filters: ctx.advancedSearch as Filter<unknown>[],
-//             selectedFields: ctx.selectedFields as SelectedFields<unknown>
-//         });
-//
-//         return {
-//             message: `Deleted ${data.length} records for ${tableName}`,
-//             content: data
-//         };
-//     },
-//
-//     deleteOneHandler: async (ctx: Record<string, unknown>, tableName: string) => {
-//         const db = (ctx as { dynamicDB: MSSQL }).dynamicDB;
-//         const repo = db.getRepository(tableName);
-//         const table = db.getTable(tableName);
-//         const primary = table.primaryKey;
-//
-//         const { id } = ctx.params as { id: string | number };
-//
-//         const data = await repo.delete({
-//             filters: {
-//                 [primary[0]]: id
-//             } as Filter<unknown>
-//         });
-//
-//         return {
-//             message: `Deleted record for ${tableName}`,
-//             content: data
-//         };
-//     }
-// } as const;
-//
-// const _addRoutes = <TInferedObject extends TObject>
-// (
-//     enabledRoutes: CRUDRoutes[],
-//     tableName: string,
-//     baseSchema: TInferedObject,
-//     isDynamicDatabase: boolean,
-//     operationsPermissions: Partial<Record<CRUDRoutes, string[]>>
-// ) => (app: Elysia) => {
-//     const routesMethods: Partial<Record<CRUDRoutes, 'post' | 'get' | 'patch' | 'delete'>> = {
-//         insert: 'post',
-//         find: 'get',
-//         findOne: 'get',
-//         count: 'get',
-//         update: 'patch',
-//         updateOne: 'patch',
-//         delete: 'delete',
-//         deleteOne: 'delete'
-//     };
-//
-//     const routesPath: Partial<Record<CRUDRoutes, string>> = {
-//         insert: '/',
-//         find: '/',
-//         findOne: '/:id',
-//         count: '/count',
-//         update: '/',
-//         updateOne: '/:id',
-//         delete: '/',
-//         deleteOne: '/:id'
-//     };
-//
-//     const hasAdvancedSearch = enabledRoutes.includes('find') || enabledRoutes.includes('count') || enabledRoutes.includes('update') || enabledRoutes.includes('delete');
-//
-//     if (hasAdvancedSearch)
-//         app.use(queryOptionsBuilderPlugin({
-//             schemaName: tableName,
-//             baseSchema
-//         }));
-//
-//
-//     for (const route of enabledRoutes) {
-//         const method = routesMethods[route];
-//         const path = routesPath[route];
-//
-//         if (method && path) {
-//             const handler = handlerDefinition[`${route}Handler`];
-//
-//             const definition = {
-//                 ...(route === 'findOne' || route === 'deleteOne' || route === 'updateOne'
-//                     ? { params: `crud${tableName}IdParam` as unknown as TObject }
-//                     : {}
-//                 ),
-//
-//                 ...(route === 'count' || route === 'update' || route === 'delete'
-//                     ? { query: createSearchSchema(baseSchema) } // can't use ref (https://discord.com/channels/1044804142461362206/1323026325531000842)
-//                     : route === 'find'
-//                         ? { query: createSearchSchema(baseSchema) } // can't use ref (https://discord.com/channels/1044804142461362206/1323026325531000842)
-//                         : {}
-//                 ),
-//
-//                 ...(route === 'insert' || route === 'update' || route === 'updateOne'
-//                     ? { body: `crud${tableName}${route === 'insert' ? 'Insert' : 'Update'}Body` as unknown as TObject }
-//                     : {}
-//                 ),
-//
-//                 response: `crud${tableName}${route === 'count' ? 'Count' : ''}Response200` as unknown as TObject,
-//                 hasAdvancedSearch: true as unknown as never,
-//                 hasDynamicDatabaseSelector: isDynamicDatabase as unknown as never,
-//                 needsOnePermission: operationsPermissions[route] || []
-//             };
-//
-//             app[method](path, (ctx) => handler(ctx, tableName), definition);
-//         }
-//     }
-//     return app;
-// };
-//
-// export const crudPlugin = <
-//     TInferedObject extends TObject,
-//     KEnumPermission extends string
-// >(options: CrudOptions<TInferedObject, KEnumPermission>) => {
-//     const enabledRoutes = _getEnabledRoutes(options.includedRoutes, options.excludedRoutes);
-//     const app = new Elysia({
-//         name: `crudPlugin[${options.tableName}]`,
-//         tags: [options.tableName]
-//     })
-//         .use(_addModels(enabledRoutes, options))
-//         .use(options.permissionConfig.permissionsPlugin);
-//     app
-//         .use(_injectDynamicDbInContext(options.database))
-//         .use(_addRoutes(
-//             enabledRoutes,
-//             options.tableName,
-//             options.baseSchema,
-//             !(typeof options.database === 'string'),
-//             options.permissionConfig.operationsPermissions
-//         ));
-//     return app;
-// };
+import { TypeGuard, type Static, type TLiteral, type TObject, type TUndefined, type TUnion } from '@sinclair/typebox';
+import { Elysia, t } from 'elysia';
+
+import { CoreError } from '#/error/coreError';
+import { filterByKeyExclusionRecursive } from '#/modules/data/data';
+import { MSSQL } from '#/modules/database';
+import { errorKeys } from '#/modules/elysia/dbSelectorPlugin/enums/errorKeys';
+import type { DbSelectorOptions } from '#/modules/elysia/dbSelectorPlugin/types/dbSelectorOptions';
+import { queryOptionsBuilderPlugin } from '#/modules/elysia/queryOptionsBuilderPlugin/queryOptionsBuilder';
+import { SingletonManager } from '#/modules/singletonManager/singletonManager';
+import type { CrudModelsType } from './types/crudModelsType';
+import type { CrudOperationBaseOptions } from './types/crudOperationBaseOptions';
+import type { CrudOperations } from './types/crudOpterations';
+import type { CrudOptions } from './types/crudOptions';
+
+const _createResponse200Schema = <TInferedObject extends TObject>(schema: TInferedObject) => {
+	const sanitizedSchema = filterByKeyExclusionRecursive(
+		schema,
+		[
+			'minLength',
+			'maxLength',
+			'pattern',
+			'format',
+			'minimum',
+			'maximum',
+			'exclusiveMinimum',
+			'exclusiveMaximum',
+			'multipleOf',
+			'minItems',
+			'maxItems',
+			'maxContains',
+			'minContains',
+			'minProperties',
+			'maxProperties',
+			'uniqueItems',
+			'minimumTimestamp',
+			'maximumTimestamp',
+			'exclusiveMinimumTimestamp',
+			'exclusiveMaximumTimestamp',
+			'multipleOfTimestamp',
+			'required',
+			'default'
+		]
+	) as TInferedObject;
+
+	const { properties } = sanitizedSchema;
+
+	const responseSchema = {} as {
+		[K in keyof Static<TInferedObject>]: TUnion<[
+			TUndefined,
+			TLiteral<''>,
+			TInferedObject['properties'][K]
+		]>
+	};
+
+	for (const key in properties)
+	// @ts-expect-error - Generic can't be indexed
+		responseSchema[key] = TypeGuard.IsString(properties[key])
+			? t.Union([properties[key], t.Undefined(), t.Literal(''), t.Null()])
+			: t.Union([properties[key], t.Undefined(), t.Null()]);
+
+	return t.Object({
+		message: t.String(),
+		content: t.Array(t.Partial(t.Object(responseSchema)))
+	});
+};
+
+const _createCountResponse200Schema = () => t.Object({
+	message: t.String(),
+	content: t.Number()
+});
+
+const _createIdParamSchema = () => t.Object({
+	id: t.Union([t.String(), t.Number()])
+});
+
+const _addModels = <
+	const TTableName extends string,
+	const TInferedObject extends TObject,
+	const TDatabase extends string | DbSelectorOptions,
+	const TOperations extends CrudOperations<TInferedObject> = CrudOperations<TInferedObject>
+>(
+	tableName: TTableName,
+	schema: TInferedObject,
+	database: TDatabase,
+	operations: TOperations
+) => {
+	const plugin = new Elysia();
+
+	const models: Record<string, unknown> = {
+		...(operations.insert
+			? { [`${tableName}Insert`]: t.Union([
+				schema,
+				t.Array(schema, {
+					minItems: 1,
+					uniqueItems: true
+				})
+			]) }
+			: {}),
+		...(operations.update ? { [`${tableName}Update`]: t.Partial(schema) } : {}),
+		...(operations.updateOne ? { [`${tableName}UpdateOne`]: t.Partial(schema) } : {})
+	};
+
+	if (
+		operations.find
+		|| operations.update
+		|| operations.delete
+		|| operations.count
+	)
+		plugin.use(queryOptionsBuilderPlugin({
+			schemaName: tableName,
+			baseSchema: schema
+		}));
+
+	if (
+		operations.findOne
+		|| operations.updateOne
+		|| operations.deleteOne
+	)
+		models[`${tableName}IdParam`] = _createIdParamSchema();
+
+	if (
+		operations.find
+		|| operations.findOne
+		|| operations.insert
+		|| operations.update
+		|| operations.updateOne
+		|| operations.delete
+		|| operations.deleteOne
+	)
+		models[`${tableName}Response200`] = _createResponse200Schema(schema);
+
+	if (operations.count)
+		models[`${tableName}CountResponse200`] = _createCountResponse200Schema();
+
+	if (typeof database === 'object')
+		models['dbSelectorHeader'] = t.Object({
+			[database.headerKey || 'database-using']: t.String({
+				description: 'Name of the database to use for the request',
+				example: 'my_database'
+			})
+		});
+
+	return plugin.model(models as CrudModelsType<
+		TTableName,
+		TInferedObject,
+		TDatabase,
+		TOperations
+	>);
+};
+
+/**
+ * Internal function to resolve database connection based on configuration type (static or dynamic)
+ *
+ * @param database - Database configuration (string for static, DbSelectorOptions for dynamic)
+ * @param headers - Request headers containing database selection information
+ *
+ * @throws ({@link CoreError}): When database header key is not found in dynamic mode
+ *
+ * @returns Database instance wrapped in appropriate record type
+ */
+const _resolveDatabaseConnection = async <TDatabase extends string | DbSelectorOptions>(
+	database: TDatabase,
+	headers: Record<string, string | undefined>
+): Promise<Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>> => {
+	// Static database case - database name is provided as string
+	if (typeof database === 'string')
+		return {
+			staticDB: SingletonManager.get<MSSQL>(`database:${database}`)
+		} as Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>;
+
+	// Dynamic database case - database selected via header
+	const databaseName = headers[database.headerKey || 'database-using'];
+
+	if (!databaseName)
+		throw new CoreError({
+			key: errorKeys.dbSelectorHeaderKeyNotFound,
+			message: 'Database Selector key not found in the request headers.',
+			httpStatusCode: 400
+		});
+
+	// Register and connect database if not already available
+	if (!SingletonManager.has(`database:${databaseName}`)) {
+		SingletonManager.register(`database:${databaseName}`, MSSQL, {
+			...database.connectionConfig,
+			databaseName
+		});
+		await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
+	}
+
+	return {
+		dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
+	} as Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>;
+};
+
+const _defaultOperationsWhithHandler: <
+	const TTableName extends string,
+	const TInferedObject extends TObject,
+	const TDatabase extends string | DbSelectorOptions
+>(tableName: TTableName, database: TDatabase) => Record<
+	string,
+	Required<Omit<CrudOperationBaseOptions<TInferedObject>, 'transform'>>
+	& {
+		handler: (ctx: Record<string, unknown>) => Promise<unknown>;
+	}
+> = <
+	const TTableName extends string,
+	const TDatabase extends string | DbSelectorOptions
+>(
+	tableName: TTableName,
+	database: TDatabase
+) => {
+	const requiredHeaderDatabase = typeof database === 'object'
+		? { headers: 'dbSelectorHeader' } as const // need header to select dynamic database
+		: {} as const; // no header needed for static database
+	return {
+		find: {
+			method: 'POST',
+			path: '/search',
+			hook: {
+				...requiredHeaderDatabase,
+				body: `${tableName}Search`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const body = ctx.body as {
+					queryOptions: Record<string, unknown>;
+				};
+				const data = await db.getRepository(tableName).find({
+					...body.queryOptions,
+					throwIfNoResult: true
+				});
+				return {
+					message: `Found ${data.length} records for ${tableName}`,
+					content: data
+				};
+			}
+		},
+		findOne: {
+			method: 'GET',
+			path: '/:id',
+			hook: {
+				...requiredHeaderDatabase,
+				params: `${tableName}IdParam`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { id } = ctx.params as { id: string | number };
+				const [primaryKey] = db.getTable(tableName).primaryKey;
+
+				const data = await db.getRepository(tableName).find({
+					filters: {
+						[primaryKey]: id
+					},
+					throwIfNoResult: true
+				});
+				return {
+					message: `Found record with id ${id} in ${tableName}`,
+					content: data
+				};
+			}
+		},
+		insert: {
+			method: 'POST',
+			path: '/',
+			hook: {
+				...requiredHeaderDatabase,
+				body: `${tableName}Insert`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { body } = ctx as {
+					body: Partial<Record<string, unknown>> | Partial<Record<string, unknown>>[];
+				};
+				const data = await db.getRepository(tableName).insert(body, {
+					throwIfNoResult: true
+				});
+				return {
+					message: `Inserted record into ${tableName}`,
+					content: data
+				};
+			}
+		}
+	};
+};
+
+const _addRouteByOperation = <
+	const TTableName extends string,
+	const TInferedObject extends TObject,
+	const TDatabase extends string | DbSelectorOptions,
+	const TOperations extends CrudOperations<TInferedObject>
+>(
+	tableName: TTableName,
+	database: TDatabase,
+	operations: TOperations
+) => {
+	const app = new Elysia();
+	const defaultOps = _defaultOperationsWhithHandler<
+		TTableName,
+		TInferedObject,
+		TDatabase
+	>(tableName, database);
+
+	for (const key in operations) {
+		const op = operations[key as keyof TOperations];
+		const defaultOp = defaultOps[key as keyof typeof defaultOps];
+
+		if (!op || !defaultOp)
+			continue;
+
+		if (typeof op === 'boolean') {
+			app.route(defaultOp.method, defaultOp.path, (ctx) => defaultOp.handler(ctx), defaultOp.hook as unknown as {});
+		} else if (typeof op === 'object') {
+			const mergedOp = {
+				...defaultOp,
+				...op
+			};
+			app.route(mergedOp.method, mergedOp.path, (ctx) => defaultOp.handler(ctx), mergedOp.hook as unknown as {});
+		}
+	}
+	return app;
+};
+
+export const crudPlugin = <
+	const TTableName extends string,
+	const TInferedObject extends TObject,
+	const TDatabase extends string | DbSelectorOptions,
+	const TOperations extends CrudOperations<TInferedObject>
+>({
+	tableName,
+	schema,
+	database,
+	operations = {
+		find: true
+		// findOne: true,
+		// insert: true,
+		// update: true,
+		// updateOne: true,
+		// delete: true,
+		// deleteOne: true,
+		// count: true
+	} as TOperations
+}: CrudOptions<
+	TTableName,
+	TInferedObject,
+	TDatabase,
+	TOperations
+>) => {
+	const app = new Elysia({
+		name: `crudPlugin[${tableName}]`,
+		tags: [tableName]
+	})
+		.use(_addModels(
+			tableName,
+			schema,
+			database,
+			operations
+		))
+
+		.resolve({ as: 'scoped' }, async ({ headers }): Promise<
+			Record<
+				TDatabase extends string
+					? 'staticDB'
+					: 'dynamicDB',
+				MSSQL
+			>
+		> => _resolveDatabaseConnection(database, headers))
+
+		.use(_addRouteByOperation<
+			TTableName,
+			TInferedObject,
+			TDatabase,
+			TOperations
+		>(
+			tableName,
+			database,
+			operations
+		));
+	return app;
+};

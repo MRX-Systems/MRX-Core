@@ -1,2 +1,2 @@
-export type * from './adaptiveWhereClauseSchema';
-export type * from './queryOptionsBuilderOptions';
+export type { AdaptiveWhereClauseSchema } from './adaptiveWhereClauseSchema';
+export type { QueryOptionsBuilderOptions } from './queryOptionsBuilderOptions';

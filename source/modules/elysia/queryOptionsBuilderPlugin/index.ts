@@ -1,1 +1,1 @@
-export * from './queryOptionsBuilder';
+export { queryOptionsBuilderPlugin } from './queryOptionsBuilder';

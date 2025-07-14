@@ -1,1 +1,1 @@
-export * from './jwt';
+export { jwtPlugin } from './jwt';

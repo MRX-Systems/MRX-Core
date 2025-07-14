@@ -1,3 +1,3 @@
-export * from './consoleLogger.ts';
-export * from './fileLogger.ts';
+export { ConsoleLoggerStrategy } from './consoleLogger.ts';
+export { FileLoggerStrategy } from './fileLogger.ts';
 

@@ -16,6 +16,10 @@ await Bun.build({
 	external: [...dependencies, ...devDependencies, ...peerDependencies],
 	root: './source',
 	entrypoints: [
+		// # ————————— Error ————————— #
+		'./source/error/index.ts',
+		'./source/error/types/index.ts',
+
 		// # ————————— Data ————————— #
 		'./source/modules/data/index.ts',
 		'./source/modules/data/transformers/index.ts',
@@ -45,14 +49,11 @@ await Bun.build({
 		// queryOptionsBuilderPlugin
 		'./source/modules/elysia/queryOptionsBuilderPlugin/index.ts',
 		'./source/modules/elysia/queryOptionsBuilderPlugin/types/index.ts',
+		'./source/modules/elysia/queryOptionsBuilderPlugin/utils/index.ts',
 
 		// rateLimitPlugin
 		'./source/modules/elysia/ratelimitPlugin/index.ts',
 		'./source/modules/elysia/ratelimitPlugin/types/index.ts',
-
-		// # ————————— Error ————————— #
-		'./source/error/index.ts',
-		'./source/error/types/index.ts',
 
 		// # ————————— Logger ————————— #
 		'./source/modules/logger/index.ts',

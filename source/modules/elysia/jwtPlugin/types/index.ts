@@ -1,1 +1,1 @@
-export type * from './jwtOptions';
+export type { JWTOptions } from './jwtOptions';

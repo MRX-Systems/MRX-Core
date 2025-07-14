@@ -1,12 +1,13 @@
-import type { CrudOperationOptions } from './crudOperationOptions';
+import type { TObject } from '@sinclair/typebox/type';
+import type { CrudOperationBaseOptions } from './crudOperationBaseOptions';
 
-export interface CrudOperations {
-    readonly find?: CrudOperationOptions;
-    readonly findOne?: CrudOperationOptions;
-    readonly insert?: CrudOperationOptions;
-    readonly update?: CrudOperationOptions;
-    readonly updateOne?: CrudOperationOptions;
-    readonly delete?: CrudOperationOptions;
-    readonly deleteOne?: CrudOperationOptions;
-    readonly count?: CrudOperationOptions;
+export interface CrudOperations<TInferedObject extends TObject> {
+	readonly find?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly findOne?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly insert?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly update?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly updateOne?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly delete?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly deleteOne?: CrudOperationBaseOptions<TInferedObject> | true;
+	readonly count?: CrudOperationBaseOptions<TInferedObject> | true;
 }

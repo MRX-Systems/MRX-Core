@@ -1,1 +1,1 @@
-export * from './coreError';
+export { CoreError } from './coreError';

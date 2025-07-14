@@ -1,1 +1,1 @@
-export type * from './coreErrorOptions';
+export type { CoreErrorOptions } from './coreErrorOptions';
