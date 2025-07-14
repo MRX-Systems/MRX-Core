@@ -27,7 +27,7 @@ export type AdaptiveWhereClause<TValue> = TValue extends string
 		$nbetween?: [TValue, TValue];
 	}
 		: {
-			$eq?: TValue;
-			$neq?: TValue;
+			$eq?: boolean;
+			$neq?: boolean;
 			$isNull?: boolean;
 		};
