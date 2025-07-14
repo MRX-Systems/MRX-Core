@@ -1,6 +1,6 @@
 import { Kind, type TSchema } from '@sinclair/typebox/type';
 
-export const isDateFromElysiaTypeBox = <TInferedSchema extends TSchema>(schema: TInferedSchema) => schema[Kind] === 'Union'
+export const isDateFromElysiaTypeBox = <TInferedSchema extends TSchema>(schema: TInferedSchema): boolean => schema[Kind] === 'Union'
 	&& Array.isArray(schema.anyOf)
 	&& schema.anyOf.length === 4
 	&& schema.anyOf.some((item) => item[Kind] === 'Date')
