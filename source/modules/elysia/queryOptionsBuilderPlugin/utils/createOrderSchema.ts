@@ -1,8 +1,10 @@
 import type { TObject } from '@sinclair/typebox';
 import { t } from 'elysia/type-system';
 
+import type { OrderSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/types/orderSchema';
+
 /**
- * Creates a schema for order by clause in search results.
+ * Creates order schema for query options.
  *
  * @template TInferedObject - The TypeBox object schema to create order by for. Extends {@link TObject}
  *
@@ -10,7 +12,7 @@ import { t } from 'elysia/type-system';
  *
  * @returns A tuple schema with field name and direction
  */
-export const createOrderBySchema = <TInferedObject extends TObject>(schema: TInferedObject) => t.Union([
+export const createOrderSchema = <TInferedObject extends TObject>(schema: TInferedObject): OrderSchema<TInferedObject> => t.Union([
 	t.Object({
 		selectedField: t.KeyOf(schema),
 		direction: t.Union([t.Literal('asc'), t.Literal('desc')])
