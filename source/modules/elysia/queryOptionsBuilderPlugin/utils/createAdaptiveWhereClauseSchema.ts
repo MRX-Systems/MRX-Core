@@ -11,13 +11,13 @@ import { isDateFromElysiaTypeBox } from './isDateFromElysiaTypeBox';
  * Creates a where clause schema with appropriate operators based on the property type.
  * Boolean properties get fewer operators than other types.
  *
- * @template TInferedSchema - The TypeBox schema to create where clauses for. Extends {@link TSchema}
+ * @template TFieldSchema - The TypeBox schema to create where clauses for. Extends {@link TSchema}
  *
- * @param schema - The base property schema to create where clauses for. {@link TInferedSchema}
+ * @param schema - The base property schema to create where clauses for. {@link TFieldSchema}
  *
  * @returns A TypeBox object schema with where clause operators
  */
-export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(schema: TInferedSchema): AdaptiveWhereClauseSchema<TInferedSchema> => {
+export const createAdaptiveWhereClauseSchema = <TFieldSchema extends TSchema>(schema: TFieldSchema): AdaptiveWhereClauseSchema<TFieldSchema> => {
 	// all
 	const common = {
 		$eq: schema,
@@ -50,5 +50,5 @@ export const createAdaptiveWhereClauseSchema = <TInferedSchema extends TSchema>(
 		} as const
 		: {};
 
-	return t.Partial(t.Object({ ...common, ...strNumDate, ...numDate })) as unknown as AdaptiveWhereClauseSchema<TInferedSchema>;
+	return t.Partial(t.Object({ ...common, ...strNumDate, ...numDate })) as unknown as AdaptiveWhereClauseSchema<TFieldSchema>;
 };

@@ -21,23 +21,23 @@ import { createSelectedFieldsSchema } from './utils/createSelectedFieldsSchema';
 /**
  * Creates property schemas.
  *
- * @template TInferedObject - The TypeBox object schema to create property schemas for
+ * @template TSourceSchema - The TypeBox object schema to create property schemas for
  *
  * @param schema - The base object schema to create property schemas for.
  *
  * @returns Record of property schemas with union types
  */
-const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInferedObject): TObject<{
-	[K in keyof Static<TInferedObject>]: TUnion<[
-		ReturnType<typeof createAdaptiveWhereClauseSchema<TInferedObject['properties'][K]>>,
-		TInferedObject['properties'][K]
+const _createPropertiesSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TObject<{
+	[K in keyof Static<TSourceSchema>]: TUnion<[
+		ReturnType<typeof createAdaptiveWhereClauseSchema<TSourceSchema['properties'][K]>>,
+		TSourceSchema['properties'][K]
 	]>
 }> => {
 	const { properties } = schema;
 	const clauseSchema = {} as {
-		[K in keyof Static<TInferedObject>]: TUnion<[
-			ReturnType<typeof createAdaptiveWhereClauseSchema<TInferedObject['properties'][K]>>,
-			TInferedObject['properties'][K]
+		[K in keyof Static<TSourceSchema>]: TUnion<[
+			ReturnType<typeof createAdaptiveWhereClauseSchema<TSourceSchema['properties'][K]>>,
+			TSourceSchema['properties'][K]
 		]>
 	};
 	for (const [key, propertySchema] of Object.entries(properties))
@@ -52,17 +52,17 @@ const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInfere
 /**
  * Creates a filters schema that combines search queries and property filters.
  *
- * @template TInferedObject - The TypeBox object schema to create filters for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create filters for. Extends {@link TObject}
  *
  * @param schema - The base object schema to create filters for.
  *
  * @returns A TypeBox object schema for filters
  */
-const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedObject): TComposite<[
+const _createFiltersSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TComposite<[
 	TObject<{
-		$q: QSchema<TInferedObject>
+		$q: QSchema<TSourceSchema>
 	}>,
-	ReturnType<typeof _createPropertiesSchema<TInferedObject>>
+	ReturnType<typeof _createPropertiesSchema<TSourceSchema>>
 ]> => t.Composite([
 	t.Object({
 		$q: createQSchema(schema)
@@ -73,19 +73,19 @@ const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedOb
 /**
  * Creates a search schema.
  *
- * @template TInferedObject - The TypeBox object schema to create search capabilities for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create search capabilities for. Extends {@link TObject}
  *
  * @param schema - The base object schema to create search schemas for.
  *
  * @returns A TypeBox object schema for search with selected fields, order by, filters, limit, and offset
  */
-const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObject): TPartial<TObject<{
+const _createSearchSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TPartial<TObject<{
 	queryOptions: TPartial<TObject<{
 		selectedFields: ReturnType<typeof createSelectedFieldsSchema>;
 		orderBy: ReturnType<typeof createOrderSchema>;
 		filters: TUnion<[
-			TPartial<ReturnType<typeof _createFiltersSchema<TInferedObject>>>,
-			TArray<TPartial<ReturnType<typeof _createFiltersSchema<TInferedObject>>>>
+			TPartial<ReturnType<typeof _createFiltersSchema<TSourceSchema>>>,
+			TArray<TPartial<ReturnType<typeof _createFiltersSchema<TSourceSchema>>>>
 		]>;
 		limit: TNumber;
 		offset: TNumber;
@@ -122,7 +122,7 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
 			'title',
 			'description'
 		]
-	) as TInferedObject;
+	) as TSourceSchema;
 
 	return t.Partial(t.Object({
 		queryOptions: t.Partial(t.Object({
@@ -150,23 +150,26 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
  * The `queryOptionsBuilderPlugin` provides a model allowing the addition of QueryOptions
  * to the request body, which can be used in `Repository`.
  *
+ * @template TSourceSchemaName - The name of the schema to be used in the plugin
+ * @template TSourceSchema - The TypeBox object schema to create search capabilities for, extending {@link TObject}
+ *
  * @param options - Configuration options for the plugin
  *
  * @returns Configured Elysia plugin with a search model
  */
 export const queryOptionsBuilderPlugin = <
-	const TSchemaName extends string,
-	TInferedObject extends TObject
+	const TSourceSchemaName extends string,
+	const TSourceSchema extends TObject
 >(
 	{
-		schemaName,
-		baseSchema
-	}: QueryOptionsBuilderOptions<TSchemaName, TInferedObject>
+		sourceSchemaName,
+		sourceSchema
+	}: QueryOptionsBuilderOptions<TSourceSchemaName, TSourceSchema>
 ): Elysia<
-	TSchemaName,
+	TSourceSchemaName,
 	SingletonBase,
 	{
-		typebox: Record<`${TSchemaName}Search`, ReturnType<typeof _createSearchSchema<TInferedObject>>>;
+		typebox: Record<`${TSourceSchemaName}Search`, ReturnType<typeof _createSearchSchema<TSourceSchema>>>;
 		error: {};
 	},
 	MetadataBase,
@@ -183,9 +186,9 @@ export const queryOptionsBuilderPlugin = <
 		schema: {};
 		standaloneSchema: {};
 	}
-> => new Elysia<TSchemaName>({
-	name: `queryOptionsBuilderPlugin-${schemaName}`,
-	seed: baseSchema
+> => new Elysia<TSourceSchemaName>({
+	name: `queryOptionsBuilderPlugin-${sourceSchemaName}`,
+	seed: sourceSchema
 })
-	.model((`${schemaName}Search` as const), _createSearchSchema(baseSchema))
+	.model((`${sourceSchemaName}Search` as const), _createSearchSchema(sourceSchema))
 	.as('scoped');

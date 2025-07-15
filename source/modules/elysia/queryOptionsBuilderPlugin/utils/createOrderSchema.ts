@@ -6,13 +6,13 @@ import type { OrderSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/typ
 /**
  * Creates order schema for query options.
  *
- * @template TInferedObject - The TypeBox object schema to create order by for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create order by for. Extends {@link TObject}
  *
- * @param schema - The base object schema to create order by for. {@link TInferedObject}
+ * @param schema - The base object schema to create order by for. {@link TSourceSchema}
  *
  * @returns A tuple schema with field name and direction
  */
-export const createOrderSchema = <TInferedObject extends TObject>(schema: TInferedObject): OrderSchema<TInferedObject> => t.Union([
+export const createOrderSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): OrderSchema<TSourceSchema> => t.Union([
 	t.Object({
 		selectedField: t.KeyOf(schema),
 		direction: t.Union([t.Literal('asc'), t.Literal('desc')])

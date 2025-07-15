@@ -1,7 +1,7 @@
 import type { TArray, TKeyOf, TLiteral, TObject, TUnion } from '@sinclair/typebox';
 
-export type SelectedFieldsSchema<TInferedObject extends TObject> = TUnion<[
-	TKeyOf<TInferedObject>,
+export type SelectedFieldsSchema<TSourceSchema extends TObject> = TUnion<[
+	TKeyOf<TSourceSchema>,
 	TLiteral<'*'>,
-	TArray<TKeyOf<TInferedObject>>
+	TArray<TKeyOf<TSourceSchema>>
 ]>;

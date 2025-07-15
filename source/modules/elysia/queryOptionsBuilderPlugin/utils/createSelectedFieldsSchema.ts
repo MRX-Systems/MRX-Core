@@ -6,13 +6,13 @@ import type { SelectedFieldsSchema } from '#/modules/elysia/queryOptionsBuilderP
 /**
  * Creates a schema for field selection in search results.
  *
- * @template TInferedObject - The TypeBox object schema to create field selection for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create field selection for. Extends {@link TObject}
  *
- * @param schema - The base object schema to create field selection for. {@link TInferedObject}
+ * @param schema - The base object schema to create field selection for. {@link TSourceSchema}
  *
  * @returns A TypeBox union schema for selected fields
  */
-export const createSelectedFieldsSchema = <TInferedObject extends TObject>(schema: TInferedObject): SelectedFieldsSchema<TInferedObject> => t.Union([
+export const createSelectedFieldsSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): SelectedFieldsSchema<TSourceSchema> => t.Union([
 	t.KeyOf(schema),
 	t.Literal('*'),
 	t.Array(t.KeyOf(schema), {

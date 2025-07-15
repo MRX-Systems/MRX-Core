@@ -7,8 +7,8 @@ describe('queryOptionsBuilderPlugin', () => {
 	describe('Model', () => {
 		describe('TestSchemaSearch', () => {
 			const plugin = queryOptionsBuilderPlugin({
-				schemaName: 'TestSchema',
-				baseSchema: t.Object({
+				sourceSchemaName: 'TestSchema',
+				sourceSchema: t.Object({
 					id: t.String({ description: 'Unique identifier' }),
 					name: t.String({ description: 'Name of the item' }),
 					createdAt: t.String({ description: 'Creation timestamp', format: 'date-time' }),

@@ -6,13 +6,14 @@ import type { QSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/types/q
 /**
  * Creates a search query schema
  *
- * @template TInferedObject - The TypeBox object schema to create search queries for. Extends {@link TObject}
+ * @template TSourceSchema
+ *  - The TypeBox object schema to create search queries for. Extends {@link TObject}
  *
- * @param schema - The base object schema to create search queries for. {@link TInferedObject}
+ * @param schema - The base object schema to create search queries for. {@link TSourceSchema}
  *
  * @returns A union schema for search queries
  */
-export const createQSchema = <TInferedObject extends TObject>(schema: TInferedObject): QSchema<TInferedObject> => t.Union([
+export const createQSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): QSchema<TSourceSchema> => t.Union([
 	t.Object({
 		selectedFields: t.Union([
 			t.KeyOf(schema),
