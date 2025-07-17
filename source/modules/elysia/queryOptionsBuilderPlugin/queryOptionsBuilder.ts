@@ -97,7 +97,6 @@ const _createSearchSchema = <TSourceSchema extends TObject>(schema: TSourceSchem
 			'minLength',
 			'maxLength',
 			'pattern',
-			// 'format', // removed because t.date needs it
 			'minimum',
 			'maximum',
 			'exclusiveMinimum',
