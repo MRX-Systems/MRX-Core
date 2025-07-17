@@ -39,9 +39,7 @@ export type CrudModelsType<
 			TSourceInsertSchema,
 			TArray<TSourceInsertSchema>
 		]>>
-		: {
-			a: TString
-		}
+		: {}
 )
 & (
 	TOperations['update'] extends CrudOperationUpdateOptions | true

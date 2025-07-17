@@ -2,7 +2,6 @@ import type { TObject } from '@sinclair/typebox';
 
 import type { DbSelectorOptions } from '#/modules/elysia/dbSelectorPlugin/types/dbSelectorOptions';
 import type { CrudOperationsOptions } from './crudOperationsOptions';
-import type { CrudSourceSchemasOptions } from './crudSourceSchemasOptions';
 
 /**
  * Options for the CRUD plugin
@@ -13,8 +12,8 @@ import type { CrudSourceSchemasOptions } from './crudSourceSchemasOptions';
 export interface CrudOptions<
 	TDatabase extends string | DbSelectorOptions,
 	TTableName extends string,
-	TOperations extends CrudOperationsOptions,
 	TSourceSchema extends TObject,
+	TOperations extends CrudOperationsOptions = CrudOperationsOptions,
 	TSourceSearchSchema extends TObject = TSourceSchema,
 	TSourceInsertSchema extends TObject = TSourceSchema,
 	TSourceUpdateSchema extends TObject = TSourceSchema,
