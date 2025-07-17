@@ -13,22 +13,21 @@ import type { CrudSourceSchemasOptions } from './crudSourceSchemasOptions';
 export interface CrudOptions<
 	TDatabase extends string | DbSelectorOptions,
 	TTableName extends string,
+	TOperations extends CrudOperationsOptions,
 	TSourceSchema extends TObject,
-	TSourceSearchSchema extends TObject,
-	TSourceInsertSchema extends TObject,
-	TSourceUpdateSchema extends TObject,
-	TSourceResponseSchema extends TObject,
-	TSourceSchemas extends CrudSourceSchemasOptions<
-		TSourceSchema,
-		TSourceSearchSchema,
-		TSourceInsertSchema,
-		TSourceUpdateSchema,
-		TSourceResponseSchema
-	>,
-	TOperations extends CrudOperationsOptions
+	TSourceSearchSchema extends TObject = TSourceSchema,
+	TSourceInsertSchema extends TObject = TSourceSchema,
+	TSourceUpdateSchema extends TObject = TSourceSchema,
+	TSourceResponseSchema extends TObject = TSourceSchema
 > {
 	readonly database: TDatabase;
 	readonly tableName: TTableName;
-	readonly schema: TSourceSchemas;
+	readonly schema: {
+		readonly sourceSchema: TSourceSchema;
+		readonly sourceSearchSchema?: TSourceSearchSchema;
+		readonly sourceInsertSchema?: TSourceInsertSchema;
+		readonly sourceUpdateSchema?: TSourceUpdateSchema;
+		readonly sourceResponseSchema?: TSourceResponseSchema;
+	};
 	readonly operations?: TOperations;
 }

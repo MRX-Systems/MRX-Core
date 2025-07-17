@@ -14,25 +14,24 @@ import type {
 
 import type { DbSelectorOptions } from '#/modules/elysia/dbSelectorPlugin/types/dbSelectorOptions';
 import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/queryOptionsBuilderPlugin/types/adaptiveWhereClauseSchema';
-import type { CrudOperationBaseOptions } from './crudOperationBaseOptions';
-import type { CrudOperationsOptions } from './crudOperationsOptions';
-import type { CrudOperationFindOptions } from './crudOperationFindOptions';
-import type { CrudOperationInsertOptions } from './crudOperationInsertOptions';
-import type { CrudOperationUpdateOptions } from './crudOperationUpdateOptions';
+import type { CrudOperationCountOptions } from './crudOperationCountOptions';
+import type { CrudOperationDeleteOneOptions } from './crudOperationDeleteOneOptions';
 import type { CrudOperationDeleteOptions } from './crudOperationDeleteOptions';
 import type { CrudOperationFindOneOptions } from './crudOperationFindOneOptions';
+import type { CrudOperationFindOptions } from './crudOperationFindOptions';
+import type { CrudOperationInsertOptions } from './crudOperationInsertOptions';
+import type { CrudOperationsOptions } from './crudOperationsOptions';
 import type { CrudOperationUpdateOneOptions } from './crudOperationUpdateOneOptions';
-import type { CrudOperationDeleteOneOptions } from './crudOperationDeleteOneOptions';
-import type { CrudOperationCountOptions } from './crudOperationCountOptions';
+import type { CrudOperationUpdateOptions } from './crudOperationUpdateOptions';
 
 export type CrudModelsType<
 	TDatabase extends string | DbSelectorOptions,
 	TTableName extends string,
+	TOperations extends CrudOperationsOptions,
 	TSourceSearchSchema extends TObject,
 	TSourceInsertSchema extends TObject,
 	TSourceUpdateSchema extends TObject,
-	TSourceResponseSchema extends TObject,
-	TOperations extends CrudOperationsOptions
+	TSourceResponseSchema extends TObject
 >
 = (
 	TOperations['insert'] extends CrudOperationInsertOptions | true
@@ -40,7 +39,9 @@ export type CrudModelsType<
 			TSourceInsertSchema,
 			TArray<TSourceInsertSchema>
 		]>>
-		: {}
+		: {
+			a: TString
+		}
 )
 & (
 	TOperations['update'] extends CrudOperationUpdateOptions | true
@@ -153,19 +154,19 @@ export type CrudModelsType<
 )
 & (
 	(
-		TOperations['find'] extends CrudOperationBaseOptions | true
+		TOperations['find'] extends CrudOperationFindOptions | true
 			? true
-			: TOperations['findOne'] extends CrudOperationBaseOptions | true
+			: TOperations['findOne'] extends CrudOperationFindOneOptions | true
 				? true
-				: TOperations['insert'] extends CrudOperationBaseOptions | true
+				: TOperations['insert'] extends CrudOperationInsertOptions | true
 					? true
-					: TOperations['update'] extends CrudOperationBaseOptions | true
+					: TOperations['update'] extends CrudOperationUpdateOptions | true
 						? true
-						: TOperations['updateOne'] extends CrudOperationBaseOptions | true
+						: TOperations['updateOne'] extends CrudOperationUpdateOneOptions | true
 							? true
-							: TOperations['delete'] extends CrudOperationBaseOptions | true
+							: TOperations['delete'] extends CrudOperationDeleteOptions | true
 								? true
-								: TOperations['deleteOne'] extends CrudOperationBaseOptions | true
+								: TOperations['deleteOne'] extends CrudOperationDeleteOneOptions | true
 									? true
 									: false
 	) extends true
