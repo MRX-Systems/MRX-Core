@@ -20,7 +20,6 @@ import type { MSSQLDatabaseOptions } from '#/modules/database/types';
 export interface DynamicDatabaseSelectorPluginOptions<THeaderKeyName extends string = 'database-using'> {
     /**
      * Options for the database connection
-     * @see {@link MSSQLDatabaseOptions}
      */
     baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
     /**

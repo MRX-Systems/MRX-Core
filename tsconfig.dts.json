@@ -1,4 +1,9 @@
 {
+  "typedocOptions": {
+    "out": "docs",
+    "hideGenerator": true,
+    "customFooterHtml": "<p><a href=\"https://www.mrxsys.com/\">MRX Systems</a></p>",
+  },
   "include": ["source/**/*.ts"],
   "compilerOptions": {
     // Type Checking

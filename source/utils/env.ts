@@ -10,7 +10,7 @@ import { utilErrorKeys } from './enums/utilErrorKeys';
  * @param schema - The schema to validate the environment variables against.
  * @param env - The environment variables to validate. Defaults to `process.env`.
  *
- * @throws ({@link CoreError}): If the environment variables are invalid based on the schema. ({@link utilErrorKeys.invalidEnvironment})
+ * @throws ({@link CoreError}): If the environment variables are invalid based on the schema.
  */
 export const validateEnv = (schema: TSchema, env: Record<string, unknown> = process.env): void => {
     try {

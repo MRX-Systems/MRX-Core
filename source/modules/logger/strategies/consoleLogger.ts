@@ -2,7 +2,7 @@ import type { LoggerStrategy } from '#/modules/logger/types/loggerStrategy';
 import type { LogLevels } from '#/modules/logger/types/logLevels';
 
 /**
- * ConsoleLoggerStrategy implements LoggerStrategy to provide logging functionality to the console. ({@link LoggerStrategy})
+ * ConsoleLoggerStrategy implements {@link LoggerStrategy} to provide logging functionality to the console.
  */
 export class ConsoleLoggerStrategy implements LoggerStrategy {
     private readonly _colorize: boolean;
@@ -19,7 +19,7 @@ export class ConsoleLoggerStrategy implements LoggerStrategy {
     /**
      * Logs a message to the console with the specified log level.
      *
-     * @param level - The log level at which the message should be logged. ({@link LogLevels})
+     * @param level - The log level at which the message should be logged.
      * @param date - The date at which the message was logged.
      * @param object - The object to log.
      */

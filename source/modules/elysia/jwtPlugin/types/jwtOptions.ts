@@ -59,14 +59,18 @@ export interface JWTOptions<TPluginName extends string = 'jwt'> {
      * @defaultValue '15m' (15 minutes)
      *
      * @example
+     * Set tokens to expire after 1 hour
      * ```ts
-     * // Set tokens to expire after 1 hour
      * exp: '1h'
-     *
-     * // Set tokens to expire at a specific date
+     * ```
+     * @example
+     * Set tokens to expire at a specific date
+     * ```ts
      * exp: new Date('2023-12-31')
-     *
-     * // Set tokens to expire after 3600 seconds (1 hour)
+     * ```
+     * @example
+     * Set tokens to expire after 3600 seconds (1 hour)
+     * ```ts
      * exp: 3600
      * ```
      */

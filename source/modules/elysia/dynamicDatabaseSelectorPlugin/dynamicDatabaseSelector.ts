@@ -18,16 +18,13 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  * 3. Creates a new connection if needed, or reuses an existing one
  * 4. Makes the database connection available through the request context
  *
- * The plugin uses a singleton pattern to efficiently manage database connections, ensuring
- * that connections are reused when possible rather than creating new connections for each request.
- *
  * @param options - The configuration options for the plugin
  *
- * @returns An {@link Elysia} plugin that adds dynamic database selection functionality
+ * @returns An Elysia plugin that adds dynamic database selection functionality
  *
  * @example
+ * Create and register the plugin
  * ```ts
- * // Create and register the plugin
  * const app = new Elysia()
  *   .use(dynamicDatabaseSelectorPlugin({
  *     baseDatabaseConfig: {
@@ -42,15 +39,13 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  *
  *   // Use the dynamic database in a route handler
  *   .get('/data',
- *     async ({ hasDynamicDatabaseSelector }) => {
- *       const { dynamicDB } = await hasDynamicDatabaseSelector();
+ *     async ({ dynamicDB }) => {
  *       const users = await dynamicDB.getRepository('users').find();
  *       return users;
  *     },
  *     {
- *       headers: t.Object({
- *         'x-tenant-db': t.String()
- *       })
+ *       hasDynamicDatabaseSelector: true,
+ *       headers: 'databaseUsingHeader',
  *     }
  *   );
  * ```

@@ -1,6 +1,5 @@
 import { databaseErrorKeys } from './databaseErrorKeys';
 
-/** MSSQL error codes with their corresponding error key. */
 export const mssqlErrorCode = {
     0: databaseErrorKeys.mssqlQueryError,
     4060: databaseErrorKeys.mssqlDatabaseAccessDenied,

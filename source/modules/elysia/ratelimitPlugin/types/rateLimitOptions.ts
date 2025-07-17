@@ -16,7 +16,6 @@ import type { Redis } from '#/modules/store/redis';
 export interface RateLimitOptions {
     /**
      * The Redis instance to store rate limit data.
-     * @see {@link Redis}
      */
     redis: Redis;
     /**
@@ -35,9 +34,6 @@ export interface RateLimitOptions {
     window: number;
     /**
      * Custom error message when rate limit is exceeded.
-     *
-     * If provided, this message will be included in the error response when a client
-     * exceeds their rate limit. If not provided, a default message is used.
      *
      * @defaultValue 'Rate limit exceeded'
      */

@@ -17,7 +17,7 @@ import { createSelectedFieldsSchema } from './utils/createSelectedFieldsSchema';
  *
  * @template TInferedObject - The TypeBox object schema to create property schemas for
  *
- * @param schema - The base object schema to create property schemas for. {@link TInferedObject}
+ * @param schema - The base object schema to create property schemas for.
  *
  * @returns Record of property schemas with union types
  */
@@ -43,7 +43,7 @@ const _createPropertiesSchema = <TInferedObject extends TObject>(schema: TInfere
  *
  * @template TInferedObject - The TypeBox object schema to create filters for. Extends {@link TObject}
  *
- * @param schema - The base object schema to create filters for. {@link TInferedObject}
+ * @param schema - The base object schema to create filters for.
  *
  * @returns A TypeBox object schema for filters
  */
@@ -59,7 +59,7 @@ const _createFiltersSchema = <TInferedObject extends TObject>(schema: TInferedOb
  *
  * @template TInferedObject - The TypeBox object schema to create search capabilities for. Extends {@link TObject}
  *
- * @param schema - The base object schema to create search schemas for. {@link TInferedObject}
+ * @param schema - The base object schema to create search schemas for.
  *
  * @returns A TypeBox object schema for search with selected fields, order by, filters, limit, and offset
  */
@@ -120,12 +120,12 @@ const _createSearchSchema = <TInferedObject extends TObject>(schema: TInferedObj
 };
 
 /**
- * Creates an advanced search plugin for Elysia with type-safe query building.
- * Provides a model for search capabilities.
+ * The `queryOptionsBuilderPlugin` provides a model allowing the addition of QueryOptions
+ * to the request body, which can be used in `Repository`.
  *
- * @param options - Configuration options for the plugin {@link QueryOptionsBuilderOptions}
+ * @param options - Configuration options for the plugin
  *
- * @returns Configured Elysia plugin with search model
+ * @returns Configured Elysia plugin with a search model
  */
 export const queryOptionsBuilderPlugin = <
     const TSchemaName extends string,

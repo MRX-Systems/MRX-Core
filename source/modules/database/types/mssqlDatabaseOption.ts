@@ -1,20 +1,5 @@
 /**
  * Options to configure the MSSQL database connection.
- *
- * @example
- * ```ts
- * const options: MSSQLDatabaseOptions = {
- *   databaseName: 'my_database',
- *   host: 'localhost',
- *   port: 1433,
- *   user: 'sa',
- *   password: 'Password123',
- *   encrypt: true,
- *   poolMin: 5,
- *   poolMax: 20,
- *   isEventEnabled: true
- * };
- * ```
  */
 export interface MSSQLDatabaseOptions {
     /** The name of the database to connect to. */
@@ -30,7 +15,6 @@ export interface MSSQLDatabaseOptions {
     /**
      * Whether to encrypt the database connection.
      * When enabled, communication between the client and server will be encrypted,
-     * providing increased security but potentially slight performance impact.
      *
      * @defaultValue true
      */
@@ -61,19 +45,17 @@ export interface MSSQLDatabaseOptions {
      */
     connectionTimeout?: number;
     /**
-     * If set to true, adds basic event listeners for all tables.
-     * This automatically sets up event listeners to track database operations
-     * (select, create, update, delete) for all tables, allowing for easy monitoring
-     * and event-driven programming.
+     * If set to true, emits events for database operations.
+     * (select, create, update, delete) for all tables.
      *
      * @defaultValue false
      * @example
      * ```ts
      * const mssql = new MSSQL(options);
      * await mssql.connect();
-     * // SELECTED, CREATED, UPDATED, DELETED
-     * mssql.table('table_name').on(EVENT_TABLE.SELECTED, (data: unknown) => {
-     *    console.log(data); // data is the response from the query
+     * // selected, inserted, updated, deleted
+     * mssql.table('table_name').on('selected', (data: unknown) => {
+     *   console.log(data); // data is the response from the query
      * });
      * ```
      */

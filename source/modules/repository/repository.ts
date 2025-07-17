@@ -47,11 +47,7 @@ const _operators: Record<string, OperatorFn> = ({
 });
 
 /**
- * Provides a type-safe, extensible interface for database operations (CRUD, search, streaming) on a table.
- *
- * - Wraps Knex.js for query building and execution.
- * - Supports filter, pagination, field selection, and streaming.
- * - Centralizes error handling for MSSQL.
+ * Repository allowing interaction with a database table using Knex.js fully typed.
  *
  * @template TModel - The data model type handled by the repository.
  *
@@ -94,25 +90,38 @@ export class Repository<TModel = unknown> {
      *
      * @template KModel - The type of the object to retrieve.
      *
-     * @param options - The query options to apply to the search. ({@link QueryOptionsExtendStream})
+     * @param options - The query options to apply to the search.
      *
-     * @returns A stream with an async iterable interface for consuming the results. ({@link StreamWithAsyncIterable})
+     * @returns A stream with an async iterable interface for consuming the results.
      *
      * @example
+     * Basic usage with async iteration
      * ```ts
-     * // Basic usage with async iteration
      * const stream = userRepository.findStream();
      * for await (const user of stream) {
      *     console.log(user);
      * }
-     *
-     * // With ordering and field selection
+     * ```
+     * @example
+     * With ordering and field selection
+     * ```ts
      * const stream = userRepository.findStream({
      *     selectedFields: ['id', 'name', 'email'],
      *     orderBy: ['createdDate', 'desc']
      * });
-     *
-     * // Using event listeners
+     * ```
+     * @example
+     * With filtering
+     * ```ts
+     * const stream = userRepository.findStream({
+     *     filters: {
+     *         isActive: false
+     *     }
+     * });
+     * ```
+     * @example
+     * Using event listeners
+     * ```ts
      * const stream = userRepository.findStream();
      * stream.on('data', (user) => {
      *     console.log('User:', user);
@@ -123,8 +132,10 @@ export class Repository<TModel = unknown> {
      * stream.on('end', () => {
      *     console.log('Stream completed');
      * });
-     *
-     * // With transform function to process records
+     * ```
+     * @example
+     * With transform function to process records
+     * ```ts
      * const stream = userRepository.findStream({
      *     transform: (chunk, encoding, callback) => {
      *         // Transform the data
@@ -176,49 +187,57 @@ export class Repository<TModel = unknown> {
      *
      * @template KModel - The type of the object to retrieve.
      *
-     * @param options - The query options to apply to the search. ({@link QueryOptionsExtendPagination})
+     * @param options - The query options to apply to the search.
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
-     * @returns An array of records matching the query options. ({@link KModel})
+     * @returns An array of records matching the query options.
      *
      * @example
+     * Basic usage with pagination
      * ```ts
-     * // Basic usage with pagination
      * const users = await userRepository.find({
      *     limit: 25,
      *     offset: 50  // Get users 51-75
      * });
-     *
-     * // With field selection
+     * ```
+     * @example
+     * With field selection
+     * ```ts
      * const userNames = await userRepository.find({
      *     selectedFields: ['id', 'firstName', 'lastName']
      * });
-     *
-     * // With filter
+     * ```
+     * @example
+     * With filtering
+     * ```ts
      * const activeAdmins = await userRepository.find({
      *     filters: {
-     *         role: 'admin',
-     *         status: { $eq: 'active' },
-     *         lastLogin: { $gte: new Date('2023-01-01') }
+     *         isActive: { $eq: true }
      *     }
      * });
-     *
-     * // With OR conditions
+     * ```
+     * @example
+     * With OR conditions
+     * ```ts
      * const results = await userRepository.find({
      *     filters: [
      *         { department: 'engineering' },
      *         { department: 'design', role: 'lead' }
      *     ]
      * });
-     *
-     * // With sorting
+     * ```
+     * @example
+     * With sorting
+     * ```ts
      * const sortedUsers = await userRepository.find({
      *     orderBy: ['lastName', 'asc']
      * });
-     *
-     * // Using a transaction
+     * ```
+     * @example
+     * Using a transaction
+     * ```ts
      * await knex.transaction(async (trx) => {
      *     const users = await userRepository.find({
      *         filters: { department: 'finance' },
@@ -253,40 +272,48 @@ export class Repository<TModel = unknown> {
      *
      * @template KModel - The type of the object to retrieve.
      *
-     * @param options - The query options to apply to the search. ({@link QueryOptionsExtendPagination})
+     * @param options - The query options to apply to the search.
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
-     * @returns A single record matching the query options. ({@link KModel})
+     * @returns A single record matching the query options.
      *
      * @example
+     * Basic usage
      * ```ts
-     * // Basic usage
      * const user = await userRepository.findOne({
      *     filters: { id: 1 }
      * });
-     *
-     * // With field selection
+     * ```
+     * @example
+     * With field selection
+     * ```ts
      * const user = await userRepository.findOne({
      *     selectedFields: ['id', 'firstName', 'lastName'],
      *     filters: { id: 1 }
      * });
-     *
-     * // With advanced filtering
+     * ```
+     * @example
+     * With filtering
+     * ```ts
      * const user = await userRepository.findOne({
      *     filters: {
      *         role: 'admin',
-     *         status: { $eq: 'active' },
+     *         isActive: { $eq: true },
      *     }
      * });
-     *
-     * // With sorting
+     * ```
+     * @example
+     * With sorting
+     * ```ts
      * const user = await userRepository.findOne({
      *     orderBy: ['lastName', 'asc']
      * });
-     *
-     * // Using a transaction
+     * ```
+     * @example
+     * Using a transaction
+     * ```ts
      * await knex.transaction(async (trx) => {
      *     const user = await userRepository.findOne({
      *         filters: { department: 'finance' },
@@ -318,24 +345,28 @@ export class Repository<TModel = unknown> {
      *
      * @template KModel - The type of the object to count.
      *
-     * @param options - The query options to apply to the search. ({@link QueryOptions})
+     * @param options - The query options to apply to the search.
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
      * @returns The count of records matching the query options.
      *
      * @example
+     * Basic usage
      * ```ts
-     * // Basic usage
      * const userCount = await userRepository.count();
-     *
-     * // With advanced filtering
+     * ```
+     * @example
+     * With filtering
+     * ```ts
      * const activeUserCount = await userRepository.count({
-     *     filters: { status: 'active' }
+     *     filters: { isActive: true }
      * });
-     *
-     * // Using a transaction
+     * ```
+     * @example
+     * Using a transaction
+     * ```ts
      * await knex.transaction(async (trx) => {
      *     const userCount = await userRepository.count({
      *         filters: { department: 'finance' },
@@ -361,24 +392,28 @@ export class Repository<TModel = unknown> {
      * @template KModel - The type of the object to insert.
      *
      * @param data - The data to insert. Can be a single object or an array of objects.
-     * @param options - The query options to apply to the insertion. ({@link QueryOptions})
+     * @param options - The query options to apply to the insertion.
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
      * @returns An array of inserted records.
      *
      * @example
+     * Basic usage
      * ```ts
-     * // Basic usage
      * const newUser = await userRepository.insert({ name: 'John Doe', email: 'john.doe@example.com' });
-     *
-     * // With bulk insertion
+     * ```
+     * @example
+     * With bulk insertion
+     * ```ts
      * const users = await userRepository.insert([
      *     { name: 'Jane Doe', email: 'jane.doe@example.com' },
      *     { name: 'John Smith', email: 'john.smith@example.com' }
      * ]);
-     *
-     * // Using a transaction
+     * ```
+     * @example
+     * Using a transaction
+     * ```ts
      * await knex.transaction(async (trx) => {
      *     const newUser = await userRepository.insert({ name: 'John Doe', email: 'john.doe@example.com' }, {
      *         transaction: trx
@@ -404,25 +439,29 @@ export class Repository<TModel = unknown> {
      * @template KModel - The type of the object to update.
      *
      * @param data - The data to update. Can be a single object or an array of objects.
-     * @param options - The query options to apply to the update. ({@link QueryOptions})
+     * @param options - The query options to apply to the update.
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
      * @returns An array of updated records.
      *
      * @example
+     * Basic usage
      * ```ts
-     * // Basic usage
      * const updatedUser = await userRepository.update({ name: 'John Doe' }, {
      *     filters: { id: 1 }
      * });
-     *
-     * // With advanced filtering
+     * ```
+     * @example
+     * With filtering
+     * ```ts
      * const updatedUsers = await userRepository.update({ status: 'inactive' }, {
      *     filters: { role: 'admin' }
      * });
-     *
-     * // Using a transaction
+     * ```
+     * @example
+     * Using a transaction
+     * ```ts
      * await knex.transaction(async (trx) => {
      *   const updatedUser = await userRepository.update({ name: 'John Doe' }, {
      *       filters: { id: 1 },
@@ -450,25 +489,29 @@ export class Repository<TModel = unknown> {
      *
      * @template KModel - The type of the object to delete.
      *
-     * @param options - The query options to apply to the deletion. ({@link QueryOptions})
+     * @param options - The query options to apply to the deletion.
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
      * @returns An array of deleted records.
      *
      * @example
+     * Basic usage
      * ```ts
-     * // Basic usage
      * const deletedUser = await userRepository.delete({
      *     filters: { id: 1 }
      * });
-     *
-     * // With advanced filtering
+     * ```
+     * @example
+     * With filtering
+     * ```ts
      * const deletedUsers = await userRepository.delete({
      *     filters: { status: 'inactive' }
      * });
-     *
-     * // Using a transaction
+     * ```
+     * @example
+     * Using a transaction
+     * ```ts
      * await knex.transaction(async (trx) => {
      *     const deletedUser = await userRepository.delete({
      *         filters: { id: 1 },
@@ -494,8 +537,8 @@ export class Repository<TModel = unknown> {
      *
      * @template KModel - The type of the object to search for.
      *
-     * @param query - The Knex.js query builder to apply the search criteria to. ({@link Knex.QueryBuilder})
-     * @param search - The advanced search criteria to apply. Can be a single object or an array of objects. ({@link Filter})
+     * @param query - The Knex.js query builder to apply the search criteria to.
+     * @param search - The advanced search criteria to apply. Can be a single object or an array of objects.
      */
     protected _applyFilter<KModel>(
         query: Knex.QueryBuilder,
@@ -542,7 +585,7 @@ export class Repository<TModel = unknown> {
      * @param error - The error object thrown by Knex.js.
      * @param query - The Knex.js query builder that caused the error.
      *
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
      * @returns Never returns, always throws an error.
      */
@@ -600,8 +643,8 @@ export class Repository<TModel = unknown> {
      * @param query - The Knex.js query builder to execute.
      * @param throwIfNoResult - Whether to throw an error if no records are found.
      *
-     * @throws ({@link CoreError}) Throws an error if no records are found and the `throwIfNoResult` option is enabled. ({@link databaseErrorKeys.mssqlNoResult})
-     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution. ({@link databaseErrorKeys})
+     * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+     * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
      *
      * @returns An array of records returned by the query.
      */
