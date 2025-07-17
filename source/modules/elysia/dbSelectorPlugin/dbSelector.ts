@@ -1,16 +1,14 @@
 import type { TObject, TString } from '@sinclair/typebox';
 import { Elysia, t } from 'elysia';
 
-import { MSSQL } from '#/modules/database/mssql';
 import { CoreError } from '#/error/coreError';
+import { MSSQL } from '#/modules/database/mssql';
 import { SingletonManager } from '#/modules/singletonManager/singletonManager';
 import { errorKeys } from './enums/errorKeys';
-import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDatabaseSelectorPluginOptions';
+import type { DbSelectorOptions } from './types/dbSelectorOptions';
 
 /**
- * The `dynamicDatabaseSelectorPlugin` provides dynamic database selection capabilities for Elysia applications.
- * It enables switching between different MSSQL databases at runtime based on request headers, facilitating
- * multi-tenant or dynamically configurable database scenarios.
+ * The `dbSelectorPlugin` provides dynamic database selection capabilities.
  *
  * When a request is received with the configured database header, the plugin:
  * 1. Extracts the database name from the request header
@@ -26,7 +24,7 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  * Create and register the plugin
  * ```ts
  * const app = new Elysia()
- *   .use(dynamicDatabaseSelectorPlugin({
+ *   .use(dbSelectorPlugin({
  *     baseDatabaseConfig: {
  *       host: 'localhost',
  *       port: 1433,
@@ -50,14 +48,14 @@ import type { DynamicDatabaseSelectorPluginOptions } from './types/dynamicDataba
  *   );
  * ```
  */
-export const dynamicDatabaseSelectorPlugin = <const THeaderKeyName extends string = 'database-using'>(options: DynamicDatabaseSelectorPluginOptions<THeaderKeyName>) => {
-    const keyName = (options.headerKey ?? 'database-using') as THeaderKeyName;
+export const dbSelectorPlugin = <const THeaderKeyName extends string = 'database-using'>(options: DbSelectorOptions<THeaderKeyName>) => {
+    const keyName = options.headerKey ?? 'database-using';
 
     return new Elysia({
-        name: 'dynamicDatabaseSelectorPlugin'
+        name: 'dbSelectorPlugin'
     })
         .model({
-            databaseUsingHeader: t.Object({
+            dbSelectorHeader: t.Object({
                 [keyName]: t.String({
                     description: 'Name of the database to use for the request',
                     example: 'my_database'
@@ -65,18 +63,18 @@ export const dynamicDatabaseSelectorPlugin = <const THeaderKeyName extends strin
             }) as TObject<Record<THeaderKeyName, TString>>
         })
         .macro({
-            hasDynamicDatabaseSelector: {
+            hasDbSelector: {
                 async resolve({ headers }) {
                     const databaseName = headers[keyName];
                     if (!databaseName)
                         throw new CoreError({
-                            key: errorKeys.dynamicDatabaseKeyNotFound,
-                            message: 'Dynamic Database key not found in the request headers.',
+                            key: errorKeys.dbSelectorHeaderKeyNotFound,
+                            message: 'Database Selector key not found in the request headers.',
                             httpStatusCode: 400
                         });
                     if (!SingletonManager.has(`database:${databaseName}`)) {
                         SingletonManager.register(`database:${databaseName}`, MSSQL, {
-                            ...options.baseDatabaseConfig,
+                            ...options.connectionConfig,
                             databaseName
                         });
                         await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();

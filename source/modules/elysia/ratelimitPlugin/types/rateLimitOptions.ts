@@ -17,25 +17,25 @@ export interface RateLimitOptions {
     /**
      * The Redis instance to store rate limit data.
      */
-    redis: Redis;
+    readonly redis: Redis;
     /**
      * Maximum number of requests allowed in the time window.
      *
      * This defines how many requests a client can make within the specified time window
      * before rate limiting is applied.
      */
-    limit: number;
+    readonly limit: number;
     /**
      * Time window in seconds during which the request limit applies.
      *
      * This defines the duration of the rate limiting window. For example, a window of 60
      * with a limit of 100 allows 100 requests per minute per client.
      */
-    window: number;
+    readonly window: number;
     /**
      * Custom error message when rate limit is exceeded.
      *
      * @defaultValue 'Rate limit exceeded'
      */
-    message?: string;
+    readonly message?: string;
 }

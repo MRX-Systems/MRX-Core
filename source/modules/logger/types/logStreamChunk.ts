@@ -6,11 +6,11 @@ import type { StrategyMap } from './strategyMap';
  */
 export interface LogStreamChunk<TLogObject, TStrategies extends StrategyMap> {
     /** ISO date string of the log event. */
-    date: string;
+    readonly date: string;
     /** Log level. */
-    level: LogLevels;
+    readonly level: LogLevels;
     /** The object to log. */
-    object: TLogObject;
+    readonly object: TLogObject;
     /** Names of strategies to use. */
-    strategiesNames: (keyof TStrategies)[];
+    readonly strategiesNames: (keyof TStrategies)[];
 }

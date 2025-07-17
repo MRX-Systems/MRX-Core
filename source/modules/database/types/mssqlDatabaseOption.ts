@@ -3,22 +3,22 @@
  */
 export interface MSSQLDatabaseOptions {
     /** The name of the database to connect to. */
-    databaseName: string;
+    readonly databaseName: string;
     /** The host of the database server. */
-    host: string;
+    readonly host: string;
     /** The port number for the database connection. */
-    port: number;
+    readonly port: number;
     /** The username for authenticating with the database. */
-    user: string;
+    readonly user: string;
     /** The password for authenticating with the database. */
-    password: string;
+    readonly password: string;
     /**
      * Whether to encrypt the database connection.
      * When enabled, communication between the client and server will be encrypted,
      *
      * @defaultValue true
      */
-    encrypt?: boolean;
+    readonly encrypt?: boolean;
     /**
      * Minimum number of connections in the connection pool.
      * This represents the minimum number of connections that will be maintained in the pool,
@@ -27,7 +27,7 @@ export interface MSSQLDatabaseOptions {
      *
      * @defaultValue 2
      */
-    poolMin?: number;
+    readonly poolMin?: number;
     /**
      * Maximum number of connections in the connection pool.
      * This limits how many concurrent connections can be established to the database.
@@ -36,14 +36,14 @@ export interface MSSQLDatabaseOptions {
      *
      * @defaultValue 10
      */
-    poolMax?: number;
+    readonly poolMax?: number;
     /**
      * The timeout in milliseconds for acquiring a connection.
      * If a connection cannot be acquired within this timeframe, an error will be thrown.
      *
      * @defaultValue 20000
      */
-    connectionTimeout?: number;
+    readonly connectionTimeout?: number;
     /**
      * If set to true, emits events for database operations.
      * (select, create, update, delete) for all tables.
@@ -59,5 +59,5 @@ export interface MSSQLDatabaseOptions {
      * });
      * ```
      */
-    isEventEnabled?: boolean;
+    readonly isEventEnabled?: boolean;
 }

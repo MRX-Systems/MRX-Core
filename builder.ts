@@ -29,8 +29,8 @@ await Bun.build({
         // # ————————— Elysia Plugin ————————— #
 
         // dynamicDatabaseSelectorPlugin
-        './source/modules/elysia/dynamicDatabaseSelectorPlugin/index.ts',
-        './source/modules/elysia/dynamicDatabaseSelectorPlugin/types/index.ts',
+        // './source/modules/elysia/dynamicDatabaseSelectorPlugin/index.ts',
+        // './source/modules/elysia/dynamicDatabaseSelectorPlugin/types/index.ts',
 
         // errorPlugin
         './source/modules/elysia/errorPlugin/index.ts',

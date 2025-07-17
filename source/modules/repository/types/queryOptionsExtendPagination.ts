@@ -13,11 +13,11 @@ export interface QueryOptionsExtendPagination<TModel> extends QueryOptions<TMode
      * The limit of the query
      * @defaultValue 100
      */
-    limit?: number;
+    readonly limit?: number;
 
     /**
      * The offset of the query
      * @defaultValue 0
      */
-    offset?: number;
+    readonly offset?: number;
 }

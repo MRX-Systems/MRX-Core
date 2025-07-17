@@ -5,8 +5,8 @@ import type { MSSQLDatabaseOptions } from '#/modules/database/types';
  *
  * @example
  * ```ts
- * const options: DynamicDatabaseSelectorPluginOptions = {
- *   baseDatabaseConfig: {
+ * const options: DbSelectorOptions = {
+ *   connectionConfig: {
  *     host: 'localhost',
  *     port: 1433,
  *     user: 'sa',
@@ -17,16 +17,16 @@ import type { MSSQLDatabaseOptions } from '#/modules/database/types';
  * };
  * ```
  */
-export interface DynamicDatabaseSelectorPluginOptions<THeaderKeyName extends string = 'database-using'> {
+export interface DbSelectorOptions<THeaderKeyName extends string = 'database-using'> {
     /**
      * Options for the database connection
      */
-    baseDatabaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
+    readonly connectionConfig: Omit<MSSQLDatabaseOptions, 'databaseName'>;
     /**
      * The name of the key to be used in the header to select the database
      * @example 'x-database-name'
      *
      * @defaultValue 'database-using'
      */
-    headerKey?: THeaderKeyName;
+    readonly headerKey?: THeaderKeyName;
 }
