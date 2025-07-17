@@ -1,4 +1,3 @@
-/* eslint-disable @stylistic/no-tabs */
 import {
 	type Static,
 	type TArray,
@@ -232,6 +231,157 @@ const _resolveDatabaseConnection = async <TDatabase extends string | DbSelectorO
 	} as Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>;
 };
 
+const _createDefaultOperationsWithHandlers = <
+	const TTableName extends string,
+	const TDatabase extends string | DbSelectorOptions
+>(
+	tableName: TTableName,
+	database: TDatabase
+) => {
+	const _requiredHeaderDatabase = typeof database === 'object'
+		? { headers: 'dbSelectorHeader' } as const // Header required for dynamic database selection
+		: {} as const; // No header needed for static database
+
+	return {
+		find: {
+			method: 'POST' as const,
+			path: '/search',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Search`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>): Promise<{
+				message: string;
+				content: unknown[];
+			}> => {
+				const db = (ctx.dynamicDB as MSSQL) || (ctx.staticDB as MSSQL);
+				const body = ctx.body as {
+					queryOptions: Record<string, unknown>;
+				};
+
+				const data = await db.getRepository(tableName).find({
+					...body.queryOptions,
+					throwIfNoResult: true
+				});
+
+				return {
+					message: `Found ${data.length} records for ${tableName}`,
+					content: data
+				};
+			}
+		},
+		findOne: {
+			method: 'GET',
+			path: '/:id',
+			hook: {
+				..._requiredHeaderDatabase,
+				params: `${tableName}IdParam`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { id } = ctx.params as { id: string | number };
+				const [primaryKey] = db.getTable(tableName).primaryKey;
+
+				const data = await db.getRepository(tableName).find({
+					filters: {
+						[primaryKey]: id
+					},
+					throwIfNoResult: true
+				});
+				return {
+					message: `Found record with id ${id} in ${tableName}`,
+					content: data
+				};
+			}
+		},
+		insert: {
+			method: 'POST',
+			path: '/',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Insert`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { body } = ctx as {
+					body: Partial<Record<string, unknown>> | Partial<Record<string, unknown>>[];
+				};
+				const data = await db.getRepository(tableName).insert(body, {
+					throwIfNoResult: true
+				});
+				return {
+					message: `Inserted record into ${tableName}`,
+					content: data
+				};
+			}
+		}
+	};
+};
+
+/**
+ * Adds routes to the Elysia app based on the enabled operations.
+ *
+ * @template TDatabase - The database configuration type
+ * @template TTableName - The table name type
+ * @template TSourceSchema - The source schema type
+ * @template TSourceSearchSchema - The search schema type
+ * @template TSourceInsertSchema - The insert schema type
+ * @template TSourceUpdateSchema - The update schema type
+ * @template TSourceResponseSchema - The response schema type
+ * @template TOperations - The operations configuration type
+ *
+ * @param tableName - The name of the table
+ * @param database - The database configuration
+ * @param operations - The operations configuration
+ *
+ * @returns An Elysia app with the configured routes
+ */
+const _addRoutesByOperations = <
+	const TDatabase extends string | DbSelectorOptions,
+	const TTableName extends string,
+	const TOperations extends CrudOperationsOptions
+>(
+	tableName: TTableName,
+	database: TDatabase,
+	operations: TOperations
+) => {
+	const app = new Elysia();
+	const _defaultOperations = _createDefaultOperationsWithHandlers(tableName, database);
+
+	for (const operationKey in operations) {
+		const operation = operations[operationKey as keyof TOperations];
+		const defaultOperation = _defaultOperations[operationKey as keyof typeof _defaultOperations];
+
+		if (!operation || !defaultOperation)
+			continue;
+
+		if (typeof operation === 'boolean') {
+			app.route(
+				defaultOperation.method,
+				defaultOperation.path,
+				(ctx: Record<string, unknown>) => defaultOperation.handler(ctx),
+				defaultOperation.hook as Record<string, unknown>
+			);
+		} else if (typeof operation === 'object') {
+			const mergedOperation = {
+				...defaultOperation,
+				...operation
+			};
+
+			app.route(
+				mergedOperation.method,
+				mergedOperation.path,
+				(ctx: Record<string, unknown>) => defaultOperation.handler(ctx),
+				mergedOperation.hook as Record<string, unknown>
+			);
+		}
+	}
+
+	return app;
+};
 
 export const crudPlugin = <
 	const TDatabase extends string | DbSelectorOptions,
@@ -276,32 +426,36 @@ export const crudPlugin = <
 		TSourceUpdateSchema,
 		TSourceResponseSchema
 	>
-) => {
-	const app = new Elysia({
-		name: `crudPlugin[${tableName}]`,
-		tags: [tableName]
-	})
-		.use(
-			_addModels(
-				tableName,
-				{
-					sourceSchema: schema.sourceSchema,
-					sourceSearchSchema: schema.sourceSearchSchema ?? schema.sourceSchema,
-					sourceInsertSchema: schema.sourceInsertSchema ?? schema.sourceSchema,
-					sourceUpdateSchema: schema.sourceUpdateSchema ?? schema.sourceSchema,
-					sourceResponseSchema: schema.sourceResponseSchema ?? schema.sourceSchema
-				},
-				operations
-			)
+) => new Elysia({
+	name: `crudPlugin[${tableName}]`,
+	tags: [tableName]
+})
+	.use(
+		_addModels(
+			tableName,
+			{
+				sourceSchema: schema.sourceSchema,
+				sourceSearchSchema: schema.sourceSearchSchema ?? schema.sourceSchema,
+				sourceInsertSchema: schema.sourceInsertSchema ?? schema.sourceSchema,
+				sourceUpdateSchema: schema.sourceUpdateSchema ?? schema.sourceSchema,
+				sourceResponseSchema: schema.sourceResponseSchema ?? schema.sourceSchema
+			},
+			operations
 		)
+	)
 
-		.resolve({ as: 'scoped' }, async ({ headers }): Promise<
-			Record<
-				TDatabase extends string
-					? 'staticDB'
-					: 'dynamicDB',
-				MSSQL
-			>
-		> => _resolveDatabaseConnection(database, headers));
-	return app;
-};
+	.resolve({ as: 'scoped' }, async ({ headers }): Promise<
+		Record<
+			TDatabase extends string
+				? 'staticDB'
+				: 'dynamicDB',
+			MSSQL
+		>
+	> => _resolveDatabaseConnection(database, headers))
+	.use(
+		_addRoutesByOperations(
+			tableName,
+			database,
+			operations
+		)
+	);
