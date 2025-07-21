@@ -1,0 +1,57 @@
+import type { TArray, TObject, TPartial, TUnion } from '@sinclair/typebox';
+import { t } from 'elysia';
+
+import { filterByKeyExclusionRecursive } from '#/modules/data/data';
+import { createFiltersSchema } from './createFiltersSchema';
+
+export const createUpdateSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TObject<{
+	queryOptions: TObject<{
+		filters: TUnion<[
+			TPartial<ReturnType<typeof createFiltersSchema<TSourceSchema>>>,
+			TArray<TPartial<ReturnType<typeof createFiltersSchema<TSourceSchema>>>>
+		]>;
+	}>,
+	data: TPartial<TSourceSchema>
+}> => {
+	const sanitizedSchema = filterByKeyExclusionRecursive(
+		schema,
+		[
+			'minLength',
+			'maxLength',
+			'pattern',
+			'minimum',
+			'maximum',
+			'exclusiveMinimum',
+			'exclusiveMaximum',
+			'multipleOf',
+			'minItems',
+			'maxItems',
+			'maxContains',
+			'minContains',
+			'minProperties',
+			'maxProperties',
+			'uniqueItems',
+			'minimumTimestamp',
+			'maximumTimestamp',
+			'exclusiveMinimumTimestamp',
+			'exclusiveMaximumTimestamp',
+			'multipleOfTimestamp',
+			'required',
+			'examples',
+			'example',
+			'default',
+			'title',
+			'description'
+		]
+	) as TSourceSchema;
+
+	return t.Object({
+		queryOptions: t.Object({
+			filters: t.Union([
+				t.Partial(createFiltersSchema(sanitizedSchema)),
+				t.Array(t.Partial(createFiltersSchema(sanitizedSchema)), { minItems: 1 })
+			])
+		}),
+		data: t.Partial(schema)
+	});
+};

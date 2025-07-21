@@ -32,6 +32,11 @@ await Bun.build({
 
 		// # ————————— Elysia Plugin ————————— #
 
+		// crudSchemaPlugin
+		'./source/modules/elysia/crudSchemaPlugin/index.ts',
+		'./source/modules/elysia/crudSchemaPlugin/types/index.ts',
+		'./source/modules/elysia/crudSchemaPlugin/utils/index.ts',
+
 		// dbSelectorPlugin
 		'./source/modules/elysia/dbSelectorPlugin/index.ts',
 		'./source/modules/elysia/dbSelectorPlugin/types/index.ts',
@@ -45,11 +50,6 @@ await Bun.build({
 
 		// microservicePlugin
 		'./source/modules/elysia/microservicePlugin/index.ts',
-
-		// queryOptionsBuilderPlugin
-		'./source/modules/elysia/queryOptionsBuilderPlugin/index.ts',
-		'./source/modules/elysia/queryOptionsBuilderPlugin/types/index.ts',
-		'./source/modules/elysia/queryOptionsBuilderPlugin/utils/index.ts',
 
 		// rateLimitPlugin
 		'./source/modules/elysia/ratelimitPlugin/index.ts',
