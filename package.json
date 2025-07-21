@@ -22,6 +22,8 @@
 		"./modules/elysia/crudSchemaPlugin": "./dist/modules/elysia/crudSchemaPlugin/index.js",
 		"./modules/elysia/crudSchemaPlugin/types": "./dist/modules/elysia/crudSchemaPlugin/types/index.js",
 		"./modules/elysia/crudSchemaPlugin/utils": "./dist/modules/elysia/crudSchemaPlugin/utils/index.js",
+		"./modules/elysia/crudPlugin": "./dist/modules/elysia/crudPlugin/index.js",
+		"./modules/elysia/crudPlugin/types": "./dist/modules/elysia/crudPlugin/types/index.js",
 		"./modules/elysia/dbSelectorPlugin": "./dist/modules/elysia/dbSelectorPlugin/index.js",
 		"./modules/elysia/dbSelectorPlugin/types": "./dist/modules/elysia/dbSelectorPlugin/types/index.js",
 		"./modules/elysia/errorPlugin": "./dist/modules/elysia/errorPlugin/index.js",

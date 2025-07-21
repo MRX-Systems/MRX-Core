@@ -37,6 +37,10 @@ await Bun.build({
 		'./source/modules/elysia/crudSchemaPlugin/types/index.ts',
 		'./source/modules/elysia/crudSchemaPlugin/utils/index.ts',
 
+		// crudPlugin
+		'./source/modules/elysia/crudPlugin/index.ts',
+		'./source/modules/elysia/crudPlugin/types/index.ts',
+
 		// dbSelectorPlugin
 		'./source/modules/elysia/dbSelectorPlugin/index.ts',
 		'./source/modules/elysia/dbSelectorPlugin/types/index.ts',

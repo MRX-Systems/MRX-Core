@@ -1,0 +1,1 @@
+export { crudPlugin } from './crud';
