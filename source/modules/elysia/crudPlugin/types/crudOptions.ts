@@ -1,6 +1,6 @@
 import type { TObject } from '@sinclair/typebox';
 
-import type { DbSelectorOptions } from '#/modules/elysia/dbSelectorPlugin/types/dbSelectorOptions';
+import type { DynamicDbOptions } from '#/modules/elysia/dbResolverPlugin/types/dynamicDbOptions';
 import type { CrudOperationsOptions } from './crudOperationsOptions';
 
 /**
@@ -10,9 +10,10 @@ import type { CrudOperationsOptions } from './crudOperationsOptions';
  * @template KEnumPermission - The type of the enum for permissions extending {@link String}
  */
 export interface CrudOptions<
-	TDatabase extends string | DbSelectorOptions,
+	TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
 	TTableName extends string,
 	TSourceSchema extends TObject,
+	THeaderKeyName extends string = 'database-using',
 	TOperations extends CrudOperationsOptions = CrudOperationsOptions,
 	TSourceFindSchema extends TObject = TSourceSchema,
 	TSourceCountSchema extends TObject = TSourceSchema,
