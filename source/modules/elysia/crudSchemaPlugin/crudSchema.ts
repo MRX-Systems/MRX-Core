@@ -22,7 +22,16 @@ export const crudSchemaPlugin = <
 	const TSourceUpdateSchema extends TObject = TSourceSchema,
 	const TSourceDeleteSchema extends TObject = TSourceSchema,
 	const TSourceResponseSchema extends TObject = TSourceSchema,
-	const TOperations extends CrudSchemaOperations = CrudSchemaOperations
+	const TOperations extends CrudSchemaOperations = {
+		count: true;
+		find: true;
+		findOne: true;
+		insert: true;
+		update: true;
+		updateOne: true;
+		delete: true;
+		deleteOne: true;
+	}
 > (
 	{
 		sourceSchemaName,
