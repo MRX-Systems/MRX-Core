@@ -41,9 +41,9 @@ await Bun.build({
 		'./source/modules/elysia/crudPlugin/index.ts',
 		'./source/modules/elysia/crudPlugin/types/index.ts',
 
-		// dbSelectorPlugin
-		'./source/modules/elysia/dbSelectorPlugin/index.ts',
-		'./source/modules/elysia/dbSelectorPlugin/types/index.ts',
+		// dbResolverPlugin
+		'./source/modules/elysia/dbResolverPlugin/index.ts',
+		'./source/modules/elysia/dbResolverPlugin/types/index.ts',
 
 		// errorPlugin
 		'./source/modules/elysia/errorPlugin/index.ts',
