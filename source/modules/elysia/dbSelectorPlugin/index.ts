@@ -1,1 +1,0 @@
-export { dbSelectorPlugin } from './dbSelector';
