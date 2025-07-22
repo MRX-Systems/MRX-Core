@@ -81,7 +81,7 @@ export const dbResolverPlugin = <
 		name: 'dbResolverPlugin',
 		seed: database
 	})
-		.resolve({ as: 'scoped' }, async ({ headers }): Promise<
+		.resolve({ as: 'global' }, async ({ headers }): Promise<
 			Record<
 				TDatabase extends string
 					? 'staticDB'
