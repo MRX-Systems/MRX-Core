@@ -21,8 +21,8 @@ import type { CrudOperationUpdateOptions } from './types/crudOperationUpdateOpti
 import type { CrudOptions } from './types/crudOptions';
 
 const _createDefaultOperationsWithHandlers = <
-	const TTableName extends string,
 	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
+	const TTableName extends string,
 	const THeaderKeyName extends string = 'database-using'
 >(
 	tableName: TTableName,
@@ -321,7 +321,7 @@ const _addRoutesByOperations = <
 	operations: TOperations
 ) => {
 	const app = new Elysia();
-	const _defaultOperations = _createDefaultOperationsWithHandlers(tableName, database);
+	const _defaultOperations = _createDefaultOperationsWithHandlers<TDatabase, TTableName, THeaderKeyName>(tableName, database);
 
 	for (const operationKey in operations) {
 		const operation = operations[operationKey as keyof TOperations];
