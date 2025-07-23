@@ -7,12 +7,14 @@ import { createQSchema } from './createQSchema';
 
 /**
  * Creates a filters schema that combines search queries and property filters.
+ * The resulting schema includes a $q property for query operations and properties
+ * from the source schema for field-specific filtering.
  *
- * @template TSourceSchema - The TypeBox object schema to create filters for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create filters for
  *
- * @param schema - The base object schema to create filters for.
+ * @param schema - The base object schema to create filters for
  *
- * @returns A TypeBox object schema for filters
+ * @returns A composite TypeBox schema containing query and property filter capabilities
  */
 export const createFiltersSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TComposite<[
 	TObject<{
