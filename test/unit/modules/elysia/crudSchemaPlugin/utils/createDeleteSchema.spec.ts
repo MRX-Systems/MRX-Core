@@ -1,4 +1,4 @@
-import { Kind } from '@sinclair/typebox';
+import { Kind, OptionalKind } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -38,5 +38,16 @@ describe('createDeleteSchema', () => {
 		expect(schema.properties.queryOptions.properties).toHaveProperty('filters');
 		expect(schema.properties.queryOptions.properties).toHaveProperty('selectedFields');
 		expect(Object.keys(schema.properties.queryOptions.properties).length).toBe(2);
+	});
+
+	test('should selectedFields be optional', () => {
+		const schema = createDeleteSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.selectedFields[Kind]).toBe('Union');
+		expect(schema.properties.queryOptions.properties.selectedFields[OptionalKind]).toBe('Optional');
+	});
+
+	test('should filter is required', () => {
+		const schema = createDeleteSchema(sourceSchema);
+		expect(schema.properties.queryOptions.required).toEqual(['filters']);
 	});
 });
