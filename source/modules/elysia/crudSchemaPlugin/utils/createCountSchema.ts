@@ -7,13 +7,15 @@ import { createFiltersSchema } from './createFiltersSchema';
 /**
  * Creates a find schema.
  *
- * @template TSourceSchema - The TypeBox object schema to create search capabilities for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create search capabilities for
  *
  * @param schema - The base object schema to create search schemas for.
  *
  * @returns A TypeBox object schema for search with selected fields, order by, filters, limit, and offset
  */
-export const createCountSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TPartial<TObject<{
+export const createCountSchema = <
+	const TSourceSchema extends TObject
+>(schema: TSourceSchema): TPartial<TObject<{
 	queryOptions: TPartial<TObject<{
 		filters: TUnion<[
 			TPartial<ReturnType<typeof createFiltersSchema<TSourceSchema>>>,
