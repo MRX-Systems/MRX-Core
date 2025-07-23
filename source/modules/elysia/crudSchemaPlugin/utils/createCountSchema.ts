@@ -5,13 +5,13 @@ import { filterByKeyExclusionRecursive } from '#/modules/data/data';
 import { createFiltersSchema } from './createFiltersSchema';
 
 /**
- * Creates a find schema.
+ * Creates a count schema for counting records with optional filtering.
  *
- * @template TSourceSchema - The TypeBox object schema to create search capabilities for
+ * @template TSourceSchema - The TypeBox object schema to create count capabilities for
  *
- * @param schema - The base object schema to create search schemas for.
+ * @param schema - The base object schema to create count schema for.
  *
- * @returns A TypeBox object schema for search with selected fields, order by, filters, limit, and offset
+ * @returns A TypeBox partial object schema containing queryOptions with filters for counting operations
  */
 export const createCountSchema = <
 	const TSourceSchema extends TObject
