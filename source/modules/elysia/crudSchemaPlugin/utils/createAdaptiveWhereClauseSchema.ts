@@ -8,16 +8,22 @@ import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/crudSchemaPlugi
 import { isDateFromElysiaTypeBox } from './isDateFromElysiaTypeBox';
 
 /**
- * Creates a where clause schema with appropriate operators based on the property type.
- * Boolean properties get fewer operators than other types.
+ * Creates an adaptive where clause schema with appropriate operators based on the field type.
  *
- * @template TFieldSchema - The TypeBox schema to create where clauses for. Extends {@link TSchema}
+ * Generates different sets of query operators depending on the schema type:
+ * - All types: $eq, $neq, $isNull
+ * - String/Number/Date types: additional $in, $nin, $like, $nlike operators
+ * - Number/Date types: additional comparison operators ($lt, $lte, $gt, $gte, $between, $nbetween)
  *
- * @param schema - The base property schema to create where clauses for. {@link TFieldSchema}
+ * @template TFieldSchema - The TypeBox schema type to create where clauses for
  *
- * @returns A TypeBox object schema with where clause operators
+ * @param schema - The base field schema to generate where clause operators for
+ *
+ * @returns An adaptive where clause schema with operators appropriate for the field type
  */
-export const createAdaptiveWhereClauseSchema = <TFieldSchema extends TSchema>(schema: TFieldSchema): AdaptiveWhereClauseSchema<TFieldSchema> => {
+export const createAdaptiveWhereClauseSchema = <
+	const TFieldSchema extends TSchema
+>(schema: TFieldSchema): AdaptiveWhereClauseSchema<TFieldSchema> => {
 	// all
 	const common = {
 		$eq: schema,
