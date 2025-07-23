@@ -5,6 +5,15 @@ import { filterByKeyExclusionRecursive } from '#/modules/data/data';
 import { createFiltersSchema } from './createFiltersSchema';
 import { createSelectedFieldsSchema } from './createSelectedFieldsSchema';
 
+/**
+ * Creates a delete schema for deleting records with optional selected fields and required filtering.
+ *
+ * @template TSourceSchema - The TypeBox object schema to create delete capabilities for
+ *
+ * @param schema - The base object schema to create delete schema for.
+ *
+ * @returns A TypeBox object schema containing queryOptions with selected fields and filters for delete operations
+ */
 export const createDeleteSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TObject<{
 	queryOptions: TObject<{
 		selectedFields: TOptional<ReturnType<typeof createSelectedFieldsSchema>>;
