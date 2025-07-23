@@ -2,7 +2,7 @@ import type {
 	TObject,
 	TString
 } from '@sinclair/typebox';
-import { Elysia, type SingletonBase } from 'elysia';
+import { Elysia, type SingletonBase, t } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
 import { crudSchemaPlugin } from '#/modules/elysia/crudSchemaPlugin/crudSchema';
@@ -19,6 +19,341 @@ import type { CrudOperationsOptions } from './types/crudOperationsOptions';
 import type { CrudOperationUpdateOneOptions } from './types/crudOperationUpdateOneOptions';
 import type { CrudOperationUpdateOptions } from './types/crudOperationUpdateOptions';
 import type { CrudOptions } from './types/crudOptions';
+
+const _createDefaultOperationsWithHandlers = <
+	const TTableName extends string,
+	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
+	const THeaderKeyName extends string = 'database-using'
+>(
+	tableName: TTableName,
+	database: TDatabase
+) => {
+	const _requiredHeaderDatabase = typeof database === 'object'
+		? { headers: 'dbSelectorHeader' } as const // Header required for dynamic database selection
+		: {} as const; // No header needed for static database
+
+	return {
+		insert: {
+			method: 'POST',
+			path: '/',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Insert`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const body = ctx.body as {
+					queryOptions?: {
+						selectedFields: string[] | string;
+					};
+					data: Record<string, unknown> | Record<string, unknown>[];
+				};
+
+				const selectedFields = body.queryOptions?.selectedFields ?? '*';
+
+				const data = await db.getRepository(tableName).insert<Record<string, unknown>>(body.data, {
+					selectedFields,
+					throwIfNoResult: true
+				});
+				return {
+					message: `Inserted record into ${tableName}`,
+					content: data
+				};
+			}
+		},
+		find: {
+			method: 'POST' as const,
+			path: '/search',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Find`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>): Promise<{
+				message: string;
+				content: unknown[];
+			}> => {
+				const db = (ctx.dynamicDB as MSSQL) || (ctx.staticDB as MSSQL);
+				const body = ctx.body as {
+					queryOptions: Record<string, unknown>;
+				};
+
+				const data = await db.getRepository(tableName).find({
+					...body.queryOptions,
+					throwIfNoResult: true
+				});
+
+				return {
+					message: `Found ${data.length} records for ${tableName}`,
+					content: data
+				};
+			}
+		},
+		findOne: {
+			method: 'GET',
+			path: '/:id',
+			hook: {
+				..._requiredHeaderDatabase,
+				// params: `${tableName}IdParam`, // elysia is broken like all fucking js web frameworks
+				params: t.Object({
+					id: t.Union([
+						t.String({
+							format: 'uuid'
+						}),
+						t.Number({
+							minimum: 1,
+							maximum: Number.MAX_SAFE_INTEGER
+						})
+					])
+				}),
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { id } = ctx.params as { id: string | number };
+				const [primaryKey] = db.getTable(tableName).primaryKey;
+
+				const data = await db.getRepository(tableName).find({
+					filters: {
+						[primaryKey]: id
+					},
+					throwIfNoResult: true
+				});
+				return {
+					message: `Found record with id ${id} in ${tableName}`,
+					content: data
+				};
+			}
+		},
+		count: {
+			method: 'POST' as const,
+			path: '/count',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Count`,
+				response: `${tableName}CountResponse200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const body = ctx.body as {
+					queryOptions: Record<string, unknown>;
+				};
+				const data = await db.getRepository(tableName).count({
+					...body.queryOptions,
+					throwIfNoResult: true
+				});
+				return {
+					message: `Counted records in ${tableName}`,
+					content: data
+				};
+			}
+		},
+		update: {
+			method: 'PATCH',
+			path: '/',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Update`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const body = ctx.body as {
+					queryOptions: {
+						filters: Record<string, unknown>;
+						orderBy?: Record<string, unknown>;
+						selectedFields: string[] | string;
+					};
+					data: Record<string, unknown>;
+				};
+
+				const data = await db.getRepository(tableName).update(body.data, {
+					filters: body.queryOptions.filters,
+					selectedFields: body.queryOptions.selectedFields ?? '*',
+					throwIfNoResult: true
+				});
+				return {
+					message: `Updated record in ${tableName}`, // si ça renvoie rien dire que rien n'a ete mis a jour
+					content: data
+				};
+			}
+		},
+		updateOne: {
+			method: 'PATCH',
+			path: '/:id',
+			hook: {
+				..._requiredHeaderDatabase,
+				// params: `${tableName}IdParam`, // elysia is broken like all fucking js web frameworks
+				params: t.Object({
+					id: t.Union([
+						t.String({
+							format: 'uuid'
+						}),
+						t.Number({
+							minimum: 1,
+							maximum: Number.MAX_SAFE_INTEGER
+						})
+					])
+				}),
+				body: `${tableName}UpdateOne`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { id } = ctx.params as { id: string | number };
+				const body = ctx.body as {
+					data: Record<string, unknown>;
+				};
+				const [primaryKey] = db.getTable(tableName).primaryKey;
+
+				const data = await db.getRepository(tableName).update(body.data, {
+					selectedFields: '*',
+					filters: {
+						[primaryKey]: id
+					},
+					throwIfNoResult: true
+				});
+				return {
+					message: `Updated record with id ${id} in ${tableName}`,
+					content: data
+				};
+			}
+		},
+		delete: {
+			method: 'DELETE',
+			path: '/',
+			hook: {
+				..._requiredHeaderDatabase,
+				body: `${tableName}Delete`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const body = ctx.body as {
+					queryOptions: {
+						filters: Record<string, unknown>;
+						selectedFields?: string[] | string;
+					};
+				};
+				const selectedFields = body.queryOptions?.selectedFields ?? '*';
+				const data = await db.getRepository(tableName).delete<Record<string, unknown>>({
+					filters: body.queryOptions.filters,
+					selectedFields,
+					throwIfNoResult: true
+				});
+				return {
+					message: `Deleted records from ${tableName}`,
+					content: data
+				};
+			}
+		},
+		deleteOne: {
+			method: 'DELETE',
+			path: '/:id',
+			hook: {
+				..._requiredHeaderDatabase,
+				// params: `${tableName}IdParam`, // elysia is broken like all fucking js web frameworks
+				params: t.Object({
+					id: t.Union([
+						t.String({
+							format: 'uuid'
+						}),
+						t.Number({
+							minimum: 1,
+							maximum: Number.MAX_SAFE_INTEGER
+						})
+					])
+				}),
+				body: `${tableName}DeleteOne`,
+				response: `${tableName}Response200`
+			},
+			handler: async (ctx: Record<string, unknown>) => {
+				const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
+				const { id } = ctx.params as { id: string | number };
+				const body = ctx.body as {
+					queryOptions: {
+						filters: Record<string, unknown>;
+						selectedFields?: string[] | string;
+					};
+				};
+				const selectedFields = body.queryOptions?.selectedFields ?? '*';
+				const data = await db.getRepository(tableName).delete<Record<string, unknown>>({
+					filters: body.queryOptions.filters,
+					selectedFields,
+					throwIfNoResult: true
+				});
+				return {
+					message: `Deleted record with id ${id} from ${tableName}`,
+					content: data
+				};
+			}
+		}
+	};
+};
+
+/**
+ * Adds routes to the Elysia app based on the enabled operations.
+ *
+ * @template TDatabase - The database configuration type
+ * @template TTableName - The table name type
+ * @template TSourceSchema - The source schema type
+ * @template TSourceSearchSchema - The search schema type
+ * @template TSourceInsertSchema - The insert schema type
+ * @template TSourceUpdateSchema - The update schema type
+ * @template TSourceResponseSchema - The response schema type
+ * @template TOperations - The operations configuration type
+ *
+ * @param tableName - The name of the table
+ * @param database - The database configuration
+ * @param operations - The operations configuration
+ *
+ * @returns An Elysia app with the configured routes
+ */
+const _addRoutesByOperations = <
+	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
+	const TTableName extends string,
+	const TOperations extends CrudOperationsOptions,
+	const THeaderKeyName extends string = 'database-using'
+>(
+	tableName: TTableName,
+	database: TDatabase,
+	operations: TOperations
+) => {
+	const app = new Elysia();
+	const _defaultOperations = _createDefaultOperationsWithHandlers(tableName, database);
+
+	for (const operationKey in operations) {
+		const operation = operations[operationKey as keyof TOperations];
+		const defaultOperation = _defaultOperations[operationKey as keyof typeof _defaultOperations];
+
+		if (!operation || !defaultOperation)
+			continue;
+
+		if (typeof operation === 'boolean') {
+			app.route(
+				defaultOperation.method,
+				defaultOperation.path,
+				(ctx: Record<string, unknown>) => defaultOperation.handler(ctx),
+				defaultOperation.hook as Record<string, unknown>
+			);
+		} else if (typeof operation === 'object') {
+			const mergedOperation = {
+				...defaultOperation,
+				...operation
+			};
+
+			app.route(
+				mergedOperation.method,
+				mergedOperation.path,
+				(ctx: Record<string, unknown>) => defaultOperation.handler(ctx),
+				mergedOperation.hook as Record<string, unknown>
+			);
+		}
+	}
+
+	return app;
+};
 
 export const crudPlugin = <
 	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
@@ -202,6 +537,18 @@ export const crudPlugin = <
 					: false
 			}
 		})
+	)
+	.use(
+		_addRoutesByOperations<
+			TDatabase,
+			TTableName,
+			TOperations,
+			THeaderKeyName
+		>(
+			tableName,
+			database,
+			operations
+		)
 	) as unknown as Elysia<
 	TTableName,
 	{

@@ -1,5 +1,5 @@
 import type { TObject, TSchema } from '@sinclair/typebox/type';
-import { Elysia, t, type SingletonBase } from 'elysia';
+import { Elysia, type SingletonBase } from 'elysia';
 
 import type { CrudModelsType } from './types/crudModelsType';
 import type { CrudSchemaOperations } from './types/crudSchemaOperations';
@@ -9,6 +9,7 @@ import { createCountSchema } from './utils/createCountSchema';
 import { createDeleteSchema } from './utils/createDeleteSchema';
 import { createFindSchema } from './utils/createFindSchema';
 import { createIdParamSchema } from './utils/createIdParamSchema';
+import { createInsertSchema } from './utils/createInsertSchema';
 import { createResponse200Schema } from './utils/createResponse200Schema';
 import { createUpdateOneSchema } from './utils/createUpdateOneSchema';
 import { createUpdateSchema } from './utils/createUpdateSchema';
@@ -83,13 +84,7 @@ export const crudSchemaPlugin = <
 	const models: Record<string, TSchema> = {};
 
 	if (operations.insert)
-		models[`${sourceSchemaName}Insert`] = t.Union([
-			sourceInsertSchema,
-			t.Array(sourceInsertSchema, {
-				minItems: 1,
-				uniqueItems: true
-			})
-		]);
+		models[`${sourceSchemaName}Insert`] = createInsertSchema(sourceInsertSchema);
 
 	if (operations.find)
 		models[`${sourceSchemaName}Find`] = createFindSchema(sourceFindSchema);
