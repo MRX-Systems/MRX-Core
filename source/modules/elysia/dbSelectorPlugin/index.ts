@@ -1,1 +1,1 @@
-export * from './dbSelector';
+export { dbSelectorPlugin } from './dbSelector';

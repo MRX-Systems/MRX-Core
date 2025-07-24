@@ -1,2 +1,2 @@
-export type * from './mssqlEventMap';
-export type * from './tableEventMap';
+export type { MssqlEventMap } from './mssqlEventMap';
+export type { TableEventMap } from './tableEventMap';

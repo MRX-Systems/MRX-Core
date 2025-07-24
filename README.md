@@ -5,9 +5,9 @@
 ## 📌 Table of contents
 
 - [📦 Core](#-core)
-  - [📌 Table of contents](#-table-of-contents)
-  - [⚖️ License](#-license)
-  - [📧 Contact](#-contact)
+	- [📌 Table of contents](#-table-of-contents)
+	- [⚖️ License](#-license)
+	- [📧 Contact](#-contact)
 
 ## ⚖️ License
 

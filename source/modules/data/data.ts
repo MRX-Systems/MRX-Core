@@ -13,11 +13,11 @@ import type { TransformObjectKeys } from './types/transformObjectKeys';
  * @throws ({@link CoreError}) - Throws an error if the data is null or undefined. ({@link dataErrorKeys.dataIsNull})
  */
 const _validateDataNull = <TObject extends object>(data: TObject): void => {
-    if (data === null || data === undefined)
-        throw new CoreError({
-            key: dataErrorKeys.dataIsNull,
-            message: 'Data cannot be null or undefined.'
-        });
+	if (data === null || data === undefined)
+		throw new CoreError({
+			key: dataErrorKeys.dataIsNull,
+			message: 'Data cannot be null or undefined.'
+		});
 };
 
 /**
@@ -49,31 +49,31 @@ const _validateDataNull = <TObject extends object>(data: TObject): void => {
  * ```
  */
 export const filterByKeyExclusion = <
-    TObject extends Readonly<object>,
-    TExcludedKeys extends keyof TObject = never,
-    TExcludeNullUndefined extends boolean = false
+	TObject extends Readonly<object>,
+	TExcludedKeys extends keyof TObject = never,
+	TExcludeNullUndefined extends boolean = false
 >(
-    data: Readonly<TObject>,
-    keys: readonly TExcludedKeys[],
-    excludeNullUndefined?: TExcludeNullUndefined
+	data: Readonly<TObject>,
+	keys: readonly TExcludedKeys[],
+	excludeNullUndefined?: TExcludeNullUndefined
 ): TExcludeNullUndefined extends true
-    ? Partial<Omit<TObject, TExcludedKeys>>
-    : Omit<TObject, TExcludedKeys> => {
-    _validateDataNull(data);
-    const filteredData: Record<string, unknown> = {};
+	? Partial<Omit<TObject, TExcludedKeys>>
+	: Omit<TObject, TExcludedKeys> => {
+	_validateDataNull(data);
+	const filteredData: Record<string, unknown> = {};
 
-    for (const key in data) {
-        const typedKey = key as keyof TObject;
-        if (
-            !(keys as readonly PropertyKey[]).includes(typedKey as PropertyKey)
-            && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
-        )
-            filteredData[key] = data[typedKey];
-    }
+	for (const key in data) {
+		const typedKey = key as keyof TObject;
+		if (
+			!(keys as readonly PropertyKey[]).includes(typedKey as PropertyKey)
+			&& (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
+		)
+			filteredData[key] = data[typedKey];
+	}
 
-    return filteredData as TExcludeNullUndefined extends true
-        ? Partial<Omit<TObject, TExcludedKeys>>
-        : Omit<TObject, TExcludedKeys>;
+	return filteredData as TExcludeNullUndefined extends true
+		? Partial<Omit<TObject, TExcludedKeys>>
+		: Omit<TObject, TExcludedKeys>;
 };
 
 /**
@@ -98,44 +98,47 @@ export const filterByKeyExclusion = <
  * ```
  */
 export const filterByKeyExclusionRecursive = <
-    TObject extends Readonly<object>,
-    TExcludedKeys extends PropertyKey = never
+	TObject extends Readonly<object>,
+	TExcludedKeys extends PropertyKey = never
 >(
-    data: Readonly<TObject>,
-    keys: readonly TExcludedKeys[],
-    excludeNullUndefined = false
+	data: Readonly<TObject>,
+	keys: readonly TExcludedKeys[],
+	excludeNullUndefined = false
 ): Record<string, unknown> => {
-    _validateDataNull(data);
+	_validateDataNull(data);
 
-    const filteredData: Record<string, unknown> = {};
+	const filteredData: Record<PropertyKey, unknown> = {};
 
-    for (const key in data) {
-        const typedKey = key as keyof TObject;
-        if (
-            !(keys as readonly PropertyKey[]).includes(typedKey as PropertyKey)
-            && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
-        )
-            if (typeof data[typedKey] === 'object' && data[typedKey] !== null && !Array.isArray(data[typedKey]))
-                filteredData[key] = filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
-                    data[typedKey] as Readonly<object>,
-                    keys,
-                    excludeNullUndefined
-                );
-            else if (Array.isArray(data[typedKey]))
-                filteredData[key] = (data[typedKey] as unknown[]).map((item) => {
-                    if (typeof item === 'object' && item !== null && !Array.isArray(item))
-                        return filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
-                            item,
-                            keys,
-                            excludeNullUndefined
-                        );
-                    return item;
-                });
-            else
-                filteredData[key] = data[typedKey];
-    }
+	for (const key in data) {
+		const typedKey = key as keyof TObject;
+		if (
+			!(keys as readonly PropertyKey[]).includes(typedKey as PropertyKey)
+			&& (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
+		)
+			if (typeof data[typedKey] === 'object' && data[typedKey] !== null && !Array.isArray(data[typedKey]))
+				filteredData[key] = filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
+					data[typedKey] as Readonly<object>,
+					keys,
+					excludeNullUndefined
+				);
+			else if (Array.isArray(data[typedKey]))
+				filteredData[key] = (data[typedKey] as unknown[]).map((item) => {
+					if (typeof item === 'object' && item !== null && !Array.isArray(item))
+						return filterByKeyExclusionRecursive<Readonly<object>, TExcludedKeys>(
+							item,
+							keys,
+							excludeNullUndefined
+						);
+					return item;
+				});
+			else
+				filteredData[key] = data[typedKey];
+	}
 
-    return filteredData;
+	for (const symbol of Object.getOwnPropertySymbols(data))
+		filteredData[symbol] = (data as Record<symbol, unknown>)[symbol];
+
+	return filteredData;
 };
 
 /**
@@ -160,34 +163,34 @@ export const filterByKeyExclusionRecursive = <
  * ```
  */
 export const filterByKeyInclusion = <
-    TObject extends Readonly<object>,
-    TIncludedKeys extends keyof TObject = never,
-    TExcludeNullUndefined extends boolean = false
+	TObject extends Readonly<object>,
+	TIncludedKeys extends keyof TObject = never,
+	TExcludeNullUndefined extends boolean = false
 >(
-    data: Readonly<TObject>,
-    keys: readonly TIncludedKeys[],
-    excludeNullUndefined?: TExcludeNullUndefined,
-    throwIfDataIsNull = true
+	data: Readonly<TObject>,
+	keys: readonly TIncludedKeys[],
+	excludeNullUndefined?: TExcludeNullUndefined,
+	throwIfDataIsNull = true
 ): TExcludeNullUndefined extends true
-    ? Partial<Pick<TObject, TIncludedKeys>>
-    : Pick<TObject, TIncludedKeys> => {
-    if (throwIfDataIsNull)
-        _validateDataNull(data);
+	? Partial<Pick<TObject, TIncludedKeys>>
+	: Pick<TObject, TIncludedKeys> => {
+	if (throwIfDataIsNull)
+		_validateDataNull(data);
 
-    const filteredData: Record<string, unknown> = {};
+	const filteredData: Record<string, unknown> = {};
 
-    for (const key of keys) {
-        const typedKey = key as keyof TObject;
-        if (
-            typedKey in data
-            && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
-        )
-            filteredData[key as string] = data[typedKey];
-    }
+	for (const key of keys) {
+		const typedKey = key as keyof TObject;
+		if (
+			typedKey in data
+			&& (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined))
+		)
+			filteredData[key as string] = data[typedKey];
+	}
 
-    return filteredData as TExcludeNullUndefined extends true
-        ? Partial<Pick<TObject, TIncludedKeys>>
-        : Pick<TObject, TIncludedKeys>;
+	return filteredData as TExcludeNullUndefined extends true
+		? Partial<Pick<TObject, TIncludedKeys>>
+		: Pick<TObject, TIncludedKeys>;
 };
 
 /**
@@ -211,21 +214,21 @@ export const filterByKeyInclusion = <
  * ```
  */
 export const filterByValue = <TObject extends Readonly<object>>(
-    data: Readonly<TObject>,
-    predicate: (value: TObject[keyof TObject]) => boolean,
-    excludeNullUndefined = false,
-    throwIfDataIsNull = true
+	data: Readonly<TObject>,
+	predicate: (value: TObject[keyof TObject]) => boolean,
+	excludeNullUndefined = false,
+	throwIfDataIsNull = true
 ): TObject => {
-    if (throwIfDataIsNull)
-        _validateDataNull(data);
-    const filteredData = {} as TObject;
-    for (const key in data)
-        if (Object.hasOwn(data, key)) {
-            const typedKey = key as keyof TObject;
-            if (predicate(data[typedKey]) && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined)))
-                filteredData[typedKey] = data[typedKey];
-        }
-    return filteredData;
+	if (throwIfDataIsNull)
+		_validateDataNull(data);
+	const filteredData = {} as TObject;
+	for (const key in data)
+		if (Object.hasOwn(data, key)) {
+			const typedKey = key as keyof TObject;
+			if (predicate(data[typedKey]) && (!excludeNullUndefined || (data[typedKey] !== null && data[typedKey] !== undefined)))
+				filteredData[typedKey] = data[typedKey];
+		}
+	return filteredData;
 };
 
 /**
@@ -247,22 +250,22 @@ export const filterByValue = <TObject extends Readonly<object>>(
  * ```
  */
 export const transformKeys = <
-    TObject extends Readonly<Record<string, unknown>>,
-    TTransformer extends CaseTransformer
+	TObject extends Readonly<Record<string, unknown>>,
+	TTransformer extends CaseTransformer
 >(
-    data: Readonly<TObject>,
-    transformer: Readonly<TTransformer>,
-    throwIfDataIsNull = true
+	data: Readonly<TObject>,
+	transformer: Readonly<TTransformer>,
+	throwIfDataIsNull = true
 ): TransformObjectKeys<TObject, TTransformer> => {
-    if (throwIfDataIsNull)
-        _validateDataNull(data);
+	if (throwIfDataIsNull)
+		_validateDataNull(data);
 
-    const result = {} as Record<string, TObject[keyof TObject]>;
+	const result = {} as Record<string, TObject[keyof TObject]>;
 
-    for (const key in data) {
-        const transformedKey = transformer.convertCase(key);
-        result[transformedKey] = data[key];
-    }
+	for (const key in data) {
+		const transformedKey = transformer.convertCase(key);
+		result[transformedKey] = data[key];
+	}
 
-    return result as TransformObjectKeys<TObject, TTransformer>;
+	return result as TransformObjectKeys<TObject, TTransformer>;
 };

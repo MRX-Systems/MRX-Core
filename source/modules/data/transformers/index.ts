@@ -1,5 +1,4 @@
-export * from './camelCase.ts';
-export * from './kebabCase.ts';
-export * from './pascalCase.ts';
-export * from './snakeCase.ts';
-
+export { CamelCaseTransformer } from './camelCase.ts';
+export { KebabCaseTransformer } from './kebabCase.ts';
+export { PascalCaseTransformer } from './pascalCase.ts';
+export { SnakeCaseTransformer } from './snakeCase.ts';

@@ -1,15 +1,15 @@
 import type { TObject } from '@sinclair/typebox';
 
 export interface QueryOptionsBuilderOptions<
-    TSchemaName extends string,
-    TInferedObject extends TObject
+	TSourceSchemaName extends string,
+	TSourceSchema extends TObject
 > {
-    /**
-     * The name of the schema to be used for referencing the query options model.
-     */
-    readonly schemaName: TSchemaName;
-    /**
-     * The base schema that defines the structure of the query options model.
-     */
-    readonly baseSchema: TInferedObject;
+	/**
+	 * The name of the schema to be used for referencing the query options model.
+	 */
+	readonly sourceSchemaName: TSourceSchemaName;
+	/**
+	 * The source schema that defines the structure of the query options model.
+	 */
+	readonly sourceSchema: TSourceSchema;
 }

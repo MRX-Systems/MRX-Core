@@ -32,5 +32,5 @@ benchmarks/
 # === Core project files ===
 README.md
 tsconfig.json
-tsconfig.dts.json
+tsconfig.build.json
 bunfig.toml

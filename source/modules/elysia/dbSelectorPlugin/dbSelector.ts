@@ -49,42 +49,42 @@ import type { DbSelectorOptions } from './types/dbSelectorOptions';
  * ```
  */
 export const dbSelectorPlugin = <const THeaderKeyName extends string = 'database-using'>(options: DbSelectorOptions<THeaderKeyName>) => {
-    const keyName = options.headerKey ?? 'database-using';
+	const keyName = options.headerKey ?? 'database-using';
 
-    return new Elysia({
-        name: 'dbSelectorPlugin'
-    })
-        .model({
-            dbSelectorHeader: t.Object({
-                [keyName]: t.String({
-                    description: 'Name of the database to use for the request',
-                    example: 'my_database'
-                })
-            }) as TObject<Record<THeaderKeyName, TString>>
-        })
-        .macro({
-            hasDbSelector: {
-                async resolve({ headers }) {
-                    const databaseName = headers[keyName];
-                    if (!databaseName)
-                        throw new CoreError({
-                            key: errorKeys.dbSelectorHeaderKeyNotFound,
-                            message: 'Database Selector key not found in the request headers.',
-                            httpStatusCode: 400
-                        });
-                    if (!SingletonManager.has(`database:${databaseName}`)) {
-                        SingletonManager.register(`database:${databaseName}`, MSSQL, {
-                            ...options.connectionConfig,
-                            databaseName
-                        });
-                        await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
-                    }
-                    return {
-                        dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
-                    };
-                }
-            }
-        })
-        .as('scoped');
+	return new Elysia({
+		name: 'dbSelectorPlugin'
+	})
+		.model({
+			dbSelectorHeader: t.Object({
+				[keyName]: t.String({
+					description: 'Name of the database to use for the request',
+					example: 'my_database'
+				})
+			}) as TObject<Record<THeaderKeyName, TString>>
+		})
+		.macro({
+			hasDbSelector: {
+				async resolve({ headers }) {
+					const databaseName = headers[keyName];
+					if (!databaseName)
+						throw new CoreError({
+							key: errorKeys.dbSelectorHeaderKeyNotFound,
+							message: 'Database Selector key not found in the request headers.',
+							httpStatusCode: 400
+						});
+					if (!SingletonManager.has(`database:${databaseName}`)) {
+						SingletonManager.register(`database:${databaseName}`, MSSQL, {
+							...options.connectionConfig,
+							databaseName
+						});
+						await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
+					}
+					return {
+						dynamicDB: SingletonManager.get<MSSQL>(`database:${databaseName}`)
+					};
+				}
+			}
+		})
+		.as('scoped');
 };
 

@@ -40,76 +40,76 @@ import type { CoreErrorOptions } from './types/coreErrorOptions';
  * });
  * console.log(coreError.cause); // { foo: 'bar' }
  * ```
- */
+*/
 export class CoreError<const T = unknown> extends Error {
-    /**
-     * The cause of the error, typically used to store the original error or additional context.
-     */
-    public override readonly cause: T | undefined;
+	/**
+	 * The cause of the error, typically used to store the original error or additional context.
+	*/
+	public override readonly cause: T | undefined;
 
-    /**
-     * The unique identifier of the error, automatically generated using UUID v7.
-     * This identifier is particularly useful for tracking errors in logs.
-     */
-    private readonly _uuid: string = randomUUIDv7();
+	/**
+	 * The unique identifier of the error, automatically generated using UUID v7.
+	 * This identifier is particularly useful for tracking errors in logs.
+	*/
+	private readonly _uuid: string = randomUUIDv7();
 
-    /**
-     * The date when the error was created, automatically set to the current date and time.
-     */
-    private readonly _date: Date = new Date();
+	/**
+	 * The date when the error was created, automatically set to the current date and time.
+	*/
+	private readonly _date: Date = new Date();
 
-    /**
-     * A unique key identifying the type of error, useful for localization or error handling.
-     */
-    private readonly _key: string;
+	/**
+	 * A unique key identifying the type of error, useful for localization or error handling.
+	*/
+	private readonly _key: string;
 
-    /**
-     * The HTTP status code associated with the error, typically used in API responses.
-     */
-    private readonly _httpStatusCode: number;
+	/**
+	 * The HTTP status code associated with the error, typically used in API responses.
+	*/
+	private readonly _httpStatusCode: number;
 
-    /**
-     * Creates a new instance of the CoreError class.
-     *
-     * @param coreErrorOptions - The options for the Core error.
-     */
-    public constructor(coreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
-        super(coreErrorOptions?.message);
-        super.name = 'CoreError';
-        this.cause = coreErrorOptions?.cause;
-        this._key = coreErrorOptions?.key || '';
-        this._httpStatusCode = coreErrorOptions?.httpStatusCode || 500;
-    }
+	/**
+	 * Creates a new instance of the CoreError class.
+	 *
+	 * @param coreErrorOptions - The options for the Core error.
+	*/
+	public constructor(coreErrorOptions?: Readonly<CoreErrorOptions<T>>) {
+		super(coreErrorOptions?.message);
+		super.name = 'CoreError';
+		this.cause = coreErrorOptions?.cause;
+		this._key = coreErrorOptions?.key || '';
+		this._httpStatusCode = coreErrorOptions?.httpStatusCode || 500;
+	}
 
-    /**
-     * Gets the unique identifier of the error.
-     * @returns The UUID of the error.
-     */
-    public get uuid(): string {
-        return this._uuid;
-    }
+	/**
+	 * Gets the unique identifier of the error.
+	 * @returns The UUID of the error.
+	*/
+	public get uuid(): string {
+		return this._uuid;
+	}
 
-    /**
-     * Gets the date when the error was created.
-     * @returns The creation date of the error.
-     */
-    public get date(): Date {
-        return this._date;
-    }
+	/**
+	 * Gets the date when the error was created.
+	 * @returns The creation date of the error.
+	*/
+	public get date(): Date {
+		return this._date;
+	}
 
-    /**
-     * Gets the error key, which identifies the type of error.
-     * @returns The key associated with the error.
-     */
-    public get key(): string {
-        return this._key;
-    }
+	/**
+	 * Gets the error key, which identifies the type of error.
+	 * @returns The key associated with the error.
+	*/
+	public get key(): string {
+		return this._key;
+	}
 
-    /**
-     * Gets the HTTP status code associated with the error.
-     * @returns The HTTP status code.
-     */
-    public get httpStatusCode(): number {
-        return this._httpStatusCode;
-    }
+	/**
+	 * Gets the HTTP status code associated with the error.
+	 * @returns The HTTP status code.
+	*/
+	public get httpStatusCode(): number {
+		return this._httpStatusCode;
+	}
 }

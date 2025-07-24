@@ -1,3 +1,3 @@
-export * from './mssql';
-export * from './table';
+export { MSSQL } from './mssql';
+export { Table } from './table';
 

@@ -1,1 +1,1 @@
-export * from './typedEventEmitter';
+export { TypedEventEmitter } from './typedEventEmitter';

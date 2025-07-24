@@ -1,1 +1,1 @@
-export * from './smtp';
+export { SMTP } from './smtp';

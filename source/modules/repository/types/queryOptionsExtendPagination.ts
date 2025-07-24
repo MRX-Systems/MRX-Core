@@ -9,15 +9,15 @@ import type { QueryOptions } from './queryOptions';
  * in addition to the base query options.
  */
 export interface QueryOptionsExtendPagination<TModel> extends QueryOptions<TModel> {
-    /**
-     * The limit of the query
-     * @defaultValue 100
-     */
-    readonly limit?: number;
+	/**
+	 * The limit of the query
+	 * @defaultValue 100
+	 */
+	readonly limit?: number;
 
-    /**
-     * The offset of the query
-     * @defaultValue 0
-     */
-    readonly offset?: number;
+	/**
+	 * The offset of the query
+	 * @defaultValue 0
+	 */
+	readonly offset?: number;
 }

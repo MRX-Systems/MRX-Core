@@ -1,1 +1,1 @@
-export * from './ratelimit';
+export { rateLimitPlugin } from './ratelimit';

@@ -35,10 +35,10 @@ import type { SelectedFields } from './selectedFields';
  * ```
  */
 export type Filter<TModel> = {
-    $q?: string | number | {
-        selectedFields: SelectedFields<TModel>,
-        value: string | number
-    };
+	$q?: string | number | {
+		selectedFields: SelectedFields<TModel>,
+		value: string | number
+	};
 } & {
-    [Key in keyof TModel]?: TModel[Key] | Partial<AdaptiveWhereClause<TModel[Key]>>;
+	[Key in keyof TModel]?: TModel[Key] | Partial<AdaptiveWhereClause<TModel[Key]>>;
 };

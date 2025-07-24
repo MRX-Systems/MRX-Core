@@ -8,12 +8,15 @@ import type { PassThrough } from 'stream';
  * @template TModel - The type of the object to retrieve.
  *
  * @example
+ *  Define a model
  * ```ts
  * interface User {
  *     id: string;
  *     name: string;
  * }
- *
+ * ```
+ * @example
+ * ```ts
  * const users: StreamWithAsyncIterable<User> = ...;
  *
  * // Method 1
@@ -24,4 +27,4 @@ import type { PassThrough } from 'stream';
  * users.on('data', (user: User) => console.log(user));
  * ```
  */
-export type StreamWithAsyncIterable<TModel> = PassThrough & AsyncIterable<TModel extends (infer Model)[] ? Model : never>;
+export type StreamWithAsyncIterable<TModel> = AsyncIterable<TModel> & PassThrough;
