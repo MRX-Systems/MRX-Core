@@ -4,7 +4,7 @@ import {
 } from '@sinclair/typebox';
 import { t } from 'elysia';
 
-import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/crudSchemaPlugin/types/adaptiveWhereClauseSchema';
+import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/crudSchema/types/adaptiveWhereClauseSchema';
 import { isDateFromElysiaTypeBox } from './isDateFromElysiaTypeBox';
 
 /**

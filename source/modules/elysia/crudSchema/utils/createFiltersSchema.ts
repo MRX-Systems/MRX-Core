@@ -1,7 +1,7 @@
 import type { TComposite, TObject } from '@sinclair/typebox/type';
 import { t } from 'elysia';
 
-import type { QSchema } from '#/modules/elysia/crudSchemaPlugin/types/qSchema';
+import type { QSchema } from '#/modules/elysia/crudSchema/types/qSchema';
 import { createPropertiesSchema } from './createPropertiesSchema';
 import { createQSchema } from './createQSchema';
 

@@ -4,14 +4,14 @@ import type {
 	TUnion
 } from '@sinclair/typebox';
 
-import type { createCountResponse200Schema } from '#/modules/elysia/crudSchemaPlugin/utils/createCountResponse200Schema';
-import type { createCountSchema } from '#/modules/elysia/crudSchemaPlugin/utils/createCountSchema';
-import type { createFindSchema } from '#/modules/elysia/crudSchemaPlugin/utils/createFindSchema';
-import type { createIdParamSchema } from '#/modules/elysia/crudSchemaPlugin/utils/createIdParamSchema';
-import type { createResponse200Schema } from '#/modules/elysia/crudSchemaPlugin/utils/createResponse200Schema';
-import type { createUpdateSchema } from '#/modules/elysia/crudSchemaPlugin/utils/createUpdateSchema';
-import type { createUpdateOneSchema } from '#/modules/elysia/crudSchemaPlugin/utils/createUpdateOneSchema';
-import type { createDeleteSchema } from '#/modules/elysia/crudSchemaPlugin/utils/createDeleteSchema';
+import type { createCountResponse200Schema } from '#/modules/elysia/crudSchema/utils/createCountResponse200Schema';
+import type { createCountSchema } from '#/modules/elysia/crudSchema/utils/createCountSchema';
+import type { createFindSchema } from '#/modules/elysia/crudSchema/utils/createFindSchema';
+import type { createIdParamSchema } from '#/modules/elysia/crudSchema/utils/createIdParamSchema';
+import type { createResponse200Schema } from '#/modules/elysia/crudSchema/utils/createResponse200Schema';
+import type { createUpdateSchema } from '#/modules/elysia/crudSchema/utils/createUpdateSchema';
+import type { createUpdateOneSchema } from '#/modules/elysia/crudSchema/utils/createUpdateOneSchema';
+import type { createDeleteSchema } from '#/modules/elysia/crudSchema/utils/createDeleteSchema';
 import type { CrudSchemaOperations } from './crudSchemaOperations';
 
 export type CrudModelsType<

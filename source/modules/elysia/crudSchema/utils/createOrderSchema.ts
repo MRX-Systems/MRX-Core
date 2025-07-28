@@ -1,7 +1,7 @@
 import type { TObject } from '@sinclair/typebox';
 import { t } from 'elysia/type-system';
 
-import type { OrderSchema } from '#/modules/elysia/crudSchemaPlugin/types/orderSchema';
+import type { OrderSchema } from '#/modules/elysia/crudSchema/types/orderSchema';
 
 /**
  * Creates order schema for query options.

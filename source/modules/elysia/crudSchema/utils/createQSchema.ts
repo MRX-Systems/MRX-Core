@@ -1,7 +1,7 @@
 import type { TObject } from '@sinclair/typebox';
 import { t } from 'elysia/type-system';
 
-import type { QSchema } from '#/modules/elysia/crudSchemaPlugin/types/qSchema';
+import type { QSchema } from '#/modules/elysia/crudSchema/types/qSchema';
 
 /**
  * Creates a search query schema

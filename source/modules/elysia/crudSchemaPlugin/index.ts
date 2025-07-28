@@ -1,1 +1,0 @@
-export { crudSchemaPlugin } from './crudSchema';

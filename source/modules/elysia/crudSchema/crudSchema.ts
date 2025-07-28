@@ -14,7 +14,7 @@ import { createResponse200Schema } from './utils/createResponse200Schema';
 import { createUpdateOneSchema } from './utils/createUpdateOneSchema';
 import { createUpdateSchema } from './utils/createUpdateSchema';
 
-export const crudSchemaPlugin = <
+export const crudSchema = <
 	const TSourceSchemaName extends string,
 	const TSourceSchema extends TObject,
 	const TSourceInsertSchema extends TObject = TSourceSchema,

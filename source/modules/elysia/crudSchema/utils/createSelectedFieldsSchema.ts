@@ -1,7 +1,7 @@
 import type { TObject } from '@sinclair/typebox';
 import { t } from 'elysia/type-system';
 
-import type { SelectedFieldsSchema } from '#/modules/elysia/crudSchemaPlugin/types/selectedFieldSchema';
+import type { SelectedFieldsSchema } from '#/modules/elysia/crudSchema/types/selectedFieldSchema';
 
 /**
  * Creates a schema for field selection in search results.
