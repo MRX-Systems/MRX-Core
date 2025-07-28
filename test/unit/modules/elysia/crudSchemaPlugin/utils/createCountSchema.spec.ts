@@ -22,7 +22,7 @@ describe('createCountSchema', () => {
 		expect(schema.properties).toHaveProperty('queryOptions');
 	});
 
-	test('should queryOptions has a good type, kind and optionalKind', () => {
+	test('should verify queryOptions has correct type, kind and optionalKind', () => {
 		const schema = createCountSchema(sourceSchema);
 		expect(schema.properties.queryOptions.type).toBe('object');
 		expect(schema.properties.queryOptions[Kind]).toBe('Object');
