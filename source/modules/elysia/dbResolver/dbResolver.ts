@@ -53,7 +53,7 @@ const _resolveDatabaseConnection = async <
 	} as Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>;
 };
 
-export const dbResolverPlugin = <
+export const dbResolver = <
 	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
 	const THeaderKeyName extends string = 'database-using'
 >(database: TDatabase): Elysia<
