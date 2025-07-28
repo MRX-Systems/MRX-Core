@@ -5,8 +5,8 @@ import {
 	type JWTPayload
 } from 'jose';
 
-import { CoreError } from '#/error/coreError';
-import { errorKeys } from './enums/errorKeys';
+import { HttpError } from '#/errors/httpError';
+import { JWT_ERROR_KEYS } from './enums/jwtErrorKeys';
 import type { JWTOptions } from './types/jwtOptions';
 
 /**
@@ -24,9 +24,9 @@ import type { JWTOptions } from './types/jwtOptions';
 export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOptions<Name>) => {
 	// Check if the secret is provided
 	if (!options.secret)
-		throw new CoreError({
-			key: errorKeys.jwtSecretNotFound,
-			message: 'Secret key is required for JWT signing and verification.'
+		throw new HttpError({
+			message: JWT_ERROR_KEYS.JWT_SECRET_NOT_FOUND,
+			httpStatusCode: 'INTERNAL_SERVER_ERROR'
 		});
 
 	// Encode string secret to Uint8Array
@@ -62,9 +62,9 @@ export const jwtPlugin = <const Name extends string = 'jwt'>(options: JWTOptions
 						.setExpirationTime(exp)
 						.sign(key);
 				} catch {
-					throw new CoreError({
-						key: errorKeys.jwtSignError,
-						message: 'Error signing JWT.'
+					throw new HttpError({
+						message: JWT_ERROR_KEYS.JWT_SIGN_ERROR,
+						httpStatusCode: 'INTERNAL_SERVER_ERROR'
 					});
 				}
 			},
