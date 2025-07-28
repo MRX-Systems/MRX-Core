@@ -1,7 +1,7 @@
-import type { CoreError } from '#/error';
+import type { BaseError } from '#/errors/baseError';
 
 export interface LoggerEvent {
-	readonly error: [CoreError<{
+	readonly error: [BaseError<{
 		strategyName: string;
 		object: unknown;
 		error: Error;

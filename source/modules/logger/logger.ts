@@ -1,9 +1,9 @@
 import { once } from 'events';
 import { Transform } from 'stream';
 
-import { CoreError } from '#/error/coreError';
+import { BaseError } from '#/errors/baseError';
 import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter';
-import { loggerErrorKeys } from './enums/loggerErrorKeys';
+import { LOGGER_ERROR_KEYS } from './enums/loggerErrorKeys';
 import type { LoggerEvent } from './events/loggerEvents';
 import type { BodiesIntersection } from './types/bodiesIntersection';
 import type { LogLevels } from './types/logLevels';
@@ -12,52 +12,52 @@ import type { LoggerStrategy } from './types/loggerStrategy';
 import type { StrategyMap } from './types/strategyMap';
 
 /**
- * Logger provides a flexible, type-safe logging system that allows multiple strategies for log output.
- * The logger uses a transform stream to process log entries and execute the logging strategies.
- *
- * Logger extends the {@link TypedEventEmitter}<{@link LoggerEvent}> class to emit typed events when an error occurs or when the logger ends.
- * The logger can log messages with different levels: error, warn, info, debug, and log.
- *
- * @template TStrategies - The map of strategy names to LoggerStrategy types.
- */
+* Logger provides a flexible, type-safe logging system that allows multiple strategies for log output.
+* The logger uses a transform stream to process log entries and execute the logging strategies.
+*
+* Logger extends the TypedEventEmitter class to emit typed events when an error occurs or when the logger ends.
+* The logger can log messages with different levels: error, warn, info, debug, and log.
+*
+* @template TStrategies - The map of strategy names to LoggerStrategy types.
+*/
 export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmitter<LoggerEvent> {
 	/**
-	 * The map of strategies.
-	 */
+	* The map of strategies.
+	*/
 	private readonly _strategies: TStrategies;
 
 	/**
-	 * The transform stream for processing log entries.
-	 */
+	* The transform stream for processing log entries.
+	*/
 
 	private readonly _logStream: Transform;
 
 	/**
-	 * The queue of pending log entries.
-	 */
+	* The queue of pending log entries.
+	*/
 
 	private readonly _pendingLogs: LogStreamChunk<unknown, TStrategies>[] = [];
 
 	/**
-	 * The maximum number of pending logs.
-	 * @defaultValue 10_000
-	 */
+	* The maximum number of pending logs.
+	* @defaultValue 10_000
+	*/
 	private readonly _maxPendingLogs;
 
 	/**
-	 * Flag to indicate if the logger is currently writing logs.
-	 */
+	* Flag to indicate if the logger is currently writing logs.
+	*/
 	private _isWriting = false;
 
 	/**
-	 * Construct a Logger.
-	 *
-	 * @template TStrategies - The map of strategy names to LoggerStrategy types.
-	 *
-	 * @param strategies - Initial strategies map.
-	 *
-	 * @param maxPendingLogs - Maximum number of logs in the queue (default: 10_000)
-	 */
+	* Construct a Logger.
+	*
+	* @template TStrategies - The map of strategy names to LoggerStrategy types.
+	*
+	* @param strategies - Initial strategies map.
+	*
+	* @param maxPendingLogs - Maximum number of logs in the queue (default: 10_000)
+	*/
 	public constructor(strategies: TStrategies = {} as TStrategies, maxPendingLogs = 10_000) {
 		super();
 		this._strategies = strategies;
@@ -68,7 +68,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 				this._executeStrategies(chunk.level, new Date(chunk.date), chunk.object, chunk.strategiesNames)
 					.then(() => callback())
 					.catch((error: unknown) => {
-						this.emit('error', error as CoreError<{
+						this.emit('error', error as BaseError<{
 							strategyName: string;
 							object: unknown;
 							error: Error;
@@ -80,26 +80,25 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Register a new logging strategy.
-	 *
-	 * @template Key - The name of the strategy.
-	 * @template Strategy - The strategy type.
-	 *
-	 * @param name - The name of the strategy.
-	 * @param strategy - The strategy to add. It must implement {@link LoggerStrategy}.
-	 *
-	 * @throws ({@link CoreError}): If the strategy is already added.
-	 *
-	 * @returns A new Logger instance with the added strategy.
-	 */
+	* Register a new logging strategy.
+	*
+	* @template Key - The name of the strategy.
+	* @template Strategy - The strategy type.
+	*
+	* @param name - The name of the strategy.
+	* @param strategy - The strategy to add. It must implement {@link LoggerStrategy}.
+	*
+	* @throws ({@link BaseError}): If the strategy is already added.
+	*
+	* @returns A new Logger instance with the added strategy.
+	*/
 	public registerStrategy<Key extends string, Strategy extends LoggerStrategy>(
 		name: Key,
 		strategy: Strategy
 	): Logger<TStrategies & Record<Key, Strategy>> {
 		if ((this._strategies as Record<string, LoggerStrategy>)[name])
-			throw new CoreError({
-				key: loggerErrorKeys.strategyAlreadyAdded,
-				message: `The strategy "${name}" is already added.`,
+			throw new BaseError({
+				message: LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED,
 				cause: { strategyName: name }
 			});
 		return new Logger({
@@ -109,23 +108,22 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Unregister a logging strategy.
-	 *
-	 * @template Key - The name of the strategy.
-	 *
-	 * @param name - The name of the strategy to remove.
-	 *
-	 * @throws ({@link CoreError}): If the strategy is not found.
-	 *
-	 * @returns A new Logger instance without the removed strategy.
-	 */
+	* Unregister a logging strategy.
+	*
+	* @template Key - The name of the strategy.
+	*
+	* @param name - The name of the strategy to remove.
+	*
+	* @throws ({@link BaseError}): If the strategy is not found.
+	*
+	* @returns A new Logger instance without the removed strategy.
+	*/
 	public unregisterStrategy<Key extends keyof TStrategies>(
 		name: Key
 	): Logger<Omit<TStrategies, Key>> {
 		if (!(name in this._strategies))
-			throw new CoreError({
-				key: loggerErrorKeys.strategyNotFound,
-				message: `The strategy "${String(name)}" is not found.`,
+			throw new BaseError({
+				message: LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND,
 				cause: { strategyName: name }
 			});
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -134,16 +132,16 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Register multiple strategies at once.
-	 *
-	 * @template TNew - The new strategies to add.
-	 *
-	 * @param strategies - An array of tuples where each tuple contains the strategy name and the strategy instance.
-	 *
-	 * @throws ({@link CoreError}): If any strategy is already added.
-	 *
-	 * @returns A new Logger instance with the added strategies.
-	 */
+	* Register multiple strategies at once.
+	*
+	* @template TNew - The new strategies to add.
+	*
+	* @param strategies - An array of tuples where each tuple contains the strategy name and the strategy instance.
+	*
+	* @throws ({@link BaseError}): If any strategy is already added.
+	*
+	* @returns A new Logger instance with the added strategies.
+	*/
 	public registerStrategies<TNew extends [string, LoggerStrategy][] = [string, LoggerStrategy][]>(
 		strategies: TNew
 	): Logger<TStrategies & { [K in TNew[number][0]]: Extract<TNew[number], [K, LoggerStrategy]>[1] }> {
@@ -153,16 +151,16 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Unregister multiple strategies at once.
-	 *
-	 * @template Keys - The names of the strategies to remove.
-	 *
-	 * @param names - An array of strategy names to remove.
-	 *
-	 * @throws ({@link CoreError}): If any strategy is not found.
-	 *
-	 * @returns A new Logger instance without the removed strategies.
-	 */
+	* Unregister multiple strategies at once.
+	*
+	* @template Keys - The names of the strategies to remove.
+	*
+	* @param names - An array of strategy names to remove.
+	*
+	* @throws ({@link BaseError}): If any strategy is not found.
+	*
+	* @returns A new Logger instance without the removed strategies.
+	*/
 	public unregisterStrategies<Keys extends Extract<keyof TStrategies, string>>(
 		names: Keys[]
 	): Logger<Omit<TStrategies, Keys>> {
@@ -173,24 +171,24 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Remove all strategies.
-	 *
-	 * @returns A new Logger instance without any strategies.
-	 */
+	* Remove all strategies.
+	*
+	* @returns A new Logger instance without any strategies.
+	*/
 	public clearStrategies(): Logger {
 		return new Logger({}, this._maxPendingLogs);
 	}
 
 	/**
-	 * Log an error message.
-	 *
-	 * @template SNames - The names of the strategies to use.
-	 *
-	 * @param object - The object to log.
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If no strategy is added.
-	 */
+	* Log an error message.
+	*
+	* @template SNames - The names of the strategies to use.
+	*
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If no strategy is added.
+	*/
 	public error<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
 		object: BodiesIntersection<TStrategies, SNames[number]>,
 		strategiesNames?: SNames
@@ -199,15 +197,15 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Log a warning message.
-	 *
-	 * @template SNames - The names of the strategies to use.
-	 *
-	 * @param object - The object to log.
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If no strategy is added.
-	 */
+	* Log a warning message.
+	*
+	* @template SNames - The names of the strategies to use.
+	*
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If no strategy is added.
+	*/
 	public warn<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
 		object: BodiesIntersection<TStrategies, SNames[number]>,
 		strategiesNames?: SNames
@@ -216,15 +214,15 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Log an info message.
-	 *
-	 * @template SNames - The names of the strategies to use.
-	 *
-	 * @param object - The object to log.
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If no strategy is added.
-	 */
+	* Log an info message.
+	*
+	* @template SNames - The names of the strategies to use.
+	*
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If no strategy is added.
+	*/
 	public info<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
 		object: BodiesIntersection<TStrategies, SNames[number]>,
 		strategiesNames?: SNames
@@ -233,15 +231,15 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Log a debug message.
-	 *
-	 * @template SNames - The names of the strategies to use.
-	 *
-	 * @param object - The object to log.
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If no strategy is added.
-	 */
+	* Log a debug message.
+	*
+	* @template SNames - The names of the strategies to use.
+	*
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If no strategy is added.
+	*/
 	public debug<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
 		object: BodiesIntersection<TStrategies, SNames[number]>,
 		strategiesNames?: SNames
@@ -250,15 +248,15 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Log a generic message.
-	 *
-	 * @template SNames - The names of the strategies to use.
-	 *
-	 * @param object - The object to log. ({@link BodiesIntersection})
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If no strategy is added.
-	 */
+	* Log a generic message.
+	*
+	* @template SNames - The names of the strategies to use.
+	*
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If no strategy is added.
+	*/
 	public log<SNames extends (keyof TStrategies)[] = (keyof TStrategies)[]>(
 		object: BodiesIntersection<TStrategies, SNames[number]>,
 		strategiesNames?: SNames
@@ -267,17 +265,17 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Internal: execute all strategies for a log event.
-	 *
-	 * @template TLogObject - The type of the log object.
-	 *
-	 * @param level - The log level.
-	 * @param date - The date of the log event.
-	 * @param object - The object to log.
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If a strategy throws.
-	 */
+	* Internal: execute all strategies for a log event.
+	*
+	* @template TLogObject - The type of the log object.
+	*
+	* @param level - The log level.
+	* @param date - The date of the log event.
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If a strategy throws.
+	*/
 	private async _executeStrategies<TLogObject>(
 		level: LogLevels,
 		date: Date,
@@ -288,9 +286,8 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 			try {
 				await (this._strategies[name] as LoggerStrategy<TLogObject> | undefined)?.log(level, date, object);
 			} catch (error) {
-				throw new CoreError({
-					key: loggerErrorKeys.loggerStrategyError,
-					message: `An error occurred while executing the strategy "${String(name)}".`,
+				throw new BaseError({
+					message: LOGGER_ERROR_KEYS.loggerStrategyError,
 					cause: { strategyName: name, object, error }
 				});
 			}
@@ -298,16 +295,16 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Internal: queue a log event and start writing if not already.
-	 *
-	 * @template TLogObject - The type of the log object.
-	 *
-	 * @param level - The log level.
-	 * @param object - The object to log.
-	 * @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
-	 *
-	 * @throws ({@link CoreError}): If no strategy is added.
-	 */
+	* Internal: queue a log event and start writing if not already.
+	*
+	* @template TLogObject - The type of the log object.
+	*
+	* @param level - The log level.
+	* @param object - The object to log.
+	* @param strategiesNames - The names of the strategies to use. If not provided, all strategies will be used.
+	*
+	* @throws ({@link BaseError}): If no strategy is added.
+	*/
 	private _out<TLogObject>(
 		level: LogLevels,
 		object: TLogObject,
@@ -315,9 +312,9 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	): void {
 		const strategyKeys = Object.keys(this._strategies) as (keyof TStrategies)[];
 		if (strategyKeys.length === 0)
-			throw new CoreError({
-				message: 'No strategy is added.',
-				key: loggerErrorKeys.noStrategyAdded
+			throw new BaseError({
+				message: LOGGER_ERROR_KEYS.NO_STRATEGY_ADDED,
+				cause: { level, object }
 			});
 		if (this._pendingLogs.length >= this._maxPendingLogs)
 			return;
@@ -337,8 +334,8 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 	}
 
 	/**
-	 * Internal: process the log queue and emit 'end' when done.
-	 */
+	* Internal: process the log queue and emit 'end' when done.
+	*/
 	private async _writeLog(): Promise<void> {
 		while (this._pendingLogs.length > 0) {
 			const pendingLog = this._pendingLogs.shift();

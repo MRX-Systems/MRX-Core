@@ -1,6 +1,6 @@
-export const loggerErrorKeys = {
-	strategyAlreadyAdded: 'core.error.logger.strategy_already_added',
-	strategyNotFound: 'core.error.logger.strategy_not_found',
-	noStrategyAdded: 'core.error.logger.no_strategy_added',
-	loggerStrategyError: 'core.error.logger.strategy_error'
+export const LOGGER_ERROR_KEYS = {
+	STRATEGY_ALREADY_ADDED: 'logger.error.strategy_already_added',
+	STRATEGY_NOT_FOUND: 'logger.error.strategy_not_found',
+	NO_STRATEGY_ADDED: 'logger.error.no_strategy_added',
+	STRATEGY_ERROR: 'logger.error.strategy_error'
 } as const;
