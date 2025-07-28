@@ -22,7 +22,7 @@ describe('createDeleteSchema', () => {
 		expect(schema.properties).toHaveProperty('queryOptions');
 	});
 
-	test('should queryOptions has a good type, kind', () => {
+	test('should verify queryOptions has good type and kind', () => {
 		const schema = createDeleteSchema(sourceSchema);
 		expect(schema.properties.queryOptions.type).toBe('object');
 		expect(schema.properties.queryOptions[Kind]).toBe('Object');
