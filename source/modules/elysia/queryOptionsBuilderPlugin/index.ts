@@ -1,1 +1,0 @@
-export { queryOptionsBuilderPlugin } from './queryOptionsBuilder';

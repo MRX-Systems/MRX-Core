@@ -16,64 +16,65 @@ await Bun.build({
 	external: [...dependencies, ...devDependencies, ...peerDependencies],
 	root: './source',
 	entrypoints: [
-		// # ————————— Error ————————— #
-		'./source/error/index.ts',
-		'./source/error/types/index.ts',
+		// // # ————————— Error ————————— #
+		// './source/error/index.ts',
+		// './source/error/types/index.ts',
 
-		// # ————————— Data ————————— #
-		'./source/modules/data/index.ts',
-		'./source/modules/data/transformers/index.ts',
-		'./source/modules/data/types/index.ts',
+		// // # ————————— Data ————————— #
+		// './source/modules/data/index.ts',
+		// './source/modules/data/transformers/index.ts',
+		// './source/modules/data/types/index.ts',
 
-		// # ————————— Database ————————— #
-		'./source/modules/database/index.ts',
-		'./source/modules/database/events/index.ts',
-		'./source/modules/database/types/index.ts',
+		// // # ————————— Database ————————— #
+		// './source/modules/database/index.ts',
+		// './source/modules/database/events/index.ts',
+		// './source/modules/database/types/index.ts',
 
-		// # ————————— Elysia Plugin ————————— #
+		// // # ————————— Elysia Plugin ————————— #
 
-		// dbSelectorPlugin
-		'./source/modules/elysia/dbSelectorPlugin/index.ts',
-		'./source/modules/elysia/dbSelectorPlugin/types/index.ts',
+		// // crudSchemaPlugin
+		// './source/modules/elysia/crudSchemaPlugin/index.ts',
+		// './source/modules/elysia/crudSchemaPlugin/types/index.ts',
+		// './source/modules/elysia/crudSchemaPlugin/utils/index.ts',
 
-		// errorPlugin
-		'./source/modules/elysia/errorPlugin/index.ts',
+		// // crudPlugin
+		// './source/modules/elysia/crudPlugin/index.ts',
+		// './source/modules/elysia/crudPlugin/types/index.ts',
 
-		// jwtPlugin
-		'./source/modules/elysia/jwtPlugin/index.ts',
-		'./source/modules/elysia/jwtPlugin/types/index.ts',
+		// // dbResolverPlugin
+		// './source/modules/elysia/dbResolverPlugin/index.ts',
+		// './source/modules/elysia/dbResolverPlugin/types/index.ts',
 
-		// microservicePlugin
-		'./source/modules/elysia/microservicePlugin/index.ts',
+		// // errorPlugin
+		// './source/modules/elysia/errorPlugin/index.ts',
 
-		// queryOptionsBuilderPlugin
-		'./source/modules/elysia/queryOptionsBuilderPlugin/index.ts',
-		'./source/modules/elysia/queryOptionsBuilderPlugin/types/index.ts',
-		'./source/modules/elysia/queryOptionsBuilderPlugin/utils/index.ts',
+		// // jwtPlugin
+		// './source/modules/elysia/jwtPlugin/index.ts',
+		// './source/modules/elysia/jwtPlugin/types/index.ts',
 
-		// rateLimitPlugin
-		'./source/modules/elysia/ratelimitPlugin/index.ts',
-		'./source/modules/elysia/ratelimitPlugin/types/index.ts',
+		// // microservicePlugin
+		// './source/modules/elysia/microservicePlugin/index.ts',
 
-		// # ————————— Logger ————————— #
-		'./source/modules/logger/index.ts',
-		'./source/modules/logger/events/index.ts',
-		'./source/modules/logger/strategies/index.ts',
-		'./source/modules/logger/types/index.ts',
+		// // rateLimitPlugin
+		// './source/modules/elysia/ratelimitPlugin/index.ts',
+		// './source/modules/elysia/ratelimitPlugin/types/index.ts',
 
-		// # ————————— Mailer ————————— #
-		'./source/modules/mailer/index.ts',
-		'./source/modules/mailer/types/index.ts',
+		// // # ————————— Logger ————————— #
+		// './source/modules/logger/index.ts',
+		// './source/modules/logger/events/index.ts',
+		// './source/modules/logger/strategies/index.ts',
+		// './source/modules/logger/types/index.ts',
 
-		// # ————————— Repository ————————— #
-		'./source/modules/repository/index.ts',
-		'./source/modules/repository/types/index.ts',
+		// // # ————————— Mailer ————————— #
+		// './source/modules/mailer/index.ts',
+		// './source/modules/mailer/types/index.ts',
 
-		// # ————————— SingletonManager ————————— #
-		'./source/modules/singletonManager/index.ts',
+		// // # ————————— Repository ————————— #
+		// './source/modules/repository/index.ts',
+		// './source/modules/repository/types/index.ts',
 
-		// # ————————— Store ————————— #
-		'./source/modules/store/index.ts',
+		// // # ————————— SingletonManager ————————— #
+		// './source/modules/singletonManager/index.ts',
 
 		// # ————————— TypedEventEmitter ————————— #
 		'./source/modules/typedEventEmitter/index.ts',
