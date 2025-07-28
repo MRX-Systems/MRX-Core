@@ -1,27 +1,30 @@
 import { Elysia } from 'elysia';
 
-import { CoreError } from '#/error/coreError';
+import { BaseError } from '#/errors/baseError';
+import { HttpError } from '#/errors/httpError';
 
 /**
  * The `errorPlugin` provides an error handling system for Elysia applications.
- *
- * This plugin integrates with various error types from the application ecosystem:
- * - `CoreError`: Application-specific errors
- * - `Elysia`'s built-in errors (validation, not found, etc.)
  */
-export const errorPlugin = new Elysia({
+export const error = new Elysia({
 	name: 'errorPlugin'
 })
 	.error({
-		CoreError
+		BaseError,
+		HttpError
 	})
 	.onError(({ code, error, set }) => {
 		set.headers['content-type'] = 'application/json; charset=utf-8';
 		switch (code) {
-			case 'CoreError':
+			case 'HttpError':
 				set.status = error.httpStatusCode;
 				return {
-					key: error.key,
+					message: error.message,
+					cause: error.cause
+				};
+			case 'BaseError':
+				set.status = 500;
+				return {
 					message: error.message,
 					cause: error.cause
 				};

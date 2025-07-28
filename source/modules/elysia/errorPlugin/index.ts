@@ -1,1 +1,0 @@
-export { errorPlugin } from './error';
