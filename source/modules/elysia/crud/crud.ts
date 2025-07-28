@@ -5,10 +5,10 @@ import type {
 import { Elysia, type SingletonBase, t } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
-import { crudSchemaPlugin } from '#/modules/elysia/crudSchemaPlugin/crudSchema';
-import type { CrudModelsType } from '#/modules/elysia/crudSchemaPlugin/types/crudModelsType';
-import { dbResolverPlugin } from '#/modules/elysia/dbResolverPlugin/dbResolver';
-import type { DynamicDbOptions } from '#/modules/elysia/dbResolverPlugin/types/dynamicDbOptions';
+import { crudSchema } from '#/modules/elysia/crudSchema/crudSchema';
+import type { CrudModelsType } from '#/modules/elysia/crudSchema/types/crudModelsType';
+import { dbResolver } from '#/modules/elysia/dbResolver/dbResolver';
+import type { DynamicDbOptions } from '#/modules/elysia/dbResolver/types/dynamicDbOptions';
 import type { CrudOperationCountOptions } from './types/crudOperationCountOptions';
 import type { CrudOperationDeleteOneOptions } from './types/crudOperationDeleteOneOptions';
 import type { CrudOperationDeleteOptions } from './types/crudOperationDeleteOptions';
@@ -357,7 +357,7 @@ const _addRoutesByOperations = <
 	return app;
 };
 
-export const crudPlugin = <
+export const crud = <
 	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
 	const TTableName extends string,
 	const TSourceSchema extends TObject,
@@ -462,13 +462,13 @@ export const crudPlugin = <
 	tags: [tableName]
 })
 	.use(
-		dbResolverPlugin<
+		dbResolver<
 			TDatabase,
 			THeaderKeyName
 		>(database)
 	)
 	.use(
-		crudSchemaPlugin<
+		crudSchema<
 			TTableName,
 			TSourceSchema,
 			TSourceInsertSchema,
