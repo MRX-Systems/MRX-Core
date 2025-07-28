@@ -47,7 +47,7 @@ const packageJson = await import(findPackageJson(Bun.main));
  * - `/ping`: Checks if the microservice is alive.
  * - `/info`: Provides information about the microservice.
  */
-export const microservicePlugin = new Elysia({
+export const microservice = new Elysia({
 	name: 'microservicePlugin',
 	prefix: '/microservice',
 	detail: {
