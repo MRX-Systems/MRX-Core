@@ -6,7 +6,7 @@ import type {
 /**
  * Configuration options for the JWT plugin.
  *
- * @template TPluginName - The name to be used for accessing the JWT functionality in the Elysia context
+ * @template TJWTKeyName - The name to be used for accessing the JWT functionality in the Elysia context
  *
  * @example
  * ```ts
@@ -25,7 +25,7 @@ import type {
  * };
  * ```
  */
-export interface JWTOptions<TPluginName extends string = 'jwt'> {
+export interface JWTOptions<TJWTKeyName extends string = 'jwt'> {
 	/**
 	* JWT name to add in context with decorate.
 	*
@@ -35,16 +35,18 @@ export interface JWTOptions<TPluginName extends string = 'jwt'> {
 	*
 	* @defaultValue 'jwt'
 	*/
-	readonly name?: TPluginName;
+	readonly jwtKeyName?: TJWTKeyName;
 	/**
 	* Secret key used to sign and verify JWTs.
 	*
 	* @example
+	* Using a string secret
 	* ```ts
-	* // Using a string secret
 	* secret: 'your-very-secret-key'
-	*
-	* // Using an environment variable (recommended for production)
+	*```
+	* @example
+	* Using an environment variable (recommended for production)
+	* ```ts
 	* secret: process.env.JWT_SECRET
 	* ```
 	*/
