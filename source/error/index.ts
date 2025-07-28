@@ -1,1 +1,0 @@
-export { CoreError } from './coreError';
