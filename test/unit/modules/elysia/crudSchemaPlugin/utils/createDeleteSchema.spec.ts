@@ -46,7 +46,7 @@ describe('createDeleteSchema', () => {
 		expect(schema.properties.queryOptions.properties.selectedFields[OptionalKind]).toBe('Optional');
 	});
 
-	test('should filter is required', () => {
+	test('should verify filters are required', () => {
 		const schema = createDeleteSchema(sourceSchema);
 		expect(schema.properties.queryOptions.required).toEqual(['filters']);
 	});
