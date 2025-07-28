@@ -36,7 +36,7 @@ const _resolveDatabaseConnection = async <
 	if (!databaseName)
 		throw new HttpError({
 			message: DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_HEADER_KEY_NOT_FOUND,
-			httpStatusCode: 400
+			httpStatusCode: 'BAD_REQUEST'
 		});
 
 	// Register and connect database if not already available
