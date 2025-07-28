@@ -10,7 +10,7 @@ const sourceSchema = t.Object({
 	age: t.Number()
 });
 
-describe('createIdParamSchema', () => {
+describe('createInsertSchema', () => {
 	test('should create a schema with a good type and kind', () => {
 		const schema = createInsertSchema(sourceSchema);
 		expect(schema.type).toBe('object');
