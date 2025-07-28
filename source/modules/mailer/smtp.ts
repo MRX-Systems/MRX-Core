@@ -1,14 +1,14 @@
 import { createTransport, type SendMailOptions, type Transporter } from 'nodemailer';
 
-import { CoreError } from '#/error/coreError';
-import { mailerErrorKeys } from './enums/mailerErrorKeys';
+import { BaseError } from '#/errors/baseError';
+import { MAILER_ERROR_KEYS } from './enums/mailerErrorKeys';
 import type { SMTPOptions } from './types/smtpOptions';
 
 /**
  * The `SMTP` class manages the connection and operations with an SMTP server.
  *
  * This class provides methods to connect, disconnect, and send emails using
- * the Nodemailer library. It supports connection pooling and error handling ({@link CoreError}).
+ * the Nodemailer library. It supports connection pooling and error handling ({@link BaseError}).
  *
  * @example
  * ```ts
@@ -52,15 +52,12 @@ export class SMTP {
 	 * It enables connection pooling for efficient resource usage and sets the maximum number of
 	 * concurrent connections as specified in the configuration (default: 5).
 	 *
-	 * @throws ({@link CoreError}): If the transporter is already connected.
-	 * @throws ({@link CoreError}): If the connection or verification fails.
+	 * @throws ({@link BaseError}): If the transporter is already connected.
+	 * @throws ({@link BaseError}): If the connection or verification fails.
 	 */
 	public async connect(): Promise<void> {
 		if (this._transporter)
-			throw new CoreError({
-				key: mailerErrorKeys.smtpAlreadyConnected,
-				message: 'SMTP transporter is already connected.'
-			});
+			throw new BaseError({ message: MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED });
 
 		this._transporter = createTransport({
 			host: this._config.host,
@@ -76,9 +73,8 @@ export class SMTP {
 		try {
 			await this._transporter.verify();
 		} catch (error) {
-			throw new CoreError({
-				key: mailerErrorKeys.smtpConnectionError,
-				message: 'An error occurred while connecting to the SMTP server',
+			throw new BaseError({
+				message: MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR,
 				cause: error
 			});
 		}
@@ -101,16 +97,13 @@ export class SMTP {
 	 *
 	 * @param options - The mail options, such as recipient, subject, and content.
 	 *
-	 * @throws ({@link CoreError}) - If the transporter is not connected.
+	 * @throws ({@link BaseError}) - If the transporter is not connected.
 	 *
 	 * @returns A promise resolving to the result of the send operation.
 	 */
 	public async sendMail(options: SendMailOptions): Promise<unknown> {
 		if (!this._transporter)
-			throw new CoreError({
-				key: mailerErrorKeys.smtpNotConnected,
-				message: 'SMTP transporter is not connected.'
-			});
+			throw new BaseError({ message: MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED });
 		return this._transporter.sendMail(options);
 	}
 }
