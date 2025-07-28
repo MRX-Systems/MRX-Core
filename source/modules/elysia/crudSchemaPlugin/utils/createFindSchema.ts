@@ -9,7 +9,7 @@ import { createSelectedFieldsSchema } from './createSelectedFieldsSchema';
 /**
  * Creates a find schema.
  *
- * @template TSourceSchema - The TypeBox object schema to create search capabilities for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create search capabilities for.
  *
  * @param schema - The base object schema to create search schemas for.
  *

@@ -95,7 +95,7 @@ const _createDefaultOperationsWithHandlers = <
 			path: '/:id',
 			hook: {
 				..._requiredHeaderDatabase,
-				// params: `${tableName}IdParam`, // elysia is broken like all fucking js web frameworks
+				// params: `${tableName}IdParam`,
 				params: t.Object({
 					id: t.Union([
 						t.String({
@@ -174,7 +174,9 @@ const _createDefaultOperationsWithHandlers = <
 					throwIfNoResult: true
 				});
 				return {
-					message: `Updated record in ${tableName}`, // si ça renvoie rien dire que rien n'a ete mis a jour
+					message: data.length === 0
+						? `No records updated in ${tableName}`
+						: `Updated records in ${tableName}`,
 					content: data
 				};
 			}
@@ -184,7 +186,7 @@ const _createDefaultOperationsWithHandlers = <
 			path: '/:id',
 			hook: {
 				..._requiredHeaderDatabase,
-				// params: `${tableName}IdParam`, // elysia is broken like all fucking js web frameworks
+				// params: `${tableName}IdParam`,
 				params: t.Object({
 					id: t.Union([
 						t.String({
@@ -253,7 +255,7 @@ const _createDefaultOperationsWithHandlers = <
 			path: '/:id',
 			hook: {
 				..._requiredHeaderDatabase,
-				// params: `${tableName}IdParam`, // elysia is broken like all fucking js web frameworks
+				// params: `${tableName}IdParam`,
 				params: t.Object({
 					id: t.Union([
 						t.String({
