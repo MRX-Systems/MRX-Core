@@ -24,6 +24,4 @@ export const createOrderSchema = <TSourceSchema extends TObject>(schema: TSource
 		minItems: 1,
 		uniqueItems: true
 	})
-], {
-	description: 'Order by is an item or array of items with a field to order by and direction. Use "asc" for ascending or "desc" for descending order.'
-});
+]);

@@ -19,6 +19,4 @@ export const createSelectedFieldsSchema = <TSourceSchema extends TObject>(schema
 		minItems: 1,
 		uniqueItems: true
 	})
-], {
-	description: 'Selected fields can be a single field, a wildcard "*", or an array of fields and/or wildcard "*".'
-});
+]);

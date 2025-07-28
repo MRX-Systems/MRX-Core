@@ -68,12 +68,10 @@ export const createFindSchema = <TSourceSchema extends TObject>(schema: TSourceS
 				t.Array(t.Partial(createFiltersSchema(sanitizedSchema)))
 			]),
 			limit: t.Number({
-				description: 'Maximum number of results to return',
 				default: 100,
 				minimum: 1
 			}),
 			offset: t.Number({
-				description: 'Number of results to skip before starting to collect the result set',
 				default: 0,
 				minimum: 0
 			})

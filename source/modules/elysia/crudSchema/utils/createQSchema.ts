@@ -29,6 +29,4 @@ export const createQSchema = <TSourceSchema extends TObject>(schema: TSourceSche
 	}),
 	t.Number(),
 	t.String()
-], {
-	description: 'Search query that can be a simple string, an object with selected fields and value, or a number.'
-});
+]);
