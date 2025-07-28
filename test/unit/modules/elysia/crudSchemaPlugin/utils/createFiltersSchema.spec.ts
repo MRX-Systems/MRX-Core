@@ -24,7 +24,7 @@ describe('createFiltersSchema', () => {
 			expect(schema.properties).toHaveProperty(key);
 	});
 
-	test('should properties are required', () => {
+	test('should verify properties are required', () => {
 		const schema = createFiltersSchema(sourceSchema);
 		expect(schema.required).toEqual(['$q', ...Object.keys(sourceSchema.properties)]);
 	});
