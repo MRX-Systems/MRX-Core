@@ -1,10 +1,10 @@
 import type { TObject, TString } from '@sinclair/typebox';
 import { Elysia, t, type DefinitionBase, type SingletonBase } from 'elysia';
 
-import { CoreError } from '#/error/coreError';
+import { HttpError } from '#/errors/httpError';
 import { MSSQL } from '#/modules/database/mssql';
 import { SingletonManager } from '#/modules/singletonManager/singletonManager';
-import { errorKeys } from './enums/errorKeys';
+import { DB_RESOLVER_ERROR_KEYS } from './enums/dbResolverErrorKeys';
 import type { DynamicDbOptions } from './types/dynamicDbOptions';
 
 /**
@@ -13,7 +13,7 @@ import type { DynamicDbOptions } from './types/dynamicDbOptions';
  * @param database - Database configuration (string for static, DbSelectorOptions for dynamic)
  * @param headers - Request headers containing database selection information
  *
- * @throws ({@link CoreError}): When database header key is not found in dynamic mode
+ * @throws ({@link HttpError}): When database header key is not found in dynamic mode
  *
  * @returns Database instance wrapped in appropriate record type
  */
@@ -34,9 +34,8 @@ const _resolveDatabaseConnection = async <
 	const databaseName = headers[database.headerKeyName || 'database-using'];
 
 	if (!databaseName)
-		throw new CoreError({
-			key: errorKeys.dbResolverHeaderKeyNotFound,
-			message: 'Database Selector key not found in the request headers.',
+		throw new HttpError({
+			message: DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_HEADER_KEY_NOT_FOUND,
 			httpStatusCode: 400
 		});
 
