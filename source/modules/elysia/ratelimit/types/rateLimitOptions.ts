@@ -1,4 +1,4 @@
-import type { Redis } from '#/modules/store/redis';
+import type { Redis } from 'ioredis';
 
 /**
  * Options to configure the rate limit plugin.
@@ -15,7 +15,7 @@ import type { Redis } from '#/modules/store/redis';
  */
 export interface RateLimitOptions {
 	/**
-	 * The Redis instance to store rate limit data.
+	 * Redis instance used for storing rate limit data.
 	 */
 	readonly redis: Redis;
 	/**
@@ -32,10 +32,4 @@ export interface RateLimitOptions {
 	 * with a limit of 100 allows 100 requests per minute per client.
 	 */
 	readonly window: number;
-	/**
-	 * Custom error message when rate limit is exceeded.
-	 *
-	 * @defaultValue 'Rate limit exceeded'
-	 */
-	readonly message?: string;
 }
