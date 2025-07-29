@@ -62,6 +62,38 @@ describe('createFindSchema', () => {
 		expect(schema.properties.queryOptions.properties.limit[OptionalKind]).toBe('Optional');
 	});
 
+	test('should limit is a number', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.limit.type).toBe('number');
+		expect(schema.properties.queryOptions.properties.limit[Kind]).toBe('Number');
+	});
+
+	test('should limit has a minimum of 1', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.limit.minimum).toBe(1);
+	});
+
+	test('should limit has a default of 100', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.limit.default).toBe(100);
+	});
+
+	test('should offset is a number', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.offset.type).toBe('number');
+		expect(schema.properties.queryOptions.properties.offset[Kind]).toBe('Number');
+	});
+
+	test('should offset has a minimum of 0', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.offset.minimum).toBe(0);
+	});
+
+	test('should offset has a default of 0', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(schema.properties.queryOptions.properties.offset.default).toBe(0);
+	});
+
 	test('should offset is optionnal', () => {
 		const schema = createFindSchema(sourceSchema);
 		expect(schema.properties.queryOptions.properties.offset[OptionalKind]).toBe('Optional');
