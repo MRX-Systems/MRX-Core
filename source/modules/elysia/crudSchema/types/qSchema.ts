@@ -1,4 +1,11 @@
-import type { TArray, TKeyOf, TNumber, TObject, TString, TUnion } from '@sinclair/typebox';
+import type {
+	TArray,
+	TKeyOf,
+	TNumber,
+	TObject,
+	TString,
+	TUnion
+} from '@sinclair/typebox';
 
 export type QSchema<TSourceSchema extends TObject> = TUnion<[
 	TObject<{

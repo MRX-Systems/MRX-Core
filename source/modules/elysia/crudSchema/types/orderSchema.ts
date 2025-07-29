@@ -1,4 +1,10 @@
-import type { TArray, TKeyOf, TLiteral, TObject, TUnion } from '@sinclair/typebox';
+import type {
+	TArray,
+	TKeyOf,
+	TLiteral,
+	TObject,
+	TUnion
+} from '@sinclair/typebox';
 
 export type OrderSchema<TSourceSchema extends TObject> = TUnion<[
 	TObject<{

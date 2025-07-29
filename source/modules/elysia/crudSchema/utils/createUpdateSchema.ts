@@ -6,13 +6,13 @@ import { createFiltersSchema } from './createFiltersSchema';
 import { createSelectedFieldsSchema } from './createSelectedFieldsSchema';
 
 export const createUpdateSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): TObject<{
-	queryOptions: TOptional<TObject<{
-		selectedFields: ReturnType<typeof createSelectedFieldsSchema>;
+	queryOptions: TObject<{
+		selectedFields: TOptional<ReturnType<typeof createSelectedFieldsSchema>>;
 		filters: TUnion<[
 			TPartial<ReturnType<typeof createFiltersSchema<TSourceSchema>>>,
 			TArray<TPartial<ReturnType<typeof createFiltersSchema<TSourceSchema>>>>
 		]>;
-	}>>,
+	}>,
 	data: TPartial<TSourceSchema>
 }> => {
 	const sanitizedSchema = filterByKeyExclusionRecursive(
@@ -50,13 +50,13 @@ export const createUpdateSchema = <TSourceSchema extends TObject>(schema: TSourc
 	schema.minProperties = 1;
 
 	return t.Object({
-		queryOptions: t.Optional(t.Object({
-			selectedFields: createSelectedFieldsSchema(sanitizedSchema),
+		queryOptions: t.Object({
+			selectedFields: t.Optional(createSelectedFieldsSchema(sanitizedSchema)),
 			filters: t.Union([
 				t.Partial(createFiltersSchema(sanitizedSchema)),
 				t.Array(t.Partial(createFiltersSchema(sanitizedSchema)), { minItems: 1 })
 			])
-		})),
+		}),
 		data: t.Partial(schema)
 	});
 };
