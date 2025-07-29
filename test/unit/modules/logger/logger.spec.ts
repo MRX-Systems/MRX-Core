@@ -2,113 +2,114 @@
 /* eslint-disable no-empty-function */
 import { describe, expect, test } from 'bun:test';
 
-import { CoreError } from '#/error/coreError';
+import { BaseError } from '#/errors/baseError';
+import { LOGGER_ERROR_KEYS } from '#/modules/logger/enums/loggerErrorKeys';
 import { Logger } from '#/modules/logger/logger';
 import type { LoggerStrategy } from '#/modules/logger/types/loggerStrategy';
 import type { LogLevels } from '#/modules/logger/types/logLevels';
 
 /**
-* Tests for the Logger class (immutable API).
-*/
+ * Tests for the Logger class (immutable API).
+ */
 describe('Logger', () => {
 	describe('constructor', () => {
-		test('should create a new instance of BasaltLogger with default maxPendingLogs', () => {
-			const basaltLogger: Logger = new Logger();
-			expect(basaltLogger).toBeInstanceOf(Logger);
+		test('should create a new instance of Logger with default maxPendingLogs', () => {
+			const logger: Logger = new Logger();
+			expect(logger).toBeInstanceOf(Logger);
 		});
 
-		test('should create a new instance of BasaltLogger with custom maxPendingLogs', () => {
-			const basaltLogger: Logger = new Logger({}, 10);
-			expect(basaltLogger).toBeInstanceOf(Logger);
+		test('should create a new instance of Logger with custom maxPendingLogs', () => {
+			const logger: Logger = new Logger({}, 10);
+			expect(logger).toBeInstanceOf(Logger);
 		});
 	});
 
 	describe('registerStrategy', () => {
-		test('should add a strategy and return a new BasaltLogger instance', () => {
-			const basaltLogger: Logger = new Logger();
+		test('should add a strategy and return a new Logger instance', () => {
+			const logger: Logger = new Logger();
 			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = basaltLogger.registerStrategy('test', strategy);
+			const logger2 = logger.registerStrategy('test', strategy);
 			expect(Object.keys((logger2 as unknown as { _strategies: object })._strategies)).toContain('test');
 		});
 
 		test('should throw an error if the strategy is already added', () => {
-			const basaltLogger: Logger = new Logger();
+			const logger: Logger = new Logger();
 			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = basaltLogger.registerStrategy('test', strategy);
-			expect(() => logger2.registerStrategy('test', strategy)).toThrow('The strategy "test" is already added.');
+			const logger2 = logger.registerStrategy('test', strategy);
+			expect(() => logger2.registerStrategy('test', strategy)).toThrow(LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED);
 		});
 	});
 
 	describe('unregisterStrategy', () => {
-		test('should remove a strategy and return a new BasaltLogger instance', () => {
-			const basaltLogger: Logger = new Logger();
+		test('should remove a strategy and return a new Logger instance', () => {
+			const logger: Logger = new Logger();
 			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = basaltLogger.registerStrategy('test', strategy);
+			const logger2 = logger.registerStrategy('test', strategy);
 			// The key type is now 'test' only
 			const logger3 = logger2.unregisterStrategy('test');
 			expect(Object.keys((logger3 as unknown as { _strategies: object })._strategies)).not.toContain('test');
 		});
 
 		test('should throw an error if the strategy is not found', () => {
-			const basaltLogger: Logger = new Logger();
+			const logger: Logger = new Logger();
 			// Type is never, so we must cast
-			expect(() => (basaltLogger as unknown as { unregisterStrategy: (name: string) => void }).unregisterStrategy('test')).toThrow('The strategy "test" is not found.');
+			expect(() => (logger as unknown as { unregisterStrategy: (name: string) => void }).unregisterStrategy('test')).toThrow(LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND);
 		});
 	});
 
 	describe('registerStrategies', () => {
-		test('should add multiple strategies and return a new BasaltLogger instance', () => {
-			const basaltLogger: Logger = new Logger();
+		test('should add multiple strategies and return a new Logger instance', () => {
+			const logger: Logger = new Logger();
 			const strategies: [string, LoggerStrategy][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = basaltLogger.registerStrategies(strategies);
+			const logger2 = logger.registerStrategies(strategies);
 			const keys = Object.keys((logger2 as unknown as { _strategies: object })._strategies);
 			expect(keys).toContain('test1');
 			expect(keys).toContain('test2');
 		});
 
 		test('should throw an error if a strategy is already added', () => {
-			const basaltLogger: Logger = new Logger();
+			const logger: Logger = new Logger();
 			const strategies: [string, LoggerStrategy][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = basaltLogger.registerStrategies(strategies);
-			expect(() => logger2.registerStrategies(strategies)).toThrow('The strategy "test1" is already added.');
+			const logger2 = logger.registerStrategies(strategies);
+			expect(() => logger2.registerStrategies(strategies)).toThrow(LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED);
 		});
 	});
 
 	describe('unregisterStrategies', () => {
-		test('should remove multiple strategies and return a new BasaltLogger instance', () => {
-			const basaltLogger: Logger = new Logger();
+		test('should remove multiple strategies and return a new Logger instance', () => {
+			const logger: Logger = new Logger();
 			const strategies: [string, LoggerStrategy][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = basaltLogger.registerStrategies(strategies);
+			const logger2 = logger.registerStrategies(strategies);
 			// The keys are now 'test1' and 'test2'
 			const logger3 = (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test2']);
 			expect(Object.keys((logger3 as unknown as { _strategies: object })._strategies)).toHaveLength(0);
 		});
 
 		test('should throw an error if a strategy is not found', () => {
-			const basaltLogger: Logger = new Logger();
+			const logger: Logger = new Logger();
 			const strategies: [string, LoggerStrategy][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = basaltLogger.registerStrategies(strategies);
-			expect(() => (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test3'])).toThrow('The strategy "test3" is not found.');
+			const logger2 = logger.registerStrategies(strategies);
+			expect(() => (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test3'])).toThrow(LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND);
 		});
 	});
 
 	describe('clearStrategies', () => {
-		test('should clear all strategies and return a new BasaltLogger instance', () => {
-			const basaltLogger: Logger = new Logger();
+		test('should clear all strategies and return a new Logger instance', () => {
+			const logger: Logger = new Logger();
 			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = basaltLogger.registerStrategy('test', strategy);
+			const logger2 = logger.registerStrategy('test', strategy);
 			const logger3 = logger2.clearStrategies();
 			expect(Object.keys((logger3 as unknown as { _strategies: object })._strategies)).toHaveLength(0);
 		});
@@ -143,7 +144,7 @@ describe('Logger', () => {
 			['log']
 		])('should throw if no strategy is added (method: %s)', (method: string) => {
 			const logger = new Logger();
-			expect(() => ((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test')).toThrow('No strategy is added.');
+			expect(() => ((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test')).toThrow(LOGGER_ERROR_KEYS.NO_STRATEGY_ADDED);
 		});
 	});
 
@@ -157,7 +158,7 @@ describe('Logger', () => {
 			const logger = new Logger().registerStrategy('test', strategy);
 			logger.on('error', (error: Error) => {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(BaseError);
 				done();
 			});
 			logger.log('test');
@@ -176,7 +177,7 @@ describe('Logger', () => {
 			const strategy: LoggerStrategy = { log: () => {} };
 			const logger = new Logger().registerStrategy('test', strategy);
 			// Fill the buffer
-			for (let i = 0; i < 10; ++i)
+			for (let i = 0; i < 10; i++)
 				logger.log(`log${i}`);
 			const loggerFull = new Logger({}, 1).registerStrategy('test', strategy);
 			loggerFull.log('first');
