@@ -24,7 +24,7 @@ describe('createOrderSchema', () => {
 		expect(orderBySchema.anyOf).toHaveLength(2);
 	});
 
-	test('first element should be an Object with correct type and kind', () => {
+	test('first element should be an object with correct type and kind', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [firstElement] = orderBySchema.anyOf;
 
@@ -41,7 +41,7 @@ describe('createOrderSchema', () => {
 		expect(firstElement.properties).toBeDefined();
 	});
 
-	test('first element selectedField should be a Union with all base schema keys', () => {
+	test('first element selectedField should be a union with all base schema keys', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [firstElement] = orderBySchema.anyOf;
 		const { selectedField } = firstElement.properties;
@@ -58,7 +58,7 @@ describe('createOrderSchema', () => {
 			});
 	});
 
-	test('first element direction should be a Union with asc and desc values', () => {
+	test('first element direction should be a union with asc and desc values', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [firstElement] = orderBySchema.anyOf;
 		const { direction } = firstElement.properties;
@@ -78,7 +78,15 @@ describe('createOrderSchema', () => {
 		});
 	});
 
-	test('second element should be an Array with correct type, kind and constraints', () => {
+	test('should first element items is required', () => {
+		const orderBySchema = createOrderSchema(baseSchema);
+		const [firstElement] = orderBySchema.anyOf;
+
+		expect(firstElement.required).toContain('selectedField');
+		expect(firstElement.required).toContain('direction');
+	});
+
+	test('second element should be an array with correct type, kind and constraints', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 
@@ -89,7 +97,7 @@ describe('createOrderSchema', () => {
 		expect(secondElement.items).toBeDefined();
 	});
 
-	test('second element items should be Objects with correct type and kind', () => {
+	test('second element items should be objects with correct type and kind', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 
@@ -106,7 +114,7 @@ describe('createOrderSchema', () => {
 		expect(secondElement.items.properties).toBeDefined();
 	});
 
-	test('second element items selectedField should be a Union with all base schema keys', () => {
+	test('second element items selectedField should be a union with all base schema keys', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 		const { selectedField } = secondElement.items.properties;
@@ -123,7 +131,7 @@ describe('createOrderSchema', () => {
 			});
 	});
 
-	test('second element items direction should be a Union with asc and desc values', () => {
+	test('second element items direction should be a union with asc and desc values', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 		const { direction } = secondElement.items.properties;
@@ -141,5 +149,13 @@ describe('createOrderSchema', () => {
 			const: 'desc',
 			type: 'string'
 		});
+	});
+
+	test('should second element need minItems and uniqueItems', () => {
+		const orderBySchema = createOrderSchema(baseSchema);
+		const [, secondElement] = orderBySchema.anyOf;
+
+		expect(secondElement.minItems).toBe(1);
+		expect(secondElement.uniqueItems).toBe(true);
 	});
 });
