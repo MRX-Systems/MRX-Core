@@ -25,17 +25,27 @@ describe('createIdParamSchema', () => {
 		expect(schema.required).toContain('id');
 	});
 
-	test('should id is a union of string and number', () => {
+	test('should id be a union with exactly 2 types', () => {
 		const schema = createIdParamSchema();
 		expect(schema.properties.id.anyOf).toHaveLength(2);
+	});
 
-		expect(schema.properties.id.anyOf[0][Kind]).toBe('String');
-		expect(schema.properties.id.anyOf[0].type).toBe('string');
-		expect(schema.properties.id.anyOf[0].format).toBe('uuid');
+	test('should id first union type be a string with uuid format', () => {
+		const schema = createIdParamSchema();
+		const [stringType] = schema.properties.id.anyOf;
 
-		expect(schema.properties.id.anyOf[1][Kind]).toBe('Number');
-		expect(schema.properties.id.anyOf[1].type).toBe('number');
-		expect(schema.properties.id.anyOf[1].minimum).toBe(1);
-		expect(schema.properties.id.anyOf[1].maximum).toBe(Number.MAX_SAFE_INTEGER);
+		expect(stringType[Kind]).toBe('String');
+		expect(stringType.type).toBe('string');
+		expect(stringType.format).toBe('uuid');
+	});
+
+	test('should id second union type be a number with constraints', () => {
+		const schema = createIdParamSchema();
+		const [, numberType] = schema.properties.id.anyOf;
+
+		expect(numberType[Kind]).toBe('Number');
+		expect(numberType.type).toBe('number');
+		expect(numberType.minimum).toBe(1);
+		expect(numberType.maximum).toBe(Number.MAX_SAFE_INTEGER);
 	});
 });
