@@ -49,7 +49,7 @@ interface Data {
 	n: string | null;
 }
 
-async function createDataTable(): Promise<void> {
+const createDataTable = async (): Promise<void> => {
 	if (await knexInstance.schema.hasTable(testTable))
 		return;
 	await knexInstance.schema.createTable(testTable, (table) => {
@@ -60,13 +60,12 @@ async function createDataTable(): Promise<void> {
 		table.boolean('bool').notNullable();
 		table.string('n').nullable();
 	});
-}
+};
 
-async function dropDataTable(): Promise<void> {
+const dropDataTable = async (): Promise<void> => {
 	await knexInstance.schema.dropTable(testTable);
 	await knexInstance.destroy();
-}
-
+};
 
 interface FilterTest<Data> {
 	filters: Filter<Data> | Filter<Data>[];
