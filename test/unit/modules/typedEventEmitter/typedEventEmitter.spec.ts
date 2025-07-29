@@ -4,8 +4,8 @@ import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter
 import type { EventMap } from '#/modules/typedEventEmitter/types/eventMap';
 
 /**
- * Test data constants for consistent testing across all test suites.
- */
+* Test data constants for consistent testing across all test suites.
+*/
 const testData = {
 	eventNames: {
 		testEvent: 'testEvent',
@@ -17,14 +17,14 @@ const testData = {
 		string: 'test payload',
 		stringFirst: 'first emission',
 		stringSecond: 'second emission',
-		stringAgain: 'test payload again',
+		stringAgainx: 'test payload again',
 		object: { id: 123, value: 'test value' }
 	} as const
 } as const;
 
 /**
- * Event map interfaces for type safety in tests.
- */
+* Event map interfaces for type safety in tests.
+*/
 interface NoPayloadEventMap extends EventMap {
 	testEvent: [];
 }
@@ -43,8 +43,8 @@ interface MultiEventMap extends EventMap {
 }
 
 /**
- * Helper function to create a new TypedEventEmitter instance.
- */
+* Helper function to create a new TypedEventEmitter instance.
+*/
 function createEmitter<TEvents extends EventMap>(): TypedEventEmitter<TEvents> {
 	return new TypedEventEmitter<TEvents>();
 }
@@ -125,7 +125,7 @@ describe('TypedEventEmitter', (): void => {
 				emitter.once(testData.eventNames.testEvent, secondListener);
 
 				emitter.emit(testData.eventNames.testEvent, testData.payloads.string);
-				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgain);
+				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgainx);
 
 				expect(firstListener).toHaveBeenCalledTimes(1);
 				expect(secondListener).toHaveBeenCalledTimes(1);
@@ -428,7 +428,7 @@ describe('TypedEventEmitter', (): void => {
 				expect(listenersAfterFirstEmit[0]).toBe(permanentListener);
 
 				// Second emission
-				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgain);
+				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgainx);
 				expect(onceListener).toHaveBeenCalledTimes(1); // Should not be called again
 				expect(permanentListener).toHaveBeenCalledTimes(2); // Should be called again
 			});
@@ -461,7 +461,7 @@ describe('TypedEventEmitter', (): void => {
 				expect(listenersAfterFirstEmit[0]).toBe(permanentListener);
 
 				// Second emission
-				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgain);
+				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgainx);
 				expect(secondOnceListener).toHaveBeenCalledTimes(1); // Should not be called again
 				expect(firstOnceListener).toHaveBeenCalledTimes(1); // Should not be called again
 				expect(permanentListener).toHaveBeenCalledTimes(2); // Should be called again
