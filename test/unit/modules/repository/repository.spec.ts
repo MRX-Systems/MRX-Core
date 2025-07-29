@@ -3,10 +3,11 @@ import { randomBytes } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
-import { CoreError } from '#/error/coreError';
+import { HttpError } from '#/errors/httpError';
 import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
 import type { Filter } from '#/modules/repository/types/filter';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
 
 const options = {
 	databaseName: process.env.MSSQL_DATABASE ?? '',
@@ -625,9 +626,9 @@ describe('Repository', () => {
 					expect(data).not.toBeDefined();
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while streaming the query results.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
 		});
 
@@ -640,9 +641,9 @@ describe('Repository', () => {
 			});
 			stream.on('error', (error) => {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while streaming the query results.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 				done();
 			});
 		});
@@ -748,9 +749,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
 		});
 
@@ -764,9 +765,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toBe('No records found matching the specified query options.');
+				expect((error as { message: string }).message).toBe(DATABASE_ERROR_KEYS.MSSQL_NO_RESULT);
 			}
 		});
 
@@ -780,9 +781,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toBe('Custom error message');
+				expect((error as { message: string }).message).toBe(DATABASE_ERROR_KEYS.MSSQL_NO_RESULT);
 			}
 		});
 	});
@@ -813,9 +814,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
 		});
 	});
@@ -884,9 +885,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED);
 			}
 		});
 	});
@@ -977,9 +978,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABSE_CANNOT_UPDATE_IDENTITY_COLUMN);
 			}
 		});
 	});
@@ -1036,9 +1037,9 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(CoreError);
+				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain('An error occurred while executing the query.');
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
 		});
 	});
