@@ -1,5 +1,5 @@
-import { describe, test, expect } from 'bun:test';
 import { Type } from '@sinclair/typebox';
+import { describe, expect, test } from 'bun:test';
 
 import { crudSchema } from '#/modules/elysia/crudSchema/crudSchema';
 

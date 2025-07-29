@@ -4,10 +4,10 @@ import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
 import { HttpError } from '#/errors/httpError';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
 import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
 import type { Filter } from '#/modules/repository/types/filter';
-import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
 
 const options = {
 	databaseName: process.env.MSSQL_DATABASE ?? '',

@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'bun:test';
 import { Elysia } from 'elysia';
+import type { JWTVerifyResult } from 'jose';
 
 import { HttpError } from '#/errors/httpError';
 import { JWT_ERROR_KEYS } from '#/modules/elysia/jwt/enums/jwtErrorKeys';
 import { jwt as jwtPlugin } from '#/modules/elysia/jwt/jwt';
-import type { JWTVerifyResult } from 'jose';
 
 describe('jwt', () => {
 	describe('plugin initialization', () => {
