@@ -1042,5 +1042,94 @@ describe('Repository', () => {
 			}
 		});
 	});
+
+	describe('transaction support', () => {
+		test('should apply transaction to find query', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = await repository.find<Data>({
+					limit: 5,
+					transaction: trx
+				});
+				expect(data).toBeInstanceOf(Array);
+				expect(data.length).toBeGreaterThan(0);
+			});
+		});
+
+		test('should apply transaction to count query', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const count = await repository.count<Data>({
+					transaction: trx
+				});
+				expect(count).toBeGreaterThan(0);
+			});
+		});
+
+		test('should apply transaction to insert query', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = {
+					name: 'Repository::transaction-insert',
+					age: 30,
+					birth: new Date('2021-01-30'),
+					bool: true
+				};
+				const items = await repository.insert(data, {
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0]).toHaveProperty('id');
+				expect(items[0].name).toBe('Repository::transaction-insert');
+			});
+		});
+
+		test('should apply transaction to update query', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = {
+					name: 'Repository::transaction-update'
+				};
+				const items = await repository.update(data, {
+					filters: { id: 8 },
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0].name).toBe('Repository::transaction-update');
+			});
+		});
+
+		test('should apply transaction to delete query', async () => {
+			// First insert a record to delete
+			const insertedItems = await repository.insert({
+				name: 'Repository::transaction-delete',
+				age: 31,
+				birth: new Date('2021-01-31'),
+				bool: false
+			});
+			const insertedId = insertedItems[0].id;
+
+			await knexInstance.transaction(async (trx) => {
+				const items = await repository.delete({
+					filters: { id: insertedId },
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0].id).toBe(insertedId);
+			});
+		});
+
+		test('should apply transaction to findStream query', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const stream = repository.findStream<Data>({
+					limit: 5,
+					transaction: trx
+				});
+				
+				let count = 0;
+				for await (const data of stream) {
+					expect(data).toHaveProperty('id');
+					count++;
+				}
+				expect(count).toBeGreaterThan(0);
+			});
+		});
+	});
 	afterAll(dropDataTable);
 });
