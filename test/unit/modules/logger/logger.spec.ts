@@ -177,7 +177,7 @@ describe('Logger', () => {
 			const strategy: LoggerStrategy = { log: () => {} };
 			const logger = new Logger().registerStrategy('test', strategy);
 			// Fill the buffer
-			for (let i = 0; i < 10; i++)
+			for (let i = 0; i < 10; ++i)
 				logger.log(`log${i}`);
 			const loggerFull = new Logger({}, 1).registerStrategy('test', strategy);
 			loggerFull.log('first');
