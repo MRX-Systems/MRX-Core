@@ -31,8 +31,7 @@ export const error = new Elysia({
 			case 'VALIDATION': {
 				set.status = 400;
 				return {
-					key: 'core.error.validation',
-					message: 'Validation error',
+					message: 'core.error.validation',
 					cause: {
 						on: error.type,
 						found: error.value,
@@ -43,16 +42,14 @@ export const error = new Elysia({
 			case 'NOT_FOUND':
 				set.status = 404;
 				return {
-					key: 'core.error.not_found',
-					message: 'Not found'
+					message: 'core.error.not_found'
 				};
 			case 'INTERNAL_SERVER_ERROR':
 			case 'UNKNOWN':
 			default:
 				set.status = 500;
 				return {
-					key: 'core.error.internal_server_error',
-					message: 'Internal server error'
+					message: 'core.error.internal_server_error'
 				};
 		}
 	})
