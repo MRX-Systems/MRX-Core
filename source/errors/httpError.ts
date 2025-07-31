@@ -2,6 +2,11 @@ import { BaseError } from './baseError';
 import { HTTP_STATUS_CODES } from './enums/httpStatusCodes';
 import type { HttpErrorOptions } from './types/httpErrorOptions';
 
+/**
+ * Represents an HTTP error with a specific status code.
+ *
+ * @template TCause - The type of the cause of the error, if any.
+ */
 export class HttpError<const TCause = unknown> extends BaseError<TCause> {
 	private readonly _httpStatusCode: typeof HTTP_STATUS_CODES[keyof typeof HTTP_STATUS_CODES];
 

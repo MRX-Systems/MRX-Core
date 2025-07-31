@@ -52,8 +52,8 @@ export class SMTP {
 	 * It enables connection pooling for efficient resource usage and sets the maximum number of
 	 * concurrent connections as specified in the configuration (default: 5).
 	 *
-	 * @throws ({@link BaseError}): If the transporter is already connected.
-	 * @throws ({@link BaseError}): If the connection or verification fails.
+	 * @throws ({@link BaseError}) - If the transporter is already connected.
+	 * @throws ({@link BaseError}) - If the connection or verification fails.
 	 */
 	public async connect(): Promise<void> {
 		if (this._transporter)

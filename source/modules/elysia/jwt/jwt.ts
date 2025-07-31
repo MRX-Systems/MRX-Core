@@ -20,7 +20,7 @@ import type { JWTOptions } from './types/jwtOptions';
  *
  * @returns An Elysia plugin that adds JWT functionality to the application context
  *
- * @throws ({@link HttpError}) When the secret key is missing or invalid
+ * @throws ({@link HttpError}) - When the secret key is missing or invalid
  *
  * @example
  * Basic usage
@@ -79,16 +79,12 @@ export const jwt = <const TJWTKeyName extends string = 'jwt'>(options: JWTOption
 			/**
 			 * Signs a JWT with the provided payload and optional expiration time.
 			 *
-			 * This method creates a new JWT with the specified payload, merging it withrateLimitError
-			 * any default payload values configured in the plugin options. The resulting
-			 * token includes standard claims and custom data as needed.
-			 *
 			 * @param additionalPayload - Custom payload data to include in the JWT
 			 * @param expiration - Token expiration time (overrides default if provided)
 			 *
 			 * @returns A Promise that resolves to the signed JWT string
 			 *
-			 * @throws ({@link HttpError}): When JWT signing fails due to invalid payload or configuration
+			 * @throws ({@link HttpError}) - When JWT signing fails due to invalid payload or configuration
 			 *
 			 * @example
 			 * Sign with user data
@@ -163,10 +159,6 @@ export const jwt = <const TJWTKeyName extends string = 'jwt'>(options: JWTOption
 
 			/**
 			 * Verifies and decodes a JWT token.
-			 *
-			 * This method validates the token's signature, expiration, and format.
-			 * It returns the decoded payload if the token is valid, or false if
-			 * the token is invalid, expired, or malformed.
 			 *
 			 * @param token - The JWT string to verify and decode
 			 *

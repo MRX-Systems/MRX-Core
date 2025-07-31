@@ -6,8 +6,7 @@ import type { QSchema } from '#/modules/elysia/crudSchema/types/qSchema';
 /**
  * Creates a search query schema
  *
- * @template TSourceSchema
- *  - The TypeBox object schema to create search queries for. Extends {@link TObject}
+ * @template TSourceSchema - The TypeBox object schema to create search queries for. Extends {@link TObject}
  *
  * @param schema - The base object schema to create search queries for. {@link TSourceSchema}
  *

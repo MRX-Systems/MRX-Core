@@ -34,7 +34,6 @@ import type { RateLimitOptions } from './types/rateLimitOptions';
  *     redis,
  *     limit: 100,           // 100 requests
  *     window: 60,           // per minute
- *     message: 'Too many requests, please try again later.'
  *   }))
  *   .get('/public-api', () => {
  *     return { success: true, message: 'This endpoint is rate limited' };
