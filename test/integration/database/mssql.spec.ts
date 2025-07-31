@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, mock, test } from 'bun:test';
 import { randomBytes } from 'crypto';
 import knex from 'knex';
 
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
 import { Repository } from '#/modules/repository/repository';
 
 /**
@@ -212,9 +213,7 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(invalidDatabaseOptions);
 
-				expect(mssql.connect()).rejects.toThrow(
-					`Failed to connect to the database: "${databaseOptions.databaseName}".`
-				);
+				expect(mssql.connect()).rejects.toThrow(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR);
 			});
 
 			test('should throw error for invalid credentials', async () => {
@@ -227,9 +226,7 @@ describe('MSSQL', () => {
 				};
 				const mssql = new MSSQL(invalidCredentials);
 
-				expect(mssql.connect()).rejects.toThrow(
-					`Failed to connect to the database: "${databaseOptions.databaseName}".`
-				);
+				expect(mssql.connect()).rejects.toThrow(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR);
 			});
 
 			test('should throw error for invalid port', async () => {
@@ -241,9 +238,7 @@ describe('MSSQL', () => {
 				};
 				const mssql = new MSSQL(invalidPort);
 
-				expect(mssql.connect()).rejects.toThrow(
-					`Failed to connect to the database: "${databaseOptions.databaseName}".`
-				);
+				expect(mssql.connect()).rejects.toThrow(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR);
 			});
 
 			test('should handle connection timeout gracefully', async () => {
@@ -254,9 +249,7 @@ describe('MSSQL', () => {
 				};
 				const mssql = new MSSQL(timeoutOptions);
 
-				expect(mssql.connect()).rejects.toThrow(
-					`Failed to connect to the database: "${databaseOptions.databaseName}".`
-				);
+				expect(mssql.connect()).rejects.toThrow(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR);
 			});
 		});
 
@@ -276,9 +269,7 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
 
-				expect(mssql.disconnect()).rejects.toThrow(
-					`Database "${databaseOptions.databaseName}" is not connected.`
-				);
+				expect(mssql.disconnect()).rejects.toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
 			});
 
 			test('should handle multiple disconnect attempts gracefully', async () => {
@@ -288,9 +279,7 @@ describe('MSSQL', () => {
 				await mssql.connect();
 				await mssql.disconnect();
 
-				expect(mssql.disconnect()).rejects.toThrow(
-					`Database "${databaseOptions.databaseName}" is not connected.`
-				);
+				expect(mssql.disconnect()).rejects.toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
 			});
 		});
 	});
@@ -520,9 +509,7 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
 
-				expect(() => mssql.getRepository(primaryTestTable)).toThrow(
-					`Database "${databaseOptions.databaseName}" is not connected.`
-				);
+				expect(() => mssql.getRepository(primaryTestTable)).toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
 			});
 
 			test('should throw error for non-existent table repository', async () => {
@@ -530,9 +517,7 @@ describe('MSSQL', () => {
 				const mssql = new MSSQL(databaseOptions);
 				await mssql.connect();
 
-				expect(() => mssql.getRepository('non_existent_table')).toThrow(
-					'Table not found: "non_existent_table".'
-				);
+				expect(() => mssql.getRepository('non_existent_table')).toThrow(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND);
 				await mssql.disconnect();
 			});
 		});
@@ -669,9 +654,7 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
 
-				expect(() => mssql.getTable(primaryTestTable)).toThrow(
-					`Database "${databaseOptions.databaseName}" is not connected.`
-				);
+				expect(() => mssql.getTable(primaryTestTable)).toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
 			});
 
 			test('should throw error for non-existent table', async () => {
@@ -679,9 +662,7 @@ describe('MSSQL', () => {
 				const mssql = new MSSQL(databaseOptions);
 				await mssql.connect();
 
-				expect(() => mssql.getTable('non_existent_table')).toThrow(
-					'Table not found: "non_existent_table".'
-				);
+				expect(() => mssql.getTable('non_existent_table')).toThrow(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND);
 				await mssql.disconnect();
 			});
 
@@ -756,9 +737,7 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
 
-				expect(() => mssql.db).toThrow(
-					`Database "${databaseOptions.databaseName}" is not connected.`
-				);
+				expect(() => mssql.db).toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
 			});
 
 			test('should allow database queries through knex instance', async () => {

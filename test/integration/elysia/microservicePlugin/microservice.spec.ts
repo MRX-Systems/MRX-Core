@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'bun:test';
 import Elysia from 'elysia';
 
-import { microservicePlugin } from '#/modules/elysia/microservicePlugin/microservice';
+import { microservice } from '#/modules/elysia/microservice/microservice';
 import { author, description, name, version } from '#/root/package.json';
 
 describe('Microservice Plugin', () => {
-	const app = new Elysia().use(microservicePlugin);
+	const app = new Elysia().use(microservice);
 
 	test('ping - should return pong with correct status', async () => {
 		const response = await app.handle(new Request('http://localhost/microservice/ping'));
