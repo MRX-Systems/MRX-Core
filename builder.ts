@@ -16,65 +16,64 @@ await Bun.build({
 	external: [...dependencies, ...devDependencies, ...peerDependencies],
 	root: './source',
 	entrypoints: [
-		// // # ————————— Error ————————— #
-		// './source/error/index.ts',
-		// './source/error/types/index.ts',
+		// # ————————— Error ————————— #
+		'./source/errors/index.ts',
+		'./source/errors/types/index.ts',
 
-		// // # ————————— Data ————————— #
-		// './source/modules/data/index.ts',
-		// './source/modules/data/transformers/index.ts',
-		// './source/modules/data/types/index.ts',
+		// # ————————— Data ————————— #
+		'./source/modules/data/index.ts',
+		'./source/modules/data/transformers/index.ts',
+		'./source/modules/data/types/index.ts',
 
-		// // # ————————— Database ————————— #
-		// './source/modules/database/index.ts',
-		// './source/modules/database/events/index.ts',
-		// './source/modules/database/types/index.ts',
+		// # ————————— Database ————————— #
+		'./source/modules/database/index.ts',
+		'./source/modules/database/events/index.ts',
+		'./source/modules/database/types/index.ts',
 
 		// // # ————————— Elysia Plugin ————————— #
+		// crud
+		'./source/modules/elysia/crud/index.ts',
+		'./source/modules/elysia/crud/types/index.ts',
 
-		// // crudSchemaPlugin
-		// './source/modules/elysia/crudSchemaPlugin/index.ts',
-		// './source/modules/elysia/crudSchemaPlugin/types/index.ts',
-		// './source/modules/elysia/crudSchemaPlugin/utils/index.ts',
+		// crudSchema
+		'./source/modules/elysia/crudSchema/index.ts',
+		'./source/modules/elysia/crudSchema/types/index.ts',
+		'./source/modules/elysia/crudSchema/utils/index.ts',
 
-		// // crudPlugin
-		// './source/modules/elysia/crudPlugin/index.ts',
-		// './source/modules/elysia/crudPlugin/types/index.ts',
+		// dbResolver
+		'./source/modules/elysia/dbResolver/index.ts',
+		'./source/modules/elysia/dbResolver/types/index.ts',
 
-		// // dbResolverPlugin
-		// './source/modules/elysia/dbResolverPlugin/index.ts',
-		// './source/modules/elysia/dbResolverPlugin/types/index.ts',
+		// error
+		'./source/modules/elysia/error/index.ts',
 
-		// // errorPlugin
-		// './source/modules/elysia/errorPlugin/index.ts',
+		// jwt
+		'./source/modules/elysia/jwt/index.ts',
+		'./source/modules/elysia/jwt/types/index.ts',
 
-		// // jwtPlugin
-		// './source/modules/elysia/jwtPlugin/index.ts',
-		// './source/modules/elysia/jwtPlugin/types/index.ts',
+		// microservice
+		'./source/modules/elysia/microservice/index.ts',
 
-		// // microservicePlugin
-		// './source/modules/elysia/microservicePlugin/index.ts',
+		// rateLimit
+		'./source/modules/elysia/ratelimit/index.ts',
+		'./source/modules/elysia/ratelimit/types/index.ts',
 
-		// // rateLimitPlugin
-		// './source/modules/elysia/ratelimitPlugin/index.ts',
-		// './source/modules/elysia/ratelimitPlugin/types/index.ts',
+		// # ————————— Logger ————————— #
+		'./source/modules/logger/index.ts',
+		'./source/modules/logger/events/index.ts',
+		'./source/modules/logger/strategies/index.ts',
+		'./source/modules/logger/types/index.ts',
 
-		// // # ————————— Logger ————————— #
-		// './source/modules/logger/index.ts',
-		// './source/modules/logger/events/index.ts',
-		// './source/modules/logger/strategies/index.ts',
-		// './source/modules/logger/types/index.ts',
+		// # ————————— Mailer ————————— #
+		'./source/modules/mailer/index.ts',
+		'./source/modules/mailer/types/index.ts',
 
-		// // # ————————— Mailer ————————— #
-		// './source/modules/mailer/index.ts',
-		// './source/modules/mailer/types/index.ts',
+		// # ————————— Repository ————————— #
+		'./source/modules/repository/index.ts',
+		'./source/modules/repository/types/index.ts',
 
-		// // # ————————— Repository ————————— #
-		// './source/modules/repository/index.ts',
-		// './source/modules/repository/types/index.ts',
-
-		// // # ————————— SingletonManager ————————— #
-		// './source/modules/singletonManager/index.ts',
+		// # ————————— SingletonManager ————————— #
+		'./source/modules/singletonManager/index.ts',
 
 		// # ————————— TypedEventEmitter ————————— #
 		'./source/modules/typedEventEmitter/index.ts',
