@@ -287,7 +287,7 @@ export class Logger<TStrategies extends StrategyMap = {}> extends TypedEventEmit
 				await (this._strategies[name] as LoggerStrategy<TLogObject> | undefined)?.log(level, date, object);
 			} catch (error) {
 				throw new BaseError({
-					message: LOGGER_ERROR_KEYS.loggerStrategyError,
+					message: LOGGER_ERROR_KEYS.STRATEGY_ERROR,
 					cause: { strategyName: name, object, error }
 				});
 			}
