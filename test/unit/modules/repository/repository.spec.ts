@@ -1042,5 +1042,117 @@ describe('Repository', () => {
 			}
 		});
 	});
+
+	describe('transaction support', () => {
+		test('should use transaction in find operation', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = await repository.find({
+					transaction: trx,
+					limit: 1
+				});
+				expect(data).toBeInstanceOf(Array);
+				expect(data.length).toBeGreaterThan(0);
+			});
+		});
+
+		test('should use transaction in count operation', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const count = await repository.count({
+					transaction: trx
+				});
+				expect(typeof count).toBe('number');
+				expect(count).toBeGreaterThan(0);
+			});
+		});
+
+		test('should use transaction in insert operation', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = {
+					name: 'Repository::transaction-insert',
+					age: 30,
+					birth: new Date('2021-01-30'),
+					bool: true
+				};
+				const items = await repository.insert(data, {
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0]).toHaveProperty('id');
+				expect(items[0].name).toBe('Repository::transaction-insert');
+			});
+		});
+
+		test('should use transaction in update operation', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = {
+					name: 'Repository::transaction-update'
+				};
+				const items = await repository.update(data, {
+					filters: { id: 8 },
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0].name).toBe('Repository::transaction-update');
+			});
+		});
+
+		test('should use transaction in delete operation', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const items = await repository.delete({
+					filters: { id: 9 },
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0].id).toBe(9);
+			});
+		});
+
+		test('should rollback transaction on error', async () => {
+			try {
+				await knexInstance.transaction(async (trx) => {
+					// Insert a record
+					await repository.insert({
+						name: 'Repository::transaction-rollback',
+						age: 31,
+						birth: new Date('2021-01-31'),
+						bool: true
+					}, {
+						transaction: trx
+					});
+
+					// Force an error
+					throw new Error('Test rollback');
+				});
+			} catch (error) {
+				expect((error as Error).message).toBe('Test rollback');
+			}
+
+			// Verify the record was not inserted due to rollback
+			const records = await repository.find({
+				filters: {
+					name: 'Repository::transaction-rollback'
+				}
+			});
+			expect(records).toHaveLength(0);
+		});
+
+		test('should work with findStream and transaction', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const stream = repository.findStream({
+					transaction: trx,
+					filters: { id: { $lte: 2 } }
+				});
+
+				const results = [];
+				for await (const data of stream)
+					results.push(data);
+
+				expect(results.length).toBeGreaterThan(0);
+				results.forEach((item) => {
+					expect(item.id).toBeLessThanOrEqual(2);
+				});
+			});
+		});
+	});
 	afterAll(dropDataTable);
 });
