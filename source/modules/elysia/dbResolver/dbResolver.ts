@@ -11,6 +11,7 @@ import type { DynamicDbOptions } from './types/dynamicDbOptions';
  * Internal function to resolve database connection based on configuration type (static or dynamic)
  *
  * @param database - Database configuration (string for static, DbSelectorOptions for dynamic)
+ * @param headers - Request headers containing dynamic database selection key
  *
  * @throws ({@link HttpError}): When database header key is not found in dynamic mode
  *
@@ -19,7 +20,8 @@ import type { DynamicDbOptions } from './types/dynamicDbOptions';
 const _resolveDatabaseConnection = async <
 	const TDatabase extends DynamicDbOptions | string
 >(
-	database: TDatabase
+	database: TDatabase,
+	headers: Record<string, string | undefined>
 ): Promise<Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>> => {
 	// Static database case - database name is provided as string
 	if (typeof database === 'string')
@@ -28,7 +30,7 @@ const _resolveDatabaseConnection = async <
 		} as Record<TDatabase extends string ? 'staticDB' : 'dynamicDB', MSSQL>;
 
 	// Dynamic database case - database selected via header
-	const databaseName = 'database-using';
+	const databaseName = headers['database-using'];
 
 	if (!databaseName)
 		throw new HttpError({
@@ -78,14 +80,14 @@ export const dbResolver = <
 		name: 'dbResolverPlugin',
 		seed: database
 	})
-		.resolve({ as: 'global' }, async (): Promise<
+		.resolve({ as: 'global' }, async ({ headers }): Promise<
 			Record<
 				TDatabase extends string
 					? 'staticDB'
 					: 'dynamicDB',
 				MSSQL
 			>
-		> => _resolveDatabaseConnection<TDatabase>(database));
+		> => _resolveDatabaseConnection<TDatabase>(database, headers));
 
 	if (typeof database === 'object')
 		app.model({
