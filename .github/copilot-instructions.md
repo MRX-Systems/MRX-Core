@@ -119,8 +119,8 @@ This project uses a strict [Conventional Commits](https://www.conventionalcommit
 ### Format
 
 <type>(<emoji>): [<summary up to 72 chars>]
-<optional blank line>
-<optional detailed description in markdown>
+<required blank line>
+<required detailed description in markdown>
 
 
 - **Type:** One of `feat`, `fix`, `perf`, `refactor`, `build`, `types`, `chore`, `examples`, `docs`, `test`, `style`, `ci`
@@ -143,7 +143,7 @@ This project uses a strict [Conventional Commits](https://www.conventionalcommit
 | docs      | 📖    | Documentation changes                               |
 | test      | 🧪    | Test code updates                                   |
 | style     | 🎨    | Style/formatting only                               |
-| ci        | 🤖    | CI/CD configuration                                |
+| ci        | 🤖    | CI/CD configuration                                 |
 
 ### Guidelines
 
