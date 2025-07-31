@@ -46,7 +46,7 @@ export class SingletonManager {
 	* @param constructor - The constructor of the class.
 	* @param args - The arguments to pass to the constructor of the class.
 	*
-	* @throws ({@link BaseError}) If the class constructor is already registered, it throws an error.
+	* @throws ({@link BaseError}) - If the class constructor is already registered, it throws an error.
 	*/
 	public static register<
 		TClass extends object,
