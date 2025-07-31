@@ -21,9 +21,8 @@ import type { CrudOperationUpdateOptions } from './types/crudOperationUpdateOpti
 import type { CrudOptions } from './types/crudOptions';
 
 const _createDefaultOperationsWithHandlers = <
-	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
-	const TTableName extends string,
-	const THeaderKeyName extends string = 'database-using'
+	const TDatabase extends DynamicDbOptions | string,
+	const TTableName extends string
 >(
 	tableName: TTableName,
 	database: TDatabase
@@ -299,11 +298,6 @@ const _createDefaultOperationsWithHandlers = <
  *
  * @template TDatabase - The database configuration type
  * @template TTableName - The table name type
- * @template TSourceSchema - The source schema type
- * @template TSourceSearchSchema - The search schema type
- * @template TSourceInsertSchema - The insert schema type
- * @template TSourceUpdateSchema - The update schema type
- * @template TSourceResponseSchema - The response schema type
  * @template TOperations - The operations configuration type
  *
  * @param tableName - The name of the table
@@ -313,17 +307,16 @@ const _createDefaultOperationsWithHandlers = <
  * @returns An Elysia app with the configured routes
  */
 const _addRoutesByOperations = <
-	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
+	const TDatabase extends DynamicDbOptions | string,
 	const TTableName extends string,
-	const TOperations extends CrudOperationsOptions,
-	const THeaderKeyName extends string = 'database-using'
+	const TOperations extends CrudOperationsOptions
 >(
 	tableName: TTableName,
 	database: TDatabase,
 	operations: TOperations
 ) => {
 	const app = new Elysia();
-	const _defaultOperations = _createDefaultOperationsWithHandlers<TDatabase, TTableName, THeaderKeyName>(tableName, database);
+	const _defaultOperations = _createDefaultOperationsWithHandlers<TDatabase, TTableName>(tableName, database);
 
 	for (const operationKey in operations) {
 		const operation = operations[operationKey as keyof TOperations];
@@ -358,10 +351,9 @@ const _addRoutesByOperations = <
 };
 
 export const crud = <
-	const TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
+	const TDatabase extends DynamicDbOptions | string,
 	const TTableName extends string,
 	const TSourceSchema extends TObject,
-	const THeaderKeyName extends string = 'database-using',
 	const TOperations extends CrudOperationsOptions = {
 		find: true,
 		findOne: true,
@@ -397,7 +389,6 @@ export const crud = <
 		TDatabase,
 		TTableName,
 		TSourceSchema,
-		THeaderKeyName,
 		TOperations,
 		TSourceFindSchema,
 		TSourceCountSchema,
@@ -453,7 +444,9 @@ export const crud = <
 			TSourceDeleteSchema,
 			TSourceResponseSchema
 		> & {
-			ResolveDbHeader: TObject<Record<THeaderKeyName, TString>>
+			ResolveDbHeader: TObject<{
+				'database-using': TString;
+			}>
 		};
 		error: {};
 	}
@@ -461,12 +454,7 @@ export const crud = <
 	name: `crudPlugin[${tableName}]`,
 	tags: [tableName]
 })
-	.use(
-		dbResolver<
-			TDatabase,
-			THeaderKeyName
-		>(database)
-	)
+	.use(dbResolver<TDatabase>(database))
 	.use(
 		crudSchema<
 			TTableName,
@@ -544,8 +532,7 @@ export const crud = <
 		_addRoutesByOperations<
 			TDatabase,
 			TTableName,
-			TOperations,
-			THeaderKeyName
+			TOperations
 		>(
 			tableName,
 			database,
@@ -598,7 +585,9 @@ export const crud = <
 			TSourceDeleteSchema,
 			TSourceResponseSchema
 		> & {
-			ResolveDbHeader: TObject<Record<THeaderKeyName, TString>>
+			ResolveDbHeader: TObject<{
+				'database-using': TString;
+			}>
 		};
 		error: {};
 	}

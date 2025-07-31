@@ -10,10 +10,9 @@ import type { CrudOperationsOptions } from './crudOperationsOptions';
  * @template KEnumPermission - The type of the enum for permissions extending {@link String}
  */
 export interface CrudOptions<
-	TDatabase extends DynamicDbOptions<THeaderKeyName> | string,
+	TDatabase extends DynamicDbOptions | string,
 	TTableName extends string,
 	TSourceSchema extends TObject,
-	THeaderKeyName extends string = 'database-using',
 	TOperations extends CrudOperationsOptions = CrudOperationsOptions,
 	TSourceFindSchema extends TObject = TSourceSchema,
 	TSourceCountSchema extends TObject = TSourceSchema,
