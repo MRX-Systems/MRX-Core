@@ -640,7 +640,8 @@ export class Repository<TModel = unknown> {
 		this._applyFilter<KModel>(query, options?.filters);
 		this._applyOrderBy<KModel>(query, options?.orderBy);
 		this._applySelectedFields<KModel>(query, options?.selectedFields);
-		// transaction
+		if (options?.transaction)
+			query.transacting(options.transaction);
 	}
 
 	/**
