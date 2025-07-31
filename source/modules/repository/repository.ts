@@ -196,23 +196,6 @@ export class Repository<TModel = unknown> {
 	 *     }
 	 * });
 	 * ```
-	 * @example
-	 * With timeout and custom buffer size for large datasets
-	 * ```ts
-	 * const stream = userRepository.findStream({
-	 *     timeout: 30000, // 30 seconds timeout (default is 5 minutes)
-	 *     highWaterMark: 64, // Larger buffer for better throughput
-	 *     filters: { isActive: true }
-	 * });
-	 * ```
-	 * @example
-	 * Disable timeout for long-running streams
-	 * ```ts
-	 * const stream = userRepository.findStream({
-	 *     timeout: 0, // No timeout - use with caution!
-	 *     filters: { department: 'analytics' }
-	 * });
-	 * ```
 	 */
 	public findStream<KModel extends TModel = NoInfer<TModel>>(
 		options?: QueryOptionsExtendStream<KModel>
@@ -267,8 +250,8 @@ export class Repository<TModel = unknown> {
 	 *
 	 * @param options - The query options to apply to the search.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of records matching the query options.
 	 *
@@ -347,8 +330,8 @@ export class Repository<TModel = unknown> {
 	 *
 	 * @param options - The query options to apply to the search.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns The count of records matching the query options.
 	 *
@@ -395,7 +378,7 @@ export class Repository<TModel = unknown> {
 	 * @param data - The data to insert. Can be a single object or an array of objects.
 	 * @param options - The query options to apply to the insertion.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of inserted records.
 	 *
@@ -442,7 +425,7 @@ export class Repository<TModel = unknown> {
 	 * @param data - The data to update. Can be a single object or an array of objects.
 	 * @param options - The query options to apply to the update.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of updated records.
 	 *
@@ -491,7 +474,7 @@ export class Repository<TModel = unknown> {
 	 *
 	 * @param options - The query options to apply to the deletion.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of deleted records.
 	 *
@@ -667,7 +650,7 @@ export class Repository<TModel = unknown> {
 	 * @param error - The error object thrown by Knex.js.
 	 * @param query - The Knex.js query builder that caused the error.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns Never returns, always throws an error.
 	 */
@@ -712,8 +695,8 @@ export class Repository<TModel = unknown> {
 	 * @param query - The Knex.js query builder to execute.
 	 * @param throwIfNoResult - Whether to throw an error if no records are found.
 	 *
-	 * @throws ({@link HttpError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-	 * @throws ({@link HttpError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of records returned by the query.
 	 */
