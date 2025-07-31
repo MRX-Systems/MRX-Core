@@ -89,7 +89,7 @@ export const dbResolver = <
 			>
 		> => _resolveDatabaseConnection<TDatabase, THeaderKeyName>(database, headers));
 
-	if (typeof database === 'object' && 'headerKeyName' in database) {
+	if (typeof database === 'object') {
 		const dynamicConf = database;
 		app.model({
 			ResolveDbHeader: t.Object({
