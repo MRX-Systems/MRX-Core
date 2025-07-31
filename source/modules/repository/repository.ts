@@ -364,6 +364,8 @@ export class Repository<TModel = unknown> {
 		const query = this._knex(this._table.name)
 			.count({ count: '*' });
 		this._applyFilter(query, options?.filters);
+		if (options?.transaction)
+			query.transacting(options.transaction);
 
 		return this._executeQuery<{ count: number }>(query, options?.throwIfNoResult)
 			.then((result) => result[0].count);
@@ -412,6 +414,9 @@ export class Repository<TModel = unknown> {
 		const query = this._knex(this._table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
+
+		if (options?.transaction)
+			query.transacting(options.transaction);
 
 		return this._executeQuery<KModel>(query);
 	}
