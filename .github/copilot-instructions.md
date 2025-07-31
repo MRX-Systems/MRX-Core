@@ -111,3 +111,60 @@ It is designed to be modular, strongly typed, and highly focused on Developer Ex
 2. **Maintain existing code structure and modular organization**
 3. **Keep the developer experience (DX) in mind**
 4. **Keep pull requests focused and well-documented with TsDoc (with comments if asked)**
+
+## Commit Message Convention
+
+This project uses a strict [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format, enhanced with emojis for clarity and rapid visual parsing.
+
+### Format
+
+<type>(<emoji>): [<summary up to 72 chars>]
+<optional blank line>
+<optional detailed description in markdown>
+
+
+- **Type:** One of `feat`, `fix`, `perf`, `refactor`, `build`, `types`, `chore`, `examples`, `docs`, `test`, `style`, `ci`
+- **Emoji:** Corresponding emoji for each type (see table below)
+- **Summary:** Short summary (max 72 characters), enclosed in square brackets `[ ]`
+- **Description:** (Optional, but recommended) Detailed explanation in markdown, using headings (`## Features`, `## Bug Fixes`, etc.), lists, and code blocks if needed.
+
+### Commit Types & Emojis
+
+| Type      | Emoji | Use for                                             |
+|-----------|-------|-----------------------------------------------------|
+| feat      | 🚀    | New features                                        |
+| fix       | 🔧    | Bug fixes                                           |
+| perf      | ⚡    | Performance improvements                            |
+| refactor  | 🧹    | Refactoring code                                    |
+| build     | 📦    | Build tools / dependency changes                    |
+| types     | 🌊    | Type definitions                                    |
+| chore     | 🦉    | Maintenance, non-code/test changes                  |
+| examples  | 🏀    | Example updates                                     |
+| docs      | 📖    | Documentation changes                               |
+| test      | 🧪    | Test code updates                                   |
+| style     | 🎨    | Style/formatting only                               |
+| ci        | 🤖    | CI/CD configuration                                |
+
+### Guidelines
+
+- Use the format:  
+  `<type>(<emoji>): [<summary>]`  
+  (summary in **square brackets**)
+- Summary: **max 72 characters**
+- Description: Use markdown for clarity. Include sections:
+  - For new features: `## Features`, `## Description`
+  - For bug fixes: `## Bug Fixes`, `## Description`
+  - For others: adapt (see below)
+- For every commit, provide a clear, complete description explaining the changes.
+- Examples:
+
+   ```markdown
+   feat(🚀): [add advanced repository filtering operators]
+
+   ## Features
+   - Added `$eq`, `$like`, `$between` filtering operators to repository
+
+   ## Description
+   These new operators allow advanced querying and filtering of database records using the repository pattern.
+   For example:
+   ```
