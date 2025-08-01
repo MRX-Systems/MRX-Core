@@ -1,4 +1,4 @@
-export const HTTP_STATUS_CODES = {
+export const HTTP_ERROR_STATUS_CODES = {
 	// 4xx Client Error Status Codes
 	BAD_REQUEST: 400,
 	UNAUTHORIZED: 401,

@@ -1,4 +1,4 @@
-import type { HTTP_STATUS_CODES } from '#/errors/enums/httpStatusCodes';
+import type { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpStatusCodes';
 import type { BaseErrorOptions } from './baseErrorOptions';
 
 /**
@@ -10,5 +10,5 @@ export interface HttpErrorOptions<TCause = unknown> extends BaseErrorOptions<TCa
 	/**
 	 * The HTTP status code associated with the error
 	 */
-	httpStatusCode?: keyof typeof HTTP_STATUS_CODES | typeof HTTP_STATUS_CODES[keyof typeof HTTP_STATUS_CODES];
+	httpStatusCode?: keyof typeof HTTP_ERROR_STATUS_CODES | typeof HTTP_ERROR_STATUS_CODES[keyof typeof HTTP_ERROR_STATUS_CODES];
 }

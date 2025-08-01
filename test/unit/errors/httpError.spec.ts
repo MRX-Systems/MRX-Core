@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
 import { BaseError } from '#/errors/baseError';
-import { HTTP_STATUS_CODES } from '#/errors/enums/httpStatusCodes';
+import { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpStatusCodes';
 import { HttpError } from '#/errors/httpError';
 
 describe('HttpError', () => {
@@ -68,7 +68,7 @@ describe('HttpError', () => {
 		});
 
 		test('should handle all available HTTP status codes', () => {
-			const statusCodes = Object.keys(HTTP_STATUS_CODES) as (keyof typeof HTTP_STATUS_CODES)[];
+			const statusCodes = Object.keys(HTTP_ERROR_STATUS_CODES) as (keyof typeof HTTP_ERROR_STATUS_CODES)[];
 
 			statusCodes.forEach((statusCode) => {
 				const httpError = new HttpError({
@@ -76,7 +76,7 @@ describe('HttpError', () => {
 					httpStatusCode: statusCode
 				});
 
-				expect(httpError.httpStatusCode).toBe(HTTP_STATUS_CODES[statusCode]);
+				expect(httpError.httpStatusCode).toBe(HTTP_ERROR_STATUS_CODES[statusCode]);
 				expect(httpError.message).toBe(`Error for ${statusCode}`);
 			});
 		});
@@ -213,7 +213,7 @@ describe('HttpError', () => {
 
 	describe('isClientError', () => {
 		test('should return true for 4xx status codes', () => {
-			const clientErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
+			const clientErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
 				'BAD_REQUEST',
 				'UNAUTHORIZED',
 				'FORBIDDEN',
@@ -232,7 +232,7 @@ describe('HttpError', () => {
 		});
 
 		test('should return false for 5xx status codes', () => {
-			const serverErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
+			const serverErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
 				'INTERNAL_SERVER_ERROR',
 				'NOT_IMPLEMENTED',
 				'BAD_GATEWAY',
@@ -249,7 +249,7 @@ describe('HttpError', () => {
 
 	describe('isServerError', () => {
 		test('should return true for 5xx status codes', () => {
-			const serverErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
+			const serverErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
 				'INTERNAL_SERVER_ERROR',
 				'NOT_IMPLEMENTED',
 				'BAD_GATEWAY',
@@ -268,7 +268,7 @@ describe('HttpError', () => {
 		});
 
 		test('should return false for 4xx status codes', () => {
-			const clientErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
+			const clientErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
 				'BAD_REQUEST',
 				'UNAUTHORIZED',
 				'FORBIDDEN',
