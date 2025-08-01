@@ -68,7 +68,7 @@ export class SingletonManager {
 	* Unregisters a class from the SingletonManager.
 	*
 	* @param name - The name of the class to unregister.
-	*²
+	*
 	* @throws ({@link BaseError}) If the class constructor is not registered, it throws an error.
 	*/
 	public static unregister(name: string): void {
