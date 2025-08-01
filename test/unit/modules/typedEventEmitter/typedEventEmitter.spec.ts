@@ -17,7 +17,7 @@ const testData = {
 		string: 'test payload',
 		stringFirst: 'first emission',
 		stringSecond: 'second emission',
-		stringAgainx: 'test payload again',
+		stringAgain: 'test payload again',
 		object: { id: 123, value: 'test value' }
 	} as const
 } as const;
@@ -125,7 +125,7 @@ describe('TypedEventEmitter', (): void => {
 				emitter.once(testData.eventNames.testEvent, secondListener);
 
 				emitter.emit(testData.eventNames.testEvent, testData.payloads.string);
-				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgainx);
+				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgain);
 
 				expect(firstListener).toHaveBeenCalledTimes(1);
 				expect(secondListener).toHaveBeenCalledTimes(1);
@@ -428,7 +428,7 @@ describe('TypedEventEmitter', (): void => {
 				expect(listenersAfterFirstEmit[0]).toBe(permanentListener);
 
 				// Second emission
-				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgainx);
+				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgain);
 				expect(onceListener).toHaveBeenCalledTimes(1); // Should not be called again
 				expect(permanentListener).toHaveBeenCalledTimes(2); // Should be called again
 			});
@@ -461,7 +461,7 @@ describe('TypedEventEmitter', (): void => {
 				expect(listenersAfterFirstEmit[0]).toBe(permanentListener);
 
 				// Second emission
-				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgainx);
+				emitter.emit(testData.eventNames.testEvent, testData.payloads.stringAgain);
 				expect(secondOnceListener).toHaveBeenCalledTimes(1); // Should not be called again
 				expect(firstOnceListener).toHaveBeenCalledTimes(1); // Should not be called again
 				expect(permanentListener).toHaveBeenCalledTimes(2); // Should be called again
