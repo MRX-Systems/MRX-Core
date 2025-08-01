@@ -1042,5 +1042,75 @@ describe('Repository', () => {
 			}
 		});
 	});
+
+	describe('transaction support', () => {
+		test('should apply transaction to find query when provided', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = await repository.find<Data>({
+					filters: { id: { $lte: 5 } },
+					transaction: trx
+				});
+				expect(data).toBeInstanceOf(Array);
+				expect(data.length).toBeGreaterThan(0);
+			});
+		});
+
+		test('should apply transaction to count query when provided', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const count = await repository.count<Data>({
+					filters: { id: { $lte: 5 } },
+					transaction: trx
+				});
+				expect(count).toBeGreaterThan(0);
+			});
+		});
+
+		test('should apply transaction to insert query when provided', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = {
+					name: 'Repository::transaction-insert',
+					age: 25,
+					birth: new Date('2021-01-25'),
+					bool: true
+				};
+				const items = await repository.insert(data, {
+					transaction: trx
+				});
+				expect(items).toHaveLength(1);
+				expect(items[0]).toHaveProperty('id');
+			});
+		});
+
+		test('should apply transaction to update query when provided', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const data = {
+					name: 'Repository::transaction-update'
+				};
+				const items = await repository.update(data, {
+					filters: { id: { $gte: 15 } },
+					transaction: trx
+				});
+				expect(items).toBeInstanceOf(Array);
+			});
+		});
+
+		test('should apply transaction to delete query when provided', async () => {
+			await knexInstance.transaction(async (trx) => {
+				const items = await repository.delete({
+					filters: { id: { $gte: 25 } },
+					transaction: trx
+				});
+				expect(items).toBeInstanceOf(Array);
+			});
+		});
+
+		test('should work without transaction when not provided', async () => {
+			const data = await repository.find<Data>({
+				filters: { id: { $lte: 3 } }
+			});
+			expect(data).toBeInstanceOf(Array);
+		});
+	});
+
 	afterAll(dropDataTable);
 });
