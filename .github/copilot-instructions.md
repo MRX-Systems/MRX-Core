@@ -57,7 +57,7 @@ This is a modular, strongly-typed TypeScript library for the Bun runtime, focuse
 6. **Control structures:**  
    - For `if`, `for`, etc., with only a single statement in the body, omit curly braces
 7. **Path Aliases:**  
-   - Use `#/` for internal imports (e.g., `#/errors/baseError`, `#/modules/database`)
+   - Use `#/` for internal imports (for example, `#/errors/baseError`). Do not import "barrel" files; they are only used as entry points.
 8. **Export Pattern:**  
    - Each directory should have an `index.ts` that re-exports public items  
    - Types are exported in a separate `types/index.ts`
@@ -77,6 +77,7 @@ This is a modular, strongly-typed TypeScript library for the Bun runtime, focuse
 2. **Maintain existing code structure and modular organization**
 3. **Keep the developer experience (DX) in mind**
 4. **Keep pull requests focused and well-documented with TsDoc (with comments if asked)**
+5. **Commit different types of changes separately (features, fixes, refactors, etc.); for example, do not include tests in the same commit as features**
 
 ## Commit Message Convention (Conventional Commits + Emoji)
 
