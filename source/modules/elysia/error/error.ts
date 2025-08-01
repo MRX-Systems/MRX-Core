@@ -29,7 +29,7 @@ export const error = new Elysia({
 					cause: error.cause
 				};
 			case 'VALIDATION': {
-				set.status = 400;
+				set.status = 422;
 				return {
 					message: 'core.error.validation',
 					cause: {
