@@ -364,6 +364,8 @@ export class Repository<TModel = unknown> {
 		const query = this._knex(this._table.name)
 			.count({ count: '*' });
 		this._applyFilter(query, options?.filters);
+		if (options?.transaction)
+			query.transacting(options.transaction);
 
 		return this._executeQuery<{ count: number }>(query, options?.throwIfNoResult)
 			.then((result) => result[0].count);
@@ -412,6 +414,9 @@ export class Repository<TModel = unknown> {
 		const query = this._knex(this._table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
+
+		if (options?.transaction)
+			query.transacting(options.transaction);
 
 		return this._executeQuery<KModel>(query);
 	}
@@ -640,7 +645,8 @@ export class Repository<TModel = unknown> {
 		this._applyFilter<KModel>(query, options?.filters);
 		this._applyOrderBy<KModel>(query, options?.orderBy);
 		this._applySelectedFields<KModel>(query, options?.selectedFields);
-		// transaction
+		if (options?.transaction)
+			query.transacting(options.transaction);
 	}
 
 	/**
