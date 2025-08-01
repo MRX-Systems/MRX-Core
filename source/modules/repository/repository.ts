@@ -1,9 +1,9 @@
 import type { Knex } from 'knex';
 import { PassThrough } from 'stream';
 
-import { CoreError } from '#/error/coreError';
-import { databaseErrorKeys } from '#/modules/database/enums/databaseErrorKeys';
-import { mssqlErrorCode } from '#/modules/database/enums/mssqlErrorCode';
+import { HttpError } from '#/errors/httpError';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
+import { MSSQL_ERROR_CODE } from '#/modules/database/enums/mssqlErrorCode';
 import type { Table } from '#/modules/database/table';
 import { isDateString } from '#/utils/isDateString';
 import { makeStreamAsyncIterable } from '#/utils/stream';
@@ -196,23 +196,6 @@ export class Repository<TModel = unknown> {
 	 *     }
 	 * });
 	 * ```
-	 * @example
-	 * With timeout and custom buffer size for large datasets
-	 * ```ts
-	 * const stream = userRepository.findStream({
-	 *     timeout: 30000, // 30 seconds timeout (default is 5 minutes)
-	 *     highWaterMark: 64, // Larger buffer for better throughput
-	 *     filters: { isActive: true }
-	 * });
-	 * ```
-	 * @example
-	 * Disable timeout for long-running streams
-	 * ```ts
-	 * const stream = userRepository.findStream({
-	 *     timeout: 0, // No timeout - use with caution!
-	 *     filters: { department: 'analytics' }
-	 * });
-	 * ```
 	 */
 	public findStream<KModel extends TModel = NoInfer<TModel>>(
 		options?: QueryOptionsExtendStream<KModel>
@@ -238,10 +221,9 @@ export class Repository<TModel = unknown> {
 
 		// Handle source stream errors
 		kStream.on('error', (error: unknown) => {
-			const code = (error as { number: keyof typeof mssqlErrorCode })?.number || 0;
-			passThrough.emit('error', new CoreError({
-				key: mssqlErrorCode[code] ?? databaseErrorKeys.mssqlQueryError,
-				message: 'An error occurred while streaming the query results.',
+			const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
+			passThrough.emit('error', new HttpError({
+				message: MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR,
 				cause: {
 					query: query.toSQL().sql,
 					error
@@ -268,8 +250,8 @@ export class Repository<TModel = unknown> {
 	 *
 	 * @param options - The query options to apply to the search.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of records matching the query options.
 	 *
@@ -348,8 +330,8 @@ export class Repository<TModel = unknown> {
 	 *
 	 * @param options - The query options to apply to the search.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns The count of records matching the query options.
 	 *
@@ -396,7 +378,7 @@ export class Repository<TModel = unknown> {
 	 * @param data - The data to insert. Can be a single object or an array of objects.
 	 * @param options - The query options to apply to the insertion.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of inserted records.
 	 *
@@ -443,7 +425,7 @@ export class Repository<TModel = unknown> {
 	 * @param data - The data to update. Can be a single object or an array of objects.
 	 * @param options - The query options to apply to the update.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of updated records.
 	 *
@@ -492,7 +474,7 @@ export class Repository<TModel = unknown> {
 	 *
 	 * @param options - The query options to apply to the deletion.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of deleted records.
 	 *
@@ -663,12 +645,12 @@ export class Repository<TModel = unknown> {
 
 	/**
 	 * Handles errors that occur during query execution. This method centralizes error handling
-	 * for MSSQL-specific errors and throws a {@link CoreError} with relevant information.
+	 * for MSSQL-specific errors and throws a {@link HttpError} with relevant information.
 	 *
 	 * @param error - The error object thrown by Knex.js.
 	 * @param query - The Knex.js query builder that caused the error.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns Never returns, always throws an error.
 	 */
@@ -676,12 +658,11 @@ export class Repository<TModel = unknown> {
 		error: unknown,
 		query: Knex.QueryBuilder
 	): never {
-		if (error instanceof CoreError)
+		if (error instanceof HttpError)
 			throw error;
-		const code = (error as { number: keyof typeof mssqlErrorCode })?.number || 0;
-		throw new CoreError({
-			key: mssqlErrorCode[code] ?? databaseErrorKeys.mssqlQueryError,
-			message: 'An error occurred while executing the query.',
+		const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
+		throw new HttpError({
+			message: MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR,
 			cause: {
 				query: query.toSQL().sql,
 				error
@@ -714,8 +695,8 @@ export class Repository<TModel = unknown> {
 	 * @param query - The Knex.js query builder to execute.
 	 * @param throwIfNoResult - Whether to throw an error if no records are found.
 	 *
-	 * @throws ({@link CoreError}) Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
-	 * @throws ({@link CoreError}) Throws an error if an MSSQL-specific error occurs during the query execution.
+	 * @throws ({@link HttpError}) - Throws an error if no records are found if the {@link QueryOptions.throwIfNoResult} option is enabled.
+	 * @throws ({@link HttpError}) - Throws an error if an MSSQL-specific error occurs during the query execution.
 	 *
 	 * @returns An array of records returned by the query.
 	 */
@@ -726,9 +707,8 @@ export class Repository<TModel = unknown> {
 		try {
 			const result: KModel[] = await query;
 			if (throwIfNoResult && result.length === 0)
-				throw new CoreError({
-					key: databaseErrorKeys.mssqlNoResult,
-					message: typeof throwIfNoResult === 'string' ? throwIfNoResult : 'No records found matching the specified query options.',
+				throw new HttpError({
+					message: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
 					cause: !process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {
 							query: query.toSQL().sql

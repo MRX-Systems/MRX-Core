@@ -1,1 +1,0 @@
-export { microservicePlugin } from './microservice';

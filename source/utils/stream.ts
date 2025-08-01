@@ -16,9 +16,8 @@ import type { Stream } from 'stream';
  * const readableStream = Readable.from(['data1', 'data2', 'data3']);
  * const asyncIterableStream = makeStreamAsyncIterable(readableStream);
  *
- * for await (const data of asyncIterableStream) {
+ * for await (const data of asyncIterableStream)
  *     console.log(data); // Outputs: data1, data2, data3
- * }
  * ```
  */
 export const makeStreamAsyncIterable = <TModel, KStream extends Stream = Stream>(stream: KStream): KStream & AsyncIterable<TModel> => {

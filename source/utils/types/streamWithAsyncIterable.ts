@@ -16,14 +16,18 @@ import type { PassThrough } from 'stream';
  * }
  * ```
  * @example
+ * Use the stream with async iterable
  * ```ts
  * const users: StreamWithAsyncIterable<User> = ...;
  *
- * // Method 1
  * for await (const user of users)
  *    console.log(user);
+ *```
+ * @example
+ * Use the stream with event listeners
+ * ```ts
+ * const users: StreamWithAsyncIterable<User> = ...;
  *
- * // Method 2
  * users.on('data', (user: User) => console.log(user));
  * ```
  */

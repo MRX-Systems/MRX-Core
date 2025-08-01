@@ -7,6 +7,7 @@ import {
 	filterByValue,
 	transformKeys
 } from '#/modules/data/data';
+import { DATA_ERROR_KEYS } from '#/modules/data/enums/dataErrorKeys';
 import { CamelCaseTransformer } from '#/modules/data/transformers/camelCase';
 import { KebabCaseTransformer } from '#/modules/data/transformers/kebabCase';
 import { PascalCaseTransformer } from '#/modules/data/transformers/pascalCase';
@@ -40,7 +41,7 @@ const testData = {
  * Error messages expected from the data functions.
  */
 const expectedErrorMessages = {
-	NULL_DATA: 'Data cannot be null or undefined.'
+	NULL_DATA: DATA_ERROR_KEYS.DATA_IS_NULL
 } as const;
 
 /**

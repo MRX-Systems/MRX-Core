@@ -1,7 +1,8 @@
 import { beforeAll, describe, expect, test } from 'bun:test';
 import nodemailer from 'nodemailer';
 
-import type { SMTPOptions } from '#/modules/mailer/types';
+import { MAILER_ERROR_KEYS } from '#/modules/mailer/enums/mailerErrorKeys';
+import type { SMTPOptions } from '#/modules/mailer/types/smtpOptions';
 
 describe('SMTP', () => {
 	let testAccount: nodemailer.TestAccount;
@@ -89,20 +90,20 @@ describe('SMTP', () => {
 		});
 
 		test('should throw CoreError when already connected', async () => {
-			const { CoreError } = await import('#/error/coreError');
+			const { BaseError } = await import('#/errors/baseError');
 
 			const mailer = await createTestSMTP();
 			await mailer.connect();
 
-			expect(mailer.connect()).rejects.toThrow(CoreError);
-			expect(mailer.connect()).rejects.toThrow('SMTP transporter is already connected.');
+			expect(mailer.connect()).rejects.toThrow(BaseError);
+			expect(mailer.connect()).rejects.toThrow(MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED);
 
 			// Clean up
 			mailer.disconnect();
 		});
 
 		test('should throw CoreError when connection fails with invalid host', async () => {
-			const { CoreError } = await import('#/error/coreError');
+			const { BaseError } = await import('#/errors/baseError');
 
 			const mailer = await createTestSMTP({
 				host: 'invalid.nonexistent.host.example',
@@ -112,8 +113,8 @@ describe('SMTP', () => {
 			try {
 				await mailer.connect();
 			} catch (error) {
-				expect(error).toBeInstanceOf(CoreError);
-				expect((error as InstanceType<typeof CoreError>).message).toBe('An error occurred while connecting to the SMTP server');
+				expect(error).toBeInstanceOf(BaseError);
+				expect((error as InstanceType<typeof BaseError>).message).toBe(MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR);
 			}
 		});
 
@@ -166,12 +167,12 @@ describe('SMTP', () => {
 
 	describe('sendMail', () => {
 		test('should throw CoreError when not connected', async () => {
-			const { CoreError } = await import('#/error/coreError');
+			const { BaseError } = await import('#/errors/baseError');
 
 			const mailer = await createTestSMTP();
 
-			expect(mailer.sendMail({})).rejects.toThrow(CoreError);
-			expect(mailer.sendMail({})).rejects.toThrow('SMTP transporter is not connected.');
+			expect(mailer.sendMail({})).rejects.toThrow(BaseError);
+			expect(mailer.sendMail({})).rejects.toThrow(MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED);
 		});
 
 		test('should send mail successfully when connected', async () => {

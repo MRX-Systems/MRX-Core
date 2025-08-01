@@ -1,1 +1,0 @@
-export { dbResolverPlugin } from './dbResolver';

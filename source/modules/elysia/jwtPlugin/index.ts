@@ -1,1 +1,0 @@
-export { jwtPlugin } from './jwt';
