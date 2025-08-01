@@ -26,9 +26,11 @@ bun.lock
 # === Project-specific folders ===
 source/
 test/
+sandbox/
+benchmarks/
 
 # === Core project files ===
 README.md
 tsconfig.json
-tsconfig.dts.json
+tsconfig.build.json
 bunfig.toml

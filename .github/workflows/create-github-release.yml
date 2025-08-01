@@ -1,4 +1,4 @@
-name: Reusable Publish Release
+name: Create GitHub Release
 
 on:
   workflow_call:
@@ -14,7 +14,7 @@ on:
       isPrerelease:
         description: 'Is this a prerelease? (true/false)'
         required: true
-        type: boolean
+        type: string
     secrets:
       KEY_SSH:
         required: true
@@ -76,17 +76,31 @@ jobs:
 
       - name: Generate Changelog and bump version
         run: |
-          if [ -n "${{ inputs.versionSuffix }}" ]; then
-            bunx changelogen@latest --from ${{ steps.prev_tag.outputs.last_tag }} --bump --versionSuffix "${{ inputs.versionSuffix }}" --release
+          if [ -n "${{ steps.prev_tag.outputs.last_tag }}" ]; then
+            if [ -n "${{ inputs.versionSuffix }}" ]; then
+              bunx changelogen@latest --from ${{ steps.prev_tag.outputs.last_tag }} --bump --versionSuffix "${{ inputs.versionSuffix }}" --release
+            else
+              bunx changelogen@latest --from ${{ steps.prev_tag.outputs.last_tag }} --bump --release
+            fi
           else
-            bunx changelogen@latest --from ${{ steps.prev_tag.outputs.last_tag }} --bump --release
+            if [ -n "${{ inputs.versionSuffix }}" ]; then
+              bunx changelogen@latest --bump --versionSuffix "${{ inputs.versionSuffix }}" --release
+            else
+              bunx changelogen@latest --bump --release
+            fi
           fi
+
 
       - name: Sign the tag manually
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No tags found, skipping signing step."
+            exit 0
+          fi
           echo "Signing tag: $LATEST_TAG"
           git tag -s "$LATEST_TAG" -m "Signed Release $LATEST_TAG" --force
+
 
       - name: Push generated tag
         run: git push origin HEAD:${{ inputs.branch }} --tags
@@ -126,13 +140,6 @@ jobs:
               --latest
           fi
 
-      - name: Rebase develop branch to main
-        if: ${{ inputs.isPrerelease == false }}
-        run: |
-          git checkout develop
-          git rebase main
-          git push origin develop
-
       - name: Final Summary
         run: |
           tag="${{ steps.latest_tag.outputs.tag_name }}"
@@ -151,4 +158,4 @@ jobs:
           echo "| 🏷️ $tag | [View Release]($url) | $signature |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Publication completed." >> $GITHUB_STEP_SUMMARY
+          echo "✅ Release created successfully." >> $GITHUB_STEP_SUMMARY

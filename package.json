@@ -1,130 +1,130 @@
 {
-  "name": "@mrxsys/mrx-core",
-  "version": "2.4.0",
-  "author": "Ruby",
-  "description": " Core provides a set of tools to help you build a microservice",
-  "type": "module",
-  "license": "MIT",
-  "keywords": [
-    "mrxsys",
-    "mrxsys-core",
-    "core"
-  ],
-  "exports": {
-    "./data": "./dist/data/index.js",
-    "./data/enums": "./dist/data/enums/index.js",
-    "./data/transformers": "./dist/data/transformers/index.js",
-    "./data/types": "./dist/data/types/index.js",
-    "./database": "./dist/database/index.js",
-    "./database/enums": "./dist/database/enums/index.js",
-    "./database/events": "./dist/database/events/index.js",
-    "./database/types": "./dist/database/types/index.js",
-    "./elysia": "./dist/elysia/index.js",
-    "./elysia/enums": "./dist/elysia/enums/index.js",
-    "./elysia/schema": "./dist/elysia/schemas/index.js",
-    "./elysia/types": "./dist/elysia/types/index.js",
-    "./error": "./dist/error/index.js",
-    "./error/types": "./dist/error/types/index.js",
-    "./logger": "./dist/logger/index.js",
-    "./logger/enums": "./dist/logger/enums/index.js",
-    "./logger/events": "./dist/logger/events/index.js",
-    "./logger/strategies": "./dist/logger/strategies/index.js",
-    "./logger/types": "./dist/logger/types/index.js",
-    "./mailer": "./dist/mailer/index.js",
-    "./mailer/enums": "./dist/mailer/enums/index.js",
-    "./mailer/types": "./dist/mailer/types/index.js",
-    "./repository": "./dist/repository/index.js",
-    "./repository/types": "./dist/repository/types/index.js",
-    "./singletonManager": "./dist/singletonManager/index.js",
-    "./singletonManager/enums": "./dist/singletonManager/enums/index.js",
-    "./store": "./dist/store/index.js",
-    "./typedEventEmitter": "./dist/typedEventEmitter/index.js",
-    "./typedEventEmitter/types": "./dist/typedEventEmitter/types/index.js",
-    "./utils": "./dist/utils/index.js",
-    "./utils/enums": "./dist/utils/enums/index.js",
-    "./utils/types": "./dist/utils/types/index.js",
-    ".": "./dist/index.js"
-  },
-  "scripts": {
-    "build": "bun builder.ts",
-    "docs": "typedoc --tsconfig tsconfig.dts.json",
-    "fix-lint": "eslint --fix ./source",
-    "lint": "eslint ./source",
-    "start": "bun build/index.js",
-    "test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
-    "test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
-    "test": "bun test --coverage --timeout 5500"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.27.0",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/bun": "^1.2.13",
-    "@types/nodemailer": "^6.4.17",
-    "eslint": "^9.27.0",
-    "globals": "^16.1.0",
-    "tsc-alias": "^1.8.16",
-    "typedoc": "^0.28.4",
-    "typescript-eslint": "^8.32.1"
-  },
-  "peerDependencies": {
-    "elysia": "^1.3.1",
-    "ioredis": "^5.6.1",
-    "jose": "^6.0.11",
-    "knex": "^3.1.0",
-    "mssql": "^11.0.1",
-    "nodemailer": "^7.0.3",
-    "typescript": "^5.8.3"
-  },
-  "changelog": {
-    "types": {
-      "feat": {
-        "title": "🚀 Enhancements",
-        "semver": "minor"
-      },
-      "perf": {
-        "title": "⚡ Performance",
-        "semver": "patch"
-      },
-      "fix": {
-        "title": "🔧 Fixes",
-        "semver": "patch"
-      },
-      "refactor": {
-        "title": "🧹 Refactors",
-        "semver": "patch"
-      },
-      "docs": {
-        "title": "📖 Documentation",
-        "semver": "patch"
-      },
-      "build": {
-        "title": "📦 Build",
-        "semver": "patch"
-      },
-      "types": {
-        "title": "🌊 Types",
-        "semver": "patch"
-      },
-      "chore": {
-        "title": "🦉 Chore"
-      },
-      "examples": {
-        "title": "🏀 Examples"
-      },
-      "test": {
-        "title": "🧪 Tests"
-      },
-      "style": {
-        "title": "🎨 Styles"
-      },
-      "ci": {
-        "title": "🤖 CI"
-      }
-    },
-    "templates": {
-      "commitMessage": "chore(🦉): v{{newVersion}}",
-      "tagMessage": "v{{newVersion}}",
-      "tagBody": "v{{newVersion}}"
-    }
-  }
+	"name": "@mrxsys/mrx-core",
+	"version": "2.4.0",
+	"author": "Ruby",
+	"description": " Core provides a set of tools to help you build a microservice",
+	"type": "module",
+	"license": "MIT",
+	"keywords": [
+		"mrxsys",
+		"mrxsys-core",
+		"core"
+	],
+	"exports": {
+		"./errors": "./dist/errors/index.js",
+		"./errors/types": "./dist/errors/types/index.js",
+		"./modules/data": "./dist/modules/data/index.js",
+		"./modules/data/transformers": "./dist/modules/data/transformers/index.js",
+		"./modules/data/types": "./dist/modules/data/types/index.js",
+		"./modules/database": "./dist/modules/database/index.js",
+		"./modules/database/events": "./dist/modules/database/events/index.js",
+		"./modules/database/types": "./dist/modules/database/types/index.js",
+		"./modules/elysia/crud": "./dist/modules/elysia/crud/index.js",
+		"./modules/elysia/crud/types": "./dist/modules/elysia/crud/types/index.js",
+		"./modules/elysia/crudSchema": "./dist/modules/elysia/crudSchema/index.js",
+		"./modules/elysia/crudSchema/types": "./dist/modules/elysia/crudSchema/types/index.js",
+		"./modules/elysia/crudSchema/utils": "./dist/modules/elysia/crudSchema/utils/index.js",
+		"./modules/elysia/dbResolver": "./dist/modules/elysia/dbResolver/index.js",
+		"./modules/elysia/dbResolver/types": "./dist/modules/elysia/dbResolver/types/index.js",
+		"./modules/elysia/error": "./dist/modules/elysia/error/index.js",
+		"./modules/elysia/jwt": "./dist/modules/elysia/jwt/index.js",
+		"./modules/elysia/microservice": "./dist/modules/elysia/microservice/index.js",
+		"./modules/elysia/ratelimit": "./dist/modules/elysia/ratelimit/index.js",
+		"./modules/elysia/ratelimit/types": "./dist/modules/elysia/ratelimit/types/index.js",
+		"./modules/logger": "./dist/modules/logger/index.js",
+		"./modules/logger/events": "./dist/modules/logger/events/index.js",
+		"./modules/logger/strategies": "./dist/modules/logger/strategies/index.js",
+		"./modules/logger/types": "./dist/modules/logger/types/index.js",
+		"./modules/mailer": "./dist/modules/mailer/index.js",
+		"./modules/mailer/types": "./dist/modules/mailer/types/index.js",
+		"./modules/repository": "./dist/modules/repository/index.js",
+		"./modules/repository/types": "./dist/modules/repository/types/index.js",
+		"./modules/singletonManager": "./dist/modules/singletonManager/index.js",
+		"./modules/typedEventEmitter": "./dist/modules/typedEventEmitter/index.js",
+		"./modules/typedEventEmitter/types": "./dist/modules/typedEventEmitter/types/index.js",
+		"./utils": "./dist/utils/index.js",
+		"./utils/types": "./dist/utils/types/index.js"
+	},
+	"scripts": {
+		"build": "bun builder.ts",
+		"docs": "bunx typedoc --tsconfig tsconfig.build.json",
+		"fix-lint": "eslint --fix ./source",
+		"lint": "eslint ./source",
+		"start": "bun build/index.js",
+		"test:integration": "bun test --timeout 5500 $(find test/integration -name '*.spec.ts')",
+		"test:unit": "bun test --timeout 5500 --coverage $(find test/unit -name '*.spec.ts')",
+		"test": "bun test --coverage --timeout 5500"
+	},
+	"devDependencies": {
+		"@elysiajs/swagger": "^1.3.1",
+		"@eslint/js": "^9.32.0",
+		"@stylistic/eslint-plugin": "^5.2.2",
+		"@types/bun": "^1.2.19",
+		"@types/nodemailer": "^6.4.17",
+		"eslint": "^9.32.0",
+		"globals": "^16.3.0",
+		"ioredis": "^5.7.0",
+		"typescript-eslint": "^8.38.0"
+	},
+	"peerDependencies": {
+		"@sinclair/typebox": "0.34.38",
+		"elysia": "^1.3.7",
+		"jose": "^6.0.12",
+		"knex": "^3.1.0",
+		"mssql": "^11.0.1",
+		"nodemailer": "^7.0.5",
+		"typescript": "^5.8.3"
+	},
+	"changelog": {
+		"types": {
+			"feat": {
+				"title": "🚀 Enhancements",
+				"semver": "minor"
+			},
+			"perf": {
+				"title": "⚡ Performance",
+				"semver": "patch"
+			},
+			"fix": {
+				"title": "🔧 Fixes",
+				"semver": "patch"
+			},
+			"refactor": {
+				"title": "🧹 Refactors",
+				"semver": "patch"
+			},
+			"docs": {
+				"title": "📖 Documentation",
+				"semver": "patch"
+			},
+			"build": {
+				"title": "📦 Build",
+				"semver": "patch"
+			},
+			"types": {
+				"title": "🌊 Types",
+				"semver": "patch"
+			},
+			"chore": {
+				"title": "🦉 Chore"
+			},
+			"examples": {
+				"title": "🏀 Examples"
+			},
+			"test": {
+				"title": "🧪 Tests"
+			},
+			"style": {
+				"title": "🎨 Styles"
+			},
+			"ci": {
+				"title": "🤖 CI"
+			}
+		},
+		"templates": {
+			"commitMessage": "chore(🦉): v{{newVersion}}",
+			"tagMessage": "v{{newVersion}}",
+			"tagBody": "v{{newVersion}}"
+		}
+	}
 }

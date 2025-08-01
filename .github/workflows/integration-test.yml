@@ -1,4 +1,4 @@
-name: Reusable Integration Test
+name: Integration Test
 
 on:
   workflow_call:
@@ -49,54 +49,11 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.15
 
       - name: Install Dependencies
         run: bun install
 
       - name: Run Integration Tests and update Summary
         id: integration_test
-        run: |
-          start=$(date +%s%3N)
-          # Run tests and capture output
-          bun run test:integration > integration-test.log 2>&1
-          status_code=$?
-          end=$(date +%s%3N)
-          duration_ms=$((end - start))
-          # Extract pass/fail from output summary
-          pass=$(grep -Eo '([0-9]+) pass' integration-test.log | tail -1 | grep -Eo '[0-9]+' || echo 0)
-          fail=$(grep -Eo '([0-9]+) fail' integration-test.log | tail -1 | grep -Eo '[0-9]+' || echo 0)
-          if [ "$status_code" = "0" ]; then
-            status="success"
-          else
-            status="failed"
-          fi
-          echo "status=$status" >> $GITHUB_OUTPUT
-          echo "duration_ms=$duration_ms" >> $GITHUB_OUTPUT
-          echo "passed=$pass" >> $GITHUB_OUTPUT
-          echo "failed=$fail" >> $GITHUB_OUTPUT
-          exit $status_code
-
-      - name: Final Summary
-        run: |
-          status="${{ steps.integration_test.outputs.status }}"
-          duration_ms="${{ steps.integration_test.outputs.duration_ms }}"
-          passed="${{ steps.integration_test.outputs.passed }}"
-          failed="${{ steps.integration_test.outputs.failed }}"
-          if [ "$status" = "success" ]; then
-            status_icon="✅ Success"
-          else
-            status_icon="❌ Failed"
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🧪 Integration Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Status | Duration (ms) | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
-          echo "|:------:|:-------------:|:------:|:------:|" >> $GITHUB_STEP_SUMMARY
-          echo "| $status_icon | $duration_ms | $passed | $failed |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "$status" = "success" ]; then
-            echo "All integration tests passed." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Some integration tests failed. See logs above for details." >> $GITHUB_STEP_SUMMARY
-          fi
+        run: bun run test:integration

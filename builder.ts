@@ -7,76 +7,87 @@ const peerDependencies = 'peerDependencies' in pkg ? Object.keys(pkg.peerDepende
 await Bun.$`rm -rf dist`;
 console.log('🗑️  Deleted dist folder if it existed. ✅');
 
-await Bun.$`tsc --project tsconfig.dts.json`;
-await Bun.$`tsc-alias -p tsconfig.dts.json`;
+await Bun.$`tsc --project tsconfig.build.json`;
+await Bun.$`bunx tsc-alias -p tsconfig.build.json`;
 console.log('🔍 Type analysis and generation completed. ✅');
 
 await Bun.build({
-    target: 'bun',
-    external: [...dependencies, ...devDependencies, ...peerDependencies],
-    root: './source',
-    entrypoints: [
-        // Data
-        './source/data/index.ts',
-        './source/data/enums/index.ts',
-        './source/data/transformers/index.ts',
-        './source/data/types/index.ts',
+	target: 'bun',
+	external: [...dependencies, ...devDependencies, ...peerDependencies],
+	root: './source',
+	entrypoints: [
+		// # ————————— Error ————————— #
+		'./source/errors/index.ts',
+		'./source/errors/types/index.ts',
 
-        // Database
-        './source/database/index.ts',
-        './source/database/enums/index.ts',
-        './source/database/events/index.ts',
-        './source/database/types/index.ts',
+		// # ————————— Data ————————— #
+		'./source/modules/data/index.ts',
+		'./source/modules/data/transformers/index.ts',
+		'./source/modules/data/types/index.ts',
 
-        // Elysia
-        './source/elysia/index.ts',
-        './source/elysia/enums/index.ts',
-        './source/elysia/schemas/index.ts',
-        './source/elysia/types/index.ts',
+		// # ————————— Database ————————— #
+		'./source/modules/database/index.ts',
+		'./source/modules/database/events/index.ts',
+		'./source/modules/database/types/index.ts',
 
-        // Error
-        './source/error/index.ts',
-        './source/error/types/index.ts',
+		// // # ————————— Elysia Plugin ————————— #
+		// crud
+		'./source/modules/elysia/crud/index.ts',
+		'./source/modules/elysia/crud/types/index.ts',
 
-        // Logger
-        './source/logger/index.ts',
-        './source/logger/enums/index.ts',
-        './source/logger/events/index.ts',
-        './source/logger/strategies/index.ts',
-        './source/logger/types/index.ts',
+		// crudSchema
+		'./source/modules/elysia/crudSchema/index.ts',
+		'./source/modules/elysia/crudSchema/types/index.ts',
+		'./source/modules/elysia/crudSchema/utils/index.ts',
 
-        // Mailer
-        './source/mailer/index.ts',
-        './source/mailer/enums/index.ts',
-        './source/mailer/types/index.ts',
+		// dbResolver
+		'./source/modules/elysia/dbResolver/index.ts',
+		'./source/modules/elysia/dbResolver/types/index.ts',
 
-        // Repository
-        './source/repository/index.ts',
-        './source/repository/types/index.ts',
+		// error
+		'./source/modules/elysia/error/index.ts',
 
-        // SingletonManager
-        './source/singletonManager/index.ts',
-        './source/singletonManager/enums/index.ts',
+		// jwt
+		'./source/modules/elysia/jwt/index.ts',
+		'./source/modules/elysia/jwt/types/index.ts',
 
-        // Store
-        './source/store/index.ts',
+		// microservice
+		'./source/modules/elysia/microservice/index.ts',
 
-        // TypedEventEmitter
-        './source/typedEventEmitter/index.ts',
-        './source/typedEventEmitter/types/index.ts',
+		// rateLimit
+		'./source/modules/elysia/ratelimit/index.ts',
+		'./source/modules/elysia/ratelimit/types/index.ts',
 
-        // Utils
-        './source/utils/index.ts',
-        './source/utils/enums/index.ts',
-        './source/utils/types/index.ts',
+		// # ————————— Logger ————————— #
+		'./source/modules/logger/index.ts',
+		'./source/modules/logger/events/index.ts',
+		'./source/modules/logger/strategies/index.ts',
+		'./source/modules/logger/types/index.ts',
 
-        './source/index.ts'
-    ],
-    outdir: './dist',
-    splitting: true,
-    format: 'esm',
-    minify: true,
-    sourcemap: 'none'
+		// # ————————— Mailer ————————— #
+		'./source/modules/mailer/index.ts',
+		'./source/modules/mailer/types/index.ts',
+
+		// # ————————— Repository ————————— #
+		'./source/modules/repository/index.ts',
+		'./source/modules/repository/types/index.ts',
+
+		// # ————————— SingletonManager ————————— #
+		'./source/modules/singletonManager/index.ts',
+
+		// # ————————— TypedEventEmitter ————————— #
+		'./source/modules/typedEventEmitter/index.ts',
+		'./source/modules/typedEventEmitter/types/index.ts',
+
+		// # ————————— Utils ————————— #
+		'./source/utils/index.ts',
+		'./source/utils/types/index.ts'
+	],
+	outdir: './dist',
+	splitting: true,
+	format: 'esm',
+	minify: false,
+	sourcemap: 'none'
 });
 console.log('🎉 Build completed successfully! 🎉');
 
