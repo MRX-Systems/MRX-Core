@@ -1,5 +1,5 @@
 import { BaseError } from './baseError';
-import { HTTP_ERROR_STATUS_CODES } from './enums/httpStatusCodes';
+import { HTTP_ERROR_STATUS_CODES } from './enums/httpErrorStatusCodes';
 import type { HttpErrorOptions } from './types/httpErrorOptions';
 
 /**

@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
 import { BaseError } from '#/errors/baseError';
-import { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpStatusCodes';
+import { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpErrorStatusCodes';
 import { HttpError } from '#/errors/httpError';
 
 describe('HttpError', () => {

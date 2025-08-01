@@ -1,4 +1,4 @@
-import type { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpStatusCodes';
+import type { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpErrorStatusCodes';
 import type { BaseErrorOptions } from './baseErrorOptions';
 
 /**
