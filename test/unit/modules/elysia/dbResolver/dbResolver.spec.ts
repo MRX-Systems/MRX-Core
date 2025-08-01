@@ -172,7 +172,7 @@ describe('dbResolver', () => {
 				});
 
 			const response = await app.handle(new Request('http://localhost/test'));
-			expect(response.status).toBe(400);
+			expect(response.status).toBe(422);
 		});
 
 		test('should use default header key name when not specified', async () => {
