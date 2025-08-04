@@ -1,4 +1,17 @@
 
+## v2.5.1
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.5.0...v2.5.1)
+
+### 📦 Build
+
+- **📦:** [update dependencies in package.json] ([b029de76](https://github.com/MRX-Systems/MRX-Core/commit/b029de76))
+- **📦:** [update dependencies in package.json and bun.lock] ## Build Changes - Added new dependencies:   - `@sinclair/typebox` version `0.34.38`   - `elysia` version `1.3.8`   - `ioredis` version `5.7.0`   - `jose` version `6.0.12`   - `knex` version `3.1.0`   - `mssql` version `11.0.1`   - `nodemailer` version `7.0.5` - Updated `devDependencies` in both `package.json` and `bun.lock`. - Included optional peer dependencies for the newly added packages. ([cb47edf4](https://github.com/MRX-Systems/MRX-Core/commit/cb47edf4))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.5.0
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.4.0-canary-20250521-731c6b4...v2.5.0)
