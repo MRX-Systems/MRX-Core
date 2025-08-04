@@ -1,4 +1,5 @@
-name: Unit Test
+name: job-integration-test
+run-name: "[job-integration-test] ${{ inputs.branch }}"
 
 on:
   workflow_call:
@@ -18,27 +19,26 @@ on:
         required: true
       MSSQL_PASSWORD:
         required: true
-      STORE_HOST:
-        required: true
-      STORE_PORT:
-        required: true
-      STORE_KEY:
-        required: true
 
 jobs:
-  unit-test:
-    name: Check unit tests
+  run-integration-tests:
+    name: Integration Tests
     runs-on: ubuntu-latest
     env:
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
       MSSQL_USER: ${{ secrets.MSSQL_USER }}
       MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
-
-      STORE_HOST: ${{ secrets.STORE_HOST }}
-      STORE_PORT: ${{ secrets.STORE_PORT }}
-      STORE_KEY: ${{ secrets.STORE_KEY }}
     steps:
+      - name: Verify required secrets
+        run: |
+          echo "🔍 Verifying required secrets for integration test job..."
+          if [ -z "${{ secrets.KEY_SSH }}" ]; then
+            echo "❌ KEY_SSH secret is missing"
+            exit 1
+          fi
+          echo "✅ All required secrets are present"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -54,6 +54,6 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Run Unit Tests and update Summary
-        id: unit_test
-        run: bun run test:unit
+      - name: Run Integration Tests and update Summary
+        id: integration_test
+        run: bun run test:integration
