@@ -13,7 +13,7 @@ export interface CrudOptions<
 	TDatabase extends DynamicDbOptions | string,
 	TTableName extends string,
 	TSourceSchema extends TObject,
-	TOperations extends CrudOperationsOptions = CrudOperationsOptions,
+	TOperations extends CrudOperationsOptions,
 	TSourceFindSchema extends TObject = TSourceSchema,
 	TSourceCountSchema extends TObject = TSourceSchema,
 	TSourceInsertSchema extends TObject = TSourceSchema,
