@@ -1,4 +1,5 @@
-name: Build
+name: job-build
+run-name: "[job-build] ${{ inputs.branch }}"
 
 on:
   workflow_call:
@@ -12,10 +13,19 @@ on:
         required: true
 
 jobs:
-  build:
-    name: Check Build
+  check-build:
+    name: Build Package
     runs-on: ubuntu-latest
     steps:
+      - name: Verify required secrets
+        run: |
+          echo "🔍 Verifying required secrets for build job..."
+          if [ -z "${{ secrets.KEY_SSH }}" ]; then
+            echo "❌ KEY_SSH secret is missing"
+            exit 1
+          fi
+          echo "✅ All required secrets are present"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
