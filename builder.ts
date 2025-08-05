@@ -18,15 +18,18 @@ await Bun.build({
 	entrypoints: [
 		// # ————————— Error ————————— #
 		'./source/errors/index.ts',
+		'./source/errors/enums/index.ts',
 		'./source/errors/types/index.ts',
 
 		// # ————————— Data ————————— #
 		'./source/modules/data/index.ts',
+		'./source/modules/data/enums/index.ts',
 		'./source/modules/data/transformers/index.ts',
 		'./source/modules/data/types/index.ts',
 
 		// # ————————— Database ————————— #
 		'./source/modules/database/index.ts',
+		'./source/modules/database/enums/index.ts',
 		'./source/modules/database/events/index.ts',
 		'./source/modules/database/types/index.ts',
 
@@ -42,6 +45,7 @@ await Bun.build({
 
 		// dbResolver
 		'./source/modules/elysia/dbResolver/index.ts',
+		'./source/modules/elysia/dbResolver/enums/index.ts',
 		'./source/modules/elysia/dbResolver/types/index.ts',
 
 		// error
@@ -49,6 +53,7 @@ await Bun.build({
 
 		// jwt
 		'./source/modules/elysia/jwt/index.ts',
+		'./source/modules/elysia/jwt/enums/index.ts',
 		'./source/modules/elysia/jwt/types/index.ts',
 
 		// microservice
@@ -56,16 +61,19 @@ await Bun.build({
 
 		// rateLimit
 		'./source/modules/elysia/ratelimit/index.ts',
+		'./source/modules/elysia/ratelimit/enums/index.ts',
 		'./source/modules/elysia/ratelimit/types/index.ts',
 
 		// # ————————— Logger ————————— #
 		'./source/modules/logger/index.ts',
+		'./source/modules/logger/enums/index.ts',
 		'./source/modules/logger/events/index.ts',
 		'./source/modules/logger/strategies/index.ts',
 		'./source/modules/logger/types/index.ts',
 
 		// # ————————— Mailer ————————— #
 		'./source/modules/mailer/index.ts',
+		'./source/modules/mailer/enums/index.ts',
 		'./source/modules/mailer/types/index.ts',
 
 		// # ————————— Repository ————————— #
@@ -74,6 +82,7 @@ await Bun.build({
 
 		// # ————————— SingletonManager ————————— #
 		'./source/modules/singletonManager/index.ts',
+		'./source/modules/singletonManager/enums/index.ts',
 
 		// # ————————— TypedEventEmitter ————————— #
 		'./source/modules/typedEventEmitter/index.ts',
@@ -81,6 +90,7 @@ await Bun.build({
 
 		// # ————————— Utils ————————— #
 		'./source/utils/index.ts',
+		'./source/utils/enums/index.ts',
 		'./source/utils/types/index.ts'
 	],
 	outdir: './dist',
