@@ -1,5 +1,5 @@
-name: Checker
-run-name: Checker run for "${{ github.head_ref || github.ref_name }}" by "${{ github.actor }}"
+name: main-ci
+run-name: "[main-ci] Checker run for \"${{ github.head_ref || github.ref_name }}\" by \"${{ github.actor }}\""
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   lint:
-    uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/job-lint.yml
     with:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
@@ -30,7 +30,7 @@ jobs:
 
   build:
     needs: lint
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/job-build.yml
     with:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
@@ -38,7 +38,7 @@ jobs:
 
   unit-test:
     needs: build
-    uses: ./.github/workflows/unit-test.yml
+    uses: ./.github/workflows/job-unit-test.yml
     with:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
@@ -47,13 +47,10 @@ jobs:
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
       MSSQL_USER: ${{ secrets.MSSQL_USER }}
       MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
-      STORE_HOST: ${{ secrets.STORE_HOST }}
-      STORE_KEY: ${{ secrets.STORE_KEY }}
-      STORE_PORT: ${{ secrets.STORE_PORT }}
 
   integration-test:
     needs: build
-    uses: ./.github/workflows/integration-test.yml
+    uses: ./.github/workflows/job-integration-test.yml
     with:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
@@ -62,6 +59,3 @@ jobs:
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
       MSSQL_USER: ${{ secrets.MSSQL_USER }}
       MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
-      STORE_HOST: ${{ secrets.STORE_HOST }}
-      STORE_KEY: ${{ secrets.STORE_KEY }}
-      STORE_PORT: ${{ secrets.STORE_PORT }}

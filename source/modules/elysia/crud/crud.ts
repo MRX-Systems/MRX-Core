@@ -355,14 +355,14 @@ export const crud = <
 	const TTableName extends string,
 	const TSourceSchema extends TObject,
 	const TOperations extends CrudOperationsOptions = {
-		find: true,
-		findOne: true,
-		insert: true,
-		update: true,
-		updateOne: true,
-		delete: true,
-		deleteOne: true,
-		count: true
+		find: CrudOperationFindOptions | true,
+		findOne: CrudOperationFindOneOptions | true,
+		insert: CrudOperationInsertOptions | true,
+		update: CrudOperationUpdateOptions | true,
+		updateOne: CrudOperationUpdateOneOptions | true,
+		delete: CrudOperationDeleteOptions | true,
+		deleteOne: CrudOperationDeleteOneOptions | true,
+		count: CrudOperationCountOptions | true
 	},
 	const TSourceFindSchema extends TObject = TSourceSchema,
 	const TSourceCountSchema extends TObject = TSourceSchema,
