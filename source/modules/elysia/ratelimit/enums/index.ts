@@ -1,1 +1,1 @@
-export { RATELIMIT_ERROR_KEYS } from './ratelimitErrorKeys';
+export { RATE_LIMIT_ERROR_KEYS } from './ratelimitErrorKeys';
