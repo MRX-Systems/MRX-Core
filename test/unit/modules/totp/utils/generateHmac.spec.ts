@@ -4,7 +4,7 @@ import { webcrypto } from 'crypto';
 import { generateHmac } from '#/modules/totp/utils/generateHmac';
 
 describe('generateHmac', () => {
-	const createTestKey = async (secret: Uint8Array, algorithm = 'SHA-1'): Promise<CryptoKey> => await webcrypto.subtle.importKey(
+	const _createTestKey = async (secret: Uint8Array, algorithm = 'SHA-1'): Promise<CryptoKey> => await webcrypto.subtle.importKey(
 		'raw',
 		secret,
 		{ name: 'HMAC', hash: algorithm },
@@ -12,7 +12,7 @@ describe('generateHmac', () => {
 		['sign']
 	);
 
-	const createArrayBuffer = (text: string): ArrayBuffer => {
+	const _createArrayBuffer = (text: string): ArrayBuffer => {
 		const uint8Array = new TextEncoder().encode(text);
 		return uint8Array.buffer.slice(0, uint8Array.byteLength) as ArrayBuffer;
 	};
@@ -20,8 +20,8 @@ describe('generateHmac', () => {
 	test('should generate HMAC with SHA-1 algorithm', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-		const data = createArrayBuffer('test data');
-		const key = await createTestKey(secret, 'SHA-1');
+		const data = _createArrayBuffer('test data');
+		const key = await _createTestKey(secret, 'SHA-1');
 
 		// Act
 		const result = await generateHmac(key, data);
@@ -34,8 +34,8 @@ describe('generateHmac', () => {
 	test('should generate HMAC with SHA-256 algorithm', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-		const data = createArrayBuffer('test data');
-		const key = await createTestKey(secret, 'SHA-256');
+		const data = _createArrayBuffer('test data');
+		const key = await _createTestKey(secret, 'SHA-256');
 
 		// Act
 		const result = await generateHmac(key, data);
@@ -48,8 +48,8 @@ describe('generateHmac', () => {
 	test('should generate HMAC with SHA-512 algorithm', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-		const data = createArrayBuffer('test data');
-		const key = await createTestKey(secret, 'SHA-512');
+		const data = _createArrayBuffer('test data');
+		const key = await _createTestKey(secret, 'SHA-512');
 
 		// Act
 		const result = await generateHmac(key, data);
@@ -62,9 +62,9 @@ describe('generateHmac', () => {
 	test('should generate different HMACs for different data', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-		const data1 = createArrayBuffer('test data 1');
-		const data2 = createArrayBuffer('test data 2');
-		const key = await createTestKey(secret);
+		const data1 = _createArrayBuffer('test data 1');
+		const data2 = _createArrayBuffer('test data 2');
+		const key = await _createTestKey(secret);
 
 		// Act
 		const result1 = await generateHmac(key, data1);
@@ -78,9 +78,9 @@ describe('generateHmac', () => {
 		// Arrange
 		const secret1 = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const secret2 = new Uint8Array([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
-		const data = createArrayBuffer('test data');
-		const key1 = await createTestKey(secret1);
-		const key2 = await createTestKey(secret2);
+		const data = _createArrayBuffer('test data');
+		const key1 = await _createTestKey(secret1);
+		const key2 = await _createTestKey(secret2);
 
 		// Act
 		const result1 = await generateHmac(key1, data);
@@ -93,8 +93,8 @@ describe('generateHmac', () => {
 	test('should generate same HMAC for same key and data', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-		const data = createArrayBuffer('test data');
-		const key = await createTestKey(secret);
+		const data = _createArrayBuffer('test data');
+		const key = await _createTestKey(secret);
 
 		// Act
 		const result1 = await generateHmac(key, data);
@@ -108,7 +108,7 @@ describe('generateHmac', () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data = new ArrayBuffer(0);
-		const key = await createTestKey(secret);
+		const key = await _createTestKey(secret);
 
 		// Act
 		const result = await generateHmac(key, data);
@@ -122,7 +122,7 @@ describe('generateHmac', () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const largeData = new ArrayBuffer(10000);
-		const key = await createTestKey(secret);
+		const key = await _createTestKey(secret);
 
 		// Act
 		const result = await generateHmac(key, largeData);
@@ -156,8 +156,8 @@ describe('generateHmac', () => {
 			0x56,
 			0x78
 		]);
-		const data = createArrayBuffer('The quick brown fox jumps over the lazy dog');
-		const key = await createTestKey(secret);
+		const data = _createArrayBuffer('The quick brown fox jumps over the lazy dog');
+		const key = await _createTestKey(secret);
 
 		// Act
 		const result = await generateHmac(key, data);
