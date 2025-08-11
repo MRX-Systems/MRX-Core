@@ -782,7 +782,7 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toBe(DATABASE_ERROR_KEYS.MSSQL_NO_RESULT);
+				expect((error as { message: string }).message).toBe('Custom error message');
 			}
 		});
 	});
