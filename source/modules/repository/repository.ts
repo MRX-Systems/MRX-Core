@@ -714,7 +714,9 @@ export class Repository<TModel = unknown> {
 			const result: KModel[] = await query;
 			if (throwIfNoResult && result.length === 0)
 				throw new HttpError({
-					message: (typeof throwIfNoResult === 'string' && throwIfNoResult) || DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
+					message: typeof throwIfNoResult === 'string'
+						? throwIfNoResult
+						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
 					cause: !process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {
 							query: query.toSQL().sql
