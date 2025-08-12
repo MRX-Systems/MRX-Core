@@ -539,9 +539,23 @@ export class Repository<TModel = unknown> {
 			|| qMethod === 'update'
 			|| qMethod === 'insert'
 		)
-			query.returning(selectedFields ?? '*');
+			query.returning(
+				selectedFields
+					? (Array.isArray(selectedFields)
+						? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+						: `${selectedFields} as "${selectedFields}"`
+					)
+					: '*'
+			);
 		else
-			query.select(selectedFields ?? '*');
+			query.select(
+				selectedFields
+					? (Array.isArray(selectedFields)
+						? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+						: `${selectedFields} as ${selectedFields}`
+					)
+					: '*'
+			);
 	}
 
 	/**
