@@ -621,13 +621,13 @@ export class Repository<TModel = unknown> {
 		if (!(qMethod === 'select'))
 			return;
 		if (!orderBy)
-			query.orderBy(this._table.primaryKey[0], 'asc');
+			query.orderBy(`[${this._table.name}].${this._table.primaryKey[0]}`, 'asc');
 		else if (Array.isArray(orderBy))
 			orderBy.forEach((item) => {
-				query.orderBy(item.selectedField, item.direction);
+				query.orderBy(`[${this._table.name}].${item.selectedField}`, item.direction);
 			});
 		else
-			query.orderBy(orderBy.selectedField, orderBy.direction);
+			query.orderBy(`[${this._table.name}].${orderBy.selectedField}`, orderBy.direction);
 	}
 
 	/**
