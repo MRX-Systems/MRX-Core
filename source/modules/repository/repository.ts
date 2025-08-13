@@ -534,28 +534,21 @@ export class Repository<TModel = unknown> {
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 
+		const sanitizedFields = selectedFields
+			? (Array.isArray(selectedFields)
+				? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+				: `${selectedFields} as ${selectedFields}`
+			)
+			: '*';
+
 		if (
 			qMethod === 'del'
 			|| qMethod === 'update'
 			|| qMethod === 'insert'
 		)
-			query.returning(
-				selectedFields
-					? (Array.isArray(selectedFields)
-						? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
-						: `${selectedFields} as "${selectedFields}"`
-					)
-					: '*'
-			);
+			query.returning(sanitizedFields);
 		else
-			query.select(
-				selectedFields
-					? (Array.isArray(selectedFields)
-						? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
-						: `${selectedFields} as ${selectedFields}`
-					)
-					: '*'
-			);
+			query.select(sanitizedFields);
 	}
 
 	/**
