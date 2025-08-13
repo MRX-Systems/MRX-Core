@@ -84,6 +84,12 @@ await Bun.build({
 		'./source/modules/singletonManager/index.ts',
 		'./source/modules/singletonManager/enums/index.ts',
 
+		// # ————————— TOTP ————————— #
+		'./source/modules/totp/index.ts',
+		'./source/modules/totp/enums/index.ts',
+		'./source/modules/totp/types/index.ts',
+		'./source/modules/totp/utils/index.ts',
+
 		// # ————————— TypedEventEmitter ————————— #
 		'./source/modules/typedEventEmitter/index.ts',
 		'./source/modules/typedEventEmitter/types/index.ts',
