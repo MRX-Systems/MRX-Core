@@ -60,9 +60,9 @@ await Bun.build({
 		'./source/modules/elysia/microservice/index.ts',
 
 		// rateLimit
-		'./source/modules/elysia/ratelimit/index.ts',
-		'./source/modules/elysia/ratelimit/enums/index.ts',
-		'./source/modules/elysia/ratelimit/types/index.ts',
+		'./source/modules/elysia/rateLimit/index.ts',
+		'./source/modules/elysia/rateLimit/enums/index.ts',
+		'./source/modules/elysia/rateLimit/types/index.ts',
 
 		// # ————————— Logger ————————— #
 		'./source/modules/logger/index.ts',

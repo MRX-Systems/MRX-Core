@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, afterEach } from 'bun:test';
 
-import { MemoryStore } from '#/modules/elysia/ratelimit/stores/memoryStore';
+import { MemoryStore } from '#/modules/elysia/rateLimit/stores/memoryStore';
 
 describe('MemoryStore', () => {
 	describe('Basic Operations', () => {

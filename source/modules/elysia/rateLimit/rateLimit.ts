@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 
 import { HttpError } from '#/errors/httpError';
-import { RATE_LIMIT_ERROR_KEYS } from './enums/ratelimitErrorKeys';
+import { RATE_LIMIT_ERROR_KEYS } from './enums/rateLimitErrorKeys';
 import { MemoryStore } from './stores/memoryStore';
 import type { RateLimitOptions } from './types/rateLimitOptions';
 
@@ -44,7 +44,7 @@ import type { RateLimitOptions } from './types/rateLimitOptions';
  * app.listen(3000);
  * ```
  */
-export const ratelimit = ({ store, limit, window }: RateLimitOptions) => {
+export const rateLimit = ({ store, limit, window }: RateLimitOptions) => {
 	const storeInstance = store === ':memory:' || !store
 		? new MemoryStore()
 		: store;
@@ -63,7 +63,7 @@ export const ratelimit = ({ store, limit, window }: RateLimitOptions) => {
 				|| server?.requestIP(request)?.address // get IP from socket directly
 				|| '127.0.0.1';
 
-			const key = `ratelimit:${ip}`;
+			const key = `rateLimit:${ip}`;
 
 			const current = await storeInstance.get(key);
 			const count = current ? parseInt(current) : 0;

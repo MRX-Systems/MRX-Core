@@ -1,5 +1,5 @@
-import type { MemoryStoreEntry } from '#/modules/elysia/ratelimit/types/memoryStoreEntry';
-import type { RateLimitStore } from '#/modules/elysia/ratelimit/types/rateLimitStore';
+import type { MemoryStoreEntry } from '#/modules/elysia/rateLimit/types/memoryStoreEntry';
+import type { RateLimitStore } from '#/modules/elysia/rateLimit/types/rateLimitStore';
 
 export class MemoryStore implements RateLimitStore {
 	/**
