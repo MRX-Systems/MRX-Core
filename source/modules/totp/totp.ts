@@ -24,7 +24,7 @@ export const hotp = async (
 	{
 		algorithm = 'SHA-1',
 		digits = 6
-	}: TotpOptions
+	}: TotpOptions = {}
 ): Promise<string> => {
 	const counterBuffer = createCounterBuffer(counter);
 	const key = await webcrypto.subtle.importKey(
