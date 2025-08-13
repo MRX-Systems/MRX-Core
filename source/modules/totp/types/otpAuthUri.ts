@@ -16,14 +16,20 @@ export interface OtpAuthUri {
 	issuer: string;
 	/**
 	 * Hash algorithm
+	 *
+	 * @defaultValue 'SHA-1'
 	 */
-	algorithm: 'SHA-1' | 'SHA-256' | 'SHA-512';
+	algorithm?: 'SHA-1' | 'SHA-256' | 'SHA-512';
 	/**
 	 * Number of digits
+	 *
+	 * @defaultValue 6
 	 */
-	digits: 6 | 8;
+	digits?: 6 | 8;
 	/**
 	 * Time period in seconds
+	 *
+	 * @defaultValue 30
 	 */
-	period: number;
+	period?: number;
 }

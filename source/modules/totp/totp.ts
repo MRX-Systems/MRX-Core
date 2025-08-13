@@ -137,7 +137,7 @@ export const buildOtpAuthUri = (
  *
  * @returns Parsed URI parameters
  */
-export const parseOtpAuthUri = (uri: string): Omit<OtpAuthUri, 'issuer'> & { issuer?: string } => {
+export const parseOtpAuthUri = (uri: string): Required<Omit<OtpAuthUri, 'issuer'>> & { issuer?: string } => {
 	const url = new URL(uri);
 
 	if (url.protocol !== 'otpauth:')
