@@ -534,14 +534,21 @@ export class Repository<TModel = unknown> {
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 
+		const sanitizedFields = selectedFields
+			? (Array.isArray(selectedFields)
+				? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+				: `${selectedFields} as ${selectedFields}`
+			)
+			: '*';
+
 		if (
 			qMethod === 'del'
 			|| qMethod === 'update'
 			|| qMethod === 'insert'
 		)
-			query.returning(selectedFields ?? '*');
+			query.returning(sanitizedFields);
 		else
-			query.select(selectedFields ?? '*');
+			query.select(sanitizedFields);
 	}
 
 	/**
@@ -621,13 +628,13 @@ export class Repository<TModel = unknown> {
 		if (!(qMethod === 'select'))
 			return;
 		if (!orderBy)
-			query.orderBy(this._table.primaryKey[0], 'asc');
+			query.orderBy(`[${this._table.name}].${this._table.primaryKey[0]}`, 'asc');
 		else if (Array.isArray(orderBy))
 			orderBy.forEach((item) => {
-				query.orderBy(item.selectedField, item.direction);
+				query.orderBy(`[${this._table.name}].${item.selectedField}`, item.direction);
 			});
 		else
-			query.orderBy(orderBy.selectedField, orderBy.direction);
+			query.orderBy(`[${this._table.name}].${orderBy.selectedField}`, orderBy.direction);
 	}
 
 	/**
@@ -714,7 +721,9 @@ export class Repository<TModel = unknown> {
 			const result: KModel[] = await query;
 			if (throwIfNoResult && result.length === 0)
 				throw new HttpError({
-					message: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
+					message: typeof throwIfNoResult === 'string'
+						? throwIfNoResult
+						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
 					cause: !process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {
 							query: query.toSQL().sql

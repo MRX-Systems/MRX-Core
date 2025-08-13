@@ -6,18 +6,21 @@ import type { Redis } from 'ioredis';
  * @example
  * ```ts
  * const options: RateLimitOptions = {
- *   redis: redisInstance, // Your Redis instance
+ *   store: redisInstance, // Your Redis instance
  *   limit: 100,          // Allow 100 requests
  *   window: 60,          // Per 60 seconds
- *   message: 'You have exceeded the rate limit. Please try again later.'
  * };
  * ```
  */
 export interface RateLimitOptions {
 	/**
-	 * Redis instance used for storing rate limit data.
+	 * Storage backend for rate limit data.
+	 *
+	 * - If not specified, defaults to in-memory storage
+	 * - Use ':memory:' to explicitly specify in-memory storage
+	 * - Provide a Redis instance for persistent distributed storage
 	 */
-	readonly redis: Redis;
+	readonly store?: ':memory:' | Redis;
 	/**
 	 * Maximum number of requests allowed in the time window.
 	 *
