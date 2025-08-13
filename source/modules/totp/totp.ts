@@ -2,13 +2,12 @@ import { webcrypto } from 'crypto';
 
 import { BaseError } from '#/errors/baseError';
 import { TOTP_ERROR_KEYS } from './enums/totpErrorKeys';
-import type { OtpAuthUriParams } from './types/otpAuthUriParams';
-import type { ParsedOtpAuthUri } from './types/parsedOtpAuthUri';
+import type { OtpAuthUri } from './types/otpAuthUri';
 import type { TotpOptions } from './types/totpOptions';
 import type { VerifyOptions } from './types/verifyOptions';
 import { createCounterBuffer } from './utils/createCounterBuffer';
-import { generateHmac } from './utils/generateHmac';
 import { dynamicTruncation } from './utils/dynamicTruncation';
+import { generateHmac } from './utils/generateHmac';
 
 /**
  * HMAC-based One-Time Password (HOTP) implementation
@@ -25,10 +24,7 @@ export const hotp = async (
 	{
 		algorithm = 'SHA-1',
 		digits = 6
-	}: TotpOptions = {
-		algorithm: 'SHA-1',
-		digits: 6
-	}
+	}: TotpOptions
 ): Promise<string> => {
 	const counterBuffer = createCounterBuffer(counter);
 	const key = await webcrypto.subtle.importKey(
@@ -52,12 +48,15 @@ export const hotp = async (
  */
 export const totp = async (
 	secret: Uint8Array,
-	opts?: TotpOptions & { now?: number }
+	{
+		algorithm = 'SHA-1',
+		digits = 6,
+		period = 30,
+		now = Date.now()
+	}: TotpOptions & { now?: number } = {}
 ): Promise<string> => {
-	const period = opts?.period ?? 30;
-	const now = opts?.now ?? Date.now();
 	const timeStep = Math.floor(now / 1000 / period);
-	return hotp(secret, timeStep, opts);
+	return hotp(secret, timeStep, { algorithm, digits });
 };
 
 /**
@@ -72,16 +71,19 @@ export const totp = async (
 export const verifyTotp = async (
 	secret: Uint8Array,
 	code: string,
-	opts?: VerifyOptions
+	{
+		algorithm = 'SHA-1',
+		digits = 6,
+		period = 30,
+		window = 0,
+		now = Date.now()
+	}: VerifyOptions = {}
 ): Promise<boolean> => {
-	const window = opts?.window ?? 0;
-	const period = opts?.period ?? 30;
-	const now = opts?.now ?? Date.now();
 	const currentTimeStep = Math.floor(now / 1000 / period);
 
 	for (let i = -window; i <= window; ++i) {
 		const timeStep = currentTimeStep + i;
-		const expectedCode = await hotp(secret, timeStep, opts);
+		const expectedCode = await hotp(secret, timeStep, { algorithm, digits });
 		if (expectedCode === code)
 			return true;
 	}
@@ -95,16 +97,16 @@ export const verifyTotp = async (
  *
  * @returns OTPAuth URI string
  */
-export const buildOtpAuthUri = (params: OtpAuthUriParams): string => {
-	const {
+export const buildOtpAuthUri = (
+	{
 		secretBase32,
 		label,
 		issuer,
 		algorithm = 'SHA-1',
 		digits = 6,
 		period = 30
-	} = params;
-
+	}: OtpAuthUri
+): string => {
 	const encodedLabel = encodeURIComponent(label);
 	const encodedIssuer = issuer
 		? encodeURIComponent(issuer)
@@ -135,7 +137,7 @@ export const buildOtpAuthUri = (params: OtpAuthUriParams): string => {
  *
  * @returns Parsed URI parameters
  */
-export const parseOtpAuthUri = (uri: string): ParsedOtpAuthUri => {
+export const parseOtpAuthUri = (uri: string): Omit<OtpAuthUri, 'issuer'> & { issuer?: string } => {
 	const url = new URL(uri);
 
 	if (url.protocol !== 'otpauth:')
@@ -157,24 +159,21 @@ export const parseOtpAuthUri = (uri: string): ParsedOtpAuthUri => {
 		});
 
 	const issuerParam = url.searchParams.get('issuer');
-	const issuer = issuerParam
-		? decodeURIComponent(issuerParam)
-		: undefined;
+	const issuer = issuerParam ? decodeURIComponent(issuerParam) : undefined;
 
-	const algorithm = url.searchParams.get('algorithm') || 'SHA-1';
-	const digits = parseInt(url.searchParams.get('digits') || '6', 10);
+	const algorithm = (url.searchParams.get('algorithm') || 'SHA-1') as 'SHA-1' | 'SHA-256' | 'SHA-512';
+	const digits = parseInt(url.searchParams.get('digits') || '6', 10) as 6 | 8;
 	const period = parseInt(url.searchParams.get('period') || '30', 10);
 
-	const result: ParsedOtpAuthUri = {
+	const result = {
 		secretBase32,
 		label,
 		algorithm,
 		digits,
-		period
+		period,
+		...(issuer && { issuer })
 	};
 
-	if (issuer)
-		result.issuer = issuer;
 	return result;
 };
 
