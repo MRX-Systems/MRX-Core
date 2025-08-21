@@ -34,4 +34,5 @@ export interface CrudOptions<
 	};
 	readonly operations?: TOperations;
 	readonly tags?: string[];
+	readonly prefix?: string;
 }
