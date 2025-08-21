@@ -33,4 +33,5 @@ export interface CrudOptions<
 		readonly sourceResponseSchema?: TSourceResponseSchema;
 	};
 	readonly operations?: TOperations;
+	readonly tags?: string[];
 }
