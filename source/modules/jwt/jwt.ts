@@ -67,3 +67,4 @@ export const verifyJWT = async (token: string, secret: string): Promise<JWTVerif
 		return false;
 	}
 };
+

@@ -1,4 +1,5 @@
 import { BaseError } from '#/errors/baseError';
+import { PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS } from '#/modules/jwt/enums/parseHumanTimeToSecondsErrorKeys';
 
 /**
  * Time unit constants in seconds
@@ -83,7 +84,7 @@ export const parseHumanTimeToSeconds = (timeExpression: string): number => {
 
 	if (!match || (match[4] && match[1]))
 		throw new BaseError({
-			message: 'Invalid time period format'
+			message: PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION
 		});
 
 	const [, sign, valueStr, unitStr, direction] = match;
@@ -91,11 +92,6 @@ export const parseHumanTimeToSeconds = (timeExpression: string): number => {
 	const unit = unitStr.toLowerCase();
 
 	const multiplier = UNIT_MAPPINGS[unit];
-	if (multiplier === undefined)
-		throw new BaseError({
-			message: `Unknown time unit: ${unit}`
-		});
-
 	const seconds = Math.round(value * multiplier);
 
 	// Return negative value for past times (ago or negative sign)
