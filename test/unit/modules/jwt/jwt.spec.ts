@@ -1,5 +1,5 @@
-import { describe, expect, test, beforeEach } from 'bun:test';
-import type { JWTVerifyResult, JWTPayload } from 'jose';
+import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
+import type { JWTPayload, JWTVerifyResult } from 'jose';
 
 import { HttpError } from '#/errors/httpError';
 import { JWT_ERROR_KEYS } from '#/modules/jwt/enums/jwtErrorKeys';
@@ -71,10 +71,6 @@ describe('JWT Core Functions', () => {
 		});
 
 		test('should handle parseHumanTimeToSeconds integration properly', async () => {
-			// Note: The current implementation has a bug where parseHumanTimeToSeconds
-			// returns relative seconds but signJWT expects absolute timestamps
-			// This test documents the current behavior
-
 			try {
 				await signJWT(testSecret, {}, '2 hours'); // This will fail because 7200 < current timestamp
 				expect(true).toBe(false); // Should not reach here
@@ -211,6 +207,26 @@ describe('JWT Core Functions', () => {
 			});
 			expect(result.payload.tags).toBeNull();
 			expect(result.payload.isActive).toBe(true);
+		});
+
+		test('should throw HttpError when SignJWT fails during signing', async () => {
+			// Use spyOn to mock the sign method and make it throw an error
+			const jose = await import('jose');
+			const spy = spyOn(jose.SignJWT.prototype, 'sign').mockImplementation(() => {
+				throw new Error('Mocked sign error');
+			});
+
+			try {
+				await signJWT(testSecret, { userId: 123 });
+			} catch (error) {
+				expect(error).toBeInstanceOf(HttpError);
+				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_SIGN_ERROR);
+				expect((error as HttpError).httpStatusCode).toBe(500);
+				expect((error as HttpError).cause).toBeInstanceOf(Error);
+				expect(((error as HttpError).cause as Error).message).toBe('Mocked sign error');
+			} finally {
+				spy.mockRestore();
+			}
 		});
 	});
 
