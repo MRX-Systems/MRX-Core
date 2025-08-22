@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'bun:test';
+import { t, ValidationError } from 'elysia';
 
-import { error } from '#/modules/elysia/error/error';
 import { BaseError } from '#/errors/baseError';
 import { HttpError } from '#/errors/httpError';
+import { error } from '#/modules/elysia/error/error';
 
 describe('error', () => {
 	test('should have the error hook', () => {
@@ -98,18 +99,27 @@ describe('error', () => {
 
 		expect(fn({
 			set,
-			error: {
-				type: 'test',
-				value: 'test value',
-				all: ['error1', 'error2']
-			},
+			error: new ValidationError('body', t.Object({
+				e: t.Number({
+					minimum: 2
+				})
+			}), { e: 1 }),
 			code: 'VALIDATION'
 		})).toEqual({
 			message: 'core.error.validation',
 			cause: {
-				on: 'test',
-				found: 'test value',
-				errors: ['error1', 'error2']
+				on: 'body',
+				errors: [
+					{
+						path: '/e',
+						value: 1,
+						summary: 'Expected number to be greater or equal to 2',
+						schema: {
+							minimum: 2,
+							type: 'number'
+						}
+					}
+				]
 			}
 		});
 	});
