@@ -18,7 +18,7 @@ describe('parseHumanTimeToSeconds', () => {
 			['15 mins', 900],
 			['30 min', 1800],
 			['60 m', 3600],
-			// Hours
+			// Hoursbun
 			['1 hour', 3600],
 			['2 hours', 7200],
 			['12 hrs', 43200],
@@ -163,7 +163,7 @@ describe('parseHumanTimeToSeconds', () => {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
 				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('Invalid time period format');
+				expect((error as BaseError).message).toBe('parse_human_time_to_seconds.error.invalid_time_expression');
 			}
 		});
 
@@ -180,7 +180,7 @@ describe('parseHumanTimeToSeconds', () => {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
 				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('Invalid time period format');
+				expect((error as BaseError).message).toBe('parse_human_time_to_seconds.error.invalid_time_expression');
 			}
 		});
 
@@ -196,7 +196,7 @@ describe('parseHumanTimeToSeconds', () => {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
 				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('Invalid time period format');
+				expect((error as BaseError).message).toBe('parse_human_time_to_seconds.error.invalid_time_expression');
 			}
 		});
 	});
