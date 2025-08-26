@@ -28,7 +28,7 @@ const _createDefaultOperationsWithHandlers = <
 	database: TDatabase
 ) => {
 	const _requiredHeaderDatabase = typeof database === 'object'
-		? { headers: 'dbSelectorHeader' } as const // Header required for dynamic database selection
+		? { headers: 'dbResolverHeader' } as const // Header required for dynamic database selection
 		: {} as const; // No header needed for static database
 
 	return {

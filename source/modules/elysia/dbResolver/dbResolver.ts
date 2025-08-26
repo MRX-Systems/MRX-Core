@@ -69,7 +69,7 @@ export const dbResolver = <
 		? DefinitionBase
 		: {
 			typebox: {
-				ResolveDbHeader: TObject<{
+				dbResolverHeader: TObject<{
 					'database-using': TString;
 				}>;
 			};
@@ -91,7 +91,7 @@ export const dbResolver = <
 
 	if (typeof database === 'object')
 		app.model({
-			ResolveDbHeader: t.Object({
+			dbResolverHeader: t.Object({
 				'database-using': t.String({
 					description: 'The name of the database to be used for the request'
 				})
@@ -113,7 +113,7 @@ export const dbResolver = <
 			? DefinitionBase
 			: {
 				typebox: {
-					ResolveDbHeader: TObject<{
+					dbResolverHeader: TObject<{
 						'database-using': TString;
 					}>;
 				};
