@@ -168,7 +168,7 @@ describe('dbResolver', () => {
 				.use(error)
 				.use(dbResolver(dynamicDbConfig))
 				.get('/test', ({ dynamicDB }) => ({ connected: dynamicDB.isConnected }), {
-					headers: 'ResolveDbHeader'
+					headers: 'dbResolverHeader'
 				});
 
 			const response = await app.handle(new Request('http://localhost/test'));
