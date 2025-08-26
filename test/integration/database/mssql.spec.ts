@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, mock, test } from 'bun:test';
+import { afterAll, afterEach, beforeAll, describe, expect, mock, test } from 'bun:test';
 import { randomBytes } from 'crypto';
 import knex from 'knex';
 
@@ -87,7 +87,7 @@ class CustomTestRepository extends Repository<{ id: number; name: string; email?
 	public async findByNamePattern(pattern: string): Promise<{ id: number; name: string; email?: string }[]> {
 		return this.find({
 			filters: {
-				name: { $like: `%${pattern}%` }
+				name: { $like: pattern }
 			}
 		});
 	}
@@ -120,6 +120,12 @@ describe('MSSQL', () => {
 			table.timestamp('createdAt').defaultTo(knexInstance.fn.now());
 			table.timestamp('updatedAt').nullable();
 		});
+	});
+
+	afterEach(async () => {
+		await knexInstance(secondaryTestTable).delete();
+		await knexInstance(primaryTestTable).delete();
+		await knexInstance(complexTestTable).delete();
 	});
 
 	describe('Constructor and Initialization', () => {
