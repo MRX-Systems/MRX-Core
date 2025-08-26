@@ -546,7 +546,7 @@ export class Repository<TModel = unknown> {
 			|| qMethod === 'update'
 			|| qMethod === 'insert'
 		)
-			query.returning(sanitizedFields);
+			query.returning(sanitizedFields, { includeTriggerModifications: true });
 		else
 			query.select(sanitizedFields);
 	}
