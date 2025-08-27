@@ -89,7 +89,7 @@ describe('SMTP', () => {
 			timeout: 5500
 		});
 
-		test('should throw CoreError when already connected', async () => {
+		test('should throw BaseError when already connected', async () => {
 			const { BaseError } = await import('#/errors/baseError');
 
 			const mailer = await createTestSMTP();
@@ -102,7 +102,7 @@ describe('SMTP', () => {
 			mailer.disconnect();
 		});
 
-		test('should throw CoreError when connection fails with invalid host', async () => {
+		test('should throw BaseError when connection fails with invalid host', async () => {
 			const { BaseError } = await import('#/errors/baseError');
 
 			const mailer = await createTestSMTP({
@@ -166,7 +166,7 @@ describe('SMTP', () => {
 	});
 
 	describe('sendMail', () => {
-		test('should throw CoreError when not connected', async () => {
+		test('should throw BaseError when not connected', async () => {
 			const { BaseError } = await import('#/errors/baseError');
 
 			const mailer = await createTestSMTP();
