@@ -54,10 +54,14 @@ export const cache = ({
 
 					const cacheKey = await generateCacheKey(request.clone());
 					const now = new Date();
+
 					set.headers['cache-control'] = `max-age=${ttl}, public`;
 					set.headers['etag'] = `"${prefix}${cacheKey}"`;
 					set.headers['last-modified'] = now.toUTCString();
 					set.headers['expires'] = new Date(now.getTime() + (ttl * 1000)).toUTCString();
+
+					if (!set.headers['x-cache'])
+						set.headers['x-cache'] = 'MISS';
 
 					const cacheData = {
 						response,
