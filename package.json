@@ -56,7 +56,6 @@
 		"./modules/jwt": "./dist/modules/jwt/index.js",
 		"./modules/jwt/enums": "./dist/modules/jwt/enums/index.js",
 		"./modules/jwt/utils": "./dist/modules/jwt/utils/index.js",
-		"./modules/kvStore": "./dist/modules/kvStore/index.js",
 		"./modules/kvStore/enums": "./dist/modules/kvStore/enums/index.js",
 		"./modules/kvStore/ioredis": "./dist/modules/kvStore/ioredis/index.js",
 		"./modules/kvStore/memory": "./dist/modules/kvStore/memory/index.js",
