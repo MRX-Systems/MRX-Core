@@ -239,7 +239,7 @@ export const filterByValue = <TObject extends Readonly<object>>(
  * @param data - The object whose keys are to be transformed.
  * @param transformer - The key transformation strategy to use.
  *
- * @throws ({@link CoreError}) - If the provided data object is null or undefined.
+ * @throws ({@link BaseError}) - If the provided data object is null or undefined.
  *
  * @returns A new object with transformed keys.
  *
