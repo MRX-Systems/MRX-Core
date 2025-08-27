@@ -34,6 +34,11 @@ await Bun.build({
 		'./source/modules/database/types/index.ts',
 
 		// // # ————————— Elysia Plugin ————————— #
+		// cache
+		'./source/modules/elysia/cache/index.ts',
+		'./source/modules/elysia/cache/types/index.ts',
+		'./source/modules/elysia/cache/utils/index.ts',
+
 		// crud
 		'./source/modules/elysia/crud/index.ts',
 		'./source/modules/elysia/crud/types/index.ts',
