@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { webcrypto } from 'crypto';
 
 import { generateHmac } from '#/modules/totp/utils/generateHmac';

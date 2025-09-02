@@ -1,8 +1,4 @@
-export {
-	hotp,
-	totp,
-	verifyTotp,
-	buildOtpAuthUri,
-	parseOtpAuthUri,
-	timeRemaining
-} from './totp';
+export { hotp } from './hotp';
+export { buildOtpAuthUri, parseOtpAuthUri } from './otpAuthUri';
+export { totp, verifyTotp } from './totp';
+
