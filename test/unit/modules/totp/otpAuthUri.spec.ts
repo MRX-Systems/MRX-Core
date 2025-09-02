@@ -14,8 +14,6 @@ describe('buildOtpAuthUri', () => {
 	});
 });
 
-
-
 describe('parseOtpAuthUri', () => {
 	test('should parse a valid OTP Auth URI', () => {
 		const uri = 'otpauth://totp/user%40example.com?secret=2W3YP3JOW476T4APP36YTZHFBJTWRVJQ&issuer=Example';
