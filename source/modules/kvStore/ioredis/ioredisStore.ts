@@ -126,9 +126,9 @@ export class IoRedisStore implements KvStore {
 		}
 
 		if (amount === 1)
-			return await this._client.incr(key);
+			return this._client.incr(key);
 
-		return await this._client.incrby(key, amount);
+		return this._client.incrby(key, amount);
 	}
 
 	/**
@@ -154,9 +154,9 @@ export class IoRedisStore implements KvStore {
 		}
 
 		if (amount === 1)
-			return await this._client.decr(key);
+			return this._client.decr(key);
 
-		return await this._client.decrby(key, amount);
+		return this._client.decrby(key, amount);
 	}
 
 	/**
@@ -191,8 +191,8 @@ export class IoRedisStore implements KvStore {
 	 *
 	 * @returns Time to live in seconds, -1 if key has no expiration, -2 if key does not exist
 	 */
-	public async ttl(key: string): Promise<number> {
-		return await this._client.ttl(key);
+	public ttl(key: string): Promise<number> {
+		return this._client.ttl(key);
 	}
 
 	/**
@@ -205,7 +205,6 @@ export class IoRedisStore implements KvStore {
 		if (keys.length === 0)
 			return 0;
 
-		const result = await this._client.del(...keys);
-		return result;
+		return this._client.del(...keys);
 	}
 }
