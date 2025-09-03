@@ -30,10 +30,10 @@ export const cache = ({
 				&& 'metadata' in cachedData
 			) {
 				const { response, metadata } = cachedData as CacheItem;
-				set.headers['cache-control'] = `max-age=${defaultTtl}, public`;
+				set.headers['cache-control'] = `max-age=${metadata.ttl}, public`;
 				set.headers['x-cache'] = 'HIT';
 				set.headers['etag'] = `"${prefix}${cacheKey}"`;
-				set.headers['expires'] = new Date(Date.now() + (defaultTtl * 1000)).toUTCString();
+				set.headers['expires'] = new Date(Date.now() + (metadata.ttl * 1000)).toUTCString();
 				set.headers['last-modified'] = metadata.createdAt;
 				return response;
 			}
