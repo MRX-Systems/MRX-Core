@@ -1,0 +1,1 @@
+export type { KvStore } from './kvStore';

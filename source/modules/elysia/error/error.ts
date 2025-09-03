@@ -1,5 +1,6 @@
-import { Elysia } from 'elysia';
+import { Elysia, type TSchema } from 'elysia';
 
+import { filterByKeyExclusion } from '#/modules/data/data';
 import { BaseError } from '#/errors/baseError';
 import { HttpError } from '#/errors/httpError';
 
@@ -34,8 +35,13 @@ export const error = new Elysia({
 					message: 'core.error.validation',
 					cause: {
 						on: error.type,
-						found: error.value,
-						errors: error.all
+						errors: error.all.map((e) => ({
+							path: (e as { path: string }).path,
+							value: (e as { value: string }).value,
+							summary: (e as { summary: string }).summary,
+							message: (e as { schema: TSchema }).schema?.error,
+							schema: filterByKeyExclusion((e as { schema: TSchema }).schema, ['error'], true)
+						}))
 					}
 				};
 			}

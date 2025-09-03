@@ -362,6 +362,18 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
+		'Q operator check no case sensitive',
+		{
+			filters: { $q: 'REPOSITORY::' },
+			validator: (data, expectedCount) => {
+				if (!Array.isArray(data))
+					throw new Error('Data should be an array');
+				expect(data).toHaveLength(expectedCount);
+			},
+			expectedCount: 20
+		}
+	],
+	[
 		'Multiple conditions with AND',
 		{
 			filters: {
@@ -776,13 +788,33 @@ describe('Repository', () => {
 					filters: {
 						id: 100
 					},
-					throwIfNoResult: 'Custom error message'
+					throwIfNoResult: {
+						message: 'Custom error message'
+					}
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toBe('Custom error message');
+			}
+		});
+
+		test('should throw an error when they are no results with custom code', async () => {
+			try {
+				await repository.find<Data>({
+					filters: {
+						id: 100
+					},
+					throwIfNoResult: {
+						code: 'FORBIDDEN'
+					}
+				});
+			} catch (error) {
+				expect(error).toBeInstanceOf(Error);
+				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toHaveProperty('message');
+				expect((error as { httpStatusCode: number }).httpStatusCode).toBe(403);
 			}
 		});
 	});

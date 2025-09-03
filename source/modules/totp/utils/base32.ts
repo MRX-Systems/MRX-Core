@@ -48,7 +48,7 @@ export const base32Encode = (input: string | Uint8Array, withPadding = true): st
  *
  * @param base32 - Base32 string to decode
  *
- * @throws ({@link BaseError}) if invalid Base32 character is found
+ * @throws ({@link BaseError}) - if invalid Base32 character is found
  *
  * @returns Decoded bytes
  */

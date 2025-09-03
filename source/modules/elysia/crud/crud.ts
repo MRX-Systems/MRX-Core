@@ -28,7 +28,7 @@ const _createDefaultOperationsWithHandlers = <
 	database: TDatabase
 ) => {
 	const _requiredHeaderDatabase = typeof database === 'object'
-		? { headers: 'dbSelectorHeader' } as const // Header required for dynamic database selection
+		? { headers: 'dbResolverHeader' } as const // Header required for dynamic database selection
 		: {} as const; // No header needed for static database
 
 	return {
@@ -384,7 +384,9 @@ export const crud = <
 			delete: true,
 			deleteOne: true,
 			count: true
-		} as TOperations
+		} as TOperations,
+		tags = [tableName],
+		prefix = ''
 	}: CrudOptions<
 		TDatabase,
 		TTableName,
@@ -452,7 +454,8 @@ export const crud = <
 	}
 > => new Elysia({
 	name: `crudPlugin[${tableName}]`,
-	tags: [tableName]
+	tags,
+	prefix
 })
 	.use(dbResolver<TDatabase>(database))
 	.use(

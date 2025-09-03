@@ -36,7 +36,7 @@ const _operators: Record<string, OperatorFn> = ({
 		const likeValue = `%${v}%`;
 		if (isDateString(v))
 			return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) LIKE ?`, [likeValue]);
-		return q.whereLike(c, likeValue);
+		return q.where(c, 'LIKE', likeValue);
 	},
 	$nlike: (q, c, v) => {
 		const likeValue = `%${v}%`;
@@ -546,7 +546,7 @@ export class Repository<TModel = unknown> {
 			|| qMethod === 'update'
 			|| qMethod === 'insert'
 		)
-			query.returning(sanitizedFields);
+			query.returning(sanitizedFields, { includeTriggerModifications: true });
 		else
 			query.select(sanitizedFields);
 	}
@@ -721,15 +721,17 @@ export class Repository<TModel = unknown> {
 			const result: KModel[] = await query;
 			if (throwIfNoResult && result.length === 0)
 				throw new HttpError({
-					message: typeof throwIfNoResult === 'string'
-						? throwIfNoResult
+					message: typeof throwIfNoResult === 'object' && throwIfNoResult.message
+						? throwIfNoResult.message
 						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
 					cause: !process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {
 							query: query.toSQL().sql
 						}
 						: undefined,
-					httpStatusCode: 404
+					httpStatusCode: typeof throwIfNoResult === 'object' && throwIfNoResult.code
+						? throwIfNoResult.code
+						: 404
 				});
 			return result;
 		} catch (error) {
