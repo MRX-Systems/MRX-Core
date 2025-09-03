@@ -36,7 +36,7 @@ const _operators: Record<string, OperatorFn> = ({
 		const likeValue = `%${v}%`;
 		if (isDateString(v))
 			return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) LIKE ?`, [likeValue]);
-		return q.where(c, 'like', likeValue);
+		return q.where(c, 'LIKE', likeValue);
 	},
 	$nlike: (q, c, v) => {
 		const likeValue = `%${v}%`;
