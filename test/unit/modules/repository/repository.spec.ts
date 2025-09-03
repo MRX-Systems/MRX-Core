@@ -362,6 +362,18 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
+		'Q operator check no case sensitive',
+		{
+			filters: { $q: 'REPOSITORY::' },
+			validator: (data, expectedCount) => {
+				if (!Array.isArray(data))
+					throw new Error('Data should be an array');
+				expect(data).toHaveLength(expectedCount);
+			},
+			expectedCount: 20
+		}
+	],
+	[
 		'Multiple conditions with AND',
 		{
 			filters: {
