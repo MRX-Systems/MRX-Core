@@ -385,7 +385,8 @@ export const crud = <
 			deleteOne: true,
 			count: true
 		} as TOperations,
-		tags = [tableName]
+		tags = [tableName],
+		prefix = ''
 	}: CrudOptions<
 		TDatabase,
 		TTableName,
@@ -453,7 +454,8 @@ export const crud = <
 	}
 > => new Elysia({
 	name: `crudPlugin[${tableName}]`,
-	tags
+	tags,
+	prefix
 })
 	.use(dbResolver<TDatabase>(database))
 	.use(
