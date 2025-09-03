@@ -1,100 +1,15 @@
 import { describe, expect, test } from 'bun:test';
-import { Redis, type RedisKey } from 'ioredis';
 
 import { rateLimit } from '#/modules/elysia/rateLimit/rateLimit';
+import { MemoryStore } from '#/modules/kvStore/memory/memoryStore';
 
-class MockRedis extends Redis {
-	private readonly _data: Map<RedisKey, string>;
-
-	private readonly _expiry: Map<RedisKey, number>;
-
-	public constructor() {
-		super({
-			lazyConnect: true
-		});
-		this._data = new Map();
-		this._expiry = new Map();
-	}
-
-	public override get(key: RedisKey): Promise<string | null> {
-		return new Promise((resolve) => {
-			if (this._isExpired(key)) {
-				this._data.delete(key);
-				this._expiry.delete(key);
-				resolve(null);
-			} else {
-				resolve(this._data.get(key) || null);
-			}
-		});
-	}
-
-	public override setex(key: RedisKey, seconds: number | string, value: string | Buffer | number): Promise<'OK'> {
-		return new Promise((resolve) => {
-			this._data.set(key, value.toString());
-			this._expiry.set(key, Date.now() + (Number(seconds) * 1000));
-			resolve('OK');
-		});
-	}
-
-	public override incr(key: RedisKey): Promise<number> {
-		return new Promise((resolve) => {
-			if (this._isExpired(key)) {
-				this._data.delete(key);
-				this._expiry.delete(key);
-			}
-			const current = this._data.get(key);
-			const newValue = current ? parseInt(current) + 1 : 1;
-			this._data.set(key, newValue.toString());
-			resolve(newValue);
-		});
-	}
-
-	public override ttl(key: RedisKey): Promise<number> {
-		return new Promise((resolve) => {
-			const expiry = this._expiry.get(key);
-			if (!expiry) {
-				resolve(-1);
-			} else {
-				const remaining = Math.max(0, Math.ceil((expiry - Date.now()) / 1000));
-				resolve(remaining);
-			}
-		});
-	}
-
-	public override exists(...args: unknown[]): Promise<number> {
-		return new Promise((resolve) => {
-			const key = args[0] as RedisKey;
-			if (this._isExpired(key)) {
-				this._data.delete(key);
-				this._expiry.delete(key);
-				resolve(0);
-			} else {
-				resolve(this._data.has(key) ? 1 : 0);
-			}
-		});
-	}
-
-	private _isExpired(key: RedisKey): boolean {
-		const expiry = this._expiry.get(key);
-		return expiry ? Date.now() > expiry : false;
-	}
-
-	public get data() {
-		return this._data;
-	}
-
-	public get expiry() {
-		return this._expiry;
-	}
-}
-
-describe('rateLimit - Redis Store', () => {
+describe('rateLimit - MemoryStore', () => {
 	test('should handle basic rate limiting workflow', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'OK');
 
 		const ip = '127.0.0.1';
@@ -119,11 +34,11 @@ describe('rateLimit - Redis Store', () => {
 	});
 
 	test('should handle different IP extraction methods and maintain separate counters', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'OK');
 
 		// Test x-forwarded-for header
@@ -156,11 +71,11 @@ describe('rateLimit - Redis Store', () => {
 	});
 
 	test('should handle edge cases with IP headers', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'OK');
 
 		const testCases = [
@@ -186,11 +101,11 @@ describe('rateLimit - Redis Store', () => {
 	});
 
 	test('should handle concurrent requests correctly', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'OK');
 
 		// Test concurrent requests from different IPs
@@ -221,10 +136,10 @@ describe('rateLimit - Redis Store', () => {
 	});
 
 	test('should handle different rate limit configurations', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 
 		// Test very low limit
-		const lowLimitApp = rateLimit({ store: redis, limit: 1, window: 60 })
+		const lowLimitApp = rateLimit({ store: memoryStore, limit: 1, window: 60 })
 			.get('/test', () => 'Low limit test');
 
 		const ip1 = '198.51.100.200';
@@ -239,8 +154,9 @@ describe('rateLimit - Redis Store', () => {
 		}));
 		expect(response2.status).toBe(429);
 
-		// Test high limit
-		const highLimitApp = rateLimit({ store: redis, limit: 1000, window: 60 })
+		// Test high limit with new store instance
+		const memoryStore2 = new MemoryStore();
+		const highLimitApp = rateLimit({ store: memoryStore2, limit: 1000, window: 60 })
 			.get('/test', () => 'High limit test');
 
 		const ip2 = '203.0.113.250';
@@ -255,12 +171,12 @@ describe('rateLimit - Redis Store', () => {
 		expect(finalResponse.headers.get('X-RateLimit-Remaining')).toEqual('989');
 	});
 
-	test('should handle TTL and Redis operations correctly', async () => {
-		const redis = new MockRedis();
+	test('should handle TTL and MemoryStore operations correctly', async () => {
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'OK');
 
 		const testIp = '172.16.254.1';
@@ -271,20 +187,20 @@ describe('rateLimit - Redis Store', () => {
 		}));
 
 		// Verify key exists and has TTL
-		const keyExists = await redis.exists(`rateLimit:${testIp}`);
-		expect(keyExists).toBe(1);
+		const keyValue = memoryStore.get<number>(`ratelimit:${testIp}`);
+		expect(keyValue).toBe(1);
 
-		const ttl = await redis.ttl(`rateLimit:${testIp}`);
+		const ttl = memoryStore.ttl(`ratelimit:${testIp}`);
 		expect(ttl).toBeGreaterThan(0);
 		expect(ttl).toBeLessThanOrEqual(60);
 	});
 
 	test('should handle HTTP methods and request variations', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'GET OK')
 			.post('/test', ({ body }) => ({ received: body }));
 
@@ -319,11 +235,11 @@ describe('rateLimit - Redis Store', () => {
 	});
 
 	test('should handle window expiration', async () => {
-		const redis = new MockRedis();
+		const memoryStore = new MemoryStore();
 		const limit = 5;
 		const window = 1; // 1 second window
 
-		const app = rateLimit({ store: redis, limit, window })
+		const app = rateLimit({ store: memoryStore, limit, window })
 			.get('/test', () => 'OK');
 
 		const ip = '192.168.1.100';
@@ -347,7 +263,7 @@ describe('rateLimit - Redis Store', () => {
 	});
 });
 
-describe('rateLimit - Memory Store', () => {
+describe('rateLimit - Default Memory Store', () => {
 	test('should work with explicit memory store configuration', async () => {
 		const limit = 3;
 		const window = 60;
