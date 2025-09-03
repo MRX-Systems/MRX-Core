@@ -18,7 +18,7 @@ const TIME_UNITS = {
  * Matches patterns like: "2 hours", "+30 minutes", "1 day ago", "5 seconds from now"
  */
 const TIME_EXPRESSION_REGEX
-    = /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
+	= /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
 
 /**
  * Mapping of unit strings to their corresponding time unit values

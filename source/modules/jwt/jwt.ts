@@ -26,7 +26,6 @@ export const signJWT = (
 			httpStatusCode: 'BAD_REQUEST'
 		});
 
-
 	// Prepare the final payload with default claims
 	const finalPayload = {
 		iss: 'Core-Issuer', // Issuer
