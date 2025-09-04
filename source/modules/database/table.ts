@@ -1,4 +1,4 @@
-import type { TableEventMap } from '#/modules/database/events/tableEventMap';
+import type { TableEventMap } from '#/modules/database/events/table-event-map';
 import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter';
 
 /**

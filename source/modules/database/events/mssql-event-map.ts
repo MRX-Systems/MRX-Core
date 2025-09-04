@@ -1,4 +1,4 @@
-import type { QueryContext } from '#/modules/database/types/queryContext';
+import type { QueryContext } from '#/modules/database/types/query-context';
 
 export interface MssqlEventMap {
 	readonly query: [QueryContext]

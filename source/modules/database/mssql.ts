@@ -1,13 +1,13 @@
 import knex, { type Knex } from 'knex';
 
-import { BaseError } from '#/errors/baseError';
+import { BaseError } from '#/errors/base-error';
 import { Repository } from '#/modules/repository/repository';
 import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter';
-import { DATABASE_ERROR_KEYS } from './enums/databaseErrorKeys';
-import type { MssqlEventMap } from './events/mssqlEventMap';
+import { DATABASE_ERROR_KEYS } from './enums/database-error-keys';
+import type { MssqlEventMap } from './events/mssql-event-map';
 import { Table } from './table';
-import type { MSSQLDatabaseOptions } from './types/mssqlDatabaseOption';
-import type { QueryContext } from './types/queryContext';
+import type { MSSQLDatabaseOptions } from './types/mssql-database-option';
+import type { QueryContext } from './types/query-context';
 
 /**
  * Manages the connection with an MSSQL database.
@@ -102,12 +102,9 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 			if (this._isEventEnabled)
 				this._addEventKnex();
 		} catch (error) {
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR,
-				cause: {
-					databaseName: this._databaseName,
-					error
-				}
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR, {
+				databaseName: this._databaseName,
+				error
 			});
 		}
 	}
@@ -120,20 +117,16 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	public async disconnect(): Promise<void> {
 		if (!this._isConnected)
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED,
-				cause: { databaseName: this._databaseName }
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, {
+				databaseName: this._databaseName
 			});
 		try {
 			await this._db.destroy();
 			this._isConnected = false;
 		} catch (error) {
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_DISCONNECT_ERROR,
-				cause: {
-					databaseName: this._databaseName,
-					error
-				}
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_DISCONNECT_ERROR, {
+				databaseName: this._databaseName,
+				error
 			});
 		}
 	}
@@ -164,15 +157,9 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 		customRepository?: new (knex: Knex, table: Table) => Repository
 	): Repository {
 		if (!this._isConnected)
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED,
-				cause: { databaseName: this._databaseName }
-			});
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
 		if (!this._tables.has(tableName))
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND,
-				cause: { table: tableName }
-			});
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
 
 		let repo = this._repositories.get(tableName);
 
@@ -199,15 +186,9 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	public getTable(tableName: string): Table {
 		if (!this._isConnected)
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED,
-				cause: { databaseName: this._databaseName }
-			});
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
 		if (!this._tables.has(tableName))
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND,
-				cause: { table: tableName }
-			});
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
 		return this._tables.get(tableName) as Table;
 	}
 
@@ -256,10 +237,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	public get db(): Knex {
 		if (!this._isConnected)
-			throw new BaseError({
-				message: DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED,
-				cause: { databaseName: this._databaseName }
-			});
+			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
 		return this._db;
 	}
 
