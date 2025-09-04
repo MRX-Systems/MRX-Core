@@ -1,4 +1,4 @@
-import type { QueryOptions } from './queryOptions';
+import type { QueryOptions } from './query-options';
 
 /**
  * Interface Option query with stream option inherited from {@link QueryOptions}

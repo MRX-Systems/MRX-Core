@@ -3,8 +3,8 @@ import { randomBytes } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
-import { HttpError } from '#/errors/httpError';
-import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
+import { HttpError } from '#/errors/http-error';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
 import type { Filter } from '#/modules/repository/types/filter';

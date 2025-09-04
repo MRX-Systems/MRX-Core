@@ -1,4 +1,4 @@
-import type { QueryOptions } from './queryOptions';
+import type { QueryOptions } from './query-options';
 
 /**
  * Extends {@link QueryOptions} to add pagination capabilities for queries.

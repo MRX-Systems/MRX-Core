@@ -1,7 +1,7 @@
-import type { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/httpErrorStatusCodes';
+import type { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/http-status-codes';
 import type { Filter } from './filter';
-import type { OrderByItem } from './orderByItem';
-import type { SelectedFields } from './selectedFields';
+import type { OrderByItem } from './order-by-item';
+import type { SelectedFields } from './selected-fields';
 import type { Transaction } from './transaction';
 
 /**
