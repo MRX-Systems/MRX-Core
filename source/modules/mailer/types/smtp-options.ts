@@ -1,5 +1,5 @@
-import type { SMTPCredentials } from './smtpCredentials';
-import type { SMTPPoolOptions } from './smtpPoolOptions';
+import type { SMTPCredentials } from './smtp-credentials';
+import type { SMTPPoolOptions } from './smtp-pool-options';
 
 export interface SMTPOptions {
 	/**

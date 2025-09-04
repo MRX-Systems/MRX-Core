@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, test } from 'bun:test';
 import nodemailer from 'nodemailer';
 
-import { MAILER_ERROR_KEYS } from '#/modules/mailer/enums/mailerErrorKeys';
-import type { SMTPOptions } from '#/modules/mailer/types/smtpOptions';
+import { MAILER_ERROR_KEYS } from '#/modules/mailer/enums/mailer-error-keys';
+import type { SMTPOptions } from '#/modules/mailer/types/smtp-options';
 
 describe('SMTP', () => {
 	let testAccount: nodemailer.TestAccount;
@@ -90,7 +90,7 @@ describe('SMTP', () => {
 		});
 
 		test('should throw BaseError when already connected', async () => {
-			const { BaseError } = await import('#/errors/baseError');
+			const { BaseError } = await import('#/errors/base-error');
 
 			const mailer = await createTestSMTP();
 			await mailer.connect();
@@ -103,7 +103,7 @@ describe('SMTP', () => {
 		});
 
 		test('should throw BaseError when connection fails with invalid host', async () => {
-			const { BaseError } = await import('#/errors/baseError');
+			const { BaseError } = await import('#/errors/base-error');
 
 			const mailer = await createTestSMTP({
 				host: 'invalid.nonexistent.host.example',
@@ -167,7 +167,7 @@ describe('SMTP', () => {
 
 	describe('sendMail', () => {
 		test('should throw BaseError when not connected', async () => {
-			const { BaseError } = await import('#/errors/baseError');
+			const { BaseError } = await import('#/errors/base-error');
 
 			const mailer = await createTestSMTP();
 
