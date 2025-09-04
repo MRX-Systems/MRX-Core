@@ -1,2 +1,3 @@
-export { BaseError } from './baseError';
-export { HttpError } from './httpError';
+export { BaseError } from './base-error';
+export { HttpError } from './http-error';
+
