@@ -1,7 +1,6 @@
-export type { BodiesIntersection } from './bodiesIntersection.ts';
-export type { LoggerStrategy } from './loggerStrategy.ts';
-export type { LogLevels } from './logLevels.ts';
-export type { LogStreamChunk } from './logStreamChunk.ts';
-export type { StrategyBody } from './strategyBody.ts';
-export type { StrategyMap } from './strategyMap.ts';
-
+export type { BodiesIntersection } from './bodies-intersection.ts';
+export type { LogLevels } from './log-levels.ts';
+export type { LogStreamChunk } from './log-stream-chunk.ts';
+export type { LoggerSink } from './logger-sink.ts';
+export type { SinkBody } from './sink-body.ts';
+export type { SinkMap } from './sink-map.ts';

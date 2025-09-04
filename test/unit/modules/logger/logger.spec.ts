@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-empty-function */
+import { BaseError } from '#/errors/base-error';
 import { describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/baseError';
-import { LOGGER_ERROR_KEYS } from '#/modules/logger/enums/loggerErrorKeys';
+import { LOGGER_ERROR_KEYS } from '#/modules/logger/enums/logger-error-keys';
 import { Logger } from '#/modules/logger/logger';
-import type { LoggerStrategy } from '#/modules/logger/types/loggerStrategy';
-import type { LogLevels } from '#/modules/logger/types/logLevels';
+import type { LogLevels } from '#/modules/logger/types/log-levels';
+import type { LoggerSink } from '#/modules/logger/types/logger-sink';
 
 /**
  * Tests for the Logger class (immutable API).
@@ -24,94 +24,94 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('registerStrategy', () => {
-		test('should add a strategy and return a new Logger instance', () => {
+	describe('registerSink', () => {
+		test('should add a sink and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
-			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = logger.registerStrategy('test', strategy);
-			expect(Object.keys((logger2 as unknown as { _strategies: object })._strategies)).toContain('test');
+			const sink: LoggerSink = { log: () => {} };
+			const logger2 = logger.registerSink('test', sink);
+			expect(Object.keys((logger2 as unknown as { _sinks: object })._sinks)).toContain('test');
 		});
 
-		test('should throw an error if the strategy is already added', () => {
+		test('should throw an error if the sink is already added', () => {
 			const logger: Logger = new Logger();
-			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = logger.registerStrategy('test', strategy);
-			expect(() => logger2.registerStrategy('test', strategy)).toThrow(LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED);
+			const sink: LoggerSink = { log: () => {} };
+			const logger2 = logger.registerSink('test', sink);
+			expect(() => logger2.registerSink('test', sink)).toThrow(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
 		});
 	});
 
-	describe('unregisterStrategy', () => {
-		test('should remove a strategy and return a new Logger instance', () => {
+	describe('unregisterSink', () => {
+		test('should remove a sink and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
-			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = logger.registerStrategy('test', strategy);
+			const sink: LoggerSink = { log: () => {} };
+			const logger2 = logger.registerSink('test', sink);
 			// The key type is now 'test' only
-			const logger3 = logger2.unregisterStrategy('test');
-			expect(Object.keys((logger3 as unknown as { _strategies: object })._strategies)).not.toContain('test');
+			const logger3 = logger2.unregisterSink('test');
+			expect(Object.keys((logger3 as unknown as { _sinks: object })._sinks)).not.toContain('test');
 		});
 
-		test('should throw an error if the strategy is not found', () => {
+		test('should throw an error if the sink is not found', () => {
 			const logger: Logger = new Logger();
 			// Type is never, so we must cast
-			expect(() => (logger as unknown as { unregisterStrategy: (name: string) => void }).unregisterStrategy('test')).toThrow(LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND);
+			expect(() => (logger as unknown as { unregisterSink: (name: string) => void }).unregisterSink('test')).toThrow(LOGGER_ERROR_KEYS.SINK_NOT_FOUND);
 		});
 	});
 
-	describe('registerStrategies', () => {
-		test('should add multiple strategies and return a new Logger instance', () => {
+	describe('registerSinks', () => {
+		test('should add multiple sinks and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
-			const strategies: [string, LoggerStrategy][] = [
+			const sinks: [string, LoggerSink][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = logger.registerStrategies(strategies);
-			const keys = Object.keys((logger2 as unknown as { _strategies: object })._strategies);
+			const logger2 = logger.registerSinks(sinks);
+			const keys = Object.keys((logger2 as unknown as { _sinks: object })._sinks);
 			expect(keys).toContain('test1');
 			expect(keys).toContain('test2');
 		});
 
-		test('should throw an error if a strategy is already added', () => {
+		test('should throw an error if a sink is already added', () => {
 			const logger: Logger = new Logger();
-			const strategies: [string, LoggerStrategy][] = [
+			const sinks: [string, LoggerSink][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = logger.registerStrategies(strategies);
-			expect(() => logger2.registerStrategies(strategies)).toThrow(LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED);
+			const logger2 = logger.registerSinks(sinks);
+			expect(() => logger2.registerSinks(sinks)).toThrow(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
 		});
 	});
 
-	describe('unregisterStrategies', () => {
-		test('should remove multiple strategies and return a new Logger instance', () => {
+	describe('unregisterSinks', () => {
+		test('should remove multiple sinks and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
-			const strategies: [string, LoggerStrategy][] = [
+			const sinks: [string, LoggerSink][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = logger.registerStrategies(strategies);
+			const logger2 = logger.registerSinks(sinks);
 			// The keys are now 'test1' and 'test2'
-			const logger3 = (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test2']);
-			expect(Object.keys((logger3 as unknown as { _strategies: object })._strategies)).toHaveLength(0);
+			const logger3 = (logger2 as unknown as { unregisterSinks: (names: string[]) => Logger }).unregisterSinks(['test1', 'test2']);
+			expect(Object.keys((logger3 as unknown as { _sinks: object })._sinks)).toHaveLength(0);
 		});
 
-		test('should throw an error if a strategy is not found', () => {
+		test('should throw an error if a sink is not found', () => {
 			const logger: Logger = new Logger();
-			const strategies: [string, LoggerStrategy][] = [
+			const sinks: [string, LoggerSink][] = [
 				['test1', { log: () => {} }],
 				['test2', { log: () => {} }]
 			];
-			const logger2 = logger.registerStrategies(strategies);
-			expect(() => (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test3'])).toThrow(LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND);
+			const logger2 = logger.registerSinks(sinks);
+			expect(() => (logger2 as unknown as { unregisterSinks: (names: string[]) => Logger }).unregisterSinks(['test1', 'test3'])).toThrow(LOGGER_ERROR_KEYS.SINK_NOT_FOUND);
 		});
 	});
 
-	describe('clearStrategies', () => {
-		test('should clear all strategies and return a new Logger instance', () => {
+	describe('clearSinks', () => {
+		test('should clear all sinks and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
-			const strategy: LoggerStrategy = { log: () => {} };
-			const logger2 = logger.registerStrategy('test', strategy);
-			const logger3 = logger2.clearStrategies();
-			expect(Object.keys((logger3 as unknown as { _strategies: object })._strategies)).toHaveLength(0);
+			const sink: LoggerSink = { log: () => {} };
+			const logger2 = logger.registerSink('test', sink);
+			const logger3 = logger2.clearSinks();
+			expect(Object.keys((logger3 as unknown as { _sinks: object })._sinks)).toHaveLength(0);
 		});
 	});
 
@@ -123,13 +123,13 @@ describe('Logger', () => {
 			['debug', 'DEBUG'],
 			['log', 'LOG']
 		])('should log a %s message and queue it', (method: string, level: string) => {
-			const strategy: LoggerStrategy = {
+			const sink: LoggerSink = {
 				log: (logLevel: LogLevels, _: Date, object: unknown) => {
 					expect(logLevel).toBe(level as LogLevels);
 					expect(object).toBe('test');
 				}
 			};
-			const logger = new Logger().registerStrategy('test', strategy);
+			const logger = new Logger().registerSink('test', sink);
 			((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test');
 			const pendingLogs = (logger as unknown as { _pendingLogs: unknown[] })._pendingLogs;
 			expect(pendingLogs).toHaveLength(1);
@@ -142,20 +142,20 @@ describe('Logger', () => {
 			['info'],
 			['debug'],
 			['log']
-		])('should throw if no strategy is added (method: %s)', (method: string) => {
+		])('should throw if no sink is added (method: %s)', (method: string) => {
 			const logger = new Logger();
-			expect(() => ((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test')).toThrow(LOGGER_ERROR_KEYS.NO_STRATEGY_ADDED);
+			expect(() => ((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test')).toThrow(LOGGER_ERROR_KEYS.NO_SINK_ADDED);
 		});
 	});
 
 	describe('event emission', () => {
-		test('should emit an error when a strategy throws', (done) => {
-			const strategy: LoggerStrategy = {
+		test('should emit an error when a sink throws', (done) => {
+			const sink: LoggerSink = {
 				log: () => {
 					throw new Error('test');
 				}
 			};
-			const logger = new Logger().registerStrategy('test', strategy);
+			const logger = new Logger().registerSink('test', sink);
 			logger.on('error', (error: Error) => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(BaseError);
@@ -165,8 +165,8 @@ describe('Logger', () => {
 		});
 
 		test('should emit end when no more logs are pending', (done) => {
-			const strategy: LoggerStrategy = { log: () => {} };
-			const logger = new Logger().registerStrategy('test', strategy);
+			const sink: LoggerSink = { log: () => {} };
+			const logger = new Logger().registerSink('test', sink);
 			logger.on('end', () => done());
 			logger.log('test');
 		});
@@ -174,12 +174,12 @@ describe('Logger', () => {
 
 	describe('internal behavior', () => {
 		test('should ignore logs when maxPendingLogs is reached', () => {
-			const strategy: LoggerStrategy = { log: () => {} };
-			const logger = new Logger().registerStrategy('test', strategy);
+			const sink: LoggerSink = { log: () => {} };
+			const logger = new Logger().registerSink('test', sink);
 			// Fill the buffer
-			for (let i = 0; i < 10; ++i)
+			for (let i = 0; i < 10; i++)
 				logger.log(`log${i}`);
-			const loggerFull = new Logger({}, 1).registerStrategy('test', strategy);
+			const loggerFull = new Logger({}, 1).registerSink('test', sink);
 			loggerFull.log('first');
 			loggerFull.log('second');
 			const pendingLogs = (loggerFull as unknown as { _pendingLogs: unknown[] })._pendingLogs;
@@ -187,10 +187,10 @@ describe('Logger', () => {
 		});
 
 		test('should handle backpressure in _writeLog', async () => {
-			const mockStrategy: LoggerStrategy = {
+			const mockSink: LoggerSink = {
 				log: (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 100))
 			};
-			const logger = new Logger().registerStrategy('test', mockStrategy);
+			const logger = new Logger().registerSink('test', mockSink);
 			logger.log('test1');
 			logger.log('test2');
 			// @ts-expect-error _writeLog is private

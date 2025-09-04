@@ -1,28 +1,28 @@
-import type { LoggerStrategy } from '#/modules/logger/types/loggerStrategy';
-import type { LogLevels } from '#/modules/logger/types/logLevels';
+import type { LogLevels } from '#/modules/logger/types/log-levels';
+import type { LoggerSink } from '#/modules/logger/types/logger-sink';
 
 /**
- * ConsoleLoggerStrategy implements {@link LoggerStrategy} to provide logging functionality to the console.
- */
-export class ConsoleLoggerStrategy implements LoggerStrategy {
+* ConsoleLoggerSink implements LoggerSink to provide logging functionality to the console.
+*/
+export class ConsoleLoggerSink implements LoggerSink {
 	private readonly _colorize: boolean;
 
 	/**
-	 * Initializes the ConsoleLoggerStrategy.
-	 *
-	 * @param colorize - Indicates if the output should be colorized. (Default is false.)
-	 */
+	* Initializes the ConsoleLoggerSink.
+	*
+	* @param colorize - Indicates if the output should be colorized. (Default is false.)
+	*/
 	public constructor(colorize = false) {
 		this._colorize = colorize;
 	}
 
 	/**
-	 * Logs a message to the console with the specified log level.
-	 *
-	 * @param level - The log level at which the message should be logged.
-	 * @param date - The date at which the message was logged.
-	 * @param object - The object to log.
-	 */
+	* Logs a message to the console with the specified log level.
+	*
+	* @param level - The log level at which the message should be logged.
+	* @param date - The date at which the message was logged.
+	* @param object - The object to log.
+	*/
 	public log(level: LogLevels, date: Date, object: unknown): void {
 		const colors: Record<LogLevels, string> = {
 			ERROR: '\x1b[31m',

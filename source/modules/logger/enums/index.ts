@@ -1,1 +1,1 @@
-export { LOGGER_ERROR_KEYS } from './loggerErrorKeys';
+export type { LOGGER_ERROR_KEYS } from './logger-error-keys';
