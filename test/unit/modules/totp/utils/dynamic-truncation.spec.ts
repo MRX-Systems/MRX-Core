@@ -1,6 +1,6 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, test, expect } from 'bun:test';
 
-import { dynamicTruncation } from '#/modules/totp/utils/dynamicTruncation';
+import { dynamicTruncation } from '#/modules/totp/utils/dynamic-truncation';
 
 describe('dynamicTruncation', () => {
 	test('should correctly truncate HMAC array with 6 digits', () => {

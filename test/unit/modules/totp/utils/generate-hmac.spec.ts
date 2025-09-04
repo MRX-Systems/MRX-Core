@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { webcrypto } from 'crypto';
 
-import { generateHmac } from '#/modules/totp/utils/generateHmac';
+import { generateHmac } from '#/modules/totp/utils/generate-hmac';
 
 describe('generateHmac', () => {
 	const _createTestKey = async (secret: Uint8Array, algorithm = 'SHA-1'): Promise<CryptoKey> => await webcrypto.subtle.importKey(

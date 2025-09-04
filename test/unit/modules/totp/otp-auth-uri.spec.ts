@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
-import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totpErrorKeys';
-import { buildOtpAuthUri, parseOtpAuthUri } from '#/modules/totp/otpAuthUri';
+import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
+import { buildOtpAuthUri, parseOtpAuthUri } from '#/modules/totp/otp-auth-uri';
 
 describe('buildOtpAuthUri', () => {
 	test('should build a valid OTP Auth URI', () => {

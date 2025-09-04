@@ -1,4 +1,4 @@
-import type { TotpOptions } from './totpOptions';
+import type { TotpOptions } from './totp-options';
 
 /**
  * Options for TOTP verification

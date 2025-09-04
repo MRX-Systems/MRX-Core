@@ -1,7 +1,7 @@
+import { BaseError } from '#/errors/base-error';
 import { getRandomValues } from 'crypto';
 
-import { BaseError } from '#/errors/baseError';
-import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totpErrorKeys';
+import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
 
 /**
  * Generate cryptographically secure random bytes for TOTP secret
@@ -14,8 +14,6 @@ import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totpErrorKeys';
  */
 export const generateSecretBytes = (length = 20): Uint8Array => {
 	if (length <= 0)
-		throw new BaseError({
-			message: TOTP_ERROR_KEYS.INVALID_SECRET_LENGTH
-		});
+		throw new BaseError(TOTP_ERROR_KEYS.INVALID_SECRET_LENGTH);
 	return getRandomValues(new Uint8Array(length));
 };

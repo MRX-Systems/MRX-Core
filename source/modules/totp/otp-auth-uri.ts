@@ -1,6 +1,7 @@
-import { BaseError } from '#/errors/baseError';
-import { TOTP_ERROR_KEYS } from './enums/totpErrorKeys';
-import type { OtpAuthUri } from './types/otpAuthUri';
+import { BaseError } from '#/errors/base-error';
+
+import { TOTP_ERROR_KEYS } from './enums/totp-error-keys';
+import type { OtpAuthUri } from './types/otp-auth-uri';
 
 /**
  * Build an OTPAuth URI for QR code generation
@@ -53,22 +54,16 @@ export const parseOtpAuthUri = (uri: string): Required<Omit<OtpAuthUri, 'issuer'
 	const url = new URL(uri);
 
 	if (url.protocol !== 'otpauth:')
-		throw new BaseError({
-			message: TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI
-		});
+		throw new BaseError(TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI);
 
 	if (url.hostname !== 'totp')
-		throw new BaseError({
-			message: TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI
-		});
+		throw new BaseError(TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI);
 
 	const label = decodeURIComponent(url.pathname.slice(1));
 	const secretBase32 = url.searchParams.get('secret');
 
 	if (!secretBase32)
-		throw new BaseError({
-			message: TOTP_ERROR_KEYS.MISSING_SECRET
-		});
+		throw new BaseError(TOTP_ERROR_KEYS.MISSING_SECRET);
 
 	const issuerParam = url.searchParams.get('issuer');
 	const issuer = issuerParam ? decodeURIComponent(issuerParam) : undefined;

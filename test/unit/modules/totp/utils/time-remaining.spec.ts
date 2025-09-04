@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { timeRemaining } from '#/modules/totp/utils/timeRemaining';
+import { timeRemaining } from '#/modules/totp/utils/time-remaining';
 
 describe('timeRemaining', () => {
 	test('should calculate the remaining time until the next TOTP code', () => {

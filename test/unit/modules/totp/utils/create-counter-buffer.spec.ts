@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 
-import { createCounterBuffer } from '#/modules/totp/utils/createCounterBuffer';
+import { createCounterBuffer } from '#/modules/totp/utils/create-counter-buffer';
 
 describe('createCounterBuffer', () => {
 	test('should create an 8-byte buffer from bigint counter', () => {

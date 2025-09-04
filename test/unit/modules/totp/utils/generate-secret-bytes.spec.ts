@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
-import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totpErrorKeys';
-import { generateSecretBytes } from '#/modules/totp/utils/generateSecretBytes';
+import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
+import { generateSecretBytes } from '#/modules/totp/utils/generate-secret-bytes';
 
 describe('generateSecretBytes', () => {
 	test('should generate 20 random bytes, is default option', () => {
