@@ -31,7 +31,7 @@
 	"exports": {
 		"./errors": "./dist/errors/index.js",
 		"./errors/enums": "./dist/errors/enums/index.js",
-		"./errors/types": "./dist/errors/types/index.js",
+		"./errors/utils": "./dist/errors/utils/index.js",
 		"./modules/data": "./dist/modules/data/index.js",
 		"./modules/data/enums": "./dist/modules/data/enums/index.js",
 		"./modules/data/transformers": "./dist/modules/data/transformers/index.js",
