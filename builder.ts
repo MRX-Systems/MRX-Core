@@ -19,7 +19,7 @@ await Bun.build({
 		// # ————————— Error ————————— #
 		'./source/errors/index.ts',
 		'./source/errors/enums/index.ts',
-		'./source/errors/types/index.ts',
+		'./source/errors/utils/index.ts',
 
 		// # ————————— Data ————————— #
 		'./source/modules/data/index.ts',
