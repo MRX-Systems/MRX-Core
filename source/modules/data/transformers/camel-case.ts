@@ -1,5 +1,5 @@
-import type { CamelCase } from '#/modules/data/types/camelCase';
-import type { CaseTransformer } from '#/modules/data/types/caseTransformer';
+import type { CamelCase } from '#/modules/data/types/camel-case';
+import type { CaseTransformer } from '#/modules/data/types/case-transformer';
 
 /**
  * Transforms string into `camelCase` format.

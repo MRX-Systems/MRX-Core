@@ -1,5 +1,5 @@
-import type { CaseTransformer } from '#/modules/data/types/caseTransformer';
-import type { KebabCase } from '#/modules/data/types/kebabCase';
+import type { CaseTransformer } from '#/modules/data/types/case-transformer';
+import type { KebabCase } from '#/modules/data/types/kebab-case';
 
 /**
  * Transforms string into `kebab-case` format.

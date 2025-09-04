@@ -1,5 +1,5 @@
-import type { CaseTransformer } from '#/modules/data/types/caseTransformer';
-import type { SnakeCase } from '#/modules/data/types/snakeCase';
+import type { CaseTransformer } from '#/modules/data/types/case-transformer';
+import type { SnakeCase } from '#/modules/data/types/snake-case';
 
 /**
  * Transforms string into `snake_case` format.

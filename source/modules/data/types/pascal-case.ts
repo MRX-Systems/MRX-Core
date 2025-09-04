@@ -1,4 +1,4 @@
-import type { CamelCase } from './camelCase';
+import type { CamelCase } from './camel-case';
 
 export type PascalCase<S extends string>
 = S extends `${infer First}${infer Rest}`

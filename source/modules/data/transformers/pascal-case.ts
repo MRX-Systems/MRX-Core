@@ -1,5 +1,5 @@
-import type { CaseTransformer } from '#/modules/data/types/caseTransformer';
-import type { PascalCase } from '#/modules/data/types/pascalCase';
+import type { CaseTransformer } from '#/modules/data/types/case-transformer';
+import type { PascalCase } from '#/modules/data/types/pascal-case';
 
 /**
  * Transforms string into `PascalCase` format.
