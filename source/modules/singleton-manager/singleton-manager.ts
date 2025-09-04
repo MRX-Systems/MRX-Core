@@ -1,5 +1,6 @@
-import { BaseError } from '#/errors/baseError';
-import { SINGLETON_MANAGER_ERROR_KEYS } from './enums/singletonManagerErrorKeys';
+import { BaseError } from '#/errors/base-error';
+
+import { SINGLETON_MANAGER_ERROR_KEYS } from './enums/singleton-manager-error-keys';
 
 /**
 * SingletonManager is a static class that manages the singletons in the application.
@@ -46,7 +47,7 @@ export class SingletonManager {
 	* @param constructor - The constructor of the class.
 	* @param args - The arguments to pass to the constructor of the class.
 	*
-	* @throws ({@link BaseError}) - If the class constructor is already registered, it throws an error.
+	* @throws ({@link BaseError}) If the class constructor is already registered, it throws an error.
 	*/
 	public static register<
 		TClass extends object,
@@ -57,10 +58,7 @@ export class SingletonManager {
 		...args: TArgs
 	): void {
 		if (this._registry.has(name))
-			throw new BaseError({
-				message: SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_ALREADY_REGISTERED,
-				cause: { name }
-			});
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_ALREADY_REGISTERED, { name });
 		this._registry.set(name, new constructor(...args));
 	}
 
@@ -68,15 +66,12 @@ export class SingletonManager {
 	* Unregisters a class from the SingletonManager.
 	*
 	* @param name - The name of the class to unregister.
-	*
+	*²
 	* @throws ({@link BaseError}) If the class constructor is not registered, it throws an error.
 	*/
 	public static unregister(name: string): void {
 		if (!this._registry.has(name))
-			throw new BaseError({
-				message: SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED,
-				cause: { name }
-			});
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED, { name });
 		this._registry.delete(name);
 	}
 
@@ -93,10 +88,7 @@ export class SingletonManager {
 	*/
 	public static get<TClass>(name: string): TClass {
 		if (!this._registry.has(name))
-			throw new BaseError({
-				message: SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED,
-				cause: { name }
-			});
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED, { name });
 		return this._registry.get(name) as TClass;
 	}
 
