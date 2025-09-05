@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
-import { generateCacheKey } from '#/modules/elysia/cache/utils/generateCacheKey';
+import { generateCacheKey } from '#/modules/elysia/cache/utils/generate-cache-key';
 
 describe('generateCacheKey', () => {
 	it('should generate cache key for request with body', async () => {
