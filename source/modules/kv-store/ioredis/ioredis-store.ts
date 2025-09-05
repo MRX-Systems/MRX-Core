@@ -181,7 +181,7 @@ export class IoRedisStore implements KvStore {
 	 *
 	 * @returns Time to live in seconds, -1 if key has no expiration, -2 if key does not exist
 	 */
-	public async ttl(key: string): Promise<number> {
+	public ttl(key: string): Promise<number> {
 		return this._client.ttl(key);
 	}
 

@@ -55,7 +55,7 @@
 		"./modules/elysia/microservice": "./dist/modules/elysia/microservice/index.js",
 		"./modules/elysia/rate-limit": "./dist/modules/elysia/rate-limit/index.js",
 		"./modules/elysia/rate-limit/enums": "./dist/modules/elysia/rate-limit/enums/index.js",
-		"./modules/elysia/rate-limit/types": "./dist/modules/elysia/rateLimit/types/index.js",
+		"./modules/elysia/rate-limit/types": "./dist/modules/elysia/rate-limit/types/index.js",
 		"./modules/jwt": "./dist/modules/jwt/index.js",
 		"./modules/jwt/enums": "./dist/modules/jwt/enums/index.js",
 		"./modules/jwt/utils": "./dist/modules/jwt/utils/index.js",
