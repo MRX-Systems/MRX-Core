@@ -1,4 +1,4 @@
-import type { TArray, TObject, TPartial, TUnion, TOptional } from '@sinclair/typebox';
+import type { TArray, TObject, TOptional, TPartial, TUnion } from '@sinclair/typebox';
 import { t } from 'elysia';
 
 import { filterByKeyExclusionRecursive } from '#/modules/data/data';

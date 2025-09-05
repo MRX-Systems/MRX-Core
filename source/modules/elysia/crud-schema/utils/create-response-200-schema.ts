@@ -1,5 +1,14 @@
 import { TypeGuard } from '@sinclair/typebox';
-import type { Static, TArray, TLiteral, TObject, TPartial, TString, TUndefined, TUnion } from '@sinclair/typebox/type';
+import type {
+	Static,
+	TArray,
+	TLiteral,
+	TObject,
+	TPartial,
+	TString,
+	TUndefined,
+	TUnion
+} from '@sinclair/typebox/type';
 import { t } from 'elysia';
 
 import { filterByKeyExclusionRecursive } from '#/modules/data/data';

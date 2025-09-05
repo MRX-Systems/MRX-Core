@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { isDateString } from '#/utils/isDateString';
+import { isDateString } from '#/utils/is-date-string';
 
 describe('isDateString', () => {
 	describe('Valid date strings', () => {

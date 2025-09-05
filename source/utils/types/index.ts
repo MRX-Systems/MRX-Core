@@ -1,2 +1,2 @@
-export type { RenameKey } from './renameKey';
-export type { StreamWithAsyncIterable } from './streamWithAsyncIterable';
+export type { RenameKey } from './rename-key';
+export type { StreamWithAsyncIterable } from './stream-with-async-iterable';

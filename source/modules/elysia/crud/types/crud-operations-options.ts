@@ -4,8 +4,8 @@ import type { CrudOperationDeleteOptions } from './crud-operation-delete-options
 import type { CrudOperationFindOneOptions } from './crud-operation-find-one-options';
 import type { CrudOperationFindOptions } from './crud-operation-find-options';
 import type { CrudOperationInsertOptions } from './crud-operation-insert-options';
-import type { CrudOperationUpdateOneOptions } from './crud-operation-updateOneOptions';
 import type { CrudOperationUpdateOptions } from './crud-operation-update-options';
+import type { CrudOperationUpdateOneOptions } from './crud-operation-updateOneOptions';
 
 export interface CrudOperationsOptions {
 	readonly find?: CrudOperationFindOptions | true;

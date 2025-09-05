@@ -1,4 +1,4 @@
-import type { KvStore } from '@nowarajs/kv-store/types';
+import type { KvStore } from '#/modules/kv-store/types/kv-store';
 
 export interface CacheOptions {
 	/**

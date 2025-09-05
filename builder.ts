@@ -44,14 +44,14 @@ await Bun.build({
 		'./source/modules/elysia/crud/types/index.ts',
 
 		// crudSchema
-		'./source/modules/elysia/crudSchema/index.ts',
-		'./source/modules/elysia/crudSchema/types/index.ts',
-		'./source/modules/elysia/crudSchema/utils/index.ts',
+		'./source/modules/elysia/crud-schema/index.ts',
+		'./source/modules/elysia/crud-schema/types/index.ts',
+		'./source/modules/elysia/crud-schema/utils/index.ts',
 
 		// dbResolver
-		'./source/modules/elysia/dbResolver/index.ts',
-		'./source/modules/elysia/dbResolver/enums/index.ts',
-		'./source/modules/elysia/dbResolver/types/index.ts',
+		'./source/modules/elysia/db-resolver/index.ts',
+		'./source/modules/elysia/db-resolver/enums/index.ts',
+		'./source/modules/elysia/db-resolver/types/index.ts',
 
 		// error
 		'./source/modules/elysia/error/index.ts',
@@ -60,9 +60,9 @@ await Bun.build({
 		'./source/modules/elysia/microservice/index.ts',
 
 		// rateLimit
-		'./source/modules/elysia/rateLimit/index.ts',
-		'./source/modules/elysia/rateLimit/enums/index.ts',
-		'./source/modules/elysia/rateLimit/types/index.ts',
+		'./source/modules/elysia/rate-limit/index.ts',
+		'./source/modules/elysia/rate-limit/enums/index.ts',
+		'./source/modules/elysia/rate-limit/types/index.ts',
 
 		// # ————————— JWT ————————— #
 		'./source/modules/jwt/index.ts',
@@ -70,10 +70,10 @@ await Bun.build({
 		'./source/modules/jwt/utils/index.ts',
 
 		// # ————————— kvStore ————————— #
-		'./source/modules/kvStore/enums/index.ts',
-		'./source/modules/kvStore/ioredis/index.ts',
-		'./source/modules/kvStore/memory/index.ts',
-		'./source/modules/kvStore/types/index.ts',
+		'./source/modules/kv-store/enums/index.ts',
+		'./source/modules/kv-store/ioredis/index.ts',
+		'./source/modules/kv-store/memory/index.ts',
+		'./source/modules/kv-store/types/index.ts',
 
 		// # ————————— Logger ————————— #
 		'./source/modules/logger/index.ts',
@@ -92,8 +92,8 @@ await Bun.build({
 		'./source/modules/repository/types/index.ts',
 
 		// # ————————— SingletonManager ————————— #
-		'./source/modules/singletonManager/index.ts',
-		'./source/modules/singletonManager/enums/index.ts',
+		'./source/modules/singleton-manager/index.ts',
+		'./source/modules/singleton-manager/enums/index.ts',
 
 		// # ————————— TOTP ————————— #
 		'./source/modules/totp/index.ts',
@@ -102,8 +102,8 @@ await Bun.build({
 		'./source/modules/totp/utils/index.ts',
 
 		// # ————————— TypedEventEmitter ————————— #
-		'./source/modules/typedEventEmitter/index.ts',
-		'./source/modules/typedEventEmitter/types/index.ts',
+		'./source/modules/typed-event-emitter/index.ts',
+		'./source/modules/typed-event-emitter/types/index.ts',
 
 		// # ————————— Utils ————————— #
 		'./source/utils/index.ts',
