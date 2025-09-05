@@ -1,7 +1,7 @@
 import type { TObject } from '@sinclair/typebox';
 
-import type { DynamicDbOptions } from '#/modules/elysia/dbResolver/types/dynamicDbOptions';
-import type { CrudOperationsOptions } from './crudOperationsOptions';
+import type { DynamicDbOptions } from '#/modules/elysia/db-resolver/types/dynamic-db-options';
+import type { CrudOperationsOptions } from './crud-operations-options';
 
 /**
  * Options for the CRUD plugin
