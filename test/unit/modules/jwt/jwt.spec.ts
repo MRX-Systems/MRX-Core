@@ -1,10 +1,4 @@
-import {
-	beforeEach,
-	describe,
-	expect,
-	spyOn,
-	test
-} from 'bun:test';
+import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
 import type { JWTPayload, JWTVerifyResult } from 'jose';
 
 import { HttpError } from '#/errors/http-error';
