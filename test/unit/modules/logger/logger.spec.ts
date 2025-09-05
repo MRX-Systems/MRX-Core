@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-empty-function */
-import { BaseError } from '#/errors/base-error';
 import { describe, expect, test } from 'bun:test';
 
+import { BaseError } from '#/errors/base-error';
 import { LOGGER_ERROR_KEYS } from '#/modules/logger/enums/logger-error-keys';
 import { Logger } from '#/modules/logger/logger';
 import type { LogLevels } from '#/modules/logger/types/log-levels';

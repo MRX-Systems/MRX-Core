@@ -1,5 +1,5 @@
-import { BaseError } from '#/base-error';
-import { HttpError } from '#/http-error';
+import { BaseError } from '#/errors/base-error';
+import { HttpError } from '#/errors/http-error';
 
 export const isBaseError = (e: unknown): e is BaseError => e instanceof BaseError;
 
