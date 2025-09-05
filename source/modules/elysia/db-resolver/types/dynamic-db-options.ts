@@ -1,4 +1,4 @@
-import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssqlDatabaseOption';
+import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 
 export interface DynamicDbOptions {
 	/**

@@ -1,11 +1,11 @@
 import type { TObject, TString } from '@sinclair/typebox';
 import { Elysia, t, type DefinitionBase, type SingletonBase } from 'elysia';
 
-import { HttpError } from '#/errors/httpError';
+import { HttpError } from '#/errors/http-error';
 import { MSSQL } from '#/modules/database/mssql';
-import { SingletonManager } from '#/modules/singletonManager/singletonManager';
-import { DB_RESOLVER_ERROR_KEYS } from './enums/dbResolverErrorKeys';
-import type { DynamicDbOptions } from './types/dynamicDbOptions';
+import { SingletonManager } from '#/modules/singleton-manager/singleton-manager';
+import { DB_RESOLVER_ERROR_KEYS } from './enums/db-resolver-error-keys';
+import type { DynamicDbOptions } from './types/dynamic-db-options';
 
 /**
  * Internal function to resolve database connection based on configuration type (static or dynamic)
@@ -33,10 +33,7 @@ const _resolveDatabaseConnection = async <
 	const databaseName = headers['database-using'];
 
 	if (!databaseName)
-		throw new HttpError({
-			message: DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_HEADER_KEY_NOT_FOUND,
-			httpStatusCode: 'BAD_REQUEST'
-		});
+		throw new HttpError(DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_HEADER_KEY_NOT_FOUND, 'BAD_REQUEST');
 
 	// Register and connect database if not already available
 	if (!SingletonManager.has(`database:${databaseName}`)) {

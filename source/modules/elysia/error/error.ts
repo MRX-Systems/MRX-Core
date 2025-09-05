@@ -1,8 +1,8 @@
 import { Elysia, type TSchema } from 'elysia';
 
 import { filterByKeyExclusion } from '#/modules/data/data';
-import { BaseError } from '#/errors/baseError';
-import { HttpError } from '#/errors/httpError';
+import { BaseError } from '#/errors/base-error';
+import { HttpError } from '#/errors/http-error';
 
 /**
  * The `errorPlugin` provides an error handling system for Elysia applications.

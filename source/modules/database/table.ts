@@ -1,5 +1,5 @@
 import type { TableEventMap } from '#/modules/database/events/table-event-map';
-import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter';
+import { TypedEventEmitter } from '#/modules/typed-event-emitter/typed-event-emitter';
 
 /**
  * Represents a database table and provides access to its metadata (name, fields, primary key).

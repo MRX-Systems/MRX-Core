@@ -2,7 +2,7 @@ import knex, { type Knex } from 'knex';
 
 import { BaseError } from '#/errors/base-error';
 import { Repository } from '#/modules/repository/repository';
-import { TypedEventEmitter } from '#/modules/typedEventEmitter/typedEventEmitter';
+import { TypedEventEmitter } from '#/modules/typed-event-emitter/typed-event-emitter';
 import { DATABASE_ERROR_KEYS } from './enums/database-error-keys';
 import type { MssqlEventMap } from './events/mssql-event-map';
 import { Table } from './table';

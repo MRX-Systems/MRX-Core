@@ -3,9 +3,9 @@ import { randomBytes } from 'crypto';
 import { Elysia } from 'elysia';
 
 import { MSSQL } from '#/modules/database/mssql';
-import { dbResolver } from '#/modules/elysia/dbResolver/dbResolver';
+import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 import { error } from '#/modules/elysia/error/error';
-import { SingletonManager } from '#/modules/singletonManager/singletonManager';
+import { SingletonManager } from '#/modules/singleton-manager/singleton-manager';
 
 const options = {
 	databaseName: process.env.MSSQL_DATABASE ?? '',
