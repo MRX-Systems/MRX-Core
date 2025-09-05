@@ -341,7 +341,7 @@ describe('JWT Core Functions', () => {
 			const token = await signJWT(testSecret, originalPayload, oneHourFromNow);
 
 			// Verify multiple times
-			for (let i = 0; i < 5; i++) {
+			for (let i = 0; i < 5; ++i) {
 				const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
 				expect(result).not.toBe(false);
 				expect(result.payload.userId).toBe(2222);

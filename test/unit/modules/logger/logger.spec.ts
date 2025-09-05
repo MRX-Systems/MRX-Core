@@ -177,7 +177,7 @@ describe('Logger', () => {
 			const sink: LoggerSink = { log: () => {} };
 			const logger = new Logger().registerSink('test', sink);
 			// Fill the buffer
-			for (let i = 0; i < 10; i++)
+			for (let i = 0; i < 10; ++i)
 				logger.log(`log${i}`);
 			const loggerFull = new Logger({}, 1).registerSink('test', sink);
 			loggerFull.log('first');

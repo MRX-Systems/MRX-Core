@@ -79,7 +79,7 @@ await Bun.build({
 		'./source/modules/logger/index.ts',
 		'./source/modules/logger/enums/index.ts',
 		'./source/modules/logger/events/index.ts',
-		'./source/modules/logger/strategies/index.ts',
+		'./source/modules/logger/sinks/index.ts',
 		'./source/modules/logger/types/index.ts',
 
 		// # ————————— Mailer ————————— #
