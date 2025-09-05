@@ -1,9 +1,9 @@
 import { Elysia } from 'elysia';
 
-import { HttpError } from '#/errors/httpError';
-import { MemoryStore } from '#/modules/kvStore/memory/memoryStore';
-import { RATE_LIMIT_ERROR_KEYS } from './enums/rateLimitErrorKeys';
-import type { RateLimitOptions } from './types/rateLimitOptions';
+import { HttpError } from '#/errors/http-error';
+import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import { RATE_LIMIT_ERROR_KEYS } from './enums/rate-limit-error-keys';
+import type { RateLimitOptions } from './types/rate-limit-options';
 
 /**
  * The `rateLimitPlugin` provides rate limiting capabilities for Elysia applications,
@@ -96,15 +96,11 @@ export const rateLimit = ({ store, limit, window }: RateLimitOptions) => {
 
 			if (newCount > limit) {
 				set.status = 429;
-				throw new HttpError({
-					message: RATE_LIMIT_ERROR_KEYS.RATE_LIMIT_EXCEEDED,
-					httpStatusCode: 'TOO_MANY_REQUESTS',
-					cause: {
-						limit,
-						window,
-						remaining: 0,
-						reset: await storeInstance.ttl(key)
-					}
+				throw new HttpError(RATE_LIMIT_ERROR_KEYS.RATE_LIMIT_EXCEEDED, 'TOO_MANY_REQUESTS', {
+					limit,
+					window,
+					remaining: 0,
+					reset: await storeInstance.ttl(key)
 				});
 			}
 

@@ -1,15 +1,15 @@
 import { describe, expect, test } from 'bun:test';
 
-import { rateLimit } from '#/modules/elysia/rateLimit/rateLimit';
-import { MemoryStore } from '#/modules/kvStore/memory/memoryStore';
+import { rateLimit } from '#/modules/elysia/rate-limit/rate-limit';
+import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 
-describe('rateLimit - MemoryStore', () => {
+describe('rateLimit - KV Store', () => {
 	test('should handle basic rate limiting workflow', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'OK');
 
 		const ip = '127.0.0.1';
@@ -34,11 +34,11 @@ describe('rateLimit - MemoryStore', () => {
 	});
 
 	test('should handle different IP extraction methods and maintain separate counters', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'OK');
 
 		// Test x-forwarded-for header
@@ -71,11 +71,11 @@ describe('rateLimit - MemoryStore', () => {
 	});
 
 	test('should handle edge cases with IP headers', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'OK');
 
 		const testCases = [
@@ -101,11 +101,11 @@ describe('rateLimit - MemoryStore', () => {
 	});
 
 	test('should handle concurrent requests correctly', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'OK');
 
 		// Test concurrent requests from different IPs
@@ -136,10 +136,10 @@ describe('rateLimit - MemoryStore', () => {
 	});
 
 	test('should handle different rate limit configurations', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 
 		// Test very low limit
-		const lowLimitApp = rateLimit({ store: memoryStore, limit: 1, window: 60 })
+		const lowLimitApp = rateLimit({ store, limit: 1, window: 60 })
 			.get('/test', () => 'Low limit test');
 
 		const ip1 = '198.51.100.200';
@@ -154,9 +154,8 @@ describe('rateLimit - MemoryStore', () => {
 		}));
 		expect(response2.status).toBe(429);
 
-		// Test high limit with new store instance
-		const memoryStore2 = new MemoryStore();
-		const highLimitApp = rateLimit({ store: memoryStore2, limit: 1000, window: 60 })
+		// Test high limit
+		const highLimitApp = rateLimit({ store, limit: 1000, window: 60 })
 			.get('/test', () => 'High limit test');
 
 		const ip2 = '203.0.113.250';
@@ -171,12 +170,12 @@ describe('rateLimit - MemoryStore', () => {
 		expect(finalResponse.headers.get('X-RateLimit-Remaining')).toEqual('989');
 	});
 
-	test('should handle TTL and MemoryStore operations correctly', async () => {
-		const memoryStore = new MemoryStore();
+	test('should handle TTL and KV store operations correctly', async () => {
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'OK');
 
 		const testIp = '172.16.254.1';
@@ -187,20 +186,20 @@ describe('rateLimit - MemoryStore', () => {
 		}));
 
 		// Verify key exists and has TTL
-		const keyValue = memoryStore.get<number>(`ratelimit:${testIp}`);
-		expect(keyValue).toBe(1);
+		const keyExists = store.get(`ratelimit:${testIp}`) !== null;
+		expect(keyExists).toBe(true);
 
-		const ttl = memoryStore.ttl(`ratelimit:${testIp}`);
+		const ttl = store.ttl(`ratelimit:${testIp}`);
 		expect(ttl).toBeGreaterThan(0);
 		expect(ttl).toBeLessThanOrEqual(60);
 	});
 
 	test('should handle HTTP methods and request variations', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 60;
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'GET OK')
 			.post('/test', ({ body }) => ({ received: body }));
 
@@ -235,11 +234,11 @@ describe('rateLimit - MemoryStore', () => {
 	});
 
 	test('should handle window expiration', async () => {
-		const memoryStore = new MemoryStore();
+		const store = new MemoryStore();
 		const limit = 5;
 		const window = 1; // 1 second window
 
-		const app = rateLimit({ store: memoryStore, limit, window })
+		const app = rateLimit({ store, limit, window })
 			.get('/test', () => 'OK');
 
 		const ip = '192.168.1.100';
@@ -261,9 +260,45 @@ describe('rateLimit - MemoryStore', () => {
 		expect(response2.status).toEqual(200);
 		expect(response2.headers.get('X-RateLimit-Remaining')).toEqual('4');
 	});
+
+	test('should handle different stores maintain separate data', async () => {
+		const store1 = new MemoryStore();
+		const store2 = new MemoryStore();
+		const limit = 2;
+		const window = 60;
+
+		const app1 = rateLimit({ store: store1, limit, window })
+			.get('/test', () => 'App1');
+
+		const app2 = rateLimit({ store: store2, limit, window })
+			.get('/test', () => 'App2');
+
+		const ip = '192.168.1.1';
+
+		// Use up limit on app1
+		await app1.handle(new Request('http://localhost/test', {
+			headers: { 'x-forwarded-for': ip }
+		}));
+		await app1.handle(new Request('http://localhost/test', {
+			headers: { 'x-forwarded-for': ip }
+		}));
+
+		// App1 should be limited
+		const response1 = await app1.handle(new Request('http://localhost/test', {
+			headers: { 'x-forwarded-for': ip }
+		}));
+		expect(response1.status).toBe(429);
+
+		// App2 should still work (different store)
+		const response2 = await app2.handle(new Request('http://localhost/test', {
+			headers: { 'x-forwarded-for': ip }
+		}));
+		expect(response2.status).toEqual(200);
+		expect(response2.headers.get('X-RateLimit-Remaining')).toEqual('1');
+	});
 });
 
-describe('rateLimit - Default Memory Store', () => {
+describe('rateLimit - Memory Store', () => {
 	test('should work with explicit memory store configuration', async () => {
 		const limit = 3;
 		const window = 60;

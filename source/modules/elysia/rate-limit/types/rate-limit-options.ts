@@ -1,4 +1,4 @@
-import type { KvStore } from '#/modules/kvStore/types/kvStore';
+import type { KvStore } from '#/modules/kv-store/types/kv-store';
 
 export interface RateLimitOptions {
 	/**
