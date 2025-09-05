@@ -1,5 +1,6 @@
-import { BaseError } from '#/errors/baseError';
-import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totpErrorKeys';
+import { BaseError } from '#/errors/base-error';
+
+import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
 
 /**
  * Base32 alphabet according to RFC 4648
@@ -65,10 +66,7 @@ export const base32Decode = (base32: string): Uint8Array => {
 	for (const char of cleanBase32) {
 		const charValue = BASE32_ALPHABET.indexOf(char);
 		if (charValue === -1)
-			throw new BaseError({
-				message: TOTP_ERROR_KEYS.INVALID_BASE32_CHARACTER,
-				cause: `Invalid Base32 character: ${char}`
-			});
+			throw new BaseError(TOTP_ERROR_KEYS.INVALID_BASE32_CHARACTER, `Invalid Base32 character: ${char}`);
 
 		value = (value << 5) | charValue;
 		bits += 5;

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totpErrorKeys';
+import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
 import {
 	base32Decode,
 	base32Encode

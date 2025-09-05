@@ -1,8 +1,8 @@
 import { createTransport, type SendMailOptions, type Transporter } from 'nodemailer';
 
-import { BaseError } from '#/errors/baseError';
-import { MAILER_ERROR_KEYS } from './enums/mailerErrorKeys';
-import type { SMTPOptions } from './types/smtpOptions';
+import { BaseError } from '#/errors/base-error';
+import { MAILER_ERROR_KEYS } from './enums/mailer-error-keys';
+import type { SMTPOptions } from './types/smtp-options';
 
 /**
  * The `SMTP` class manages the connection and operations with an SMTP server.
@@ -57,7 +57,7 @@ export class SMTP {
 	 */
 	public async connect(): Promise<void> {
 		if (this._transporter)
-			throw new BaseError({ message: MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED });
+			throw new BaseError(MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED);
 
 		this._transporter = createTransport({
 			host: this._config.host,
@@ -73,10 +73,7 @@ export class SMTP {
 		try {
 			await this._transporter.verify();
 		} catch (error) {
-			throw new BaseError({
-				message: MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR,
-				cause: error
-			});
+			throw new BaseError(MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR, error);
 		}
 	}
 
@@ -103,7 +100,7 @@ export class SMTP {
 	 */
 	public async sendMail(options: SendMailOptions): Promise<unknown> {
 		if (!this._transporter)
-			throw new BaseError({ message: MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED });
+			throw new BaseError(MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED);
 		return this._transporter.sendMail(options);
 	}
 }

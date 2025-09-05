@@ -1,3 +1,3 @@
-export type { MSSQLDatabaseOptions } from './mssqlDatabaseOption';
-export type { MssqlEventLog } from './mssqlEventLog';
-export type { QueryContext } from './queryContext';
+export type { MSSQLDatabaseOptions } from './mssql-database-option';
+export type { MssqlEventLog } from './mssql-event-log';
+export type { QueryContext } from './query-context';

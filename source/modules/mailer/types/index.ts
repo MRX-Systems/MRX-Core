@@ -1,3 +1,4 @@
-export type { SMTPCredentials } from './smtpCredentials';
-export type { SMTPOptions } from './smtpOptions';
-export type { SMTPPoolOptions } from './smtpPoolOptions';
+export type { SMTPCredentials } from './smtp-credentials';
+export type { SMTPOptions } from './smtp-options';
+export type { SMTPPoolOptions } from './smtp-pool-options';
+

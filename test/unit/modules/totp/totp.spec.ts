@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { totp, verifyTotp } from '#/modules/totp/totp';
+import { totp, verifyTotp } from '#/modules/totp';
 
 describe('totp', () => {
 	test('should generate a valid TOTP code', async () => {

@@ -1,1 +1,1 @@
-export { parseHumanTimeToSeconds } from './parseHumanTimeToSeconds';
+export { parseHumanTimeToSeconds } from './parse-human-time-to-seconds';

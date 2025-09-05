@@ -1,7 +1,7 @@
-import { BaseError } from '#/errors/baseError';
-import { DATA_ERROR_KEYS } from './enums/dataErrorKeys';
-import type { CaseTransformer } from './types/caseTransformer';
-import type { TransformObjectKeys } from './types/transformObjectKeys';
+import { BaseError } from '#/errors/base-error';
+import { DATA_ERROR_KEYS } from './enums/data-error-keys';
+import type { CaseTransformer } from './types/case-transformer';
+import type { TransformObjectKeys } from './types/transform-object-keys';
 
 /**
  * Checks if the provided data is null or undefined and throws an error if it is.
@@ -14,9 +14,7 @@ import type { TransformObjectKeys } from './types/transformObjectKeys';
  */
 const _validateDataNull = <TObject extends object>(data: TObject): void => {
 	if (data === null || data === undefined)
-		throw new BaseError({
-			message: DATA_ERROR_KEYS.DATA_IS_NULL
-		});
+		throw new BaseError(DATA_ERROR_KEYS.DATA_IS_NULL);
 };
 
 /**

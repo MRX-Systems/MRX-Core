@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, mock, test } from 'bun:test';
 
 import { Table } from '#/modules/database/table';
-import type { QueryContext } from '#/modules/database/types/queryContext';
+import type { QueryContext } from '#/modules/database/types/query-context';
 
 /**
  * Test data for Table class tests.

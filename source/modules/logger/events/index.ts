@@ -1,1 +1,1 @@
-export type { LoggerEvent } from './loggerEvents';
+export type { LoggerEvent } from './logger-events';

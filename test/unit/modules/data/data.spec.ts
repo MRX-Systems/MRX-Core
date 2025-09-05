@@ -7,11 +7,11 @@ import {
 	filterByValue,
 	transformKeys
 } from '#/modules/data/data';
-import { DATA_ERROR_KEYS } from '#/modules/data/enums/dataErrorKeys';
-import { CamelCaseTransformer } from '#/modules/data/transformers/camelCase';
-import { KebabCaseTransformer } from '#/modules/data/transformers/kebabCase';
-import { PascalCaseTransformer } from '#/modules/data/transformers/pascalCase';
-import { SnakeCaseTransformer } from '#/modules/data/transformers/snakeCase';
+import { DATA_ERROR_KEYS } from '#/modules/data/enums/data-error-keys';
+import { CamelCaseTransformer } from '#/modules/data/transformers/camel-case';
+import { KebabCaseTransformer } from '#/modules/data/transformers/kebab-case';
+import { PascalCaseTransformer } from '#/modules/data/transformers/pascal-case';
+import { SnakeCaseTransformer } from '#/modules/data/transformers/snake-case';
 
 /**
  * Test data constants for consistent testing across all test suites.

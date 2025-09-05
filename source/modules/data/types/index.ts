@@ -1,11 +1,11 @@
-export type { CamelCase } from './camelCase';
-export type { CaseTransformer } from './caseTransformer';
-export type { KebabCase } from './kebabCase';
-export type { PascalCase } from './pascalCase';
-export type { SnakeCase } from './snakeCase';
-export type { TransformKeysCamelCase } from './transformKeysCamelCase';
-export type { TransformKeysKebabCase } from './transformKeysKebabCase';
-export type { TransformKeysPascalCase } from './transformKeysPascalCase';
-export type { TransformKeysSnakeCase } from './transformKeysSnakeCase';
-export type { TransformObjectKeys } from './transformObjectKeys';
+export type { CamelCase } from './camel-case';
+export type { CaseTransformer } from './case-transformer';
+export type { KebabCase } from './kebab-case';
+export type { PascalCase } from './pascal-case';
+export type { SnakeCase } from './snake-case';
+export type { TransformKeysCamelCase } from './transform-keys-camel-case';
+export type { TransformKeysKebabCase } from './transform-keys-kebab-case';
+export type { TransformKeysPascalCase } from './transform-keys-pascal-case';
+export type { TransformKeysSnakeCase } from './transform-keys-snake-case';
+export type { TransformObjectKeys } from './transform-object-keys';
 

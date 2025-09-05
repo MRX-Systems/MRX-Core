@@ -1,4 +1,4 @@
 export { validateEnv } from './env';
-export { isDateString } from './isDateString';
+export { isDateString } from './is-date-string';
 export { makeStreamAsyncIterable } from './stream';
 

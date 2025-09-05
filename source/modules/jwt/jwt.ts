@@ -1,3 +1,4 @@
+import { HttpError } from '#/errors/http-error';
 import {
 	SignJWT,
 	jwtVerify,
@@ -5,9 +6,8 @@ import {
 	type JWTVerifyResult
 } from 'jose';
 
-import { HttpError } from '#/errors/httpError';
-import { JWT_ERROR_KEYS } from './enums/jwtErrorKeys';
-import { parseHumanTimeToSeconds } from './utils/parseHumanTimeToSeconds';
+import { JWT_ERROR_KEYS } from './enums/jwt-error-keys';
+import { parseHumanTimeToSeconds } from './utils/parse-human-time-to-seconds';
 
 export const signJWT = (
 	secret: string,
@@ -21,10 +21,7 @@ export const signJWT = (
 			: parseHumanTimeToSeconds(expiration);
 
 	if (exp <= Math.floor(Date.now() / 1000))
-		throw new HttpError({
-			message: JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED,
-			httpStatusCode: 'BAD_REQUEST'
-		});
+		throw new HttpError(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED, 'BAD_REQUEST');
 
 	// Prepare the final payload with default claims
 	const finalPayload = {
@@ -51,11 +48,7 @@ export const signJWT = (
 			.sign(new TextEncoder().encode(secret));
 		return jwt;
 	} catch (error) {
-		throw new HttpError({
-			message: JWT_ERROR_KEYS.JWT_SIGN_ERROR,
-			httpStatusCode: 'INTERNAL_SERVER_ERROR',
-			cause: error
-		});
+		throw new HttpError(JWT_ERROR_KEYS.JWT_SIGN_ERROR, 'INTERNAL_SERVER_ERROR', error);
 	}
 };
 
@@ -66,4 +59,3 @@ export const verifyJWT = async (token: string, secret: string): Promise<JWTVerif
 		return false;
 	}
 };
-

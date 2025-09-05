@@ -1,1 +1,1 @@
-export { MAILER_ERROR_KEYS } from './mailerErrorKeys';
+export { MAILER_ERROR_KEYS } from './mailer-error-keys';
