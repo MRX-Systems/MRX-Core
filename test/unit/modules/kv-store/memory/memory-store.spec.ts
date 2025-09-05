@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/baseError';
-import { KV_STORE_ERROR_KEYS } from '#/modules/kvStore/enums/kvStoreErrorKeys';
-import { MemoryStore } from '#/modules/kvStore/memory/memoryStore';
+import { BaseError } from '#/errors/base-error';
+import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
+import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 
 describe('MemoryStore', () => {
 	describe('Basic Operations', () => {

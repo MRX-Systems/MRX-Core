@@ -1,9 +1,9 @@
 
 import { Redis, type RedisOptions } from 'ioredis';
 
-import { BaseError } from '#/errors/baseError';
-import { KV_STORE_ERROR_KEYS } from '#/modules/kvStore/enums/kvStoreErrorKeys';
-import type { KvStore } from '#/modules/kvStore/types/kvStore';
+import { BaseError } from '#/errors/base-error';
+import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
+import type { KvStore } from '#/modules/kv-store/types/kv-store';
 
 /**
  * Redis-based key-value store implementation using ioredis client.
@@ -38,10 +38,7 @@ export class IoRedisStore implements KvStore {
 		try {
 			await this._client.connect();
 		} catch (e) {
-			throw new BaseError({
-				message: KV_STORE_ERROR_KEYS.CONNECTION_FAILED,
-				cause: e
-			});
+			throw new BaseError(KV_STORE_ERROR_KEYS.CONNECTION_FAILED, e);
 		}
 	}
 
@@ -54,10 +51,7 @@ export class IoRedisStore implements KvStore {
 		try {
 			await this._client.quit();
 		} catch (e) {
-			throw new BaseError({
-				message: KV_STORE_ERROR_KEYS.CLOSING_CONNECTION_FAILED,
-				cause: e
-			});
+			throw new BaseError(KV_STORE_ERROR_KEYS.CLOSING_CONNECTION_FAILED, e);
 		}
 	}
 
@@ -120,9 +114,7 @@ export class IoRedisStore implements KvStore {
 		if (current !== null) {
 			const parsed = Number(current);
 			if (Number.isNaN(parsed))
-				throw new BaseError({
-					message: KV_STORE_ERROR_KEYS.NOT_INTEGER
-				});
+				throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
 		}
 
 		if (amount === 1)
@@ -148,9 +140,7 @@ export class IoRedisStore implements KvStore {
 		if (current !== null) {
 			const parsed = Number(current);
 			if (Number.isNaN(parsed))
-				throw new BaseError({
-					message: KV_STORE_ERROR_KEYS.NOT_INTEGER
-				});
+				throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
 		}
 
 		if (amount === 1)
@@ -191,7 +181,7 @@ export class IoRedisStore implements KvStore {
 	 *
 	 * @returns Time to live in seconds, -1 if key has no expiration, -2 if key does not exist
 	 */
-	public ttl(key: string): Promise<number> {
+	public async ttl(key: string): Promise<number> {
 		return this._client.ttl(key);
 	}
 
@@ -204,7 +194,6 @@ export class IoRedisStore implements KvStore {
 		const keys = await this._client.keys('*');
 		if (keys.length === 0)
 			return 0;
-
 		return this._client.del(...keys);
 	}
 }
