@@ -1,5 +1,6 @@
-import { BaseError } from '#/errors/baseError';
-import { PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS } from '#/modules/jwt/enums/parseHumanTimeToSecondsErrorKeys';
+import { BaseError } from '#/errors/base-error';
+
+import { PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS } from '#/modules/jwt/enums/parse-human-time-to-seconds-error-keys';
 
 /**
  * Time unit constants in seconds
@@ -83,9 +84,7 @@ export const parseHumanTimeToSeconds = (timeExpression: string): number => {
 	const match = TIME_EXPRESSION_REGEX.exec(timeExpression);
 
 	if (!match || (match[4] && match[1]))
-		throw new BaseError({
-			message: PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION
-		});
+		throw new BaseError(PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION);
 
 	const [, sign, valueStr, unitStr, direction] = match;
 	const value = parseFloat(valueStr);

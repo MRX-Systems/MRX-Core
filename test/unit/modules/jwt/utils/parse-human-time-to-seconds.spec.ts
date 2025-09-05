@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/baseError';
-import { parseHumanTimeToSeconds } from '#/modules/jwt/utils/parseHumanTimeToSeconds';
+import { BaseError } from '#/errors/base-error';
+import { parseHumanTimeToSeconds } from '#/modules/jwt/utils/parse-human-time-to-seconds';
 
 describe('parseHumanTimeToSeconds', () => {
 	describe('basic time units', () => {
