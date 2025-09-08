@@ -1,9 +1,9 @@
 import { Elysia } from 'elysia';
 
-import { MemoryStore } from '#/modules/kvStore/memory/memoryStore';
-import type { CacheOptions } from './types/cacheOptions';
-import { generateCacheKey } from './utils/generateCacheKey';
-import type { CacheItem } from './types/cacheItem';
+import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import type { CacheItem } from './types/cache-item';
+import type { CacheOptions } from './types/cache-options';
+import { generateCacheKey } from './utils/generate-cache-key';
 
 export const cache = ({
 	defaultTtl = 60,
@@ -35,6 +35,8 @@ export const cache = ({
 				set.headers['etag'] = `"${prefix}${cacheKey}"`;
 				set.headers['expires'] = new Date(Date.now() + (metadata.ttl * 1000)).toUTCString();
 				set.headers['last-modified'] = metadata.createdAt;
+				if (response instanceof Response)
+					return response.clone();
 				return response;
 			}
 			set.headers['x-cache'] = 'MISS';
@@ -54,7 +56,6 @@ export const cache = ({
 
 					const cacheKey = await generateCacheKey(request.clone());
 					const now = new Date();
-
 					set.headers['cache-control'] = `max-age=${ttl}, public`;
 					set.headers['etag'] = `"${prefix}${cacheKey}"`;
 					set.headers['last-modified'] = now.toUTCString();
@@ -64,7 +65,9 @@ export const cache = ({
 						set.headers['x-cache'] = 'MISS';
 
 					const cacheData = {
-						response,
+						response: response instanceof Response
+							? response.clone()
+							: response,
 						metadata: {
 							createdAt: now.toUTCString(),
 							ttl

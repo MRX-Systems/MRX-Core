@@ -1,9 +1,9 @@
 import { webcrypto } from 'crypto';
 
-import type { TotpOptions } from './types/totpOptions';
-import { createCounterBuffer } from './utils/createCounterBuffer';
-import { dynamicTruncation } from './utils/dynamicTruncation';
-import { generateHmac } from './utils/generateHmac';
+import type { TotpOptions } from './types/totp-options';
+import { createCounterBuffer } from './utils/create-counter-buffer';
+import { dynamicTruncation } from './utils/dynamic-truncation';
+import { generateHmac } from './utils/generate-hmac';
 
 /**
  * HMAC-based One-Time Password (HOTP) implementation

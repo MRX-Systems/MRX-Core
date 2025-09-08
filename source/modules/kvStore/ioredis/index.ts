@@ -1,1 +1,0 @@
-export { IoRedisStore } from './ioredisStore';

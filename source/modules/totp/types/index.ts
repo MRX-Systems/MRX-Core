@@ -1,4 +1,4 @@
-export type { OtpAuthUri } from './otpAuthUri';
-export type { TotpOptions } from './totpOptions';
-export type { VerifyOptions } from './verifyOptions';
+export type { OtpAuthUri } from './otp-auth-uri';
+export type { TotpOptions } from './totp-options';
+export type { VerifyOptions } from './verify-options';
 

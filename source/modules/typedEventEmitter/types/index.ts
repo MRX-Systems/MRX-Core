@@ -1,1 +1,0 @@
-export type { EventMap } from './eventMap';

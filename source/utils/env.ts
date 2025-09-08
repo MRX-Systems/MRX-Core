@@ -1,8 +1,8 @@
 import type { TSchema } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 
-import { BaseError } from '#/errors/baseError';
-import { UTILS_ERROR_KEYS } from './enums/utilsErrorKeys';
+import { BaseError } from '#/errors/base-error';
+import { UTILS_ERROR_KEYS } from './enums/utils-error-keys';
 
 /**
  * Validates the environment variables based on the provided schema.
@@ -17,9 +17,6 @@ export const validateEnv = (schema: TSchema, env: Record<string, unknown> = proc
 		// Parse and assert the environment variables using the provided schema
 		Value.Assert(schema, Value.Parse(schema, env));
 	} catch (error) {
-		throw new BaseError({
-			message: UTILS_ERROR_KEYS.INVALID_ENVIRONMENT,
-			cause: error
-		});
+		throw new BaseError(UTILS_ERROR_KEYS.INVALID_ENVIRONMENT, error);
 	}
 };

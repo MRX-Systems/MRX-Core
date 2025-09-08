@@ -1,5 +1,5 @@
-import type { AdaptiveWhereClause } from './adaptiveWhereClause';
-import type { SelectedFields } from './selectedFields';
+import type { AdaptiveWhereClause } from './adaptive-where-clause';
+import type { SelectedFields } from './selected-fields';
 
 /**
  * Defines an filter model using either plain partials of the model TModel or a {@link AdaptiveWhereClause} filter for more dynamic querying.

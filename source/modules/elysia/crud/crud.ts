@@ -5,20 +5,20 @@ import type {
 import { Elysia, type SingletonBase, t } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
-import { crudSchema } from '#/modules/elysia/crudSchema/crudSchema';
-import type { CrudModelsType } from '#/modules/elysia/crudSchema/types/crudModelsType';
-import { dbResolver } from '#/modules/elysia/dbResolver/dbResolver';
-import type { DynamicDbOptions } from '#/modules/elysia/dbResolver/types/dynamicDbOptions';
-import type { CrudOperationCountOptions } from './types/crudOperationCountOptions';
-import type { CrudOperationDeleteOneOptions } from './types/crudOperationDeleteOneOptions';
-import type { CrudOperationDeleteOptions } from './types/crudOperationDeleteOptions';
-import type { CrudOperationFindOneOptions } from './types/crudOperationFindOneOptions';
-import type { CrudOperationFindOptions } from './types/crudOperationFindOptions';
-import type { CrudOperationInsertOptions } from './types/crudOperationInsertOptions';
-import type { CrudOperationsOptions } from './types/crudOperationsOptions';
-import type { CrudOperationUpdateOneOptions } from './types/crudOperationUpdateOneOptions';
-import type { CrudOperationUpdateOptions } from './types/crudOperationUpdateOptions';
-import type { CrudOptions } from './types/crudOptions';
+import { crudSchema } from '#/modules/elysia/crud-schema/crud-schema';
+import type { CrudModelsType } from '#/modules/elysia/crud-schema/types/crud-models-type';
+import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import type { DynamicDbOptions } from '#/modules/elysia/db-resolver/types/dynamic-db-options';
+import type { CrudOperationCountOptions } from './types/crud-operation-count-options';
+import type { CrudOperationDeleteOneOptions } from './types/crud-operation-delete-one-options';
+import type { CrudOperationDeleteOptions } from './types/crud-operation-delete-options';
+import type { CrudOperationFindOneOptions } from './types/crud-operation-find-one-options';
+import type { CrudOperationFindOptions } from './types/crud-operation-find-options';
+import type { CrudOperationInsertOptions } from './types/crud-operation-insert-options';
+import type { CrudOperationUpdateOptions } from './types/crud-operation-update-options';
+import type { CrudOperationUpdateOneOptions } from './types/crud-operation-updateOneOptions';
+import type { CrudOperationsOptions } from './types/crud-operations-options';
+import type { CrudOptions } from './types/crud-options';
 
 const _createDefaultOperationsWithHandlers = <
 	const TDatabase extends DynamicDbOptions | string,

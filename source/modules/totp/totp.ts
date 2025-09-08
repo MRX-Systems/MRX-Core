@@ -1,7 +1,7 @@
 
 import { hotp } from './hotp';
-import type { TotpOptions } from './types/totpOptions';
-import type { VerifyOptions } from './types/verifyOptions';
+import type { TotpOptions } from './types/totp-options';
+import type { VerifyOptions } from './types/verify-options';
 
 /**
  * Time-based One-Time Password (TOTP) implementation
