@@ -24,7 +24,7 @@ export type CrudModelsType<
 	TSourceDeleteSchema extends TObject,
 	TSourceResponseSchema extends TObject
 >
-= (
+	= (
 	TOperations['insert'] extends true
 		? Record<`${TSourceSchemaName}Insert`, TUnion<[
 			TSourceInsertSchema,

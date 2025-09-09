@@ -8,8 +8,8 @@ import type { TransformKeysPascalCase } from './transform-keys-pascal-case';
 import type { TransformKeysSnakeCase } from './transform-keys-snake-case';
 
 export type TransformObjectKeys<T, TTransformer>
-= TTransformer extends PascalCaseTransformer ? TransformKeysPascalCase<T>
-	: TTransformer extends KebabCaseTransformer ? TransformKeysKebabCase<T>
-		: TTransformer extends SnakeCaseTransformer ? TransformKeysSnakeCase<T>
-			: TTransformer extends CamelCaseTransformer ? TransformKeysCamelCase<T>
-				: Record<string, T[keyof T]>;
+	= TTransformer extends PascalCaseTransformer ? TransformKeysPascalCase<T>
+		: TTransformer extends KebabCaseTransformer ? TransformKeysKebabCase<T>
+			: TTransformer extends SnakeCaseTransformer ? TransformKeysSnakeCase<T>
+				: TTransformer extends CamelCaseTransformer ? TransformKeysCamelCase<T>
+					: Record<string, T[keyof T]>;
