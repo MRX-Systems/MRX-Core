@@ -445,11 +445,15 @@ export const crud = <
 			TSourceUpdateSchema,
 			TSourceDeleteSchema,
 			TSourceResponseSchema
-		> & {
-			ResolveDbHeader: TObject<{
-				'database-using': TString;
-			}>
-		};
+		> & (
+			TDatabase extends string
+				? {}
+				: {
+					ResolveDbHeader: TObject<{
+						'database-using': TString;
+					}>
+				}
+		);
 		error: {};
 	}
 > => new Elysia({
@@ -587,11 +591,15 @@ export const crud = <
 			TSourceUpdateSchema,
 			TSourceDeleteSchema,
 			TSourceResponseSchema
-		> & {
-			ResolveDbHeader: TObject<{
-				'database-using': TString;
-			}>
-		};
+		> & (
+			TDatabase extends string
+				? {}
+				: {
+					ResolveDbHeader: TObject<{
+						'database-using': TString;
+					}>
+				}
+		);
 		error: {};
 	}
 >;
