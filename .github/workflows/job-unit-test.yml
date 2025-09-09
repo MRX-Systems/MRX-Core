@@ -48,11 +48,11 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.0
 
       - name: Install Dependencies
         run: bun install
-        with:
-          bun-version: 1.2.21
 
       - name: Run Unit Tests and update Summary
         id: unit_test
