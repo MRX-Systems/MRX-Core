@@ -11,7 +11,7 @@ import type { UpdateOneSchema } from '#/modules/elysia/crud/types/update-one-sch
 import type { UpdateSchema } from '#/modules/elysia/crud/types/update-schema';
 import type { CrudSchemaOperations } from './crud-schema-operations';
 
-export type CrudModelsType<
+export type CrudSchemaModelsType<
 	TSourceSchemaName extends string,
 	TOperations extends CrudSchemaOperations,
 	TSourceInsertSchema extends TObject,
