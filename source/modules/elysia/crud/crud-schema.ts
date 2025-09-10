@@ -1,7 +1,7 @@
 import type { TObject, TSchema } from '@sinclair/typebox/type';
 import { Elysia, type SingletonBase } from 'elysia';
 
-import type { CrudModelsType } from './types/crud-models-type';
+import type { CrudSchemaModelsType } from './types/crud-schema-models-type';
 import type { CrudSchemaOperations } from './types/crud-schema-operations';
 import type { CrudSchemaOptions } from './types/crud-schema-options';
 import { createCountResponse200Schema } from './utils/create-count-response-200-schema';
@@ -68,7 +68,7 @@ export const crudSchema = <
 	TSourceSchemaName,
 	SingletonBase,
 	{
-		typebox: CrudModelsType<
+		typebox: CrudSchemaModelsType<
 			TSourceSchemaName,
 			TOperations,
 			TSourceInsertSchema,
@@ -124,7 +124,7 @@ export const crudSchema = <
 	const app = new Elysia<TSourceSchemaName>({
 		name: `crudSchemaPlugin-${sourceSchemaName}`
 	})
-		.model(models as CrudModelsType<
+		.model(models as CrudSchemaModelsType<
 			TSourceSchemaName,
 			TOperations,
 			TSourceInsertSchema,
