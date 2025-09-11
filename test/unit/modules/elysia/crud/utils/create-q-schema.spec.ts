@@ -1,4 +1,4 @@
-import { Kind } from '@sinclair/typebox';
+import { Kind, KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -14,9 +14,9 @@ const baseSchema = t.Object({
 
 describe('createQSchema', () => {
 	describe('schema structure validation', () => {
-		test('should create as schema with a good type and kind', () => {
+		test('should create as schema with a good type', () => {
 			const qSchema = createQSchema(baseSchema);
-			expect(qSchema[Kind]).toBe('Union');
+			expect(KindGuard.IsUnion(qSchema)).toBe(true);
 		});
 
 		test('should have an anyOf with three elements', () => {
@@ -31,8 +31,7 @@ describe('createQSchema', () => {
 			const qSchema = createQSchema(baseSchema);
 			const [firstElement] = qSchema.anyOf;
 
-			expect(firstElement[Kind]).toBe('Object');
-			expect(firstElement.type).toBe('object');
+			expect(KindGuard.IsObject(firstElement)).toBe(true);
 			expect(firstElement.properties).toBeDefined();
 		});
 
@@ -50,7 +49,7 @@ describe('createQSchema', () => {
 				const [firstElement] = qSchema.anyOf;
 				const { selectedFields } = firstElement.properties;
 
-				expect(selectedFields[Kind]).toBe('Union');
+				expect(KindGuard.IsUnion(selectedFields)).toBe(true);
 				expect(selectedFields.anyOf).toBeDefined();
 				expect(selectedFields.anyOf).toHaveLength(2);
 			});
@@ -60,7 +59,7 @@ describe('createQSchema', () => {
 				const [firstElement] = qSchema.anyOf;
 				const { selectedFields } = firstElement.properties;
 
-				expect(selectedFields.anyOf[0][Kind]).toBe('Union');
+				expect(KindGuard.IsUnion(selectedFields.anyOf[0])).toBe(true);
 				expect(selectedFields.anyOf[0].anyOf).toBeDefined();
 				expect(selectedFields.anyOf[0].anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 
@@ -77,8 +76,7 @@ describe('createQSchema', () => {
 				const [firstElement] = qSchema.anyOf;
 				const { selectedFields } = firstElement.properties;
 
-				expect(selectedFields.anyOf[1][Kind]).toBe('Array');
-				expect(selectedFields.anyOf[1].type).toBe('array');
+				expect(KindGuard.IsArray(selectedFields.anyOf[1])).toBe(true);
 				expect(selectedFields.anyOf[1].minItems).toBe(1);
 				expect(selectedFields.anyOf[1].uniqueItems).toBe(true);
 				expect(selectedFields.anyOf[1].items).toBeDefined();
@@ -90,7 +88,7 @@ describe('createQSchema', () => {
 				const { selectedFields } = firstElement.properties;
 				const [, arrayOption] = selectedFields.anyOf;
 
-				expect(arrayOption.items[Kind]).toBe('Union');
+				expect(KindGuard.IsUnion(arrayOption.items)).toBe(true);
 				expect(arrayOption.items.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 
 				for (const key of Object.keys(baseSchema.properties))
@@ -108,7 +106,7 @@ describe('createQSchema', () => {
 				const [firstElement] = qSchema.anyOf;
 				const { value } = firstElement.properties;
 
-				expect(value[Kind]).toBe('Union');
+				expect(KindGuard.IsUnion(value)).toBe(true);
 				expect(value.anyOf).toBeDefined();
 				expect(value.anyOf).toHaveLength(2);
 			});
@@ -118,8 +116,7 @@ describe('createQSchema', () => {
 				const [firstElement] = qSchema.anyOf;
 				const { value } = firstElement.properties;
 
-				expect(value.anyOf[0][Kind]).toBe('Number');
-				expect(value.anyOf[0].type).toBe('number');
+				expect(KindGuard.IsNumber(value.anyOf[0])).toBe(true);
 			});
 
 			test('should have string as second option', () => {
@@ -127,8 +124,7 @@ describe('createQSchema', () => {
 				const [firstElement] = qSchema.anyOf;
 				const { value } = firstElement.properties;
 
-				expect(value.anyOf[1][Kind]).toBe('String');
-				expect(value.anyOf[1].type).toBe('string');
+				expect(KindGuard.IsString(value.anyOf[1])).toBe(true);
 			});
 		});
 	});
@@ -138,16 +134,14 @@ describe('createQSchema', () => {
 			const qSchema = createQSchema(baseSchema);
 
 			const [, secondElement] = qSchema.anyOf;
-			expect(secondElement[Kind]).toBe('Number');
-			expect(secondElement.type).toBe('number');
+			expect(KindGuard.IsNumber(secondElement)).toBe(true);
 		});
 
 		test('should create third union element as string', () => {
 			const qSchema = createQSchema(baseSchema);
 
 			const [, , thirdElement] = qSchema.anyOf;
-			expect(thirdElement[Kind]).toBe('String');
-			expect(thirdElement.type).toBe('string');
+			expect(KindGuard.IsString(thirdElement)).toBe(true);
 		});
 	});
 });
