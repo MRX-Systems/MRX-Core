@@ -1,4 +1,4 @@
-import { TypeGuard, type TSchema } from '@sinclair/typebox/type';
+import { KindGuard, type TSchema } from '@sinclair/typebox/type';
 import { t } from 'elysia';
 
 import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/crud/types/adaptive-where-clause-schema';
@@ -29,8 +29,8 @@ export const createAdaptiveWhereClauseSchema = <
 	} as const;
 
 	// string, number, date
-	const strNumDate = (TypeGuard.IsString(schema)
-		|| TypeGuard.IsNumber(schema)
+	const strNumDate = (KindGuard.IsString(schema)
+		|| KindGuard.IsNumber(schema)
 		|| isDateFromElysiaTypeBox(schema))
 		? {
 			$in: t.Array(schema, { minItems: 1, uniqueItems: true }),
@@ -41,7 +41,7 @@ export const createAdaptiveWhereClauseSchema = <
 		: {};
 
 	// number, date
-	const numDate = (TypeGuard.IsNumber(schema)
+	const numDate = (KindGuard.IsNumber(schema)
 		|| isDateFromElysiaTypeBox(schema))
 		? {
 			$lt: schema,
