@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { PassThrough, Readable, Transform } from 'stream';
 
-import { makeStreamAsyncIterable } from '#/utils/stream';
+import { makeStreamAsyncIterable } from '#/shared/utils/stream';
 
 describe('makeStreamAsyncIterable', () => {
 	/**

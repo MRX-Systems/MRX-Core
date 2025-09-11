@@ -106,9 +106,9 @@ await Bun.build({
 		'./source/modules/typed-event-emitter/types/index.ts',
 
 		// # ————————— Utils ————————— #
-		'./source/utils/index.ts',
-		'./source/utils/enums/index.ts',
-		'./source/utils/types/index.ts'
+		'./source/shared/enums/index.ts',
+		'./source/shared/types/index.ts',
+		'./source/shared/utils/index.ts'
 	],
 	outdir: './dist',
 	splitting: true,

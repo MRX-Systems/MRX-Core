@@ -2,7 +2,7 @@ import type { TSchema } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 
 import { BaseError } from '#/errors/base-error';
-import { UTILS_ERROR_KEYS } from './enums/utils-error-keys';
+import { UTILS_ERROR_KEYS } from '#/shared/enums/utils-error-keys';
 
 /**
  * Validates the environment variables based on the provided schema.

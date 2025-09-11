@@ -2,8 +2,8 @@ import { type TSchema, Type } from '@sinclair/typebox';
 import { beforeEach, describe, expect, test } from 'bun:test';
 
 import { BaseError } from '#/errors/base-error';
-import { UTILS_ERROR_KEYS } from '#/utils/enums/utils-error-keys';
-import { validateEnv } from '#/utils/env';
+import { UTILS_ERROR_KEYS } from '#/shared/enums/utils-error-keys';
+import { validateEnv } from '#/shared/utils/env';
 
 describe('validateEnv', () => {
 	/**
