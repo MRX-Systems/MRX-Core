@@ -1,4 +1,4 @@
-import { Kind, OptionalKind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createInsertSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createInsertSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties', () => {
@@ -23,15 +22,14 @@ describe('createInsertSchema', () => {
 		expect(schema.properties).toHaveProperty('data');
 	});
 
-	test('should queryOptions has a good type and kind', () => {
+	test('should queryOptions has a good type', () => {
 		const schema = createInsertSchema(sourceSchema);
-		expect(schema.properties.queryOptions.type).toBe('object');
-		expect(schema.properties.queryOptions[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions is optional', () => {
 		const schema = createInsertSchema(sourceSchema);
-		expect(schema.properties.queryOptions[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions has the correct properties', () => {
@@ -44,23 +42,21 @@ describe('createInsertSchema', () => {
 		expect(schema.properties.queryOptions.required).toContain('selectedFields');
 	});
 
-	test('should data has a good type and kind', () => {
+	test('should data has a good type', () => {
 		const schema = createInsertSchema(sourceSchema);
-		expect(schema.properties.data[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(schema.properties.data)).toBe(true);
 	});
 
 	test('should data can be a single object or an array of objects', () => {
 		const schema = createInsertSchema(sourceSchema);
 		expect(schema.properties.data.anyOf).toHaveLength(2);
-		expect(schema.properties.data.anyOf[0].type).toBe('object');
-		expect(schema.properties.data.anyOf[0][Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.data.anyOf[0])).toBe(true);
 		for (const key of Object.keys(sourceSchema.properties))
 			expect(schema.properties.data.anyOf[0].properties).toHaveProperty(key);
 
-		expect(schema.properties.data.anyOf[1].type).toBe('array');
-		expect(schema.properties.data.anyOf[1][Kind]).toBe('Array');
+		expect(KindGuard.IsArray(schema.properties.data.anyOf[1])).toBe(true);
 		expect(schema.properties.data.anyOf[1].items.type).toBe('object');
-		expect(schema.properties.data.anyOf[1].items[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.data.anyOf[1].items)).toBe(true);
 		for (const key of Object.keys(sourceSchema.properties))
 			expect(schema.properties.data.anyOf[1].items.properties).toHaveProperty(key);
 	});
