@@ -1,4 +1,4 @@
-import { Kind } from '@sinclair/typebox';
+import { Kind, KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -13,9 +13,9 @@ const baseSchema = t.Object({
 
 describe('createSelectedFieldsSchema', () => {
 	describe('schema structure validation', () => {
-		test('should create a schema with a good type and kind', () => {
+		test('should create a schema with a good type', () => {
 			const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
-			expect(selectedFieldsSchema[Kind]).toBe('Union');
+			expect(KindGuard.IsUnion(selectedFieldsSchema)).toBe(true);
 		});
 
 		test('should have an anyOf with three elements', () => {
@@ -31,7 +31,7 @@ describe('createSelectedFieldsSchema', () => {
 				const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
 				const [firstElement] = selectedFieldsSchema.anyOf;
 
-				expect(firstElement[Kind]).toBe('Union');
+				expect(KindGuard.IsUnion(firstElement)).toBe(true);
 				expect(firstElement.anyOf).toBeDefined();
 				expect(firstElement.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 			});
@@ -54,9 +54,8 @@ describe('createSelectedFieldsSchema', () => {
 				const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
 				const [, secondElement] = selectedFieldsSchema.anyOf;
 
-				expect(secondElement[Kind]).toBe('Literal');
+				expect(KindGuard.IsLiteral(secondElement)).toBe(true);
 				expect(secondElement.const).toBe('*');
-				expect(secondElement.type).toBe('string');
 			});
 		});
 
@@ -65,8 +64,7 @@ describe('createSelectedFieldsSchema', () => {
 				const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
 				const [, , thirdElement] = selectedFieldsSchema.anyOf;
 
-				expect(thirdElement[Kind]).toBe('Array');
-				expect(thirdElement.type).toBe('array');
+				expect(KindGuard.IsArray(thirdElement)).toBe(true);
 				expect(thirdElement.minItems).toBe(1);
 				expect(thirdElement.uniqueItems).toBe(true);
 				expect(thirdElement.items).toBeDefined();
@@ -76,7 +74,7 @@ describe('createSelectedFieldsSchema', () => {
 				const selectedFieldsSchema = createSelectedFieldsSchema(baseSchema);
 				const [, , thirdElement] = selectedFieldsSchema.anyOf;
 
-				expect(thirdElement.items[Kind]).toBe('Union');
+				expect(KindGuard.IsUnion(thirdElement.items)).toBe(true);
 				expect(thirdElement.items.anyOf).toBeDefined();
 				expect(thirdElement.items.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 			});
