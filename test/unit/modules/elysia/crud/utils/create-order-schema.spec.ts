@@ -1,4 +1,4 @@
-import { Kind } from '@sinclair/typebox';
+import { Kind, KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -13,9 +13,9 @@ const baseSchema = t.Object({
 
 
 describe('createOrderSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
-		expect(orderBySchema[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(orderBySchema)).toBe(true);
 	});
 
 	test('should have an anyOf with two elements', () => {
@@ -24,12 +24,11 @@ describe('createOrderSchema', () => {
 		expect(orderBySchema.anyOf).toHaveLength(2);
 	});
 
-	test('first element should be an object with correct type and kind', () => {
+	test('first element should be an object with correct type', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [firstElement] = orderBySchema.anyOf;
 
-		expect(firstElement[Kind]).toBe('Object');
-		expect(firstElement.type).toBe('object');
+		expect(KindGuard.IsObject(firstElement)).toBe(true);
 	});
 
 	test('first element should have required selectedField and direction properties', () => {
@@ -46,7 +45,7 @@ describe('createOrderSchema', () => {
 		const [firstElement] = orderBySchema.anyOf;
 		const { selectedField } = firstElement.properties;
 
-		expect(selectedField[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(selectedField)).toBe(true);
 		expect(selectedField.anyOf).toBeDefined();
 		expect(selectedField.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 
@@ -63,7 +62,7 @@ describe('createOrderSchema', () => {
 		const [firstElement] = orderBySchema.anyOf;
 		const { direction } = firstElement.properties;
 
-		expect(direction[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(direction)).toBe(true);
 		expect(direction.anyOf).toBeDefined();
 		expect(direction.anyOf).toHaveLength(2);
 		expect(direction.anyOf).toContainEqual({
@@ -86,23 +85,21 @@ describe('createOrderSchema', () => {
 		expect(firstElement.required).toContain('direction');
 	});
 
-	test('second element should be an array with correct type, kind and constraints', () => {
+	test('second element should be an array with correct type and constraints', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 
-		expect(secondElement[Kind]).toBe('Array');
-		expect(secondElement.type).toBe('array');
+		expect(KindGuard.IsArray(secondElement)).toBe(true);
 		expect(secondElement.minItems).toBe(1);
 		expect(secondElement.uniqueItems).toBe(true);
 		expect(secondElement.items).toBeDefined();
 	});
 
-	test('second element items should be objects with correct type and kind', () => {
+	test('second element items should be objects with correct type', () => {
 		const orderBySchema = createOrderSchema(baseSchema);
 		const [, secondElement] = orderBySchema.anyOf;
 
-		expect(secondElement.items[Kind]).toBe('Object');
-		expect(secondElement.items.type).toBe('object');
+		expect(KindGuard.IsObject(secondElement.items)).toBe(true);
 	});
 
 	test('second element items should have required selectedField and direction properties', () => {
@@ -119,7 +116,7 @@ describe('createOrderSchema', () => {
 		const [, secondElement] = orderBySchema.anyOf;
 		const { selectedField } = secondElement.items.properties;
 
-		expect(selectedField[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(selectedField)).toBe(true);
 		expect(selectedField.anyOf).toBeDefined();
 		expect(selectedField.anyOf).toHaveLength(Object.keys(baseSchema.properties).length);
 
@@ -136,7 +133,7 @@ describe('createOrderSchema', () => {
 		const [, secondElement] = orderBySchema.anyOf;
 		const { direction } = secondElement.items.properties;
 
-		expect(direction[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(direction)).toBe(true);
 		expect(direction.anyOf).toBeDefined();
 		expect(direction.anyOf).toHaveLength(2);
 		expect(direction.anyOf).toContainEqual({
