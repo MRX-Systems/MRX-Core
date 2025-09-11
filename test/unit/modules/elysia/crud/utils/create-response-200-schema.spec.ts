@@ -1,4 +1,4 @@
-import { Kind, OptionalKind, type TSchema } from '@sinclair/typebox';
+import { Kind, KindGuard, OptionalKind, type TSchema } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -15,8 +15,7 @@ const baseSchema = t.Object({
 describe('createResponse200Schema', () => {
 	test('should create a schema with a good type and kind', () => {
 		const responseSchema = createResponse200Schema(baseSchema);
-		expect(responseSchema.type).toBe('object');
-		expect(responseSchema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(responseSchema)).toBe(true);
 	});
 
 	describe('schema properties validation', () => {
@@ -24,23 +23,20 @@ describe('createResponse200Schema', () => {
 			const responseSchema = createResponse200Schema(baseSchema);
 
 			expect(responseSchema.properties).toHaveProperty('message');
-			expect(responseSchema.properties.message.type).toBe('string');
-			expect(responseSchema.properties.message[Kind]).toBe('String');
+			expect(KindGuard.IsString(responseSchema.properties.message)).toBe(true);
 		});
 
 		test('should have content property with correct array structure', () => {
 			const responseSchema = createResponse200Schema(baseSchema);
 
 			expect(responseSchema.properties).toHaveProperty('content');
-			expect(responseSchema.properties.content.type).toBe('array');
-			expect(responseSchema.properties.content[Kind]).toBe('Array');
+			expect(KindGuard.IsArray(responseSchema.properties.content)).toBe(true);
 		});
 
 		test('should have content items as objects', () => {
 			const responseSchema = createResponse200Schema(baseSchema);
 
-			expect(responseSchema.properties.content.items.type).toBe('object');
-			expect(responseSchema.properties.content.items[Kind]).toBe('Object');
+			expect(KindGuard.IsObject(responseSchema.properties.content.items)).toBe(true);
 		});
 	});
 
@@ -58,8 +54,8 @@ describe('createResponse200Schema', () => {
 			const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
 			for (const key of Object.keys(baseSchema.properties)) {
-				expect(properties[key][Kind]).toBe('Union');
-				expect(properties[key][OptionalKind]).toBe('Optional');
+				expect(KindGuard.IsUnion(properties[key])).toBe(true);
+				expect(KindGuard.IsOptional(properties[key])).toBe(true);
 			}
 		});
 
@@ -81,18 +77,11 @@ describe('createResponse200Schema', () => {
 					if (baseSchema.properties[key as keyof typeof baseSchema.properties][Kind] === 'String') {
 						const [firstOption, secondOption, thirdOption, fourthOption] = properties[key].anyOf;
 
-						expect(firstOption[Kind]).toBe('String');
-						expect(firstOption.type).toBe('string');
-
-						expect(secondOption[Kind]).toBe('Undefined');
-						expect(secondOption.type).toBe('undefined');
-
-						expect(thirdOption[Kind]).toBe('Literal');
-						expect(thirdOption.type).toBe('string');
+						expect(KindGuard.IsString(firstOption)).toBe(true);
+						expect(KindGuard.IsUndefined(secondOption)).toBe(true);
+						expect(KindGuard.IsLiteral(thirdOption)).toBe(true);
 						expect(thirdOption.const).toBe('');
-
-						expect(fourthOption[Kind]).toBe('Null');
-						expect(fourthOption.type).toBe('null');
+						expect(KindGuard.IsNull(fourthOption)).toBe(true);
 					}
 			});
 		});
@@ -103,7 +92,7 @@ describe('createResponse200Schema', () => {
 				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
 				for (const key of Object.keys(baseSchema.properties))
-					if (baseSchema.properties[key as keyof typeof baseSchema.properties][Kind] !== 'String')
+					if (!KindGuard.IsString(baseSchema.properties[key as keyof typeof baseSchema.properties]))
 						expect(properties[key].anyOf).toHaveLength(3);
 			});
 
@@ -112,17 +101,14 @@ describe('createResponse200Schema', () => {
 				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
 				for (const key of Object.keys(baseSchema.properties))
-					if (baseSchema.properties[key as keyof typeof baseSchema.properties][Kind] !== 'String') {
+					if (!KindGuard.IsString(baseSchema.properties[key as keyof typeof baseSchema.properties])) {
 						const [firstOption, secondOption, thirdOption] = properties[key].anyOf;
 
 						expect(firstOption[Kind]).toBe(baseSchema.properties[key as keyof typeof baseSchema.properties][Kind]);
 						expect(firstOption[OptionalKind]).toBe(baseSchema.properties[key as keyof typeof baseSchema.properties][OptionalKind]);
 
-						expect(secondOption[Kind]).toBe('Undefined');
-						expect(secondOption.type).toBe('undefined');
-
-						expect(thirdOption[Kind]).toBe('Null');
-						expect(thirdOption.type).toBe('null');
+						expect(KindGuard.IsUndefined(secondOption)).toBe(true);
+						expect(KindGuard.IsNull(thirdOption)).toBe(true);
 					}
 			});
 		});
