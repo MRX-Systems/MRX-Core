@@ -81,9 +81,9 @@
 		"./modules/totp/utils": "./dist/modules/totp/utils/index.js",
 		"./modules/typed-event-emitter": "./dist/modules/typed-event-emitter/index.js",
 		"./modules/typed-event-emitter/types": "./dist/modules/typed-event-emitter/types/index.js",
-		"./utils": "./dist/utils/index.js",
-		"./utils/enums": "./dist/utils/enums/index.js",
-		"./utils/types": "./dist/utils/types/index.js"
+		"./shared/enums": "./dist/shared/enums/index.js",
+		"./shared/types": "./dist/shared/types/index.js",
+		"./shared/utils": "./dist/shared/utils/index.js"
 	},
 	"changelog": {
 		"types": {
