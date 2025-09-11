@@ -1,4 +1,4 @@
-import { Kind, type TSchema } from '@sinclair/typebox';
+import { KindGuard, type TSchema } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createPropertiesSchema', () => {
-	test('should create as schema with a good type and kind', () => {
+	test('should create as schema with a good type', () => {
 		const schema = createPropertiesSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties', () => {
@@ -23,11 +22,11 @@ describe('createPropertiesSchema', () => {
 			expect(schema.properties).toHaveProperty(key);
 	});
 
-	test('should each property has a good type and kind', () => {
+	test('should each property has a good type', () => {
 		const schema = createPropertiesSchema(sourceSchema);
 		for (const key of Object.keys(sourceSchema.properties)) {
 			const propertySchema = schema.properties[key as keyof typeof schema.properties];
-			expect(propertySchema[Kind]).toBe('Union');
+			expect(KindGuard.IsUnion(propertySchema)).toBe(true);
 		}
 	});
 
@@ -35,9 +34,9 @@ describe('createPropertiesSchema', () => {
 		const schema = createPropertiesSchema(sourceSchema);
 		for (const key of Object.keys(sourceSchema.properties)) {
 			const propertySchema = schema.properties[key as keyof typeof schema.properties] as TSchema;
-			expect(propertySchema[Kind]).toBe('Union');
+			expect(KindGuard.IsUnion(propertySchema)).toBe(true);
 			expect(propertySchema.anyOf).toHaveLength(2);
-			expect(propertySchema.anyOf[0][Kind]).toBe('Object'); // Adaptive where clause schema
+			expect(KindGuard.IsObject(propertySchema.anyOf[0])).toBe(true); // Adaptive where clause schema
 			expect(propertySchema.anyOf[1]).toEqual(sourceSchema.properties[key as keyof typeof sourceSchema.properties]);
 		}
 	});
