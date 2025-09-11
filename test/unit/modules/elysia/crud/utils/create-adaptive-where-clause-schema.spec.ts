@@ -1,4 +1,4 @@
-import { Kind, OptionalKind, type TSchema } from '@sinclair/typebox';
+import { Kind, KindGuard, type TSchema } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -67,10 +67,9 @@ describe('createAdaptiveWhereClauseSchema', () => {
 			]
 		]
 	])('type: %s', (typeName, schema, expectedOperators) => {
-		test(`should have a good Kind and type for ${typeName}`, () => {
+		test(`should have a good type for ${typeName}`, () => {
 			const adaptiveWhereClauseSchema = createAdaptiveWhereClauseSchema(schema);
-			expect(adaptiveWhereClauseSchema[Kind]).toBe('Object');
-			expect(adaptiveWhereClauseSchema.type).toBe('object');
+			expect(KindGuard.IsObject(adaptiveWhereClauseSchema)).toBe(true);
 		});
 
 		test(`should have correct properties for ${typeName}`, () => {
@@ -86,40 +85,32 @@ describe('createAdaptiveWhereClauseSchema', () => {
 			const operatorSchema: TSchema = adaptiveWhereClauseSchema.properties[operator as keyof typeof adaptiveWhereClauseSchema.properties];
 
 			if (operator === '$isNull') {
-				expect(operatorSchema.type).toBe('boolean');
-				expect(operatorSchema[Kind]).toBe('Boolean');
-				expect(operatorSchema[OptionalKind]).toBe('Optional');
+				expect(KindGuard.IsBoolean(operatorSchema)).toBe(true);
+				expect(KindGuard.IsOptional(operatorSchema)).toBe(true);
 			} else if (['$in', '$nin'].includes(operator)) {
-				expect(operatorSchema.type).toBe('array');
-				expect(operatorSchema[Kind]).toBe('Array');
+				expect(KindGuard.IsArray(operatorSchema)).toBe(true);
 				expect(operatorSchema.minItems).toBe(1);
 				expect(operatorSchema.uniqueItems).toBe(true);
 				expect(operatorSchema.items).toEqual(schema);
 				expect(operatorSchema.items[Kind]).toBe(schema[Kind]);
-				expect(operatorSchema.items.type).toBe(schema.type);
-				expect(operatorSchema[OptionalKind]).toBe('Optional');
+				expect(KindGuard.IsOptional(operatorSchema)).toBe(true);
 			} else if (['$like', '$nlike'].includes(operator)) {
-				expect(operatorSchema.type).toBe('string');
-				expect(operatorSchema[Kind]).toBe('String');
-				expect(operatorSchema[OptionalKind]).toBe('Optional');
+				expect(KindGuard.IsString(operatorSchema)).toBe(true);
+				expect(KindGuard.IsOptional(operatorSchema)).toBe(true);
 			} else if (['$between', '$nbetween'].includes(operator)) {
-				expect(operatorSchema.type).toBe('array');
-				expect(operatorSchema[Kind]).toBe('Tuple');
-				expect(operatorSchema[OptionalKind]).toBe('Optional');
+				expect(KindGuard.IsTuple(operatorSchema)).toBe(true);
+				expect(KindGuard.IsOptional(operatorSchema)).toBe(true);
 				expect(operatorSchema.minItems).toBe(2);
 				expect(operatorSchema.maxItems).toBe(2);
 				expect(operatorSchema.items).toBeDefined();
 				expect(operatorSchema.items).toHaveLength(2);
 				expect(operatorSchema.items[0]).toEqual(schema);
 				expect(operatorSchema.items[0][Kind]).toBe(schema[Kind]);
-				expect(operatorSchema.items[0].type).toBe(schema.type);
 				expect(operatorSchema.items[1]).toEqual(schema);
 				expect(operatorSchema.items[1][Kind]).toBe(schema[Kind]);
-				expect(operatorSchema.items[1].type).toBe(schema.type);
 			} else {
 				expect(operatorSchema[Kind]).toBe(schema[Kind]);
-				expect(operatorSchema.type).toBe(schema.type);
-				expect(operatorSchema[OptionalKind]).toBe('Optional');
+				expect(KindGuard.IsOptional(operatorSchema)).toBe(true);
 			}
 		});
 	});
