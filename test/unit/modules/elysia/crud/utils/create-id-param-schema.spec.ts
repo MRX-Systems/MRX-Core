@@ -1,13 +1,12 @@
-import { Kind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 
 import { createIdParamSchema } from '#/modules/elysia/crud/utils/create-id-param-schema';
 
 describe('createIdParamSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createIdParamSchema();
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties', () => {
@@ -15,9 +14,9 @@ describe('createIdParamSchema', () => {
 		expect(schema.properties).toHaveProperty('id');
 	});
 
-	test('should id has a good type and kind', () => {
+	test('should id has a good type', () => {
 		const schema = createIdParamSchema();
-		expect(schema.properties.id[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(schema.properties.id)).toBe(true);
 	});
 
 	test('should required id', () => {
@@ -34,8 +33,7 @@ describe('createIdParamSchema', () => {
 		const schema = createIdParamSchema();
 		const [stringType] = schema.properties.id.anyOf;
 
-		expect(stringType[Kind]).toBe('String');
-		expect(stringType.type).toBe('string');
+		expect(KindGuard.IsString(stringType)).toBe(true);
 		expect(stringType.format).toBe('uuid');
 	});
 
@@ -43,8 +41,7 @@ describe('createIdParamSchema', () => {
 		const schema = createIdParamSchema();
 		const [, numberType] = schema.properties.id.anyOf;
 
-		expect(numberType[Kind]).toBe('Number');
-		expect(numberType.type).toBe('number');
+		expect(KindGuard.IsNumber(numberType)).toBe(true);
 		expect(numberType.minimum).toBe(1);
 		expect(numberType.maximum).toBe(Number.MAX_SAFE_INTEGER);
 	});
