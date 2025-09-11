@@ -1,4 +1,4 @@
-import { Kind, OptionalKind } from '@sinclair/typebox';
+import { KindGuard, OptionalKind } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -13,8 +13,7 @@ const sourceSchema = t.Object({
 describe('createUpdateOneSchema', () => {
 	test('should create a schema with a good type and kind', () => {
 		const schema = createUpdateOneSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties', () => {
@@ -24,7 +23,7 @@ describe('createUpdateOneSchema', () => {
 
 	test('should data has a good type and kind', () => {
 		const schema = createUpdateOneSchema(sourceSchema);
-		expect(schema.properties.data[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.data)).toBe(true);
 		expect(schema.properties.data.type).toBe('object');
 	});
 
