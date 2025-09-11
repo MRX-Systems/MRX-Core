@@ -1,4 +1,4 @@
-import { Kind, OptionalKind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createCountSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createCountSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties with queryOptions', () => {
@@ -22,10 +21,9 @@ describe('createCountSchema', () => {
 		expect(schema.properties).toHaveProperty('queryOptions');
 	});
 
-	test('should queryOptions has correct type and kind', () => {
+	test('should queryOptions has correct type', () => {
 		const schema = createCountSchema(sourceSchema);
-		expect(schema.properties.queryOptions.type).toBe('object');
-		expect(schema.properties.queryOptions[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions has correct properties', () => {
@@ -35,24 +33,22 @@ describe('createCountSchema', () => {
 
 	test('should filters be optional', () => {
 		const schema = createCountSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.filters[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.filters)).toBe(true);
 	});
 
-	test('should filters be a union of partial filter schemas', () => {
+	test('should filters be a union of object and array', () => {
 		const schema = createCountSchema(sourceSchema);
 		const { filters } = schema.properties.queryOptions.properties;
 
-		expect(filters[Kind]).toBe('Union');
-		expect(filters[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsUnion(filters)).toBe(true);
+		expect(KindGuard.IsOptional(filters)).toBe(true);
 		expect(filters.anyOf).toHaveLength(2);
-		expect(filters.anyOf[0][Kind]).toBe('Object');
-		expect(filters.anyOf[0].type).toBe('object');
-		expect(filters.anyOf[1][Kind]).toBe('Array');
-		expect(filters.anyOf[1].type).toBe('array');
+		expect(KindGuard.IsObject(filters.anyOf[0])).toBe(true);
+		expect(KindGuard.IsArray(filters.anyOf[1])).toBe(true);
 	});
 
 	test('should queryOptions be optional', () => {
 		const schema = createCountSchema(sourceSchema);
-		expect(schema.properties.queryOptions[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions)).toBe(true);
 	});
 });
