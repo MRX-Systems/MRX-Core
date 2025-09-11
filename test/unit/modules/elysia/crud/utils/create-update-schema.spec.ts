@@ -1,4 +1,4 @@
-import { Kind, OptionalKind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createUpdateSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createUpdateSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties', () => {
@@ -23,9 +22,9 @@ describe('createUpdateSchema', () => {
 		expect(schema.properties).toHaveProperty('data');
 	});
 
-	test('should queryOptions has a good type and kind', () => {
+	test('should queryOptions has a good type', () => {
 		const schema = createUpdateSchema(sourceSchema);
-		expect(schema.properties.queryOptions.type).toBe('object');
+		expect(KindGuard.IsObject(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions has the correct properties', () => {
@@ -34,19 +33,19 @@ describe('createUpdateSchema', () => {
 		expect(schema.properties.queryOptions.properties).toHaveProperty('filters');
 	});
 
-	test('should selectedFields has a good type and kind', () => {
+	test('should selectedFields has a good type', () => {
 		const schema = createUpdateSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.selectedFields[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(schema.properties.queryOptions.properties.selectedFields)).toBe(true);
 	});
 
 	test('should selectedFields can be optional', () => {
 		const schema = createUpdateSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.selectedFields[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.selectedFields)).toBe(true);
 	});
 
-	test('should filters has a good type and kind', () => {
+	test('should filters has a good type', () => {
 		const schema = createUpdateSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.filters[Kind]).toBe('Union');
+		expect(KindGuard.IsUnion(schema.properties.queryOptions.properties.filters)).toBe(true);
 	});
 
 	test('should filter is required', () => {
@@ -61,8 +60,7 @@ describe('createUpdateSchema', () => {
 
 	test('should data has a good type and kind', () => {
 		const schema = createUpdateSchema(sourceSchema);
-		expect(schema.properties.data[Kind]).toBe('Object');
-		expect(schema.properties.data.type).toBe('object');
+		expect(KindGuard.IsObject(schema.properties.data)).toBe(true);
 	});
 
 	test('should data can be a single object', () => {
@@ -74,7 +72,7 @@ describe('createUpdateSchema', () => {
 	test('should each properties is optional', () => {
 		const schema = createUpdateSchema(sourceSchema);
 		for (const key of Object.keys(sourceSchema.properties))
-			expect(schema.properties.data.properties[key as keyof typeof schema.properties.data.properties][OptionalKind]).toBe('Optional');
+			expect(KindGuard.IsOptional(schema.properties.data.properties[key as keyof typeof schema.properties.data.properties])).toBe(true);
 	});
 
 	test('should data is required', () => {
