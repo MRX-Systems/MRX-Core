@@ -1,4 +1,4 @@
-import { Kind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createFiltersSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createFiltersSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties', () => {
