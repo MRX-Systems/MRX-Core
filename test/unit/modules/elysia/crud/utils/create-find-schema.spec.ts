@@ -1,4 +1,4 @@
-import { Kind, OptionalKind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createFindSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties with queryOptions', () => {
@@ -22,15 +21,14 @@ describe('createFindSchema', () => {
 		expect(schema.properties).toHaveProperty('queryOptions');
 	});
 
-	test('should queryOptions has a good type, kind', () => {
+	test('should queryOptions has a good type', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.type).toBe('object');
-		expect(schema.properties.queryOptions[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions is optional', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions has the correct properties', () => {
@@ -44,28 +42,32 @@ describe('createFindSchema', () => {
 
 	test('should selectedFields is optionnal', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.selectedFields[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.selectedFields)).toBe(true);
 	});
 
 	test('should orderBy is optionnal', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.orderBy[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.orderBy)).toBe(true);
 	});
 
 	test('should filters is optionnal', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.filters[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.filters)).toBe(true);
 	});
 
 	test('should limit is optionnal', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.limit[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.limit)).toBe(true);
+	});
+
+	test('should offset is optionnal', () => {
+		const schema = createFindSchema(sourceSchema);
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.offset)).toBe(true);
 	});
 
 	test('should limit is a number', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.limit.type).toBe('number');
-		expect(schema.properties.queryOptions.properties.limit[Kind]).toBe('Number');
+		expect(KindGuard.IsNumber(schema.properties.queryOptions.properties.limit)).toBe(true);
 	});
 
 	test('should limit has a minimum of 1', () => {
@@ -80,8 +82,7 @@ describe('createFindSchema', () => {
 
 	test('should offset is a number', () => {
 		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.offset.type).toBe('number');
-		expect(schema.properties.queryOptions.properties.offset[Kind]).toBe('Number');
+		expect(KindGuard.IsNumber(schema.properties.queryOptions.properties.offset)).toBe(true);
 	});
 
 	test('should offset has a minimum of 0', () => {
@@ -92,10 +93,5 @@ describe('createFindSchema', () => {
 	test('should offset has a default of 0', () => {
 		const schema = createFindSchema(sourceSchema);
 		expect(schema.properties.queryOptions.properties.offset.default).toBe(0);
-	});
-
-	test('should offset is optionnal', () => {
-		const schema = createFindSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.offset[OptionalKind]).toBe('Optional');
 	});
 });
