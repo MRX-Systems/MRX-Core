@@ -1,4 +1,4 @@
-import { Kind, OptionalKind } from '@sinclair/typebox';
+import { KindGuard } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia';
 
@@ -11,10 +11,9 @@ const sourceSchema = t.Object({
 });
 
 describe('createDeleteSchema', () => {
-	test('should create a schema with a good type and kind', () => {
+	test('should create a schema with a good type', () => {
 		const schema = createDeleteSchema(sourceSchema);
-		expect(schema.type).toBe('object');
-		expect(schema[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema)).toBe(true);
 	});
 
 	test('should have the correct properties with queryOptions', () => {
@@ -22,10 +21,9 @@ describe('createDeleteSchema', () => {
 		expect(schema.properties).toHaveProperty('queryOptions');
 	});
 
-	test('should verify queryOptions has good type and kind', () => {
+	test('should verify queryOptions has good type', () => {
 		const schema = createDeleteSchema(sourceSchema);
-		expect(schema.properties.queryOptions.type).toBe('object');
-		expect(schema.properties.queryOptions[Kind]).toBe('Object');
+		expect(KindGuard.IsObject(schema.properties.queryOptions)).toBe(true);
 	});
 
 	test('should queryOptions is required', () => {
@@ -42,12 +40,17 @@ describe('createDeleteSchema', () => {
 
 	test('should selectedFields be optional', () => {
 		const schema = createDeleteSchema(sourceSchema);
-		expect(schema.properties.queryOptions.properties.selectedFields[Kind]).toBe('Union');
-		expect(schema.properties.queryOptions.properties.selectedFields[OptionalKind]).toBe('Optional');
+		expect(KindGuard.IsUnion(schema.properties.queryOptions.properties.selectedFields)).toBe(true);
+		expect(KindGuard.IsOptional(schema.properties.queryOptions.properties.selectedFields)).toBe(true);
 	});
 
 	test('should verify filters are required', () => {
 		const schema = createDeleteSchema(sourceSchema);
 		expect(schema.properties.queryOptions.required).toEqual(['filters']);
+	});
+
+	test('should verify filters has good type', () => {
+		const schema = createDeleteSchema(sourceSchema);
+		expect(KindGuard.IsUnion(schema.properties.queryOptions.properties.filters)).toBe(true);
 	});
 });
