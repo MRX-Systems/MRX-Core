@@ -532,10 +532,12 @@ export class Repository<TModel = unknown> {
 		const qMethod = (query as unknown as { _method: string })._method;
 
 		const sanitizedFields = selectedFields
-			? (Array.isArray(selectedFields)
-				? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
-				: `${selectedFields} as ${selectedFields}`
-			)
+			? selectedFields === '*'
+				? '*'
+				: (Array.isArray(selectedFields)
+					? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+					: `${selectedFields} as ${selectedFields}`
+				)
 			: '*';
 
 		if (
