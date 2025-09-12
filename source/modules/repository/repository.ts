@@ -465,7 +465,7 @@ export class Repository<TModel = unknown> {
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		return this._executeQuery<KModel>(query);
+		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
 	/**
@@ -513,7 +513,7 @@ export class Repository<TModel = unknown> {
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		return this._executeQuery<KModel>(query);
+		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
 	/**

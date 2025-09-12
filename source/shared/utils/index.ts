@@ -1,5 +1,5 @@
 export { validateEnv } from './env';
-export { Flatten } from './flatten';
+export { flatten } from './flatten';
 export { isDateString } from './is-date-string';
 export { makeStreamAsyncIterable } from './stream';
 
