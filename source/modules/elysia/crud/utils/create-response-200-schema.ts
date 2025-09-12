@@ -1,9 +1,10 @@
-import { TypeGuard } from '@sinclair/typebox';
-import type { Static, TLiteral, TObject, TUndefined, TUnion } from '@sinclair/typebox/type';
+import type { Static, TNull, TObject, TUnion } from '@sinclair/typebox/type';
 import { t } from 'elysia';
 
 import { filterByKeyExclusionRecursive } from '#/modules/data/data';
 import type { Response200Schema } from '#/modules/elysia/crud/types/response-200-schema';
+import type { TFlatten } from '#/shared/types/tflatten';
+import { flatten } from '#/shared/utils/flatten';
 
 export const createResponse200Schema = <TSourceResponseSchema extends TObject>(schema: TSourceResponseSchema): Response200Schema<TSourceResponseSchema> => {
 	const sanitizedSchema = filterByKeyExclusionRecursive(
@@ -12,7 +13,6 @@ export const createResponse200Schema = <TSourceResponseSchema extends TObject>(s
 			'minLength',
 			'maxLength',
 			'pattern',
-			'format',
 			'minimum',
 			'maximum',
 			'exclusiveMinimum',
@@ -38,18 +38,19 @@ export const createResponse200Schema = <TSourceResponseSchema extends TObject>(s
 	const { properties } = sanitizedSchema;
 
 	const responseSchema = {} as {
-		[K in keyof Static<TSourceResponseSchema>]: TUnion<[
-			TUndefined,
-			TLiteral<''>,
-			TSourceResponseSchema['properties'][K]
-		]>
+		[K in keyof Static<TSourceResponseSchema>]: TFlatten<
+			TUnion<[
+				TSourceResponseSchema['properties'][K],
+				TNull
+			]>
+		>
 	};
 
 	for (const key in properties)
 	// @ts-expect-error - Generic can't be indexed
-		responseSchema[key] = TypeGuard.IsString(properties[key])
-			? t.Union([properties[key], t.Undefined(), t.Literal(''), t.Null()])
-			: t.Union([properties[key], t.Undefined(), t.Null()]);
+		responseSchema[key] = flatten(
+			t.Union([properties[key], t.Null()])
+		);
 
 	return t.Object({
 		message: t.String(),
