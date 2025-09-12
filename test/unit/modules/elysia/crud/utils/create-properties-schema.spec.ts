@@ -46,4 +46,20 @@ describe('createPropertiesSchema', () => {
 		for (const key of Object.keys(sourceSchema.properties))
 			expect(schema.required).toContain(key);
 	});
+
+	test('should handle union type', () => {
+		const sourceSchema = t.Object({
+			date: t.Union([t.Number(), t.Union([t.String()])]),
+		});
+		const schema = createPropertiesSchema(sourceSchema);
+		for (const key of Object.keys(sourceSchema.properties)) {
+			const propertySchema = schema.properties[key as keyof typeof schema.properties];
+			expect(KindGuard.IsUnion(propertySchema)).toBe(true);
+			expect(propertySchema.anyOf).toHaveLength(5);
+			expect(KindGuard.IsDate(propertySchema.anyOf[0])).toBe(true);
+			expect(KindGuard.IsString(propertySchema.anyOf[1]) && (propertySchema.anyOf[1] as { format: string }).format === 'date-time').toBe(true);
+			expect(KindGuard.IsString(propertySchema.anyOf[2]) && (propertySchema.anyOf[2] as { format: string }).format === 'date').toBe(true);
+			expect(KindGuard.IsNumber(propertySchema.anyOf[3])).toBe(true);
+		}
+	});
 });
