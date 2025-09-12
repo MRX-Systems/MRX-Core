@@ -3,6 +3,8 @@ import { t } from 'elysia';
 
 import type { AdaptiveWhereClauseSchema } from '#/modules/elysia/crud/types/adaptive-where-clause-schema';
 import type { PropertiesSchema } from '#/modules/elysia/crud/types/properties-schema';
+import type { TFlatten } from '#/shared/types/tflatten';
+import { flatten } from '#/shared/utils/flatten';
 import { createAdaptiveWhereClauseSchema } from './create-adaptive-where-clause-schema';
 
 /**
@@ -17,16 +19,16 @@ import { createAdaptiveWhereClauseSchema } from './create-adaptive-where-clause-
 export const createPropertiesSchema = <TSourceSchema extends TObject>(schema: TSourceSchema): PropertiesSchema<TSourceSchema> => {
 	const { properties } = schema;
 	const clauseSchema = {} as {
-		[K in keyof Static<TSourceSchema>]: TUnion<[
+		[K in keyof Static<TSourceSchema>]: TFlatten<TUnion<[
 			AdaptiveWhereClauseSchema<TSourceSchema['properties'][K]>,
 			TSourceSchema['properties'][K]
-		]>
+		]>>
 	};
 	for (const [key, propertySchema] of Object.entries(properties))
 	// @ts-expect-error // Generic can't be indexed
-		clauseSchema[key] = t.Union([
+		clauseSchema[key] = flatten(t.Union([
 			createAdaptiveWhereClauseSchema(propertySchema),
 			propertySchema
-		]);
+		]));
 	return t.Object(clauseSchema);
 };
