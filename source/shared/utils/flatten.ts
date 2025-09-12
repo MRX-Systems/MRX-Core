@@ -1,5 +1,5 @@
 import { KindGuard } from '@sinclair/typebox';
-import type { TSchema, TUnion } from '@sinclair/typebox/type';
+import type { TSchema } from '@sinclair/typebox/type';
 import { t } from 'elysia';
 
 import type { TFlatten } from '#/shared/types/tflatten';
@@ -12,7 +12,7 @@ const _flattenInto = (type: TSchema, result: TSchema[]): void => {
 		result.push(type);
 };
 
-export const flatten = <Type extends TSchema>(type: Type): Type extends TUnion ? TUnion<TFlatten<Type>> : Type => {
+export const flatten = <Type extends TSchema>(type: Type): TFlatten<Type> => {
 	// Fast path for non-union types
 	if (!KindGuard.IsUnion(type))
 		return type as never;
