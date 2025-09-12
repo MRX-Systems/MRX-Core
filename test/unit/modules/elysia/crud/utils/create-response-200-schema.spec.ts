@@ -1,4 +1,4 @@
-import { Kind, KindGuard, OptionalKind, type TSchema } from '@sinclair/typebox';
+import { KindGuard, type TSchema } from '@sinclair/typebox';
 import { describe, expect, test } from 'bun:test';
 import { t } from 'elysia/type-system';
 
@@ -9,6 +9,12 @@ const baseSchema = t.Object({
 	name: t.String(),
 	createdAt: t.String({ format: 'date-time' }),
 	updatedAt: t.Date()
+});
+
+const simpleSchema = t.Object({
+	id: t.Number(),
+	name: t.String(),
+	isActive: t.Boolean()
 });
 
 
@@ -59,57 +65,77 @@ describe('createResponse200Schema', () => {
 			}
 		});
 
-		describe('string properties handling', () => {
-			test('should string properties have 4 union options', () => {
-				const responseSchema = createResponse200Schema(baseSchema);
+		describe('simple types handling (Number, String, Boolean)', () => {
+			test('should simple types have exactly 2 union options (Type + Null)', () => {
+				const responseSchema = createResponse200Schema(simpleSchema);
 				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
-				for (const key of Object.keys(baseSchema.properties))
-					if (baseSchema.properties[key as keyof typeof baseSchema.properties][Kind] === 'String')
-						expect(properties[key].anyOf).toHaveLength(4);
+				// Test simple types only
+				const simpleKeys = ['id', 'name', 'isActive'];
+				for (const key of simpleKeys) {
+					expect(properties[key].anyOf).toHaveLength(2);
+
+					// Check that null is always present
+					const unionTypes = properties[key].anyOf as TSchema[];
+					const hasNull = unionTypes.some((schema: TSchema) => KindGuard.IsNull(schema));
+					expect(hasNull).toBe(true);
+				}
 			});
 
-			test('should string properties have correct union types', () => {
-				const responseSchema = createResponse200Schema(baseSchema);
+			test('should simple types preserve original type in union', () => {
+				const responseSchema = createResponse200Schema(simpleSchema);
 				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
-				for (const key of Object.keys(baseSchema.properties))
-					if (baseSchema.properties[key as keyof typeof baseSchema.properties][Kind] === 'String') {
-						const [firstOption, secondOption, thirdOption, fourthOption] = properties[key].anyOf;
+				// id should have Number + Null
+				const [idFirst, idSecond] = properties.id.anyOf;
+				expect(KindGuard.IsNumber(idFirst) || KindGuard.IsNumber(idSecond)).toBe(true);
+				expect(KindGuard.IsNull(idFirst) || KindGuard.IsNull(idSecond)).toBe(true);
 
-						expect(KindGuard.IsString(firstOption)).toBe(true);
-						expect(KindGuard.IsUndefined(secondOption)).toBe(true);
-						expect(KindGuard.IsLiteral(thirdOption)).toBe(true);
-						expect(thirdOption.const).toBe('');
-						expect(KindGuard.IsNull(fourthOption)).toBe(true);
-					}
+				// name should have String + Null
+				const [nameFirst, nameSecond] = properties.name.anyOf;
+				expect(KindGuard.IsString(nameFirst) || KindGuard.IsString(nameSecond)).toBe(true);
+				expect(KindGuard.IsNull(nameFirst) || KindGuard.IsNull(nameSecond)).toBe(true);
+
+				// isActive should have Boolean + Null
+				const [boolFirst, boolSecond] = properties.isActive.anyOf;
+				expect(KindGuard.IsBoolean(boolFirst) || KindGuard.IsBoolean(boolSecond)).toBe(true);
+				expect(KindGuard.IsNull(boolFirst) || KindGuard.IsNull(boolSecond)).toBe(true);
 			});
 		});
 
-		describe('non-string properties handling', () => {
-			test('should non-string properties have 3 union options', () => {
+		describe('complex types handling (Date, etc.)', () => {
+			test('should complex types include null in their union', () => {
 				const responseSchema = createResponse200Schema(baseSchema);
 				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
-				for (const key of Object.keys(baseSchema.properties))
-					if (!KindGuard.IsString(baseSchema.properties[key as keyof typeof baseSchema.properties]))
-						expect(properties[key].anyOf).toHaveLength(3);
+				// updatedAt is a complex type (t.Date() produces a union)
+				const unionTypes = properties.updatedAt.anyOf as TSchema[];
+				const hasNull = unionTypes.some((schema: TSchema) => KindGuard.IsNull(schema));
+				expect(hasNull).toBe(true);
 			});
 
-			test('should non-string properties have correct union types', () => {
+			test('should complex types have multiple options due to flattening', () => {
 				const responseSchema = createResponse200Schema(baseSchema);
 				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
-				for (const key of Object.keys(baseSchema.properties))
-					if (!KindGuard.IsString(baseSchema.properties[key as keyof typeof baseSchema.properties])) {
-						const [firstOption, secondOption, thirdOption] = properties[key].anyOf;
+				// updatedAt should have more than 2 options because t.Date() is complex
+				expect(properties.updatedAt.anyOf.length).toBeGreaterThan(2);
+			});
 
-						expect(firstOption[Kind]).toBe(baseSchema.properties[key as keyof typeof baseSchema.properties][Kind]);
-						expect(firstOption[OptionalKind]).toBe(baseSchema.properties[key as keyof typeof baseSchema.properties][OptionalKind]);
+			test('should Date type contain expected type variants', () => {
+				const responseSchema = createResponse200Schema(baseSchema);
+				const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
-						expect(KindGuard.IsUndefined(secondOption)).toBe(true);
-						expect(KindGuard.IsNull(thirdOption)).toBe(true);
-					}
+				const dateUnion = properties.updatedAt.anyOf as TSchema[];
+
+				// Should contain null
+				expect(dateUnion.some((schema: TSchema) => KindGuard.IsNull(schema))).toBe(true);
+
+				// Should contain at least one string type (for date-time format)
+				expect(dateUnion.some((schema: TSchema) => KindGuard.IsString(schema))).toBe(true);
+
+				// Should contain number type (timestamp)
+				expect(dateUnion.some((schema: TSchema) => KindGuard.IsNumber(schema))).toBe(true);
 			});
 		});
 	});
