@@ -85,8 +85,6 @@ describe('SMTP', () => {
 
 			// Clean up
 			mailer.disconnect();
-		}, {
-			timeout: 5500
 		});
 
 		test('should throw BaseError when already connected', async () => {
