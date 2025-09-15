@@ -39,14 +39,11 @@ await Bun.build({
 		'./source/modules/elysia/cache/types/index.ts',
 		'./source/modules/elysia/cache/utils/index.ts',
 
-		// crud
+		// crud & crud-schema
 		'./source/modules/elysia/crud/index.ts',
+		'./source/modules/elysia/crud/operations/index.ts',
 		'./source/modules/elysia/crud/types/index.ts',
-
-		// crudSchema
-		'./source/modules/elysia/crud-schema/index.ts',
-		'./source/modules/elysia/crud-schema/types/index.ts',
-		'./source/modules/elysia/crud-schema/utils/index.ts',
+		'./source/modules/elysia/crud/utils/index.ts',
 
 		// dbResolver
 		'./source/modules/elysia/db-resolver/index.ts',
