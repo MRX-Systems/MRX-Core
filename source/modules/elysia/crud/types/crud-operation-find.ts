@@ -1,5 +1,5 @@
 import type { Static, TObject } from '@sinclair/typebox/type';
-import type { BaseMacro, InputSchema, LocalHook, SingletonBase } from 'elysia/types';
+import type { BaseMacro, LocalHook, SingletonBase } from 'elysia/types';
 
 import type { CrudOperationBase } from './crud-operation-base';
 import type { FindSchema } from './find-schema';
@@ -11,14 +11,15 @@ export interface CrudOperationFind<
 	TSourceResponseSchema extends TObject
 > extends CrudOperationBase {
 	readonly hook?: LocalHook<
-		InputSchema,
+		BaseMacro,
 		{
 			headers: Static<THeaderSchema>;
 			body: Static<FindSchema<TSourceFindSchema>>;
 			response: Static<Response200Schema<TSourceResponseSchema>>;
+			return: Static<Response200Schema<TSourceResponseSchema>>;
+			resolve: Record<string, unknown>;
 		},
 		SingletonBase,
-		Record<string, Error>,
-		BaseMacro
+		Record<string, Error>
 	>;
 }
