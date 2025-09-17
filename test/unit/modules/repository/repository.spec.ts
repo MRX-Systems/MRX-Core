@@ -835,7 +835,7 @@ describe('Repository', () => {
 						id: 100
 					},
 					throwIfNoResult: {
-						code: 'FORBIDDEN'
+						httpStatusCode: 'FORBIDDEN'
 					}
 				});
 			} catch (error) {

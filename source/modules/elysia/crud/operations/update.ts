@@ -25,9 +25,8 @@ export const update = <
 			const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
 			const body = ctx.body as {
 				queryOptions: {
-					filters: Record<string, unknown>;
-					orderBy?: Record<string, unknown>;
 					selectedFields: string[] | string;
+					filters: Record<string, unknown>;
 				};
 				data: Record<string, unknown>;
 			};

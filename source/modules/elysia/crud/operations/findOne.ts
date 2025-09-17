@@ -30,7 +30,7 @@ export const findOne = <
 					[primaryKey]: id
 				},
 				throwIfNoResult: {
-					code: 'NOT_FOUND',
+					httpStatusCode: 'NOT_FOUND',
 					message: `Record with id ${id} not found in ${tableName}`
 				}
 			});

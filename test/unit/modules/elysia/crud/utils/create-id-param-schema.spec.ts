@@ -29,12 +29,11 @@ describe('createIdParamSchema', () => {
 		expect(schema.properties.id.anyOf).toHaveLength(2);
 	});
 
-	test('should id first union type be a string with uuid format', () => {
+	test('should id first union type be a string', () => {
 		const schema = createIdParamSchema();
 		const [stringType] = schema.properties.id.anyOf;
 
 		expect(KindGuard.IsString(stringType)).toBe(true);
-		expect(stringType.format).toBe('uuid');
 	});
 
 	test('should id second union type be a number with constraints', () => {

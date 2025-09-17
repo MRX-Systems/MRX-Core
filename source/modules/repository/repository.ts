@@ -720,8 +720,8 @@ export class Repository<TModel = unknown> {
 					typeof throwIfNoResult === 'object' && throwIfNoResult.message
 						? throwIfNoResult.message
 						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
-					typeof throwIfNoResult === 'object' && throwIfNoResult.code
-						? throwIfNoResult.code
+					typeof throwIfNoResult === 'object' && throwIfNoResult.httpStatusCode
+						? throwIfNoResult.httpStatusCode
 						: 404,
 					!process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {

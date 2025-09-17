@@ -26,8 +26,8 @@ export const batchDelete = <
 			const db = ctx.dynamicDB as MSSQL || ctx.staticDB as MSSQL;
 			const body = ctx.body as {
 				queryOptions: {
-					filters: Record<string, unknown>;
 					selectedFields?: string[] | string;
+					filters: Record<string, unknown>;
 				};
 			};
 			const selectedFields = body.queryOptions?.selectedFields ?? '*';
