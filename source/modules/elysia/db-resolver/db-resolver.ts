@@ -37,10 +37,10 @@ const _resolveDatabaseConnection = async <
 
 	// Register and connect database if not already available
 	if (!SingletonManager.has(`database:${databaseName}`)) {
-		SingletonManager.register(`database:${databaseName}`, MSSQL, {
+		SingletonManager.register(`database:${databaseName}`, new MSSQL({
 			...database.config,
 			databaseName
-		});
+		}));
 		await SingletonManager.get<MSSQL>(`database:${databaseName}`).connect();
 	}
 

@@ -18,7 +18,7 @@ const options = {
 describe('dbResolver', () => {
 	describe('dbResolver with static database', () => {
 		beforeAll(async () => {
-			SingletonManager.register(`database:${options.databaseName}`, MSSQL, options);
+			SingletonManager.register(`database:${options.databaseName}`, new MSSQL(options));
 			await SingletonManager.get<MSSQL>(`database:${options.databaseName}`).connect();
 		});
 		test('should resolve static database connection when database name is provided', async () => {
