@@ -5,6 +5,7 @@ import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationInsert } from '#/modules/elysia/crud/types/crud-operation-insert';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 export const insert = <
 	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
@@ -48,15 +49,7 @@ export const insert = <
 			};
 		},
 		{
-			...(
-				typeof database === 'string'
-					? {
-						injectStaticDB: database
-					}
-					: {
-						injectDynamicDB: database
-					}
-			),
+			...getDbInjection(database),
 			body: `${tableName}Insert`,
 			response: `${tableName}Response200`,
 			...hook

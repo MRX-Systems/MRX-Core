@@ -5,6 +5,7 @@ import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationDelete } from '#/modules/elysia/crud/types/crud-operation-delete';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 // We can't use "delete" as function name instead we use batchDelete
 export const batchDelete = <
@@ -48,15 +49,7 @@ export const batchDelete = <
 			};
 		},
 		{
-			...(
-				typeof database === 'string'
-					? {
-						injectStaticDB: database
-					}
-					: {
-						injectDynamicDB: database
-					}
-			),
+			...getDbInjection(database),
 			body: `${tableName}Delete`,
 			response: `${tableName}Response200`,
 			...hook

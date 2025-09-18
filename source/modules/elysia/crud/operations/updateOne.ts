@@ -5,6 +5,7 @@ import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationUpdateOne } from '#/modules/elysia/crud/types/crud-operation-update-one';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 export const updateOne = <
 	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
@@ -51,15 +52,7 @@ export const updateOne = <
 			};
 		},
 		{
-			...(
-				typeof database === 'string'
-					? {
-						injectStaticDB: database
-					}
-					: {
-						injectDynamicDB: database
-					}
-			),
+			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			body: `${tableName}UpdateOne`,
 			response: `${tableName}Response200`,

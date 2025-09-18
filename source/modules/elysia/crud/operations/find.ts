@@ -5,6 +5,7 @@ import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationFind } from '#/modules/elysia/crud/types/crud-operation-find';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 export const find = <
 	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
@@ -42,15 +43,7 @@ export const find = <
 			};
 		},
 		{
-			...(
-				typeof database === 'string'
-					? {
-						injectStaticDB: database
-					}
-					: {
-						injectDynamicDB: database
-					}
-			),
+			...getDbInjection(database),
 			body: `${tableName}Find`,
 			response: `${tableName}Response200`,
 			...hook

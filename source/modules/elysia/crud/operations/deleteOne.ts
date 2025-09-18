@@ -5,6 +5,7 @@ import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationDeleteOne } from '#/modules/elysia/crud/types/crud-operation-delete-one';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 export const deleteOne = <
 	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
@@ -48,15 +49,7 @@ export const deleteOne = <
 			};
 		},
 		{
-			...(
-				typeof database === 'string'
-					? {
-						injectStaticDB: database
-					}
-					: {
-						injectDynamicDB: database
-					}
-			),
+			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			response: `${tableName}Response200`,
 			...hook
