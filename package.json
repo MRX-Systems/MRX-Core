@@ -17,7 +17,7 @@
 		"knex": "^3.1.0",
 		"mssql": "^11.0.1",
 		"nodemailer": "^7.0.6",
-		"typescript-eslint": "^8.43.0"
+		"typescript-eslint": "^8.44.0"
 	},
 	"peerDependencies": {
 		"@sinclair/typebox": "0.34.41",
