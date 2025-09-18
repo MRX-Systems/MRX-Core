@@ -13,7 +13,7 @@ export const find = <
 	{
 		hook,
 		method = 'POST',
-		path = '/search'
+		path = '/find'
 	}: CrudOperationFind<THeaderSchema, TSourceFindSchema, TSourceResponseSchema>
 ) => new Elysia({
 	name: `find[${tableName}]`
