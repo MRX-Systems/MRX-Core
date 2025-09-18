@@ -42,7 +42,7 @@ export const deleteOne = <
 			};
 		},
 		{
-			// params: `${tableName}IdParam`,
+			params: `${tableName}IdParam`,
 			response: `${tableName}Response200`,
 			...hook
 		} as Record<string, unknown>

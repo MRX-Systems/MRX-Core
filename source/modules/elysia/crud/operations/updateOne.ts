@@ -45,7 +45,7 @@ export const updateOne = <
 			};
 		},
 		{
-			// params: `${tableName}IdParam`,
+			params: `${tableName}IdParam`,
 			body: `${tableName}UpdateOne`,
 			response: `${tableName}Response200`,
 			...hook
