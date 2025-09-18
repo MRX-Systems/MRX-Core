@@ -36,7 +36,7 @@ export const dbResolver = (prefixDatabaseName = '') => new Elysia()
 			return {
 				resolve() {
 					if (!SingletonManager.has(`${prefixDatabaseName}${databaseName}`))
-						throw new BaseError(DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_STATIC_DB_NOT_FOUND, databaseName);
+						throw new BaseError(DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_STATIC_DB_NOT_FOUND, `${prefixDatabaseName}${databaseName}`);
 
 					return {
 						staticDB: SingletonManager.get<MSSQL>(`${prefixDatabaseName}${databaseName}`)
