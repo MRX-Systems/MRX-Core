@@ -52,7 +52,7 @@ export class SingletonManager {
 		instance: TClass
 	): void {
 		if (this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_ALREADY_REGISTERED, { name });
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_ALREADY_REGISTERED, { name });
 		this._registry.set(name, instance);
 	}
 
@@ -65,7 +65,7 @@ export class SingletonManager {
 	*/
 	public static unregister(name: string): void {
 		if (!this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED, { name });
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
 		this._registry.delete(name);
 	}
 
@@ -82,7 +82,7 @@ export class SingletonManager {
 	*/
 	public static get<TClass>(name: string): TClass {
 		if (!this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED, { name });
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
 		return this._registry.get(name) as TClass;
 	}
 
