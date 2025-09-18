@@ -2,14 +2,18 @@ import type { TObject } from '@sinclair/typebox/type';
 import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
+import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationCount } from '#/modules/elysia/crud/types/crud-operation-count';
-
+import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 
 export const count = <
+	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
+	const TTableName extends string,
 	const THeaderSchema extends TObject,
 	const TSourceCountSchema extends TObject
 >(
-	tableName: string,
+	database: TDatabase,
+	tableName: TTableName,
 	{
 		hook,
 		method = 'POST',
@@ -18,6 +22,7 @@ export const count = <
 ) => new Elysia({
 	name: `count[${tableName}]`
 })
+	.use(dbResolver('database:'))
 	.route(
 		method,
 		path,
@@ -36,6 +41,15 @@ export const count = <
 			};
 		},
 		{
+			...(
+				typeof database === 'string'
+					? {
+						injectStaticDB: database
+					}
+					: {
+						injectDynamicDB: database
+					}
+			),
 			body: `${tableName}Count`,
 			response: `${tableName}CountResponse200`,
 			...hook
