@@ -61,7 +61,7 @@ export class SingletonManager {
 	*
 	* @param name - The name of the class to unregister.
 	*
-	* @throws ({@link BaseError}) If the class is not registered, it throws an error.
+	* @throws ({@link BaseError}) If the name is not registered, it throws an error.
 	*/
 	public static unregister(name: string): void {
 		if (!this._registry.has(name))
