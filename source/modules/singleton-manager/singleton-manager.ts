@@ -45,7 +45,7 @@ export class SingletonManager {
 	* @param name - The name of the class.
 	* @param instance - The instance of the class to register as singleton.
 	*
-	* @throws ({@link BaseError}) If the class instance is already registered, it throws an error.
+	* @throws ({@link BaseError}) If the name is already registered, it throws an error.
 	*/
 	public static register<TClass extends object>(
 		name: string,
