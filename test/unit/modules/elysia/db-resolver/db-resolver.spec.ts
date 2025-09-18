@@ -79,11 +79,11 @@ describe('dbResolver', () => {
 	});
 
 	describe('injectDynamicDB macro', () => {
-		beforeEach(() => {
+		beforeEach(async () => {
 			// Clean up any registered databases before each test
 			const dbName = `${prefix}${testDatabaseName}`;
 			if (SingletonManager.has(dbName)) {
-				void SingletonManager.get<MSSQL>(dbName).disconnect();
+				await SingletonManager.get<MSSQL>(dbName).disconnect();
 				SingletonManager.unregister(dbName);
 			}
 		});
