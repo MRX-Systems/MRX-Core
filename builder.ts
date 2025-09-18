@@ -48,7 +48,6 @@ await Bun.build({
 		// dbResolver
 		'./source/modules/elysia/db-resolver/index.ts',
 		'./source/modules/elysia/db-resolver/enums/index.ts',
-		'./source/modules/elysia/db-resolver/types/index.ts',
 
 		// error
 		'./source/modules/elysia/error/index.ts',

@@ -50,7 +50,6 @@
 		"./modules/elysia/crud/utils": "./dist/modules/elysia/crud/utils/index.js",
 		"./modules/elysia/db-resolver": "./dist/modules/elysia/db-resolver/index.js",
 		"./modules/elysia/db-resolver/enums": "./dist/modules/elysia/db-resolver/enums/index.js",
-		"./modules/elysia/db-resolver/types": "./dist/modules/elysia/db-resolver/types/index.js",
 		"./modules/elysia/error": "./dist/modules/elysia/error/index.js",
 		"./modules/elysia/microservice": "./dist/modules/elysia/microservice/index.js",
 		"./modules/elysia/rate-limit": "./dist/modules/elysia/rate-limit/index.js",
