@@ -5,9 +5,9 @@ import { HttpError } from '#/errors/http-error';
 import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { MSSQL_ERROR_CODE } from '#/modules/database/enums/mssql-error-code';
 import type { Table } from '#/modules/database/table';
-import { isDateString } from '#/utils/is-date-string';
-import { makeStreamAsyncIterable } from '#/utils/stream';
-import type { StreamWithAsyncIterable } from '#/utils/types/stream-with-async-iterable';
+import { isDateString } from '#/shared/utils/is-date-string';
+import { makeStreamAsyncIterable } from '#/shared/utils/stream';
+import type { StreamWithAsyncIterable } from '#/shared/types/stream-with-async-iterable';
 import type { AdaptiveWhereClause } from './types/adaptive-where-clause';
 import type { Filter } from './types/filter';
 import type { OrderByItem } from './types/order-by-item';
@@ -465,7 +465,7 @@ export class Repository<TModel = unknown> {
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		return this._executeQuery<KModel>(query);
+		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
 	/**
@@ -513,7 +513,7 @@ export class Repository<TModel = unknown> {
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		return this._executeQuery<KModel>(query);
+		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
 	/**
@@ -532,10 +532,12 @@ export class Repository<TModel = unknown> {
 		const qMethod = (query as unknown as { _method: string })._method;
 
 		const sanitizedFields = selectedFields
-			? (Array.isArray(selectedFields)
-				? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
-				: `${selectedFields} as ${selectedFields}`
-			)
+			? selectedFields === '*'
+				? '*'
+				: (Array.isArray(selectedFields)
+					? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+					: `${selectedFields} as ${selectedFields}`
+				)
 			: '*';
 
 		if (
@@ -718,8 +720,8 @@ export class Repository<TModel = unknown> {
 					typeof throwIfNoResult === 'object' && throwIfNoResult.message
 						? throwIfNoResult.message
 						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
-					typeof throwIfNoResult === 'object' && throwIfNoResult.code
-						? throwIfNoResult.code
+					typeof throwIfNoResult === 'object' && throwIfNoResult.httpStatusCode
+						? throwIfNoResult.httpStatusCode
 						: 404,
 					!process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {

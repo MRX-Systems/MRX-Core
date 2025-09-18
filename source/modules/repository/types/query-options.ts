@@ -32,7 +32,7 @@ export interface QueryOptions<TModel> {
 	 */
 	readonly throwIfNoResult?: boolean | {
 		message?: string;
-		code?: keyof typeof HTTP_ERROR_STATUS_CODES | typeof HTTP_ERROR_STATUS_CODES[keyof typeof HTTP_ERROR_STATUS_CODES];
+		httpStatusCode?: keyof typeof HTTP_ERROR_STATUS_CODES | typeof HTTP_ERROR_STATUS_CODES[keyof typeof HTTP_ERROR_STATUS_CODES];
 	};
 	/**
 	 * The transaction context for the query. ({@link Transaction})
