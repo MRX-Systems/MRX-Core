@@ -230,11 +230,11 @@ describe('dbResolver', () => {
 			await SingletonManager.get<MSSQL>(`${prefix}static_${testDatabaseName}`).connect();
 		});
 
-		beforeEach(() => {
+		beforeEach(async () => {
 			// Clean up dynamic database before each test
 			const dynamicDbName = `${prefix}${testDatabaseName}`;
 			if (SingletonManager.has(dynamicDbName)) {
-				void SingletonManager.get<MSSQL>(dynamicDbName).disconnect();
+				await SingletonManager.get<MSSQL>(dynamicDbName).disconnect();
 				SingletonManager.unregister(dynamicDbName);
 			}
 		});
