@@ -4,7 +4,7 @@ import { SINGLETON_MANAGER_ERROR_KEYS } from './enums/singleton-manager-error-ke
 
 /**
 * SingletonManager is a static class that manages the singletons in the application.
-* When a class is registered, the SingletonManager creates a new instance of the class when it is requested.
+* When a class instance is registered, the SingletonManager stores it and returns the same instance when requested.
 *
 * @example
 * ```ts
@@ -23,9 +23,9 @@ import { SINGLETON_MANAGER_ERROR_KEYS } from './enums/singleton-manager-error-ke
 *    }
 * }
 *
-* SingletonManager.register('ExampleSingleton', ExampleSingleton);
+* SingletonManager.register('ExampleSingleton', new ExampleSingleton());
 *
-* SingletonManager.get<ExampleSingleton>('ExampleSingleton').sayHello(); // Output: ExampleSingleton created with ID: 1 /n Hello from instance 1!
+* SingletonManager.get<ExampleSingleton>('ExampleSingleton').sayHello(); // Output: Hello from instance 1!
 * SingletonManager.get<ExampleSingleton>('ExampleSingleton').sayHello(); // Output: Hello from instance 1!
 * ```
 */
@@ -38,28 +38,22 @@ export class SingletonManager {
 	private static readonly _registry = new Map<string, unknown>();
 
 	/**
-	* Registers a class constructor in the SingletonManager.
+	* Registers a class instance in the SingletonManager.
 	*
-	* @template TClass - The type of the class.
-	* @template TArgs - The tuple type of the constructor arguments.
+	* @template TClass - The type of the class instance.
 	*
 	* @param name - The name of the class.
-	* @param constructor - The constructor of the class.
-	* @param args - The arguments to pass to the constructor of the class.
+	* @param instance - The instance of the class to register as singleton.
 	*
-	* @throws ({@link BaseError}) If the class constructor is already registered, it throws an error.
+	* @throws ({@link BaseError}) If the name is already registered, it throws an error.
 	*/
-	public static register<
-		TClass extends object,
-		TArgs extends unknown[]
-	>(
+	public static register<TClass extends object>(
 		name: string,
-		constructor: new (...args: TArgs) => TClass,
-		...args: TArgs
+		instance: TClass
 	): void {
 		if (this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_ALREADY_REGISTERED, { name });
-		this._registry.set(name, new constructor(...args));
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_ALREADY_REGISTERED, { name });
+		this._registry.set(name, instance);
 	}
 
 	/**
@@ -67,11 +61,11 @@ export class SingletonManager {
 	*
 	* @param name - The name of the class to unregister.
 	*
-	* @throws ({@link BaseError}) If the class constructor is not registered, it throws an error.
+	* @throws ({@link BaseError}) If the name is not registered, it throws an error.
 	*/
 	public static unregister(name: string): void {
 		if (!this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED, { name });
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
 		this._registry.delete(name);
 	}
 
@@ -88,7 +82,7 @@ export class SingletonManager {
 	*/
 	public static get<TClass>(name: string): TClass {
 		if (!this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_CONSTRUCTOR_NOT_REGISTERED, { name });
+			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
 		return this._registry.get(name) as TClass;
 	}
 
