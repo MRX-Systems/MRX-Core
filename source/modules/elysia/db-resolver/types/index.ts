@@ -1,1 +1,0 @@
-export type { DynamicDbOptions } from './dynamic-db-options';

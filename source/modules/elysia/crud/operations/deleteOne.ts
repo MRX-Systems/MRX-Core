@@ -2,13 +2,19 @@ import type { TObject } from '@sinclair/typebox/type';
 import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
+import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationDeleteOne } from '#/modules/elysia/crud/types/crud-operation-delete-one';
+import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 export const deleteOne = <
+	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
+	const TTableName extends string,
 	const THeaderSchema extends TObject,
 	const TSourceResponseSchema extends TObject
 >(
-	tableName: string,
+	database: TDatabase,
+	tableName: TTableName,
 	{
 		hook,
 		method = 'DELETE',
@@ -17,6 +23,7 @@ export const deleteOne = <
 ) => new Elysia({
 	name: `deleteOne[${tableName}]`
 })
+	.use(dbResolver('database:'))
 	.route(
 		method,
 		path,
@@ -42,6 +49,7 @@ export const deleteOne = <
 			};
 		},
 		{
+			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			response: `${tableName}Response200`,
 			...hook

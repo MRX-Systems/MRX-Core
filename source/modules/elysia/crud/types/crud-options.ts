@@ -1,6 +1,6 @@
 import type { TObject, TString } from '@sinclair/typebox/type';
 
-import type { DynamicDbOptions } from '#/modules/elysia/db-resolver/types/dynamic-db-options';
+import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationCount } from './crud-operation-count';
 import type { CrudOperationDelete } from './crud-operation-delete';
 import type { CrudOperationDeleteOne } from './crud-operation-delete-one';
@@ -18,7 +18,7 @@ import type { CrudOperations } from './crud-operations';
  * @template KEnumPermission - The type of the enum for permissions extending {@link String}
  */
 export interface CrudOptions<
-	TDatabase extends DynamicDbOptions | string,
+	TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
 	TTableName extends string,
 	TSourceSchema extends TObject,
 	TSourceFindSchema extends TObject = TSourceSchema,

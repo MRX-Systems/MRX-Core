@@ -2,14 +2,20 @@ import type { TObject } from '@sinclair/typebox/type';
 import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
+import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import type { CrudOperationUpdateOne } from '#/modules/elysia/crud/types/crud-operation-update-one';
+import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { getDbInjection } from './utils/get-db-injection';
 
 export const updateOne = <
+	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
+	const TTableName extends string,
 	const THeaderSchema extends TObject,
 	const TSourceUpdateSchema extends TObject,
 	const TSourceResponseSchema extends TObject
 >(
-	tableName: string,
+	database: TDatabase,
+	tableName: TTableName,
 	{
 		hook,
 		method = 'PATCH',
@@ -18,6 +24,7 @@ export const updateOne = <
 ) => new Elysia({
 	name: `updateOne[${tableName}]`
 })
+	.use(dbResolver('database:'))
 	.route(
 		method,
 		path,
@@ -45,6 +52,7 @@ export const updateOne = <
 			};
 		},
 		{
+			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			body: `${tableName}UpdateOne`,
 			response: `${tableName}Response200`,

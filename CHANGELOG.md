@@ -1,4 +1,147 @@
 
+## v2.9.0-1-and-259-20250918
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.8.0...v2.9.0-1-and-259-20250918)
+
+### 🚀 Enhancements
+
+- **🚀:** [Add new CrudSchema] ([5820a1d0](https://github.com/MRX-Systems/MRX-Core/commit/5820a1d0))
+- **🚀:** [Add flatten utility for nested union types] ([f856ebb2](https://github.com/MRX-Systems/MRX-Core/commit/f856ebb2))
+- **🚀:** [Add CRUD operations for count, delete, find, insert, and update] ([71a03b21](https://github.com/MRX-Systems/MRX-Core/commit/71a03b21))
+- **🚀:** [Add crud plugin] ([913bcdba](https://github.com/MRX-Systems/MRX-Core/commit/913bcdba))
+- **🚀:** [Add CRUD module exports and type definitions] ([abd8d243](https://github.com/MRX-Systems/MRX-Core/commit/abd8d243))
+- **🚀:** [Add db-resolver module export] ([2bbcfead](https://github.com/MRX-Systems/MRX-Core/commit/2bbcfead))
+
+### ⚡ Performance
+
+- **⚡:** [Replace TypeGuard with KindGuard in adaptive where clause schema] ([039baae5](https://github.com/MRX-Systems/MRX-Core/commit/039baae5))
+
+### 🔧 Fixes
+
+- **🔧:** [Fix entrypoint and other] ([ef213c5f](https://github.com/MRX-Systems/MRX-Core/commit/ef213c5f))
+- **🔧:** [Fix pr] ([1f951675](https://github.com/MRX-Systems/MRX-Core/commit/1f951675))
+- **🔧:** [Fix pr 2] ([8c4509ff](https://github.com/MRX-Systems/MRX-Core/commit/8c4509ff))
+- **🔧:** [Update test/unit/modules/jwt/jwt.spec.ts] ([e88996fc](https://github.com/MRX-Systems/MRX-Core/commit/e88996fc))
+- **🔧:** [Update source/modules/elysia/crud-schema/utils/create-response-200-schema.ts] ([524f94cb](https://github.com/MRX-Systems/MRX-Core/commit/524f94cb))
+- **🔧:** [fix handling of selectedFields in query builder] ([1e6aea40](https://github.com/MRX-Systems/MRX-Core/commit/1e6aea40))
+- **🔧:** [Fix update & delete method to exec query with option throwIfNoResult] ([569fc41e](https://github.com/MRX-Systems/MRX-Core/commit/569fc41e))
+- **🔧:** [PR Correction] ([0ea07dae](https://github.com/MRX-Systems/MRX-Core/commit/0ea07dae))
+- **🔧:** [Update path for find operation to '/find'] ## Bug Fixes - Corrected the default path for the find operation from '/search' to '/find'. ([45c6085e](https://github.com/MRX-Systems/MRX-Core/commit/45c6085e))
+- **🔧:** [Change deprecated response parameter to responseValue in afterHandle] ([b6bb9580](https://github.com/MRX-Systems/MRX-Core/commit/b6bb9580))
+- **🔧:** [Update db-resolver, add prefix in cause] ([cd1351a8](https://github.com/MRX-Systems/MRX-Core/commit/cd1351a8))
+
+### 🧹 Refactors
+
+- **🧹:** [error module rename files to kebab-case and refacto BaseError] ([51334872](https://github.com/MRX-Systems/MRX-Core/commit/51334872))
+- **🧹:** [error module rename files to kebab-case and refacto BaseError] ([84cb8951](https://github.com/MRX-Systems/MRX-Core/commit/84cb8951))
+- **🧹:** [database module rename files to kebab-case and refacto BaseError] ([7ed791ac](https://github.com/MRX-Systems/MRX-Core/commit/7ed791ac))
+- **🧹:** [repository module rename files to kebab-case and refacto BaseError] ([f8ffde81](https://github.com/MRX-Systems/MRX-Core/commit/f8ffde81))
+- **🧹:** [totp module rename files to kebab-case and refacto BaseError] ([64656932](https://github.com/MRX-Systems/MRX-Core/commit/64656932))
+- **🧹:** [typed-event-emitter module rename files to kebab-case and refacto BaseError] ([767b024f](https://github.com/MRX-Systems/MRX-Core/commit/767b024f))
+- **🧹:** [singleton-manager module rename files to kebab-case and refacto BaseError] ([0f44c222](https://github.com/MRX-Systems/MRX-Core/commit/0f44c222))
+- **🧹:** [mailer module rename files to kebab-case and refacto BaseError] ([9191f7a4](https://github.com/MRX-Systems/MRX-Core/commit/9191f7a4))
+- **🧹:** [logger module rename files to kebab-case and refacto BaseError] ([0e88299e](https://github.com/MRX-Systems/MRX-Core/commit/0e88299e))
+- **🧹:** [kv-store module rename files to kebab-case and refacto BaseError] ([5240ebe8](https://github.com/MRX-Systems/MRX-Core/commit/5240ebe8))
+- **🧹:** [jwt module rename files to kebab-case and refacto BaseError] ([59d38869](https://github.com/MRX-Systems/MRX-Core/commit/59d38869))
+- **🧹:** [ratelimit module rename files to kebab-case and refacto BaseError] ([18383311](https://github.com/MRX-Systems/MRX-Core/commit/18383311))
+- **🧹:** [db-resolver module rename files to kebab-case and refacto BaseError] ([493dd447](https://github.com/MRX-Systems/MRX-Core/commit/493dd447))
+- **🧹:** [crud schema module rename files to kebab-case and refacto BaseError] ([1ee9af34](https://github.com/MRX-Systems/MRX-Core/commit/1ee9af34))
+- **🧹:** [crud module rename files to kebab-case and refacto BaseError] ([7282132c](https://github.com/MRX-Systems/MRX-Core/commit/7282132c))
+- **🧹:** [cache module rename files to kebab-case and refacto BaseError] ([2a229985](https://github.com/MRX-Systems/MRX-Core/commit/2a229985))
+- **🧹:** [refactor imports and clean up code structure] ([e0ca7178](https://github.com/MRX-Systems/MRX-Core/commit/e0ca7178))
+- **🧹:** [Remove old crud-schema module] ([76e1975b](https://github.com/MRX-Systems/MRX-Core/commit/76e1975b))
+- **🧹:** [Remove old crud] ([72423e48](https://github.com/MRX-Systems/MRX-Core/commit/72423e48))
+- **🧹:** [rename crud-models-type to crud-schema-models-type] ([b3269ea7](https://github.com/MRX-Systems/MRX-Core/commit/b3269ea7))
+- **🧹:** [Rename global utils to shared for types enums and utils] ([42b57652](https://github.com/MRX-Systems/MRX-Core/commit/42b57652))
+- **🧹:** [Refactor isDateFromElysiaTypeBox for clarity and consistency] ## Refactoring - Updated the import statements for clarity. - Replaced direct property access with KindGuard methods for better readability and maintainability. ([1461fb40](https://github.com/MRX-Systems/MRX-Core/commit/1461fb40))
+- **🧹:** [Refactor createPropertiesSchema for improved clarity] ## Refactoring - Updated the type definition for `clauseSchema` to use `TFlatten` for better type handling. - Replaced direct usage of `t.Union` with `flatten(t.Union(...))` to enhance readability and maintainability. ([6664fbc3](https://github.com/MRX-Systems/MRX-Core/commit/6664fbc3))
+- **🧹:** [Refactor TFlatten] ([2816c18c](https://github.com/MRX-Systems/MRX-Core/commit/2816c18c))
+- **🧹:** [Update import paths for shared utilities] ([115298e7](https://github.com/MRX-Systems/MRX-Core/commit/115298e7))
+- **🧹:** [Refactor response schema handling for clarity] ([995ff541](https://github.com/MRX-Systems/MRX-Core/commit/995ff541))
+- **🧹:** [Refactor type exports in index files] - Updated type exports in `source/shared/types/index.ts` to include `TFlatten`. - Corrected export statement in `source/shared/utils/index.ts` for `flatten`. ([a5495345](https://github.com/MRX-Systems/MRX-Core/commit/a5495345))
+- **🧹:** [Update CRUD and crud-schema module imports] ([7a3b4226](https://github.com/MRX-Systems/MRX-Core/commit/7a3b4226))
+- **🧹:** [Uncomment params in CRUD operations] ([94251627](https://github.com/MRX-Systems/MRX-Core/commit/94251627))
+- **🧹:** [Improve SingletonManager registration logic] ([1d2fb5f8](https://github.com/MRX-Systems/MRX-Core/commit/1d2fb5f8))
+- **🧹:** [use new prototype of SingletonManager.register] ([1b7055cb](https://github.com/MRX-Systems/MRX-Core/commit/1b7055cb))
+- **🧹:** [Update error keys for SingletonManager] Refactored error keys in SingletonManager to use more accurate terminology. - Changed CLASS_CONSTRUCTOR_ALREADY_REGISTERED to CLASS_INSTANCE_ALREADY_REGISTERED - Changed CLASS_CONSTRUCTOR_NOT_REGISTERED to CLASS_INSTANCE_NOT_REGISTERED Updated corresponding tests to reflect these changes. ([6b4368eb](https://github.com/MRX-Systems/MRX-Core/commit/6b4368eb))
+- **🧹:** [Simplify dbResolver implementation and remove unused code] ## Refactoring - Removed unused imports and types related to dynamic database options. - Simplified the `dbResolver` function by eliminating unnecessary complexity. - Streamlined the error handling for static database resolution. ## Description This commit refactors the `dbResolver` implementation by removing unused code and simplifying the logic. The changes enhance readability and maintainability while ensuring that the core functionality remains intact. ([2ce26419](https://github.com/MRX-Systems/MRX-Core/commit/2ce26419))
+- **🧹:** [Refactor CRUD operations to use new dbResolver] ([2070b4d1](https://github.com/MRX-Systems/MRX-Core/commit/2070b4d1))
+
+### 📖 Documentation
+
+- **📖:** [Update tsdoc singleton-manager.register] ([ec420015](https://github.com/MRX-Systems/MRX-Core/commit/ec420015))
+- **📖:** [Update tsdoc singleton-manager.unregister] ([e97233b4](https://github.com/MRX-Systems/MRX-Core/commit/e97233b4))
+
+### 📦 Build
+
+- **📦:** [update error module import path] Changed the import path for error types from 'types/index.ts' to 'utils/index.ts' to better reflect the structure and purpose of the files. ([d3adc500](https://github.com/MRX-Systems/MRX-Core/commit/d3adc500))
+- **📦:** [update exports path for error utilities] Updated the exports path for error utilities in package.json to point to the correct utils directory. This change ensures that the application correctly references the utility functions for error handling. ([d38ec275](https://github.com/MRX-Systems/MRX-Core/commit/d38ec275))
+- **📦:** [Update test timeout values in package.json] ([84128961](https://github.com/MRX-Systems/MRX-Core/commit/84128961))
+- **📦:** [Update dependencies in package.json] ([d782c873](https://github.com/MRX-Systems/MRX-Core/commit/d782c873))
+- **📦:** [Update package dependencies and exports] ([3cadc25a](https://github.com/MRX-Systems/MRX-Core/commit/3cadc25a))
+- **📦:** [Update elysia dependency to version 1.4.5] ([18320d6d](https://github.com/MRX-Systems/MRX-Core/commit/18320d6d))
+- **📦:** [Update typescript-eslint dependency to version 8.44.0] ([92bcd88f](https://github.com/MRX-Systems/MRX-Core/commit/92bcd88f))
+- **📦:** [Remove old entrypoint] ([56bb697c](https://github.com/MRX-Systems/MRX-Core/commit/56bb697c))
+
+### 🌊 Types
+
+- **🌊:** [Improve return type with conditionnal header] ([1f304cec](https://github.com/MRX-Systems/MRX-Core/commit/1f304cec))
+- **🌊:** [Add TFlatten type for flattening nested union types] ([b3771d09](https://github.com/MRX-Systems/MRX-Core/commit/b3771d09))
+- **🌊:** [Refactor PropertiesSchema] ([39635ee5](https://github.com/MRX-Systems/MRX-Core/commit/39635ee5))
+- **🌊:** [Add CRUD operation interfaces for count, delete, find, insert, and update] ([0ea2c52b](https://github.com/MRX-Systems/MRX-Core/commit/0ea2c52b))
+- **🌊:** [Update LocalHook to Elysia 1.4.5 types] ([5fe24ecb](https://github.com/MRX-Systems/MRX-Core/commit/5fe24ecb))
+
+### 🦉 Chore
+
+- **🦉:** [Update Dependabot schedule to weekly] ([3bd835bb](https://github.com/MRX-Systems/MRX-Core/commit/3bd835bb))
+- **🦉:** [For the moment remove old db-resolver] ([19aaa85b](https://github.com/MRX-Systems/MRX-Core/commit/19aaa85b))
+
+### 🧪 Tests
+
+- **🧪:** [error module rename files to kebab-case and refacto BaseError] ([76c8c3e7](https://github.com/MRX-Systems/MRX-Core/commit/76c8c3e7))
+- **🧪:** [add test for CrudSchema and its utilities] ([4f61f4a2](https://github.com/MRX-Systems/MRX-Core/commit/4f61f4a2))
+- **🧪:** [Refactor tests for createAdaptiveWhereClauseSchema] ([2c1200f7](https://github.com/MRX-Systems/MRX-Core/commit/2c1200f7))
+- **🧪:** [Refactor tests for createCountResponse200Schema] Updated tests for createCountResponse200Schema to improve clarity and accuracy. - Removed unnecessary checks for 'type' and 'kind'. - Utilized KindGuard for type validation of schema properties. ([129dbe14](https://github.com/MRX-Systems/MRX-Core/commit/129dbe14))
+- **🧪:** [Refactor createCountSchema tests for clarity and consistency] - Updated test descriptions for better clarity. - Replaced direct property checks with KindGuard assertions for type validation. - Removed unnecessary checks related to Kind and OptionalKind. ([9f5e67d2](https://github.com/MRX-Systems/MRX-Core/commit/9f5e67d2))
+- **🧪:** [Refactor createDeleteSchema tests for clarity and consistency] Refactored tests for createDeleteSchema to improve clarity and consistency. - Removed unnecessary checks for 'type' and 'kind' properties. - Utilized KindGuard for type verification in tests. - Enhanced test descriptions for better understanding. ([f4bb606b](https://github.com/MRX-Systems/MRX-Core/commit/f4bb606b))
+- **🧪:** [Refactor createFiltersSchema tests for clarity and consistency] ([cb8112ea](https://github.com/MRX-Systems/MRX-Core/commit/cb8112ea))
+- **🧪:** [Refactor createFindSchema tests for clarity and consistency] Refactored the tests for createFindSchema to improve clarity and consistency. - Replaced usage of `Kind` and `OptionalKind` with `KindGuard` for better type checking. - Simplified test descriptions to focus on the core functionality being tested. - Ensured all optional properties are validated using `KindGuard`. ([3c35bdb9](https://github.com/MRX-Systems/MRX-Core/commit/3c35bdb9))
+- **🧪:** [Refactor createIdParamSchema tests for clarity and consistency] ([4bcec05c](https://github.com/MRX-Systems/MRX-Core/commit/4bcec05c))
+- **🧪:** [Refactor createInsertSchema tests for clarity and consistency] Refactored the tests for createInsertSchema to improve clarity and consistency. - Removed redundant checks for type and kind. - Utilized KindGuard for type validation. - Simplified test descriptions for better readability. ([594e4688](https://github.com/MRX-Systems/MRX-Core/commit/594e4688))
+- **🧪:** [Refactor createOrderSchema tests for clarity and consistency] ([60dd45f0](https://github.com/MRX-Systems/MRX-Core/commit/60dd45f0))
+- **🧪:** [Refactor createPropertiesSchema tests for clarity and consistency] Refactored the tests for createPropertiesSchema to improve clarity and consistency. - Updated test descriptions for better understanding. - Replaced direct property checks with KindGuard assertions for type validation. - Removed redundant checks related to 'kind' to streamline the tests. ([297e4fec](https://github.com/MRX-Systems/MRX-Core/commit/297e4fec))
+- **🧪:** [Refactor createQSchema tests for improved clarity and consistency] ([2fd71132](https://github.com/MRX-Systems/MRX-Core/commit/2fd71132))
+- **🧪:** [Refactor createResponse200Schema tests for improved validation] - Updated tests to utilize KindGuard for type validation. - Removed direct type checks and replaced with guard functions for better clarity. - Enhanced readability and consistency across schema property validations. ([271c022c](https://github.com/MRX-Systems/MRX-Core/commit/271c022c))
+- **🧪:** [Refactor createSelectedFieldsSchema tests for improved validation] Refactored tests for createSelectedFieldsSchema to utilize KindGuard for type validation. This enhances clarity and ensures accurate type checking for union, literal, and array elements in the schema. ([b046d270](https://github.com/MRX-Systems/MRX-Core/commit/b046d270))
+- **🧪:** [Refactor createUpdateOneSchema tests for improved validation] Refactored tests for createUpdateOneSchema to enhance validation checks. - Replaced direct property checks with KindGuard assertions for better type validation. - Ensured all schema properties are validated against expected types and structures. ([43d17a61](https://github.com/MRX-Systems/MRX-Core/commit/43d17a61))
+- **🧪:** [Refactor createUpdateSchema tests for improved clarity] - Updated test descriptions for better clarity and consistency. - Replaced direct property checks with type guard assertions for validation. - Ensured all schema properties are validated using KindGuard methods. ([08b9bd68](https://github.com/MRX-Systems/MRX-Core/commit/08b9bd68))
+- **🧪:** [Add error handling tests for various error types] ([4db818ba](https://github.com/MRX-Systems/MRX-Core/commit/4db818ba))
+- **🧪:** [Add tests for flatten utility functionality] ([1c2cead5](https://github.com/MRX-Systems/MRX-Core/commit/1c2cead5))
+- **🧪:** [Add test for handling union types in createPropertiesSchema] ([15786d56](https://github.com/MRX-Systems/MRX-Core/commit/15786d56))
+- **🧪:** [Refactor tests for createResponse200Schema] ([ba8f4f39](https://github.com/MRX-Systems/MRX-Core/commit/ba8f4f39))
+- **🧪:** [Delete timeout to "should connect to the SMTP server successfully"] ([51b56fe8](https://github.com/MRX-Systems/MRX-Core/commit/51b56fe8))
+- **🧪:** [add tests for repository methods with selectedFields set to "*"] ([111bc580](https://github.com/MRX-Systems/MRX-Core/commit/111bc580))
+- **🧪:** [Update SingletonManager registration to use instances] ([f3a8d91e](https://github.com/MRX-Systems/MRX-Core/commit/f3a8d91e))
+- **🧪:** [Refactor db-resolver tests for improved clarity and structure] ([a77ec879](https://github.com/MRX-Systems/MRX-Core/commit/a77ec879))
+- **🧪:** [Update injectDynamicDB macro cleanup process] ## Refactoring - Changed `beforeEach` in `injectDynamicDB` to be asynchronous. - Ensured proper disconnection of the database before each test. ([2b4d3491](https://github.com/MRX-Systems/MRX-Core/commit/2b4d3491))
+- **🧪:** [Improve dynamic database cleanup process] ([c18a0902](https://github.com/MRX-Systems/MRX-Core/commit/c18a0902))
+
+### 🎨 Styles
+
+- **🎨:** Auto-fix lint issues ([d85bca25](https://github.com/MRX-Systems/MRX-Core/commit/d85bca25))
+
+### 🤖 CI
+
+- **🤖:** [update CI workflows and add Dependabot configuration] ## CI Changes - Removed specific Bun version from setup in integration and unit test workflows. - Added a new Dependabot configuration file for automatic updates. ([60b1ebf6](https://github.com/MRX-Systems/MRX-Core/commit/60b1ebf6))
+- **🤖:** [Add bun-version specification to integration and unit test jobs] - Added `bun-version: 1.2.21` to the setup steps in both job-integration-test.yml and job-unit-test.yml to ensure consistent Bun version usage during CI runs. ([f4b7826d](https://github.com/MRX-Systems/MRX-Core/commit/f4b7826d))
+- **🤖:** [Specify bun version to 1.2.20 for the moment] ([63cf4c1b](https://github.com/MRX-Systems/MRX-Core/commit/63cf4c1b))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Necrelox ([@Necrelox](https://github.com/Necrelox))
+- Komiroko <komiriko@pm.me>
+
 ## v2.8.0
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.7.0...v2.8.0)
