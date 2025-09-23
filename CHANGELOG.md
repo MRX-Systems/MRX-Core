@@ -1,4 +1,20 @@
 
+## v2.9.0
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.9.0-1-and-259-20250918...v2.9.0)
+
+### 🚀 Enhancements
+
+- **🚀:** [Refactor CRUD operations to use getDbInjection utility] ([13eac707](https://github.com/MRX-Systems/MRX-Core/commit/13eac707))
+
+### 📦 Build
+
+- **📦:** [Update elysia dependency version in package.json] ([54db5ba5](https://github.com/MRX-Systems/MRX-Core/commit/54db5ba5))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.9.0-1-and-259-20250918
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.8.0...v2.9.0-1-and-259-20250918)
