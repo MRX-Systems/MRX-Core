@@ -2,11 +2,9 @@
 import type { TObject, TString } from '@sinclair/typebox';
 import { Elysia, type SingletonBase } from 'elysia';
 
-import type { MSSQL } from '#/modules/database/mssql';
+import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import { crudSchema } from '#/modules/elysia/crud/crud-schema';
 import type { CrudSchemaModelsType } from '#/modules/elysia/crud/types/crud-schema-models-type';
-import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
-import type { DynamicDbOptions } from '#/modules/elysia/db-resolver/types/dynamic-db-options';
 import { count } from './operations/count';
 import { batchDelete } from './operations/delete';
 import { deleteOne } from './operations/deleteOne';
@@ -27,7 +25,7 @@ import type { CrudOperations } from './types/crud-operations';
 import type { CrudOptions } from './types/crud-options';
 
 export const crud = <
-	const TDatabase extends DynamicDbOptions | string,
+	const TDatabase extends Omit<MSSQLDatabaseOptions, 'databaseName'> | string,
 	const TTableName extends string,
 	const TSourceSchema extends TObject,
 	const TSourceFindSchema extends TObject = TSourceSchema,
@@ -123,15 +121,7 @@ export const crud = <
 	>
 ): Elysia<
 	TTableName,
-	{
-		decorator: SingletonBase['decorator'];
-		store: SingletonBase['store'];
-		derive: SingletonBase['derive'];
-		resolve: Record<
-			TDatabase extends string ? 'staticDB' : 'dynamicDB',
-			MSSQL
-		>
-	},
+	SingletonBase,
 	{
 		typebox: CrudSchemaModelsType<
 			TTableName,
@@ -196,15 +186,7 @@ export const crud = <
 			TSourceUpdateSchema,
 			TSourceDeleteSchema,
 			TSourceResponseSchema
-		> & (
-			TDatabase extends string
-				? {}
-				: {
-					ResolveDbHeader: TObject<{
-						'database-using': TString;
-					}>
-				}
-		);
+		>;
 		error: {};
 	}
 > => {
@@ -213,9 +195,6 @@ export const crud = <
 		tags,
 		prefix
 	})
-		// Plugin to inject dynamic or static db in context
-		.use(dbResolver<TDatabase>(database))
-
 		// Plugin to add global templates to Elysia based on defined operations
 		.use(
 			crudSchema<
@@ -349,80 +328,127 @@ export const crud = <
 			})
 		);
 
-	const requiredHeaderDatabase = typeof database === 'object'
-		? { headers: 'dbResolverHeader' } as const // Header required for dynamic database selection
-		: {} as const; // No header needed for static database
-
-	/**
-	 * Helper function to create hook configuration for CRUD operations
-	 */
-	const createHookConfig = (operation: unknown) => ({
-		hook: {
-			...requiredHeaderDatabase,
-			...(typeof operation === 'object' && operation && 'hook' in operation ? (operation as { hook?: Record<string, unknown> }).hook || {} : {})
-		}
-	});
-
 	// Register CRUD operations
 	if (operations.insert)
-		app.use(insert<THeaderSchema, TSourceInsertSchema, TSourceResponseSchema>(
+		app.use(insert<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceInsertSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.insert)
+			operations.insert && typeof operations.insert === 'object'
+				? operations.insert
+				: {}
 		));
 
 	if (operations.find)
-		app.use(find<THeaderSchema, TSourceFindSchema, TSourceResponseSchema>(
+		app.use(find<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceFindSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.find)
+			operations.find && typeof operations.find === 'object'
+				? operations.find
+				: {}
 		));
 
 	if (operations.findOne)
-		app.use(findOne<THeaderSchema, TSourceResponseSchema>(
+		app.use(findOne<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.findOne)
+			operations.findOne && typeof operations.findOne === 'object'
+				? operations.findOne
+				: {}
 		));
 
 	if (operations.update)
-		app.use(update<THeaderSchema, TSourceUpdateSchema, TSourceResponseSchema>(
+		app.use(update<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceUpdateSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.update)
+			operations.update && typeof operations.update === 'object'
+				? operations.update
+				: {}
 		));
 
 	if (operations.updateOne)
-		app.use(updateOne<THeaderSchema, TSourceUpdateSchema, TSourceResponseSchema>(
+		app.use(updateOne<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceUpdateSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.updateOne)
+			operations.updateOne && typeof operations.updateOne === 'object'
+				? operations.updateOne
+				: {}
 		));
 
 	if (operations.delete)
-		app.use(batchDelete<THeaderSchema, TSourceDeleteSchema, TSourceResponseSchema>(
+		app.use(batchDelete<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceDeleteSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.delete)
+			operations.delete && typeof operations.delete === 'object'
+				? operations.delete
+				: {}
 		));
 
 	if (operations.deleteOne)
-		app.use(deleteOne<THeaderSchema, TSourceResponseSchema>(
+		app.use(deleteOne<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceResponseSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.deleteOne)
+			operations.deleteOne && typeof operations.deleteOne === 'object'
+				? operations.deleteOne
+				: {}
 		));
 
 	if (operations.count)
-		app.use(count<THeaderSchema, TSourceCountSchema>(
+		app.use(count<
+			TDatabase,
+			TTableName,
+			THeaderSchema,
+			TSourceCountSchema
+		>(
+			database,
 			tableName,
-			createHookConfig(operations.count)
+			operations.count && typeof operations.count === 'object'
+				? operations.count
+				: {}
 		));
 
 	return app as unknown as Elysia<
 		TTableName,
-		{
-			decorator: SingletonBase['decorator'];
-			store: SingletonBase['store'];
-			derive: SingletonBase['derive'];
-			resolve: Record<
-				TDatabase extends string ? 'staticDB' : 'dynamicDB',
-				MSSQL
-			>
-		},
+		SingletonBase,
 		{
 			typebox: CrudSchemaModelsType<
 				TTableName,
@@ -487,15 +513,7 @@ export const crud = <
 				TSourceUpdateSchema,
 				TSourceDeleteSchema,
 				TSourceResponseSchema
-			> & (
-			TDatabase extends string
-				? {}
-				: {
-					ResolveDbHeader: TObject<{
-						'database-using': TString;
-					}>
-				}
-		);
+			>;
 			error: {};
 		}
 	>;
