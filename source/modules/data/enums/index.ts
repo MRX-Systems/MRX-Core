@@ -1,1 +1,1 @@
-export { DATA_ERROR_KEYS } from './dataErrorKeys';
+export { DATA_ERROR_KEYS } from './data-error-keys';

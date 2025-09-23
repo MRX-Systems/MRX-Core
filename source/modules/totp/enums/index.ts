@@ -1,1 +1,1 @@
-export { TOTP_ERROR_KEYS } from './totpErrorKeys';
+export { TOTP_ERROR_KEYS } from './totp-error-keys';

@@ -1,19 +1,19 @@
 import type { Knex } from 'knex';
 import { PassThrough } from 'stream';
 
-import { HttpError } from '#/errors/httpError';
-import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
-import { MSSQL_ERROR_CODE } from '#/modules/database/enums/mssqlErrorCode';
+import { HttpError } from '#/errors/http-error';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
+import { MSSQL_ERROR_CODE } from '#/modules/database/enums/mssql-error-code';
 import type { Table } from '#/modules/database/table';
-import { isDateString } from '#/utils/isDateString';
-import { makeStreamAsyncIterable } from '#/utils/stream';
-import type { StreamWithAsyncIterable } from '#/utils/types/streamWithAsyncIterable';
-import type { AdaptiveWhereClause } from './types/adaptiveWhereClause';
+import { isDateString } from '#/shared/utils/is-date-string';
+import { makeStreamAsyncIterable } from '#/shared/utils/stream';
+import type { StreamWithAsyncIterable } from '#/shared/types/stream-with-async-iterable';
+import type { AdaptiveWhereClause } from './types/adaptive-where-clause';
 import type { Filter } from './types/filter';
-import type { OrderByItem } from './types/orderByItem';
-import type { QueryOptions } from './types/queryOptions';
-import type { QueryOptionsExtendPagination } from './types/queryOptionsExtendPagination';
-import type { QueryOptionsExtendStream } from './types/queryOptionsExtendStream';
+import type { OrderByItem } from './types/order-by-item';
+import type { QueryOptions } from './types/query-options';
+import type { QueryOptionsExtendPagination } from './types/query-options-extend-pagination';
+import type { QueryOptionsExtendStream } from './types/query-options-extend-stream';
 
 type OperatorFn = (
 	query: Knex.QueryBuilder,
@@ -222,12 +222,9 @@ export class Repository<TModel = unknown> {
 		// Handle source stream errors
 		kStream.on('error', (error: unknown) => {
 			const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-			passThrough.emit('error', new HttpError({
-				message: MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR,
-				cause: {
-					query: query.toSQL().sql,
-					error
-				}
+			passThrough.emit('error', new HttpError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+				query: query.toSQL().sql,
+				error
 			}));
 		});
 
@@ -468,7 +465,7 @@ export class Repository<TModel = unknown> {
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		return this._executeQuery<KModel>(query);
+		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
 	/**
@@ -516,7 +513,7 @@ export class Repository<TModel = unknown> {
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		return this._executeQuery<KModel>(query);
+		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
 	/**
@@ -535,10 +532,12 @@ export class Repository<TModel = unknown> {
 		const qMethod = (query as unknown as { _method: string })._method;
 
 		const sanitizedFields = selectedFields
-			? (Array.isArray(selectedFields)
-				? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
-				: `${selectedFields} as ${selectedFields}`
-			)
+			? selectedFields === '*'
+				? '*'
+				: (Array.isArray(selectedFields)
+					? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
+					: `${selectedFields} as ${selectedFields}`
+				)
 			: '*';
 
 		if (
@@ -674,12 +673,9 @@ export class Repository<TModel = unknown> {
 		if (error instanceof HttpError)
 			throw error;
 		const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-		throw new HttpError({
-			message: MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR,
-			cause: {
-				query: query.toSQL().sql,
-				error
-			}
+		throw new HttpError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+			query: query.toSQL().sql,
+			error
 		});
 	}
 
@@ -720,19 +716,19 @@ export class Repository<TModel = unknown> {
 		try {
 			const result: KModel[] = await query;
 			if (throwIfNoResult && result.length === 0)
-				throw new HttpError({
-					message: typeof throwIfNoResult === 'object' && throwIfNoResult.message
+				throw new HttpError(
+					typeof throwIfNoResult === 'object' && throwIfNoResult.message
 						? throwIfNoResult.message
 						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
-					cause: !process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
+					typeof throwIfNoResult === 'object' && throwIfNoResult.httpStatusCode
+						? throwIfNoResult.httpStatusCode
+						: 404,
+					!process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
 						? {
 							query: query.toSQL().sql
 						}
-						: undefined,
-					httpStatusCode: typeof throwIfNoResult === 'object' && throwIfNoResult.code
-						? throwIfNoResult.code
-						: 404
-				});
+						: undefined
+				);
 			return result;
 		} catch (error) {
 			return this._handleError(error, query);

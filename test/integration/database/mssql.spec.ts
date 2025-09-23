@@ -2,7 +2,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, mock, test } from 'bu
 import { randomBytes } from 'crypto';
 import knex from 'knex';
 
-import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { Repository } from '#/modules/repository/repository';
 
 /**

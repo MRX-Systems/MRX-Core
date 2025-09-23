@@ -3,8 +3,8 @@ import { randomBytes } from 'crypto';
 import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
-import { HttpError } from '#/errors/httpError';
-import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/databaseErrorKeys';
+import { HttpError } from '#/errors/http-error';
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
 import type { Filter } from '#/modules/repository/types/filter';
@@ -566,6 +566,19 @@ describe('Repository', () => {
 			}
 		});
 
+		test('should iterate asynchronously over data with selectedFields set to "*"', async () => {
+			const stream = repository.findStream<Data>({
+				selectedFields: '*'
+			});
+			for await (const data of stream) {
+				expect(data).toHaveProperty('id');
+				expect(data).toHaveProperty('name');
+				expect(data).toHaveProperty('age');
+				expect(data).toHaveProperty('birth');
+				expect(data).toHaveProperty('bool');
+			}
+		});
+
 		test('should iterate asynchronously over data with correct order based on orderBy clause', async () => {
 			const stream1 = repository.findStream<Data>({
 				orderBy: {
@@ -712,6 +725,21 @@ describe('Repository', () => {
 			});
 		});
 
+		test('should return an array of data with selectedFields set to "*"', async () => {
+			const data = await repository.find<Data>({
+				selectedFields: '*'
+			});
+			expect(data).toBeInstanceOf(Array);
+			expect(data).toHaveLength(20);
+			data.forEach((item) => {
+				expect(item).toHaveProperty('id');
+				expect(item).toHaveProperty('name');
+				expect(item).toHaveProperty('age');
+				expect(item).toHaveProperty('birth');
+				expect(item).toHaveProperty('bool');
+			});
+		});
+
 		test('should return an array of data with correct order based on orderBy clause', async () => {
 			const data1 = await repository.find<Data>({
 				orderBy: {
@@ -807,7 +835,7 @@ describe('Repository', () => {
 						id: 100
 					},
 					throwIfNoResult: {
-						code: 'FORBIDDEN'
+						httpStatusCode: 'FORBIDDEN'
 					}
 				});
 			} catch (error) {
@@ -888,6 +916,26 @@ describe('Repository', () => {
 				expect(item).not.toHaveProperty('age');
 				expect(item).not.toHaveProperty('birth');
 				expect(item).not.toHaveProperty('bool');
+			});
+		});
+
+		test('should insert a new data with selectedFields set to "*"', async () => {
+			const data = {
+				name: 'Repository::insert',
+				age: 21,
+				birth: new Date('2021-01-21'),
+				bool: true
+			};
+			const items = await repository.insert(data, {
+				selectedFields: '*'
+			});
+			expect(items).toHaveLength(1);
+			items.forEach((item) => {
+				expect(item).toHaveProperty('id');
+				expect(item).toHaveProperty('name');
+				expect(item).toHaveProperty('age');
+				expect(item).toHaveProperty('birth');
+				expect(item).toHaveProperty('bool');
 			});
 		});
 
@@ -998,6 +1046,29 @@ describe('Repository', () => {
 			});
 		});
 
+		test('should update one row with selectedFields set to "*"', async () => {
+			const data = {
+				name: 'Repository::update',
+				age: 23,
+				birth: new Date('2021-01-23'),
+				bool: true
+			};
+			const items = await repository.update(data, {
+				filters: {
+					id: 8
+				},
+				selectedFields: '*'
+			});
+			expect(items).toHaveLength(1);
+			items.forEach((item) => {
+				expect(item).toHaveProperty('id');
+				expect(item).toHaveProperty('name');
+				expect(item).toHaveProperty('age');
+				expect(item).toHaveProperty('birth');
+				expect(item).toHaveProperty('bool');
+			});
+		});
+
 		test('should throw an error when the data is invalid', async () => {
 			try {
 				await repository.update({
@@ -1055,6 +1126,23 @@ describe('Repository', () => {
 				expect(item).not.toHaveProperty('age');
 				expect(item).not.toHaveProperty('birth');
 				expect(item).not.toHaveProperty('bool');
+			});
+		});
+
+		test('should delete one row with selectedFields set to "*"', async () => {
+			const items = await repository.delete({
+				filters: {
+					id: 9
+				},
+				selectedFields: '*'
+			});
+			expect(items).toHaveLength(1);
+			items.forEach((item) => {
+				expect(item).toHaveProperty('id');
+				expect(item).toHaveProperty('name');
+				expect(item).toHaveProperty('age');
+				expect(item).toHaveProperty('birth');
+				expect(item).toHaveProperty('bool');
 			});
 		});
 

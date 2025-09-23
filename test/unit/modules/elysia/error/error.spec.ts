@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import { t, ValidationError } from 'elysia';
 
-import { BaseError } from '#/errors/baseError';
-import { HttpError } from '#/errors/httpError';
+import { BaseError } from '#/errors/base-error';
+import { HttpError } from '#/errors/http-error';
 import { error } from '#/modules/elysia/error/error';
 
 describe('error', () => {
@@ -45,11 +45,7 @@ describe('error', () => {
 
 		expect(fn({
 			set,
-			error: new HttpError({
-				cause: 'Test cause',
-				message: 'Test message',
-				httpStatusCode: 400
-			}),
+			error: new HttpError('Test message', 400, 'Test cause'),
 			code: 'HttpError'
 
 		})).toEqual({
@@ -73,10 +69,7 @@ describe('error', () => {
 
 		expect(fn({
 			set,
-			error: new BaseError({
-				cause: 'Test cause',
-				message: 'Test message'
-			}),
+			error: new BaseError('Test message', 'Test cause'),
 			code: 'BaseError'
 		})).toEqual({
 			message: 'Test message',
