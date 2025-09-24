@@ -1,4 +1,8 @@
 
+## v2.10.0
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.0-and-262-20250924...v2.10.0)
+
 ## v2.10.0-and-262-20250924
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.9.0-1-and-259-20250918...v2.10.0-and-262-20250924)
