@@ -1,4 +1,29 @@
 
+## v2.10.1-1-and-263-20250924
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.0-and-262-20250924...v2.10.1-1-and-263-20250924)
+
+### 🔧 Fixes
+
+- **🔧:** [Correct expiration calculation in signJWT function] ## Bug Fixes - Fixed the expiration time calculation in the `signJWT` function to ensure it correctly adds the parsed human-readable time to the current timestamp. ([3493f499](https://github.com/MRX-Systems/MRX-Core/commit/3493f499))
+
+### 📦 Build
+
+- **📦:** [Update peer dependencies for elysia and ioredis] Updated the peer dependencies for `elysia` to version `^1.4.7` and `ioredis` to version `^5.8.0` in package.json to ensure compatibility with the latest features and improvements. ([b2aa92d0](https://github.com/MRX-Systems/MRX-Core/commit/b2aa92d0))
+
+### 🦉 Chore
+
+- **🦉:** V2.10.0 ([b99a11ce](https://github.com/MRX-Systems/MRX-Core/commit/b99a11ce))
+
+### 🧪 Tests
+
+- **🧪:** [Enhance JWT expiration tests with additional scenarios] ## Tests - Added new test cases for various expiration scenarios including:   - Date expiration for 30 minutes and 1 day.   - Human-readable time expressions for 15 minutes, 2 hours, and 30 minutes.   - Additional checks for past expiration handling. - Improved tolerance checks for expiration validation. ([eefe5aca](https://github.com/MRX-Systems/MRX-Core/commit/eefe5aca))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <maxime.meriaux@mrxsys.com>
+
 ## v2.10.0
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.0-and-262-20250924...v2.10.0)
