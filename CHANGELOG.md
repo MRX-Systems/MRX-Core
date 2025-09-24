@@ -1,4 +1,30 @@
 
+## v2.10.0-and-262-20250924
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.9.0-1-and-259-20250918...v2.10.0-and-262-20250924)
+
+### 🚀 Enhancements
+
+- **🚀:** [Refactor CRUD operations to use getDbInjection utility] ([13eac707](https://github.com/MRX-Systems/MRX-Core/commit/13eac707))
+
+### 📦 Build
+
+- **📦:** [Update elysia dependency version in package.json] ([54db5ba5](https://github.com/MRX-Systems/MRX-Core/commit/54db5ba5))
+
+### 🌊 Types
+
+- **🌊:** [Enhance RenameKey type definition for clarity] ([41c26e24](https://github.com/MRX-Systems/MRX-Core/commit/41c26e24))
+- **🌊:** [Add AddPrefixToAllKeys type definition] ([d2c0544d](https://github.com/MRX-Systems/MRX-Core/commit/d2c0544d))
+
+### 🦉 Chore
+
+- **🦉:** V2.9.0 ([2a7532dc](https://github.com/MRX-Systems/MRX-Core/commit/2a7532dc))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <maxime.meriaux@mrxsys.com>
+
 ## v2.9.0
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.9.0-1-and-259-20250918...v2.9.0)
