@@ -50,6 +50,11 @@ export const error = new Elysia({
 				return {
 					message: 'core.error.not_found'
 				};
+			case 'PARSE':
+				set.status = 400;
+				return {
+					message: 'core.error.parse'
+				};
 			case 'INTERNAL_SERVER_ERROR':
 			case 'UNKNOWN':
 			default:
