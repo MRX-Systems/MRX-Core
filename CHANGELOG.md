@@ -1,4 +1,39 @@
 
+## v2.11.0-1-and-267-20250925
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.1-1-and-263-20250924...v2.11.0-1-and-267-20250925)
+
+### 🚀 Enhancements
+
+- **🚀:** [Add microservice success keys for responses] ## Features - Introduced `MICROSERVICE_SUCCESS_KEYS` for consistent success messages. ([1e8020c6](https://github.com/MRX-Systems/MRX-Core/commit/1e8020c6))
+- **🚀:** [Add CRUD success keys enumeration] ([98c53251](https://github.com/MRX-Systems/MRX-Core/commit/98c53251))
+- **🚀:** [Integrate CRUD success keys into response messages] ([a0d20b27](https://github.com/MRX-Systems/MRX-Core/commit/a0d20b27))
+- **🚀:** [Add new entrypoints] ([eae4a1c6](https://github.com/MRX-Systems/MRX-Core/commit/eae4a1c6))
+
+### 🔧 Fixes
+
+- **🔧:** [Update error response structure to use 'content' instead of 'cause'] ## Bug Fixes - Changed the error response property from 'cause' to 'content' for consistency. ([2fd8fab3](https://github.com/MRX-Systems/MRX-Core/commit/2fd8fab3))
+- **🔧:** [Add missing error handling for 'PARSE' case] ## Bug Fixes - Added error handling for the 'PARSE' case in the error plugin. ([395f2265](https://github.com/MRX-Systems/MRX-Core/commit/395f2265))
+- **🔧:** [Update error keys to include 'mrx-core' prefix] ([0dd9ba3d](https://github.com/MRX-Systems/MRX-Core/commit/0dd9ba3d))
+- **🔧:** [Refactor error handling to use ERROR_KEYS constants] ## Bug Fixes - Updated error messages to utilize constants from ERROR_KEYS. ([e1a2e9d2](https://github.com/MRX-Systems/MRX-Core/commit/e1a2e9d2))
+- **🔧:** [WTF] ([9e33e9dc](https://github.com/MRX-Systems/MRX-Core/commit/9e33e9dc))
+
+### 📦 Build
+
+- **📦:** [Add new entrypoits] ([8815abfb](https://github.com/MRX-Systems/MRX-Core/commit/8815abfb))
+
+### 🧪 Tests
+
+- **🧪:** [Update error response structure to use 'content' instead of 'cause'] ([7071a151](https://github.com/MRX-Systems/MRX-Core/commit/7071a151))
+- **🧪:** [Update error handling for static database not found] ([f3f89593](https://github.com/MRX-Systems/MRX-Core/commit/f3f89593))
+- **🧪:** [Update error messages to include 'mrx-core' prefix] ## Tests - Updated error messages in the `parseHumanTimeToSeconds` tests to include the 'mrx-core' prefix. ([6898c33a](https://github.com/MRX-Systems/MRX-Core/commit/6898c33a))
+- **🧪:** [Update error message to include 'mrx-core' prefix] ## Tests - Updated the error message for rate limit exceeded response. ([8e2e2f79](https://github.com/MRX-Systems/MRX-Core/commit/8e2e2f79))
+- **🧪:** [Integrate success keys for microservice responses] ([ab39a2d5](https://github.com/MRX-Systems/MRX-Core/commit/ab39a2d5))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.10.1-1-and-263-20250924
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.0-and-262-20250924...v2.10.1-1-and-263-20250924)
