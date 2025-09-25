@@ -18,7 +18,7 @@ export const signJWT = (
 		? Math.floor(expiration.getTime() / 1000)
 		: typeof expiration === 'number'
 			? expiration
-			: parseHumanTimeToSeconds(expiration);
+			: Math.floor(Date.now() / 1000) + parseHumanTimeToSeconds(expiration);
 
 	if (exp <= Math.floor(Date.now() / 1000))
 		throw new HttpError(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED, 'BAD_REQUEST');
