@@ -39,7 +39,9 @@ export const find = <
 			});
 			return {
 				message: `Found ${data.length} records for ${tableName}`,
-				content: data
+				content: {
+					data
+				}
 			};
 		},
 		{
