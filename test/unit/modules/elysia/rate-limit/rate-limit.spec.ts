@@ -322,7 +322,7 @@ describe('rateLimit - Memory Store', () => {
 			headers: { 'x-forwarded-for': ip }
 		}));
 		expect(blockedResponse.status).toBe(429);
-		expect(await blockedResponse.text()).toEqual('elysia.rate-limit.error.exceeded');
+		expect(await blockedResponse.text()).toEqual('mrx-core.elysia.rate-limit.error.exceeded');
 	});
 
 	test('should work with default memory store (no store specified)', async () => {
