@@ -3,6 +3,7 @@ import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
+import { CRUD_SUCCESS_KEYS } from '#/modules/elysia/crud/enums/crud-success-keys';
 import type { CrudOperationFind } from '#/modules/elysia/crud/types/crud-operation-find';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 import { getDbInjection } from './utils/get-db-injection';
@@ -38,7 +39,7 @@ export const find = <
 				throwIfNoResult: false
 			});
 			return {
-				message: `Found ${data.length} records for ${tableName}`,
+				message: CRUD_SUCCESS_KEYS.FIND_RESPONSE,
 				content: data
 			};
 		},
