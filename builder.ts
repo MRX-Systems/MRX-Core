@@ -41,6 +41,7 @@ await Bun.build({
 
 		// crud & crud-schema
 		'./source/modules/elysia/crud/index.ts',
+		'./source/modules/elysia/crud/enums/index.ts',
 		'./source/modules/elysia/crud/operations/index.ts',
 		'./source/modules/elysia/crud/types/index.ts',
 		'./source/modules/elysia/crud/utils/index.ts',
@@ -51,9 +52,11 @@ await Bun.build({
 
 		// error
 		'./source/modules/elysia/error/index.ts',
+		'./source/modules/elysia/error/enums/index.ts',
 
 		// microservice
 		'./source/modules/elysia/microservice/index.ts',
+		'./source/modules/elysia/microservice/enums/index.ts',
 
 		// rateLimit
 		'./source/modules/elysia/rate-limit/index.ts',
