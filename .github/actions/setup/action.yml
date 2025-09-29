@@ -1,0 +1,38 @@
+name: 'Setup Project Environment'
+description: 'Reusable action to setup the project environment with checkout, Bun, and dependencies'
+
+inputs:
+  branch:
+    description: 'Branch to checkout'
+    required: true
+  ssh-key:
+    description: 'SSH key for checkout'
+    required: true
+  bun-version:
+    description: 'Bun version to use'
+    required: false
+    default: '1.2.23'
+  install-deps:
+    description: 'Whether to install dependencies'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.branch }}
+        fetch-depth: 0
+        ssh-key: ${{ inputs.ssh-key }}
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: ${{ inputs.bun-version }}
+
+    - name: Install Dependencies
+      if: ${{ inputs.install-deps == 'true' }}
+      shell: bash
+      run: bun install

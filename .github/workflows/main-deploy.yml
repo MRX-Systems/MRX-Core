@@ -24,6 +24,7 @@ on:
 
 env:
   DEFAULT_BRANCH: main
+  BUN_VERSION: 1.2.23
 
 jobs:
   detect-context:
@@ -158,20 +159,12 @@ jobs:
     name: Generate Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: 'main'
-          fetch-depth: 0
+          branch: 'main'
           ssh-key: ${{ secrets.KEY_SSH }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Generate Docs
         run: bun run docs

@@ -18,6 +18,9 @@ on:
       NPM_TOKEN:
         required: true
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   publish-package:
     name: Publish to NPM
@@ -26,30 +29,23 @@ jobs:
       - name: Verify required secrets
         run: |
           echo "🔍 Verifying required secrets for NPM publish job..."
-          if [ -z "${{ secrets.KEY_SSH }}" ]; then
-            echo "❌ KEY_SSH secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "❌ NPM_TOKEN secret is missing"
-            exit 1
-          fi
+          for secret in KEY_SSH NPM_TOKEN; do
+            if [ -z "$(eval echo \$\{$secret\})" ]; then
+              echo "❌ $secret secret is missing"
+              exit 1
+            fi
+          done
           echo "✅ All required secrets are present"
+        env:
+          KEY_SSH: ${{ secrets.KEY_SSH }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: ${{ inputs.branch }}
-          fetch-depth: 0
+          branch: ${{ inputs.branch }}
           ssh-key: ${{ secrets.KEY_SSH }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Build the project
         run: bun run build

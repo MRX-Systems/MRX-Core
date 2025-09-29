@@ -28,6 +28,9 @@ on:
         required: true
         type: string
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   rebase-branches:
     name: Rebase Branches
@@ -36,22 +39,24 @@ jobs:
       - name: Verify required secrets
         run: |
           echo "🔍 Verifying required secrets for rebase job..."
-          if [ -z "${{ secrets.KEY_SSH }}" ]; then
-            echo "❌ KEY_SSH secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.GIT_EMAIL }}" ]; then
-            echo "❌ GIT_EMAIL secret is missing"
-            exit 1
-          fi
+          for secret in KEY_SSH GIT_EMAIL; do
+            if [ -z "$(eval echo \$\{$secret\})" ]; then
+              echo "❌ $secret secret is missing"
+              exit 1
+            fi
+          done
           echo "✅ All required secrets are present"
+        env:
+          KEY_SSH: ${{ secrets.KEY_SSH }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: ${{ inputs.from }}
-          fetch-depth: 0
+          branch: ${{ inputs.from }}
           ssh-key: ${{ secrets.KEY_SSH }}
+          bun-version: ${{ env.BUN_VERSION }}
+          install-deps: 'false'
 
       - name: Fetch all branches
         run: git fetch origin '+refs/heads/*:refs/remotes/origin/*'

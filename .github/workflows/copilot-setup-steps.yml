@@ -11,6 +11,9 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
   copilot-setup-steps:
@@ -31,7 +34,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
         run: bun install

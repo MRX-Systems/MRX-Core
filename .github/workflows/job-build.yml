@@ -12,6 +12,9 @@ on:
       KEY_SSH:
         required: true
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   check-build:
     name: Build Package
@@ -26,20 +29,12 @@ jobs:
           fi
           echo "✅ All required secrets are present"
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: ${{ inputs.branch }}
-          fetch-depth: 0
+          branch: ${{ inputs.branch }}
           ssh-key: ${{ secrets.KEY_SSH }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Run Build
         run: bun run build

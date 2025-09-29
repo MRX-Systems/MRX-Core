@@ -16,6 +16,9 @@ on:
       GIT_EMAIL:
         required: true
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   check-lint:
     name: Lint & Auto-fix
@@ -24,34 +27,24 @@ jobs:
       - name: Verify required secrets
         run: |
           echo "🔍 Verifying required secrets for lint job..."
-          if [ -z "${{ secrets.KEY_SSH }}" ]; then
-            echo "❌ KEY_SSH secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.KEY_GPG }}" ]; then
-            echo "❌ KEY_GPG secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.GIT_EMAIL }}" ]; then
-            echo "❌ GIT_EMAIL secret is missing"
-            exit 1
-          fi
+          for secret in KEY_SSH KEY_GPG GIT_EMAIL; do
+            if [ -z "$(eval echo \$\{$secret\})" ]; then
+              echo "❌ $secret secret is missing"
+              exit 1
+            fi
+          done
           echo "✅ All required secrets are present"
+        env:
+          KEY_SSH: ${{ secrets.KEY_SSH }}
+          KEY_GPG: ${{ secrets.KEY_GPG }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: ${{ inputs.branch }}
-          fetch-depth: 0
+          branch: ${{ inputs.branch }}
           ssh-key: ${{ secrets.KEY_SSH }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Run Lint and try to auto-fix if possible
         id: lint_step
@@ -89,5 +82,4 @@ jobs:
 
       - name: Push changes
         if: steps.lint_step.outputs.lint_status == 'fixed'
-        run: |
-          git push origin HEAD:${{ inputs.branch }}
+        run: git push origin HEAD:${{ inputs.branch }}

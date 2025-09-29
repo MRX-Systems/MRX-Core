@@ -20,6 +20,9 @@ on:
       MSSQL_PASSWORD:
         required: true
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   run-unit-tests:
     name: Unit Tests
@@ -33,26 +36,26 @@ jobs:
       - name: Verify required secrets
         run: |
           echo "🔍 Verifying required secrets for unit test job..."
-          if [ -z "${{ secrets.KEY_SSH }}" ]; then
-            echo "❌ KEY_SSH secret is missing"
-            exit 1
-          fi
+          for secret in KEY_SSH MSSQL_HOST MSSQL_DATABASE MSSQL_USER MSSQL_PASSWORD; do
+            if [ -z "$(eval echo \$\{$secret\})" ]; then
+              echo "❌ $secret secret is missing"
+              exit 1
+            fi
+          done
           echo "✅ All required secrets are present"
+        env:
+          KEY_SSH: ${{ secrets.KEY_SSH }}
+          MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+          MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+          MSSQL_USER: ${{ secrets.MSSQL_USER }}
+          MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: ${{ inputs.branch }}
-          fetch-depth: 0
+          branch: ${{ inputs.branch }}
           ssh-key: ${{ secrets.KEY_SSH }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.2.0
-
-      - name: Install Dependencies
-        run: bun install
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Run Unit Tests and update Summary
         id: unit_test

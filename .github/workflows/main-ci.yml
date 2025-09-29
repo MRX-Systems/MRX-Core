@@ -13,6 +13,9 @@ on:
         required: false
         type: string
 
+env:
+  BUN_VERSION: 1.2.23
+
 # Secrets used in the workflow
 # KEY_SSH: SSH key to access the repository (used with deploy keys)
 # KEY_GPG: GPG key to sign commits or tags

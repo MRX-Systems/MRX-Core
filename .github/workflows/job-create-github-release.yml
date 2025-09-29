@@ -36,6 +36,9 @@ on:
         value: ${{ jobs.create-release.outputs.isPrerelease }}
         description: 'Indicates if the release is a prerelease or not'
 
+env:
+  BUN_VERSION: 1.2.23
+
 jobs:
   create-release:
     name: Create Release
@@ -47,36 +50,27 @@ jobs:
     steps:
       - name: Verify required secrets
         run: |
-          echo "🔍 Verifying required secrets..."
-          if [ -z "${{ secrets.KEY_SSH }}" ]; then
-            echo "❌ KEY_SSH secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.KEY_GPG }}" ]; then
-            echo "❌ KEY_GPG secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.GIT_EMAIL }}" ]; then
-            echo "❌ GIT_EMAIL secret is missing"
-            exit 1
-          fi
-          if [ -z "${{ secrets.GH_TOKEN }}" ]; then
-            echo "❌ GH_TOKEN secret is missing"
-            exit 1
-          fi
+          echo "🔍 Verifying required secrets for create release job..."
+          for secret in KEY_SSH KEY_GPG GIT_EMAIL GH_TOKEN; do
+            if [ -z "$(eval echo \$\{$secret\})" ]; then
+              echo "❌ $secret secret is missing"
+              exit 1
+            fi
+          done
           echo "✅ All required secrets are present"
+        env:
+          KEY_SSH: ${{ secrets.KEY_SSH }}
+          KEY_GPG: ${{ secrets.KEY_GPG }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Setup Project Environment
+        uses: ./.github/actions/setup
         with:
-          ref: ${{ inputs.branch }}
-          fetch-depth: 0
+          branch: ${{ inputs.branch }}
           ssh-key: ${{ secrets.KEY_SSH }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
+          install-deps: 'false'
 
       - name: Fetch tags
         run: git fetch --tags --prune
