@@ -6,7 +6,7 @@ import { HttpError } from '#/errors/http-error';
 
 describe('HttpError', () => {
 	describe('constructor', () => {
-		test('should create HttpError with message only (defaults to 500)', () => {
+		test.concurrent('should create HttpError with message only (defaults to 500)', () => {
 			const httpError = new HttpError('Internal server error');
 
 			expect(httpError).toBeInstanceOf(HttpError);
@@ -19,7 +19,7 @@ describe('HttpError', () => {
 			expect(httpError.date).toBeInstanceOf(Date);
 		});
 
-		test('should create HttpError with message and numeric status code', () => {
+		test.concurrent('should create HttpError with message and numeric status code', () => {
 			const httpError = new HttpError('Not found', 404);
 
 			expect(httpError.message).toBe('Not found');
@@ -27,7 +27,7 @@ describe('HttpError', () => {
 			expect(httpError.cause).toBeUndefined();
 		});
 
-		test('should create HttpError with message and status key', () => {
+		test.concurrent('should create HttpError with message and status key', () => {
 			const httpError = new HttpError('Unauthorized access', 'UNAUTHORIZED');
 
 			expect(httpError.message).toBe('Unauthorized access');
