@@ -1,0 +1,27 @@
+name: 'Configure Git with GPG'
+description: 'Reusable action to configure Git with GPG signing'
+
+inputs:
+  gpg-key:
+    description: 'GPG private key'
+    required: true
+  git-email:
+    description: 'Git email address'
+    required: true
+  git-name:
+    description: 'Git user name'
+    required: false
+    default: 'github-actions'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Import GPG key and configure git
+      shell: bash
+      run: |
+        echo "${{ inputs.gpg-key }}" | gpg --batch --import
+        git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
+        git config --local commit.gpgsign true
+        git config --local tag.gpgsign true
+        git config --local user.email "${{ inputs.git-email }}"
+        git config --local user.name "${{ inputs.git-name }}"

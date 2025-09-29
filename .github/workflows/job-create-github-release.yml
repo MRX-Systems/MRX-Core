@@ -75,14 +75,11 @@ jobs:
       - name: Fetch tags
         run: git fetch --tags --prune
 
-      - name: Import GPG key and Configure Git
-        run: |
-          echo "${{ secrets.KEY_GPG }}" | gpg --batch --import
-          git config --local user.signingkey "$(gpg --list-keys --with-colons | grep '^pub' | cut -d':' -f5 | head -n1)"
-          git config --local commit.gpgsign true
-          git config --local tag.gpgsign true
-          git config --local user.email "${{ secrets.GIT_EMAIL }}"
-          git config --local user.name "github-actions"
+      - name: Configure Git with GPG
+        uses: ./.github/actions/git-config
+        with:
+          gpg-key: ${{ secrets.KEY_GPG }}
+          git-email: ${{ secrets.GIT_EMAIL }}
 
       - name: Compute previous tag (for changelog)
         id: prev_tag

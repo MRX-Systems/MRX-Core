@@ -85,7 +85,7 @@ jobs:
       GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
   build:
-    needs: 
+    needs:
       - lint
       - detect-context
     uses: ./.github/workflows/job-build.yml
@@ -136,7 +136,7 @@ jobs:
       KEY_SSH: ${{ secrets.KEY_SSH }}
       KEY_GPG: ${{ secrets.KEY_GPG }}
       GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
-      GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
     needs:
