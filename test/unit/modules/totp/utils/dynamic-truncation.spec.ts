@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test';
 import { dynamicTruncation } from '#/modules/totp/utils/dynamic-truncation';
 
 describe('dynamicTruncation', () => {
-	test('should correctly truncate HMAC array with 6 digits', () => {
+	test.concurrent('should correctly truncate HMAC array with 6 digits', () => {
 		// Test case from RFC 4226 Appendix D
 		const hmacArray = new Uint8Array([
 			0x1f,
@@ -31,7 +31,7 @@ describe('dynamicTruncation', () => {
 		expect(result).toBe('872921');
 	});
 
-	test('should correctly truncate HMAC array with 8 digits', () => {
+	test.concurrent('should correctly truncate HMAC array with 8 digits', () => {
 		const hmacArray = new Uint8Array([
 			0x1f,
 			0x86,
@@ -58,7 +58,7 @@ describe('dynamicTruncation', () => {
 		expect(result).toBe('57872921');
 	});
 
-	test('should pad with leading zeros when result is shorter than digits', () => {
+	test.concurrent('should pad with leading zeros when result is shorter than digits', () => {
 		// Create HMAC array that will produce a small number
 		const hmacArray = new Uint8Array([
 			0x00,
@@ -88,7 +88,7 @@ describe('dynamicTruncation', () => {
 		expect(result).toMatch(/^0+\d*$/);
 	});
 
-	test('should handle different offset values correctly', () => {
+	test.concurrent('should handle different offset values correctly', () => {
 		// Test with offset 0 (last byte & 0x0f = 0)
 		const hmacArray1 = new Uint8Array([
 			0x12,
@@ -142,7 +142,7 @@ describe('dynamicTruncation', () => {
 		expect(result2).toHaveLength(6);
 	});
 
-	test('should work with different digit lengths', () => {
+	test.concurrent('should work with different digit lengths', () => {
 		const hmacArray = new Uint8Array([
 			0x1f,
 			0x86,
@@ -180,7 +180,7 @@ describe('dynamicTruncation', () => {
 		expect(result7).toBe('7872921');
 	});
 
-	test('should handle edge case with minimum valid HMAC array', () => {
+	test.concurrent('should handle edge case with minimum valid HMAC array', () => {
 		// Minimum array size needed (offset can be max 15, need 4 bytes from offset)
 		const hmacArray = new Uint8Array(20).fill(0x00);
 		hmacArray[19] = 0x0f; // offset = 15, points to index 15-18
@@ -194,7 +194,7 @@ describe('dynamicTruncation', () => {
 		expect(result).toMatch(/^\d{6}$/);
 	});
 
-	test('should return consistent results for same input', () => {
+	test.concurrent('should return consistent results for same input', () => {
 		const hmacArray = new Uint8Array([
 			0x1f,
 			0x86,
@@ -227,7 +227,7 @@ describe('dynamicTruncation', () => {
 		expect(result1).toBe('872921');
 	});
 
-	test('should mask the most significant bit correctly', () => {
+	test.concurrent('should mask the most significant bit correctly', () => {
 		// Test that the MSB is properly masked (& 0x7f)
 		const hmacArray = new Uint8Array([
 			0xff,

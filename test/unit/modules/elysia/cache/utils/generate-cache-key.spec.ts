@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test';
 import { generateCacheKey } from '#/modules/elysia/cache/utils/generate-cache-key';
 
 describe('generateCacheKey', () => {
-	test('should generate cache key for request with body', async () => {
+	test.concurrent('should generate cache key for request with body', async () => {
 		const testBody = JSON.stringify({ test: 'data' });
 		const request = new Request('https://example.com/api/test', {
 			method: 'POST',
@@ -22,7 +22,7 @@ describe('generateCacheKey', () => {
 		expect(cacheKey).not.toContain('{"test":"data"}');
 	});
 
-	test('should generate cache key for request without body', async () => {
+	test.concurrent('should generate cache key for request without body', async () => {
 		const request = new Request('https://example.com/api/get', {
 			method: 'GET',
 			headers: {
@@ -37,7 +37,7 @@ describe('generateCacheKey', () => {
 		expect(cacheKey.length).toBe(64);
 	});
 
-	test('should generate same cache key for identical requests', async () => {
+	test.concurrent('should generate same cache key for identical requests', async () => {
 		const requestData = {
 			url: 'https://example.com/api/test',
 			method: 'POST',
@@ -54,7 +54,7 @@ describe('generateCacheKey', () => {
 		expect(cacheKey1).toBe(cacheKey2);
 	});
 
-	test('should generate different cache keys for different bodies', async () => {
+	test.concurrent('should generate different cache keys for different bodies', async () => {
 		const request1 = new Request('https://example.com/api/test', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },

@@ -1,5 +1,5 @@
 import { type TSchema, Type } from '@sinclair/typebox';
-import { beforeEach, describe, expect, test } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 
 import { BaseError } from '#/errors/base-error';
 import { UTILS_ERROR_KEYS } from '#/shared/enums/utils-error-keys';
@@ -123,6 +123,11 @@ describe('validateEnv', () => {
 
 		beforeEach(() => {
 			// Reset process.env to original state before each test
+			process.env = { ..._originalProcessEnv };
+		});
+
+		afterEach(() => {
+			// Ensure process.env is restored after each test
 			process.env = { ..._originalProcessEnv };
 		});
 
