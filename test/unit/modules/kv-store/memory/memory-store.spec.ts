@@ -6,20 +6,20 @@ import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 
 describe('MemoryStore', () => {
 	describe('Basic Operations', () => {
-		test('should create empty store', () => {
+		test.concurrent('should create empty store', () => {
 			const store = new MemoryStore();
 			expect(store.get<string>('nonexistent')).toBeNull();
 			store.destroy();
 		});
 
-		test('should set and get values', () => {
+		test.concurrent('should set and get values', () => {
 			const store = new MemoryStore();
 			store.set('key1', 'value1');
 			expect(store.get<string>('key1')).toBe('value1');
 			store.destroy();
 		});
 
-		test('should set and get values with TTL', () => {
+		test.concurrent('should set and get values with TTL', () => {
 			const store = new MemoryStore();
 			store.set('key1', 'value1', 60);
 			expect(store.get<string>('key1')).toBe('value1');
@@ -30,7 +30,7 @@ describe('MemoryStore', () => {
 			store.destroy();
 		});
 
-		test('should handle different value types', () => {
+		test.concurrent('should handle different value types', () => {
 			const store = new MemoryStore();
 
 			// String
@@ -56,7 +56,7 @@ describe('MemoryStore', () => {
 	});
 
 	describe('Increment/Decrement Operations', () => {
-		test('should increment values correctly', () => {
+		test.concurrent('should increment values correctly', () => {
 			const store = new MemoryStore();
 			store.set('counter', 5);
 
@@ -66,7 +66,7 @@ describe('MemoryStore', () => {
 			store.destroy();
 		});
 
-		test('should increment with custom amount', () => {
+		test.concurrent('should increment with custom amount', () => {
 			const store = new MemoryStore();
 			store.set('counter', 10);
 
@@ -76,7 +76,7 @@ describe('MemoryStore', () => {
 			store.destroy();
 		});
 
-		test('should decrement values correctly', () => {
+		test.concurrent('should decrement values correctly', () => {
 			const store = new MemoryStore();
 			store.set('counter', 10);
 
@@ -86,7 +86,7 @@ describe('MemoryStore', () => {
 			store.destroy();
 		});
 
-		test('should decrement with custom amount', () => {
+		test.concurrent('should decrement with custom amount', () => {
 			const store = new MemoryStore();
 			store.set('counter', 20);
 
