@@ -38,3 +38,7 @@ test/
 README.md
 tsconfig.json
 translate.json
+
+.env
+.env.test
+sandbox

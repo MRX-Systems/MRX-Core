@@ -114,7 +114,7 @@ export interface AbstractCrudOptions<T> {
     /**
      * The tags for the CRUD routes.
      */
-    tags: string[];
+    tags?: string[];
 
     /**
      * The prefix for the CRUD routes.
