@@ -62,6 +62,7 @@ export class CoreError extends Error {
         this._code = CoreErrorOptions.code ?? 500;
         this.message = CoreErrorOptions.messageKey;
         this._detail = CoreErrorOptions.detail;
+        this.cause = CoreErrorOptions.detail;
         this.name = 'CoreError';
         if (Error.captureStackTrace)
             Error.captureStackTrace(this, this.constructor);
