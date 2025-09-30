@@ -8,6 +8,10 @@ import type { Plugin } from '#/common/type/data/presentation/http/plugin.data.ts
  */
 export interface MultipartOptions {
     /**
+     * Whether to attach fields to body for the Multipart. (default: true)
+     */
+    attachFieldsToBody?: boolean;
+    /**
      * The field name size in bytes for the Multipart. (default: 100)
      */
     fieldNameSize?: number;
@@ -62,11 +66,12 @@ export class MultipartPlugin implements Plugin {
      */
     public async configure(app: FastifyInstance): Promise<void> {
         await app.register(fastifyMultipart, {
+            attachFieldsToBody: this._options?.attachFieldsToBody ?? true,
             limits: {
                 fieldNameSize: this._options?.fieldNameSize ?? 100,
                 fieldSize: this._options?.fieldSize ?? 100,
                 fields: this._options?.fields ?? 10,
-                fileSize: this._options?.fileSize ?? 1000000,
+                fileSize: this._options?.fileSize ?? 10 * 1024 * 1024,
                 files: this._options?.files ?? 1,
                 headerPairs: this._options?.headerPairs ?? 2000,
                 parts: this._options?.parts ?? 1000
