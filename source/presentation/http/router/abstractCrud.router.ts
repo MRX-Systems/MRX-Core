@@ -112,6 +112,11 @@ export interface AbstractCrudOptions<T> {
     table: string;
 
     /**
+     * The tags for the CRUD routes.
+     */
+    tags: string[];
+
+    /**
      * The prefix for the CRUD routes.
      */
     prefix: string;
@@ -208,7 +213,7 @@ export abstract class AbstractCrud<T> extends AbstractRouter {
     private _buildRoutesOptionsByOptions(): Record<string, RouteOptions> {
         const primaryKey = (this._options.primaryKey && String(this._options.primaryKey[0])) ?? 'id';
         const byOne = `/:${primaryKey}`;
-        const tags = [this._options.table];
+        const tags = this._options.tags ?? [this._options.table];
 
         return {
             insert: {
