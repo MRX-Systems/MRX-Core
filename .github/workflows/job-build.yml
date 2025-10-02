@@ -13,19 +13,10 @@ on:
         required: true
 
 jobs:
-  check-build:
+  build:
     name: Build Package
     runs-on: ubuntu-latest
     steps:
-      - name: Verify required secrets
-        run: |
-          echo "🔍 Verifying required secrets for build job..."
-          if [ -z "${{ secrets.KEY_SSH }}" ]; then
-            echo "❌ KEY_SSH secret is missing"
-            exit 1
-          fi
-          echo "✅ All required secrets are present"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -33,13 +24,8 @@ jobs:
           fetch-depth: 0
           ssh-key: ${{ secrets.KEY_SSH }}
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+      - name: Setup Bun Project
+        uses: ./.github/actions/setup-bun-project
 
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Run Build
+      - name: Build
         run: bun run build
