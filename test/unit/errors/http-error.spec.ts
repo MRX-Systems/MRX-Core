@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'bun:test';
 
 import { BaseError } from '#/errors/base-error';
-import { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/http-status-codes';
+import { HTTP_STATUS_CODES } from '#/errors/enums/http-status-codes';
 import { HttpError } from '#/errors/http-error';
 
 describe('HttpError', () => {
 	describe('constructor', () => {
-		test('should create HttpError with message only (defaults to 500)', () => {
+		test.concurrent('should create HttpError with message only (defaults to 500)', () => {
 			const httpError = new HttpError('Internal server error');
 
 			expect(httpError).toBeInstanceOf(HttpError);
@@ -19,7 +19,7 @@ describe('HttpError', () => {
 			expect(httpError.date).toBeInstanceOf(Date);
 		});
 
-		test('should create HttpError with message and numeric status code', () => {
+		test.concurrent('should create HttpError with message and numeric status code', () => {
 			const httpError = new HttpError('Not found', 404);
 
 			expect(httpError.message).toBe('Not found');
@@ -27,7 +27,7 @@ describe('HttpError', () => {
 			expect(httpError.cause).toBeUndefined();
 		});
 
-		test('should create HttpError with message and status key', () => {
+		test.concurrent('should create HttpError with message and status key', () => {
 			const httpError = new HttpError('Unauthorized access', 'UNAUTHORIZED');
 
 			expect(httpError.message).toBe('Unauthorized access');
@@ -54,19 +54,19 @@ describe('HttpError', () => {
 		});
 
 		test('should handle all available HTTP status codes', () => {
-			const statusCodes = Object.keys(HTTP_ERROR_STATUS_CODES) as (keyof typeof HTTP_ERROR_STATUS_CODES)[];
+			const statusCodes = Object.keys(HTTP_STATUS_CODES) as (keyof typeof HTTP_STATUS_CODES)[];
 
 			statusCodes.forEach((statusCode) => {
 				const httpError = new HttpError(`Error for ${statusCode}`, statusCode);
 
-				expect(httpError.httpStatusCode).toBe(HTTP_ERROR_STATUS_CODES[statusCode]);
+				expect(httpError.httpStatusCode).toBe(HTTP_STATUS_CODES[statusCode]);
 				expect(httpError.message).toBe(`Error for ${statusCode}`);
 			});
 		});
 
 		test('should default to INTERNAL_SERVER_ERROR when invalid status is provided', () => {
 			// Test with an invalid string that's not in HTTP_STATUS_CODES
-			const httpError = new HttpError('Server error', 'INVALID_STATUS' as keyof typeof HTTP_ERROR_STATUS_CODES);
+			const httpError = new HttpError('Server error', 'INVALID_STATUS' as keyof typeof HTTP_STATUS_CODES);
 
 			expect(httpError.httpStatusCode).toBe(500);
 			expect(httpError.message).toBe('Server error');
@@ -154,7 +154,7 @@ describe('HttpError', () => {
 
 	describe('isClientError', () => {
 		test('should return true for 4xx status codes', () => {
-			const clientErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+			const clientErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'BAD_REQUEST',
 				'UNAUTHORIZED',
 				'FORBIDDEN',
@@ -173,7 +173,7 @@ describe('HttpError', () => {
 		});
 
 		test('should return false for 5xx status codes', () => {
-			const serverErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+			const serverErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'INTERNAL_SERVER_ERROR',
 				'NOT_IMPLEMENTED',
 				'BAD_GATEWAY',
@@ -190,7 +190,7 @@ describe('HttpError', () => {
 
 	describe('isServerError', () => {
 		test('should return true for 5xx status codes', () => {
-			const serverErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+			const serverErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'INTERNAL_SERVER_ERROR',
 				'NOT_IMPLEMENTED',
 				'BAD_GATEWAY',
@@ -209,7 +209,7 @@ describe('HttpError', () => {
 		});
 
 		test('should return false for 4xx status codes', () => {
-			const clientErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+			const clientErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'BAD_REQUEST',
 				'UNAUTHORIZED',
 				'FORBIDDEN',

@@ -101,7 +101,7 @@ describe('makeStreamAsyncIterable', () => {
 	};
 
 	describe('basic functionality', () => {
-		test('should make a readable stream async iterable', async () => {
+		test.concurrent('should make a readable stream async iterable', async () => {
 			const stream = _trackStream(_createTestStreams.singleChunk(_testData.singleChunk));
 			const asyncIterable = makeStreamAsyncIterable<Buffer>(stream);
 
@@ -120,7 +120,7 @@ describe('makeStreamAsyncIterable', () => {
 			expect(typeof asyncIterable[Symbol.asyncIterator]).toBe('function');
 		});
 
-		test('should handle binary data correctly', async () => {
+		test.concurrent('should handle binary data correctly', async () => {
 			const stream = _trackStream(_createTestStreams.singleChunk(_testData.binaryData));
 			const asyncIterable = makeStreamAsyncIterable<Buffer>(stream);
 

@@ -4,7 +4,7 @@ import { BaseError } from '#/errors/base-error';
 
 describe('BaseError', () => {
 	describe('constructor', () => {
-		test('should create a new BaseError instance with message and cause', () => {
+		test.concurrent('should create a new BaseError instance with message and cause', () => {
 			const cause = { details: 'Invalid input data' };
 			const baseError = new BaseError('error.base.validation', cause);
 
@@ -17,7 +17,7 @@ describe('BaseError', () => {
 			expect(baseError.stack).toBeTypeOf('string');
 		});
 
-		test('should create a new BaseError instance with message only', () => {
+		test.concurrent('should create a new BaseError instance with message only', () => {
 			const baseError = new BaseError('Something went wrong');
 
 			expect(baseError).toBeInstanceOf(BaseError);

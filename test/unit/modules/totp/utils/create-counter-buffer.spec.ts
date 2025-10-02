@@ -3,7 +3,7 @@ import { describe, test, expect } from 'bun:test';
 import { createCounterBuffer } from '#/modules/totp/utils/create-counter-buffer';
 
 describe('createCounterBuffer', () => {
-	test('should create an 8-byte buffer from bigint counter', () => {
+	test.concurrent('should create an 8-byte buffer from bigint counter', () => {
 		const counter = 1n;
 		const buffer = createCounterBuffer(counter);
 		const view = new Uint8Array(buffer);
@@ -14,7 +14,7 @@ describe('createCounterBuffer', () => {
 		expect(view).toEqual(expected);
 	});
 
-	test('should create an 8-byte buffer from number counter', () => {
+	test.concurrent('should create an 8-byte buffer from number counter', () => {
 		const counter = 1;
 		const buffer = createCounterBuffer(counter);
 		const view = new Uint8Array(buffer);
@@ -25,7 +25,7 @@ describe('createCounterBuffer', () => {
 		expect(view).toEqual(expected);
 	});
 
-	test('should handle larger bigint values correctly', () => {
+	test.concurrent('should handle larger bigint values correctly', () => {
 		const counter = 0x123456789ABCDEFn;
 		const buffer = createCounterBuffer(counter);
 		const view = new Uint8Array(buffer);
@@ -34,7 +34,7 @@ describe('createCounterBuffer', () => {
 		expect(view).toEqual(expected);
 	});
 
-	test('should handle larger number values correctly', () => {
+	test.concurrent('should handle larger number values correctly', () => {
 		const counter = 0x12345678;
 		const buffer = createCounterBuffer(counter);
 		const view = new Uint8Array(buffer);
@@ -44,7 +44,7 @@ describe('createCounterBuffer', () => {
 		expect(view).toEqual(expected);
 	});
 
-	test('should handle zero values', () => {
+	test.concurrent('should handle zero values', () => {
 		const bufferFromBigint = createCounterBuffer(0n);
 		const bufferFromNumber = createCounterBuffer(0);
 		const expected = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);

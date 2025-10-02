@@ -5,7 +5,7 @@ import { describe, test, expect } from 'bun:test';
 import { flatten } from '#/shared/utils/flatten';
 
 describe('flatten', () => {
-	test('should flattens nested unions', () => {
+	test.concurrent('should flattens nested unions', () => {
 		const schemaNested = t.Union([
 			t.String(),
 			t.Union([
@@ -28,13 +28,13 @@ describe('flatten', () => {
 		]);
 	});
 
-	test('should return the same schema if it is not a union', () => {
+	test.concurrent('should return the same schema if it is not a union', () => {
 		const schema = t.String();
 		const flattened = flatten(schema);
 		expect(flattened).toBe(schema);
 	});
 
-	test('should return an union schema if it is already flat', () => {
+	test.concurrent('should return an union schema if it is already flat', () => {
 		const schema = t.Union([
 			t.String(),
 			t.Number()

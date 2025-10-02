@@ -17,7 +17,7 @@ describe('generateHmac', () => {
 		return uint8Array.buffer.slice(0, uint8Array.byteLength) as ArrayBuffer;
 	};
 
-	test('should generate HMAC with SHA-1 algorithm', async () => {
+	test.concurrent('should generate HMAC with SHA-1 algorithm', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data = _createArrayBuffer('test data');
@@ -31,7 +31,7 @@ describe('generateHmac', () => {
 		expect(result.length).toBe(20); // SHA-1 produces 20 bytes
 	});
 
-	test('should generate HMAC with SHA-256 algorithm', async () => {
+	test.concurrent('should generate HMAC with SHA-256 algorithm', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data = _createArrayBuffer('test data');
@@ -45,7 +45,7 @@ describe('generateHmac', () => {
 		expect(result.length).toBe(32); // SHA-256 produces 32 bytes
 	});
 
-	test('should generate HMAC with SHA-512 algorithm', async () => {
+	test.concurrent('should generate HMAC with SHA-512 algorithm', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data = _createArrayBuffer('test data');
@@ -59,7 +59,7 @@ describe('generateHmac', () => {
 		expect(result.length).toBe(64); // SHA-512 produces 64 bytes
 	});
 
-	test('should generate different HMACs for different data', async () => {
+	test.concurrent('should generate different HMACs for different data', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data1 = _createArrayBuffer('test data 1');
@@ -74,7 +74,7 @@ describe('generateHmac', () => {
 		expect(result1).not.toEqual(result2);
 	});
 
-	test('should generate different HMACs for different keys', async () => {
+	test.concurrent('should generate different HMACs for different keys', async () => {
 		// Arrange
 		const secret1 = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const secret2 = new Uint8Array([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
@@ -90,7 +90,7 @@ describe('generateHmac', () => {
 		expect(result1).not.toEqual(result2);
 	});
 
-	test('should generate same HMAC for same key and data', async () => {
+	test.concurrent('should generate same HMAC for same key and data', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data = _createArrayBuffer('test data');
@@ -104,7 +104,7 @@ describe('generateHmac', () => {
 		expect(result1).toEqual(result2);
 	});
 
-	test('should handle empty data', async () => {
+	test.concurrent('should handle empty data', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const data = new ArrayBuffer(0);
@@ -118,7 +118,7 @@ describe('generateHmac', () => {
 		expect(result.length).toBe(20); // SHA-1 produces 20 bytes even for empty data
 	});
 
-	test('should handle large data', async () => {
+	test.concurrent('should handle large data', async () => {
 		// Arrange
 		const secret = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 		const largeData = new ArrayBuffer(10000);
@@ -132,7 +132,7 @@ describe('generateHmac', () => {
 		expect(result.length).toBe(20);
 	});
 
-	test('should produce deterministic results', async () => {
+	test.concurrent('should produce deterministic results', async () => {
 		// Arrange
 		const secret = new Uint8Array([
 			0x12,
