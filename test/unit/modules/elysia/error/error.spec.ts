@@ -183,4 +183,28 @@ describe('error', () => {
 			message: ERROR_KEYS.CORE_ERROR_INTERNAL_SERVER_ERROR
 		});
 	});
+
+	test('should onError handle correctly PARSE code', () => {
+		const { event } = error;
+		if (!event.error || event.error.length === 0)
+			throw new Error('No error handler found');
+		const [onErrorFn] = event.error;
+		const { fn } = onErrorFn;
+		expect(fn).toBeDefined();
+
+		const set = {
+			status: 0,
+			headers: {} as Record<string, string>
+		};
+
+		expect(fn({
+			set,
+			error: new Error('Parse error'),
+			code: 'PARSE'
+		})).toEqual({
+			message: ERROR_KEYS.CORE_ERROR_PARSE
+		});
+
+		expect(set.status).toBe(400);
+	});
 });
