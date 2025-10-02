@@ -96,11 +96,7 @@ describe('JWT Core Functions', () => {
 			expect(result).not.toBe(false);
 
 			const expected = expectedExpiration(currentTime);
-			if (tolerance > 0)
-				expect(result.payload.exp).toBeGreaterThanOrEqual(expected - tolerance);
-			else
-				expect(result.payload.exp).toBe(expected);
-
+			expect(result.payload.exp).toBeGreaterThanOrEqual(expected - tolerance);
 			expect(result.payload.exp).toBeLessThanOrEqual(expected + tolerance);
 		});
 
