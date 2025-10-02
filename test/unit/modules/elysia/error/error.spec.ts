@@ -50,7 +50,7 @@ describe('error', () => {
 
 		})).toEqual({
 			message: 'Test message',
-			cause: 'Test cause'
+			content: 'Test cause'
 		});
 	});
 
@@ -73,7 +73,7 @@ describe('error', () => {
 			code: 'BaseError'
 		})).toEqual({
 			message: 'Test message',
-			cause: 'Test cause'
+			content: 'Test cause'
 		});
 	});
 
@@ -100,7 +100,7 @@ describe('error', () => {
 			code: 'VALIDATION'
 		})).toEqual({
 			message: 'core.error.validation',
-			cause: {
+			content: {
 				on: 'body',
 				errors: [
 					{
