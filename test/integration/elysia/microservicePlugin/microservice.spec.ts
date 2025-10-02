@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import Elysia from 'elysia';
 
+import { MICROSERVICE_SUCCESS_KEYS } from '#/modules/elysia/microservice/enums/microservice-success-keys';
 import { microservice } from '#/modules/elysia/microservice/microservice';
 import { author, description, name, version } from '#/root/package.json';
 
@@ -13,7 +14,7 @@ describe('Microservice Plugin', () => {
 
 		expect(response.status).toBe(200);
 		expect(json).toEqual({
-			message: 'pong'
+			message: MICROSERVICE_SUCCESS_KEYS.PING_RESPONSE
 		});
 	});
 
@@ -23,7 +24,7 @@ describe('Microservice Plugin', () => {
 
 		expect(response.status).toBe(200);
 		expect(json).toEqual({
-			message: 'Microservice Information',
+			message: MICROSERVICE_SUCCESS_KEYS.INFO_RETRIEVED,
 			content: {
 				author,
 				description,
