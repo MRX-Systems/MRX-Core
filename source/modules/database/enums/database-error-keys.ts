@@ -19,7 +19,7 @@ export const DATABASE_ERROR_KEYS = {
 	MSSQL_DATABASE_TRANSACTION_ABORTED: 'mrx-core.mssql.error.database.transaction_aborted',
 	MSSQL_DATABASE_TRANSACTION_LOG_FULL: 'mrx-core.mssql.error.database.transaction_log_full',
 	MSSQL_DATABASE_UNIQUE_CONSTRAINT_VIOLATION: 'mrx-core.mssql.error.database.unique_constraint_violation',
-	MSSQL_DATABSE_CANNOT_UPDATE_IDENTITY_COLUMN: 'mrx-core.mssql.error.database.cannot_update_identity_column',
+	MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN: 'mrx-core.mssql.error.database.cannot_update_identity_column',
 	MSSQL_DISCONNECT_ERROR: 'mrx-core.mssql.error.database.disconnect_error',
 	MSSQL_NO_RESULT: 'mrx-core.mssql.error.database.no_result',
 	MSSQL_NOT_CONNECTED: 'mrx-core.mssql.error.database.not_connected',
