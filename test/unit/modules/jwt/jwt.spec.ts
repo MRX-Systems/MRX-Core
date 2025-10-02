@@ -182,7 +182,7 @@ describe('JWT Core Functions', () => {
 
 			try {
 				await signJWT(testSecret, {}, expiration);
-				expect(true).toBe(false); // Should not reach here
+				expect.unreachable();
 			} catch (error) {
 				expect(error).toBeInstanceOf(HttpError);
 				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED);
