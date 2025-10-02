@@ -1,4 +1,4 @@
-import type { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/http-status-codes';
+import type { HTTP_STATUS_CODES } from '#/errors/enums/http-status-codes';
 import type { Filter } from './filter';
 import type { OrderByItem } from './order-by-item';
 import type { SelectedFields } from './selected-fields';
@@ -32,7 +32,7 @@ export interface QueryOptions<TModel> {
 	 */
 	readonly throwIfNoResult?: boolean | {
 		message?: string;
-		httpStatusCode?: keyof typeof HTTP_ERROR_STATUS_CODES | typeof HTTP_ERROR_STATUS_CODES[keyof typeof HTTP_ERROR_STATUS_CODES];
+		httpStatusCode?: keyof typeof HTTP_STATUS_CODES | typeof HTTP_STATUS_CODES[keyof typeof HTTP_STATUS_CODES];
 	};
 	/**
 	 * The transaction context for the query. ({@link Transaction})
