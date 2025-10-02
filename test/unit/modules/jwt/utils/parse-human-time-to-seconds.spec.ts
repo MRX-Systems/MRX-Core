@@ -163,7 +163,7 @@ describe('parseHumanTimeToSeconds', () => {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
 				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('parse_human_time_to_seconds.error.invalid_time_expression');
+				expect((error as BaseError).message).toBe('mrx-core.parse_human_time_to_seconds.error.invalid_time_expression');
 			}
 		});
 
@@ -180,7 +180,7 @@ describe('parseHumanTimeToSeconds', () => {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
 				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('parse_human_time_to_seconds.error.invalid_time_expression');
+				expect((error as BaseError).message).toBe('mrx-core.parse_human_time_to_seconds.error.invalid_time_expression');
 			}
 		});
 
@@ -196,7 +196,7 @@ describe('parseHumanTimeToSeconds', () => {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
 				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('parse_human_time_to_seconds.error.invalid_time_expression');
+				expect((error as BaseError).message).toBe('mrx-core.parse_human_time_to_seconds.error.invalid_time_expression');
 			}
 		});
 	});
