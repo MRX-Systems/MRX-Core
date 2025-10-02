@@ -21,19 +21,19 @@ export const error = new Elysia({
 				set.status = error.httpStatusCode;
 				return {
 					message: error.message,
-					cause: error.cause
+					content: error.cause
 				};
 			case 'BaseError':
 				set.status = 500;
 				return {
 					message: error.message,
-					cause: error.cause
+					content: error.cause
 				};
 			case 'VALIDATION': {
 				set.status = 422;
 				return {
 					message: 'core.error.validation',
-					cause: {
+					content: {
 						on: error.type,
 						errors: error.all.map((e) => ({
 							path: (e as { path: string }).path,
@@ -49,6 +49,11 @@ export const error = new Elysia({
 				set.status = 404;
 				return {
 					message: 'core.error.not_found'
+				};
+			case 'PARSE':
+				set.status = 400;
+				return {
+					message: 'core.error.parse'
 				};
 			case 'INTERNAL_SERVER_ERROR':
 			case 'UNKNOWN':
