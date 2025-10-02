@@ -3,6 +3,7 @@ import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
+import { CRUD_SUCCESS_KEYS } from '#/modules/elysia/crud/enums/crud-success-keys';
 import type { CrudOperationUpdateOne } from '#/modules/elysia/crud/types/crud-operation-update-one';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 import { getDbInjection } from './utils/get-db-injection';
@@ -47,7 +48,7 @@ export const updateOne = <
 				}
 			});
 			return {
-				message: `Updated record with id ${id} in ${tableName}`,
+				message: CRUD_SUCCESS_KEYS.UPDATE_ONE_RESPONSE,
 				content: data
 			};
 		},
