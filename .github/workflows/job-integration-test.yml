@@ -11,11 +11,24 @@ on:
     secrets:
       KEY_SSH:
         required: true
+      MSSQL_HOST:
+        required: true
+      MSSQL_DATABASE:
+        required: true
+      MSSQL_USER:
+        required: true
+      MSSQL_PASSWORD:
+        required: true
 
 jobs:
   integration-test:
     name: Integration Tests
     runs-on: ubuntu-latest
+    env:
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
