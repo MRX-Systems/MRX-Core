@@ -1,4 +1,64 @@
 
+## v2.11.0-1-and-269-20251003
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.0...v2.11.0-1-and-269-20251003)
+
+### 🚀 Enhancements
+
+- **🚀:** [Add microservice success keys for responses] ## Features - Introduced `MICROSERVICE_SUCCESS_KEYS` for consistent success messages. ([c8031f41](https://github.com/MRX-Systems/MRX-Core/commit/c8031f41))
+- **🚀:** [Add CRUD success keys enumeration] ([f7df540b](https://github.com/MRX-Systems/MRX-Core/commit/f7df540b))
+- **🚀:** [Integrate CRUD success keys into response messages] ([863a601e](https://github.com/MRX-Systems/MRX-Core/commit/863a601e))
+- **🚀:** [Add new entrypoints] ([ee80b6a0](https://github.com/MRX-Systems/MRX-Core/commit/ee80b6a0))
+- **🚀:** [Add status code] ([8bb890c3](https://github.com/MRX-Systems/MRX-Core/commit/8bb890c3))
+
+### 🔧 Fixes
+
+- **🔧:** [Correct expiration calculation in signJWT function] ## Bug Fixes - Fixed the expiration time calculation in the `signJWT` function to ensure it correctly adds the parsed human-readable time to the current timestamp. ([3493f499](https://github.com/MRX-Systems/MRX-Core/commit/3493f499))
+- **🔧:** [Update error response structure to use 'content' instead of 'cause'] ## Bug Fixes - Changed the error response property from 'cause' to 'content' for consistency. ([77bb785b](https://github.com/MRX-Systems/MRX-Core/commit/77bb785b))
+- **🔧:** [Add missing error handling for 'PARSE' case] ## Bug Fixes - Added error handling for the 'PARSE' case in the error plugin. ([c1aaa0e7](https://github.com/MRX-Systems/MRX-Core/commit/c1aaa0e7))
+- **🔧:** [Update error keys to include 'mrx-core' prefix] ([aa611054](https://github.com/MRX-Systems/MRX-Core/commit/aa611054))
+- **🔧:** [Refactor error handling to use ERROR_KEYS constants] ## Bug Fixes - Updated error messages to utilize constants from ERROR_KEYS. ([00690808](https://github.com/MRX-Systems/MRX-Core/commit/00690808))
+- **🔧:** [WTF] ([46a23ff2](https://github.com/MRX-Systems/MRX-Core/commit/46a23ff2))
+- **🔧:** [Correct authorization error key typos] ([e6a3693b](https://github.com/MRX-Systems/MRX-Core/commit/e6a3693b))
+- **🔧:** [Correct typos in database error keys] ([b8621308](https://github.com/MRX-Systems/MRX-Core/commit/b8621308))
+
+### 📦 Build
+
+- **📦:** [Update peer dependencies for elysia and ioredis] Updated the peer dependencies for `elysia` to version `^1.4.7` and `ioredis` to version `^5.8.0` in package.json to ensure compatibility with the latest features and improvements. ([b2aa92d0](https://github.com/MRX-Systems/MRX-Core/commit/b2aa92d0))
+- **📦:** [Update dependencies in package.json for improved stability] ([bbc02f9d](https://github.com/MRX-Systems/MRX-Core/commit/bbc02f9d))
+- **📦:** [Add new entrypoits] ([a99dcc77](https://github.com/MRX-Systems/MRX-Core/commit/a99dcc77))
+- **📦:** [Update dependencies in package.json] ([683a1a68](https://github.com/MRX-Systems/MRX-Core/commit/683a1a68))
+- **📦:** [Update mssql dependency version] ([a6084d4a](https://github.com/MRX-Systems/MRX-Core/commit/a6084d4a))
+
+### 🦉 Chore
+
+- **🦉:** V2.10.1-1-and-263-20250924 ([20aaf4f3](https://github.com/MRX-Systems/MRX-Core/commit/20aaf4f3))
+- **🦉:** V2.11.0-1-and-267-20250925 ([f3ab1a0b](https://github.com/MRX-Systems/MRX-Core/commit/f3ab1a0b))
+
+### 🧪 Tests
+
+- **🧪:** [Enhance JWT expiration tests with additional scenarios] ## Tests - Added new test cases for various expiration scenarios including:   - Date expiration for 30 minutes and 1 day.   - Human-readable time expressions for 15 minutes, 2 hours, and 30 minutes.   - Additional checks for past expiration handling. - Improved tolerance checks for expiration validation. ([eefe5aca](https://github.com/MRX-Systems/MRX-Core/commit/eefe5aca))
+- **🧪:** [Update unreachable expectation in signJWT test case] ([82a6c71d](https://github.com/MRX-Systems/MRX-Core/commit/82a6c71d))
+- **🧪:** [Refactor expiration checks in signJWT test case] ([fe75f283](https://github.com/MRX-Systems/MRX-Core/commit/fe75f283))
+- **🧪:** [Update error response structure to use 'content' instead of 'cause'] ([f1b36d38](https://github.com/MRX-Systems/MRX-Core/commit/f1b36d38))
+- **🧪:** [Update error handling for static database not found] ([c0514d1c](https://github.com/MRX-Systems/MRX-Core/commit/c0514d1c))
+- **🧪:** [Update error messages to include 'mrx-core' prefix] ## Tests - Updated error messages in the `parseHumanTimeToSeconds` tests to include the 'mrx-core' prefix. ([2c6a0bab](https://github.com/MRX-Systems/MRX-Core/commit/2c6a0bab))
+- **🧪:** [Update error message to include 'mrx-core' prefix] ## Tests - Updated the error message for rate limit exceeded response. ([55f1ee7e](https://github.com/MRX-Systems/MRX-Core/commit/55f1ee7e))
+- **🧪:** [Integrate success keys for microservice responses] ([966a9097](https://github.com/MRX-Systems/MRX-Core/commit/966a9097))
+- **🧪:** [Add test for onError handling of PARSE code] ([9f671fb2](https://github.com/MRX-Systems/MRX-Core/commit/9f671fb2))
+- **🧪:** [Refactor HTTP status code references in tests] ([3d6fef78](https://github.com/MRX-Systems/MRX-Core/commit/3d6fef78))
+
+### 🤖 CI
+
+- **🤖:** [Refactor CI/CD workflows and actions] ([404d76da](https://github.com/MRX-Systems/MRX-Core/commit/404d76da))
+- **🤖:** [Update CI configuration for MSSQL secrets management] ([6987886a](https://github.com/MRX-Systems/MRX-Core/commit/6987886a))
+- **🤖:** [Add Bun version input to CI workflows] ([a0ecbb82](https://github.com/MRX-Systems/MRX-Core/commit/a0ecbb82))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <maxime.meriaux@mrxsys.com>
+
 ## v2.11.0-1-and-267-20250925
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.10.1-1-and-263-20250924...v2.11.0-1-and-267-20250925)
