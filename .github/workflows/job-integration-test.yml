@@ -9,6 +9,8 @@ on:
         required: true
         type: string
     secrets:
+      BUN_VERSION:
+        required: false
       KEY_SSH:
         required: true
       MSSQL_HOST:
@@ -39,6 +41,8 @@ jobs:
 
       - name: Setup Bun Project
         uses: ./.github/actions/setup-bun-project
+        with:
+          bun-version: ${{ secrets.BUN_VERSION || '1.2.15' }}
 
       - name: Run Integration Tests
         run: bun run test:integration
