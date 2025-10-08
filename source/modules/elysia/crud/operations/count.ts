@@ -43,6 +43,10 @@ export const count = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Count',
+				description: `Count ${tableName} records based on query options.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Count`,
 			response: `${tableName}CountResponse200`,

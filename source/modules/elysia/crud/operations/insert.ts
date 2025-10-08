@@ -50,6 +50,10 @@ export const insert = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Insert',
+				description: `Insert one or more records into the ${tableName} table.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Insert`,
 			response: `${tableName}Response200`,

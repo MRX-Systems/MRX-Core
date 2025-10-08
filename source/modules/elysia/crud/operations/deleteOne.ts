@@ -50,6 +50,10 @@ export const deleteOne = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Delete One',
+				description: `Delete a single ${tableName} record by its primary key.`
+			},
 			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			response: `${tableName}Response200`,
