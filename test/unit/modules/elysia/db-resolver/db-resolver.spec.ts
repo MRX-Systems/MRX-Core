@@ -68,8 +68,10 @@ describe('dbResolver', () => {
 			const response = await app.handle(new Request('http://localhost/test'));
 
 			expect(response.status).toBe(500);
-			const responseText = await response.text();
-			expect(responseText).toContain('DB_RESOLVER_STATIC_DB_NOT_FOUND');
+			const responseText = await response.json();
+			expect(responseText).toBeDefined();
+			expect(responseText).toHaveProperty('message');
+			expect((responseText as { message: string }).message).toContain('mrx-core.db-resolver.error.static_db_not_found');
 		});
 
 		afterAll(async () => {
