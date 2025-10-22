@@ -1,338 +1,437 @@
-import { once } from 'events';
-import { Transform } from 'stream';
+import type { BunMessageEvent } from 'bun';
 
 import { BaseError } from '#/errors/base-error';
 import { TypedEventEmitter } from '#/modules/typed-event-emitter/typed-event-emitter';
 import { LOGGER_ERROR_KEYS } from './enums/logger-error-keys';
 import type { LoggerEvent } from './events/logger-events';
-import type { BodiesIntersection } from './types/bodies-intersection';
 import type { LogLevels } from './types/log-levels';
-import type { LogStreamChunk } from './types/log-stream-chunk';
+import type { LoggerOptions } from './types/logger-options';
 import type { LoggerSink } from './types/logger-sink';
+import type { SinkBodiesIntersection } from './types/sink-bodies-intersection';
 import type { SinkMap } from './types/sink-map';
 
 /**
- * Logger provides a flexible, type-safe logging system that allows multiple sinks for log output.
- * The logger uses a transform stream to process log entries and execute the logging sinks.
- *
- * Logger extends the TypedEventEmitter class to emit typed events when an error occurs or when the logger ends.
- * The logger can log messages with different levels: error, warn, info, debug, and log.
- *
- * @template TSinks - The map of sink names to LoggerStrategy types.
+ * Pending log message corresponding to a log entry waiting to be processed by the worker.
  */
+interface PendingLogMessage {
+	readonly sinkNames: string[];
+	readonly level: LogLevels;
+	readonly timestamp: number;
+	readonly object: unknown;
+}
+
+type WorkerResponseMessage
+	= | { type: 'BATCH_COMPLETE'; }
+		| { type: 'REGISTER_SINK_ERROR'; sinkName: string; error: Error; }
+		| { type: 'SINK_LOG_ERROR'; sinkName: string; error: Error; object: unknown; }
+		| { type: 'SINK_CLOSE_ERROR'; sinkName: string; error: Error; }
+		| { type: 'CLOSE_COMPLETE'; };
+
 export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<LoggerEvent> {
 	/**
-	 * The map of sinks.
+	 * Map of registered sinks (logging destinations)
 	 */
 	private readonly _sinks: TSinks;
-
 	/**
-	 * The transform stream for processing log entries.
+	 * List of registered sink keys for quick access
 	 */
-
-	private readonly _logStream: Transform;
-
+	private readonly _sinkKeys: (keyof TSinks)[] = [];
 	/**
-	 * The queue of pending log entries.
+	 * Worker instance handling log processing
 	 */
-
-	private readonly _pendingLogs: LogStreamChunk<unknown, TSinks>[] = [];
-
+	private readonly _worker: Worker;
 	/**
-	 * The maximum number of pending logs.
-	 * @defaultValue 10_000
+	 * Maximum number of pending log messages allowed in the queue
 	 */
-	private readonly _maxPendingLogs;
-
+	private readonly _maxPendingLogs: number;
 	/**
-	 * Flag to indicate if the logger is currently writing logs.
+	 * Maximum number of messages in flight to the worker
+	 */
+	private readonly _maxMessagesInFlight: number;
+	/**
+	 * Number of logs to batch before sending to worker
+	 */
+	private readonly _batchSize: number;
+	/**
+	 * Timeout in milliseconds before flushing incomplete batch
+	 */
+	private readonly _batchTimeout: number;
+	/**
+	 * Whether to auto flush and close on process exit
+	 */
+	private readonly _autoEnd: boolean;
+	/**
+	 * Whether to flush before process exit
+	 */
+	private readonly _flushOnBeforeExit: boolean;
+
+	// State managed only by root logger
+	/**
+	 * Queue of pending log messages
+	 */
+	private readonly _pendingLogs: PendingLogMessage[] = [];
+	/**
+	 * Number of log messages currently being processed by the worker
+	 */
+	private _messagesInFlight = 0;
+	/**
+	 * Timer for batching log messages
+	 */
+	private _batchTimer: Timer | null = null;
+	/**
+	 * Whether the logger is currently writing log messages to the worker
 	 */
 	private _isWriting = false;
+	/**
+	 * Resolvers for flush promises
+	 */
+	private readonly _flushResolvers: (() => void)[] = [];
+	/**
+	 * Resolver for the close promise
+	 */
+	private _closeResolver: (() => void) | null = null;
+	/**
+	 * Resolver for backpressure when maxMessagesInFlight is reached
+	 */
+	private _backpressureResolver: (() => void) | null = null;
+	/**
+	 * Handle the exit event
+	 */
+	private readonly _handleExit = (): void => {
+		this._worker.terminate();
+	};
+	/**
+	 * Handle the worker close event
+	 */
+	private readonly _handleWorkerClose = (): void => {
+		process.off('beforeExit', this._handleBeforeExit);
+		process.off('exit', this._handleExit);
+	};
 
 	/**
-	 * Construct a Logger.
+	 * Creates a new Logger instance with the specified options.
 	 *
-	 * @template TStrategies - The map of sink names to LoggerStrategy types.
-	 *
-	 * @param sinks - Initial sinks map.
-	 *
-	 * @param maxPendingLogs - Maximum number of logs in the queue (default: 10_000)
+	 * @param options - Configuration options for the logger
 	 */
-	public constructor(sinks: TSinks = {} as TSinks, maxPendingLogs = 10_000) {
+	public constructor(options?: LoggerOptions) {
 		super();
-		this._sinks = sinks;
+		const {
+			autoEnd = true,
+			batchSize = 50,
+			batchTimeout = 0.1,
+			flushOnBeforeExit = true,
+			maxMessagesInFlight = 100,
+			maxPendingLogs = 10_000
+		} = options ?? {};
+		this._sinks = {} as TSinks;
 		this._maxPendingLogs = maxPendingLogs;
-		this._logStream = new Transform({
-			objectMode: true,
-			transform: (chunk: LogStreamChunk<unknown, TSinks>, _, callback): void => {
-				this._executeStrategies(chunk.level, new Date(chunk.date), chunk.object, chunk.sinksNames)
-					.then(() => callback())
-					.catch((error: unknown) => {
-						this.emit('error', error as BaseError<{
-							sinkName: string;
-							object: unknown;
-							error: Error;
-						}>);
-						callback();
-					});
+		this._maxMessagesInFlight = maxMessagesInFlight;
+		this._batchSize = batchSize;
+		this._batchTimeout = batchTimeout;
+		this._autoEnd = autoEnd;
+		this._flushOnBeforeExit = flushOnBeforeExit;
+		this._worker = new Worker(new URL('worker-logger.ts', import.meta.url).href, { type: 'module' }); // create a new worker
+		this._setupWorkerMessages(); // setup message handling from the worker
+		if (this._autoEnd)
+			this._setupAutoEnd(); // setup auto-end on process exit
+	}
+
+	/**
+	 * Registers a new sink (logging destination) with the logger.
+	 *
+	 * @param sinkName - The name of the sink
+	 * @param sinkConstructor - The sink class constructor
+	 * @param sinkArgs - The sink constructor arguments
+	 *
+	 * @returns The logger instance with new type (for chaining)
+	 */
+	public registerSink<
+		TSinkName extends string,
+		TSink extends LoggerSink,
+		TSinkArgs extends unknown[]
+	>(
+		sinkName: TSinkName,
+		sinkConstructor: new (...args: TSinkArgs) => TSink,
+		...sinkArgs: TSinkArgs
+	): Logger<TSinks & Record<TSinkName, new (...args: TSinkArgs) => TSink>> {
+		if (this._sinks[sinkName as keyof TSinks])
+			throw new Error(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
+		this._worker.postMessage({
+			type: 'REGISTER_SINK',
+			sinkName,
+			sinkClassName: sinkConstructor.name,
+			sinkClassString: sinkConstructor.toString(),
+			sinkArgs
+		});
+		this._sinks[sinkName as keyof TSinks] = sinkConstructor as unknown as TSinks[keyof TSinks];
+		this._sinkKeys.push(sinkName as keyof TSinks);
+		return this as unknown as Logger<TSinks & Record<TSinkName, new (...args: TSinkArgs) => TSink>>;
+	}
+
+	/**
+	 * Logs a message at the ERROR level to the specified sinks.
+	 *
+	 * @param object - The log message object
+	 * @param sinkNames - Optional array of sink names to log to; logs to all sinks if omitted
+	 */
+	public error<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
+		object: SinkBodiesIntersection<TSinks, SNames[number]>,
+		sinkNames?: SNames
+	): void {
+		this._enqueue('ERROR', object, sinkNames);
+	}
+
+	/**
+	 * Logs a message at the WARN level to the specified sinks.
+	 *
+	 * @param object - The log message object
+	 * @param sinkNames - Optionnal array of sink names to log to; logs to all sinks if omitted
+	 */
+	public warn<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
+		object: SinkBodiesIntersection<TSinks, SNames[number]>,
+		sinkNames?: SNames
+	): void {
+		this._enqueue('WARN', object, sinkNames);
+	}
+
+	/**
+	 * Logs a message at the INFO level to the specified sinks.
+	 *
+	 * @param object - The log message object
+	 * @param sinkNames - Optional array of sink names to log to; logs to all sinks if omitted
+	 */
+	public info<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
+		object: SinkBodiesIntersection<TSinks, SNames[number]>,
+		sinkNames?: SNames
+	): void {
+		this._enqueue('INFO', object, sinkNames);
+	}
+
+	/**
+	 * Logs a message at the DEBUG level to the specified sinks.
+	 *
+	 * @param object - The log message object
+	 * @param sinkNames - Optional array of sink names to log to; logs to all sinks if omitted
+	 */
+	public debug<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
+		object: SinkBodiesIntersection<TSinks, SNames[number]>,
+		sinkNames?: SNames
+	): void {
+		this._enqueue('DEBUG', object, sinkNames);
+	}
+
+	/**
+	 * Logs a message at the TRACE level to the specified sinks.
+	 *
+	 * @param object - The log message object
+	 * @param sinkNames - Optional array of sink names to log to; logs to all sinks if omitted
+	 */
+	public log<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
+		object: SinkBodiesIntersection<TSinks, SNames[number]>,
+		sinkNames: SNames = Object.keys(this._sinks) as SNames
+	): void {
+		this._enqueue('LOG', object, sinkNames);
+	}
+
+	/**
+	 * Flushes all pending logs and waits for them to be processed.
+	 */
+	public async flush(): Promise<void> {
+		if (this._pendingLogs.length === 0 && this._messagesInFlight === 0)
+			return;
+
+		return new Promise<void>((resolve) => {
+			this._flushResolvers.push(resolve);
+
+			if (!this._isWriting && this._pendingLogs.length > 0) {
+				this._isWriting = true;
+				void this._processPendingLogs();
 			}
 		});
 	}
 
 	/**
-	 * Register a new logging sink.
-	 *
-	 * @template Key - The name of the sink.
-	 * @template Sink - The sink type.
-	 *
-	 * @param name - The name of the sink.
-	 * @param sink - The sink to add. It must implement {@link LoggerSink}.
-	 *
-	 * @throws ({@link BaseError}) - If the sink is already added.
-	 *
-	 * @returns A new Logger instance with the added sink.
+	 * Closes the logger, flushes pending logs, and releases resources.
 	 */
-	public registerSink<Key extends string, Sink extends LoggerSink>(
-		name: Key,
-		sink: Sink
-	): Logger<TSinks & Record<Key, Sink>> {
-		if ((this._sinks as Record<string, LoggerSink>)[name])
-			throw new BaseError(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED, { sinkName: name });
-		return new Logger({
-			...this._sinks,
-			[name]: sink
-		}, this._maxPendingLogs);
+	public async close(): Promise<void> {
+		await this.flush();
+
+		return new Promise<void>((resolve) => {
+			this._closeResolver = resolve;
+			this._worker.postMessage({ type: 'CLOSE' });
+		});
 	}
 
 	/**
-	 * Unregister a logging sink.
+	 * Enqueues a log message to be processed by the worker.
 	 *
-	 * @template Key - The name of the sink.
-	 *
-	 * @param name - The name of the sink to remove.
-	 *
-	 * @throws ({@link BaseError}) - If the sink is not found.
-	 *
-	 * @returns A new Logger instance without the removed sink.
+	 * @param level - The log level
+	 * @param object - The log message object
+	 * @param sinkNames - Optional array of sink names to log to; logs to all sinks if omitted
 	 */
-	public unregisterSink<Key extends keyof TSinks>(
-		name: Key
-	): Logger<Omit<TSinks, Key>> {
-		if (!(name in this._sinks))
-			throw new BaseError(LOGGER_ERROR_KEYS.SINK_NOT_FOUND, { sinkName: name });
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { [name]: _, ...rest } = this._sinks;
-		return new Logger(rest, this._maxPendingLogs);
-	}
-
-	/**
-	 * Register multiple sinks at once.
-	 *
-	 * @template TNew - The new sinks to add.
-	 *
-	 * @param sinks - An array of tuples where each tuple contains the sink name and the sink instance.
-	 *
-	 * @throws ({@link BaseError}) - If any sink is already added.
-	 *
-	 * @returns A new Logger instance with the added sinks.
-	 */
-	public registerSinks<TNew extends [string, LoggerSink][] = [string, LoggerSink][]>(
-		sinks: TNew
-	): Logger<TSinks & { [K in TNew[number][0]]: Extract<TNew[number], [K, LoggerSink]>[1] }> {
-		return sinks.reduce(
-			(logger, [name, sink]) => logger.registerSink(name, sink), this as unknown as Logger<SinkMap>
-		) as unknown as Logger<TSinks & { [K in TNew[number][0]]: Extract<TNew[number], [K, LoggerSink]>[1] }>;
-	}
-
-	/**
-	 * Unregister multiple sinks at once.
-	 *
-	 * @template Keys - The names of the sinks to remove.
-	 *
-	 * @param names - An array of sink names to remove.
-	 *
-	 * @throws ({@link BaseError}) - If any sink is not found.
-	 *
-	 * @returns A new Logger instance without the removed sinks.
-	 */
-	public unregisterSinks<Keys extends Extract<keyof TSinks, string>>(
-		names: Keys[]
-	): Logger<Omit<TSinks, Keys>> {
-		let logger: Logger<SinkMap> = this as unknown as Logger<SinkMap>;
-		for (const name of names)
-			logger = logger.unregisterSink(name) as unknown as Logger<SinkMap>;
-		return logger as unknown as Logger<Omit<TSinks, Keys>>;
-	}
-
-	/**
-	 * Remove all sinks.
-	 *
-	 * @returns A new Logger instance without any sinks.
-	 */
-	public clearSinks(): Logger {
-		return new Logger({}, this._maxPendingLogs);
-	}
-
-	/**
-	 * Log an error message.
-	 *
-	 * @template SNames - The names of the sinks to use.
-	 *
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If no sink is added.
-	 */
-	public error<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
-		object: BodiesIntersection<TSinks, SNames[number]>,
-		sinksNames?: SNames
-	): void {
-		this._out('ERROR', object, sinksNames);
-	}
-
-	/**
-	 * Log a warning message.
-	 *
-	 * @template SNames - The names of the sinks to use.
-	 *
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If no sink is added.
-	 */
-	public warn<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
-		object: BodiesIntersection<TSinks, SNames[number]>,
-		sinksNames?: SNames
-	): void {
-		this._out('WARN', object, sinksNames);
-	}
-
-	/**
-	 * Log an info message.
-	 *
-	 * @template SNames - The names of the sinks to use.
-	 *
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If no sink is added.
-	 */
-	public info<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
-		object: BodiesIntersection<TSinks, SNames[number]>,
-		sinksNames?: SNames
-	): void {
-		this._out('INFO', object, sinksNames);
-	}
-
-	/**
-	 * Log a debug message.
-	 *
-	 * @template SNames - The names of the sinks to use.
-	 *
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If no sink is added.
-	 */
-	public debug<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
-		object: BodiesIntersection<TSinks, SNames[number]>,
-		sinksNames?: SNames
-	): void {
-		this._out('DEBUG', object, sinksNames);
-	}
-
-	/**
-	 * Log a generic message.
-	 *
-	 * @template SNames - The names of the sinks to use.
-	 *
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If no sink is added.
-	 */
-	public log<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
-		object: BodiesIntersection<TSinks, SNames[number]>,
-		sinksNames?: SNames
-	): void {
-		this._out('LOG', object, sinksNames);
-	}
-
-	/**
-	 * Internal: execute all sinks for a log event.
-	 *
-	 * @template TLogObject - The type of the log object.
-	 *
-	 * @param level - The log level.
-	 * @param date - The date of the log event.
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If a sink throws.
-	 */
-	private async _executeStrategies<TLogObject>(
-		level: LogLevels,
-		date: Date,
-		object: TLogObject,
-		sinksNames: (keyof TSinks)[]
-	): Promise<void> {
-		await Promise.all(sinksNames.map(async (name) => {
-			try {
-				await (this._sinks[name] as LoggerSink<TLogObject> | undefined)?.log(level, date, object);
-			} catch (error) {
-				throw new BaseError(LOGGER_ERROR_KEYS.SINK_ERROR, { sinkName: name, object, error });
-			}
-		}));
-	}
-
-	/**
-	 * Internal: queue a log event and start writing if not already.
-	 *
-	 * @template TLogObject - The type of the log object.
-	 *
-	 * @param level - The log level.
-	 * @param object - The object to log.
-	 * @param sinksNames - The names of the sinks to use. If not provided, all sinks will be used.
-	 *
-	 * @throws ({@link BaseError}) - If no sink is added.
-	 */
-	private _out<TLogObject>(
+	private _enqueue<TLogObject>(
 		level: LogLevels,
 		object: TLogObject,
-		sinksNames?: (keyof TSinks)[]
+		sinkNames?: (keyof TSinks)[]
 	): void {
-		const sinkKeys = Object.keys(this._sinks) as (keyof TSinks)[];
-		if (sinkKeys.length === 0)
-			throw new BaseError(LOGGER_ERROR_KEYS.NO_SINK_ADDED, { level, object });
+		if (this._sinkKeys.length === 0)
+			throw new BaseError(LOGGER_ERROR_KEYS.NO_SINKS_PROVIDED, { level, object });
+
 		if (this._pendingLogs.length >= this._maxPendingLogs)
 			return;
-		const log: LogStreamChunk<TLogObject, TSinks> = {
-			date: new Date().toISOString(),
+
+		this._pendingLogs.push({
+			sinkNames: (sinkNames ?? this._sinkKeys) as string[],
 			level,
-			object,
-			sinksNames: sinksNames ? sinksNames : sinkKeys
-		};
-		this._pendingLogs.push(log);
-		if (!this._isWriting) {
-			this._isWriting = true;
-			setImmediate(() => {
-				void this._writeLog();
-			});
+			timestamp: Date.now(),
+			object
+		});
+
+		// If the batch size is reached, trigger immediate processing
+		if (this._pendingLogs.length >= this._batchSize) {
+			if (this._batchTimer !== null) {
+				clearTimeout(this._batchTimer);
+				this._batchTimer = null;
+			}
+			this._triggerProcessing();
+		} else if (this._batchTimeout > 0 && this._batchTimer === null) {
+			// Otherwise, start a timer if not already started
+			this._batchTimer = setTimeout(() => {
+				this._batchTimer = null;
+				this._triggerProcessing();
+			}, this._batchTimeout);
 		}
 	}
 
 	/**
-	 * Internal: process the log queue and emit 'end' when done.
+	 * Triggers processing of pending logs.
 	 */
-	private async _writeLog(): Promise<void> {
-		while (this._pendingLogs.length > 0) {
-			const pendingLog = this._pendingLogs.shift();
-			if (!pendingLog) continue;
-			const canWrite = this._logStream.write(pendingLog);
-			if (!canWrite)
-				await once(this._logStream, 'drain');
-		}
-		this._isWriting = false;
-		this.emit('end');
+	private _triggerProcessing(): void {
+		if (this._isWriting)
+			return;
+		this._isWriting = true;
+		void this._processPendingLogs();
 	}
+
+	/**
+	 * Processes pending log messages by sending them to the worker in batches.
+	 */
+	private async _processPendingLogs(): Promise<void> {
+		while (this._pendingLogs.length > 0) {
+			if (this._messagesInFlight >= this._maxMessagesInFlight)
+				await new Promise<void>((resolve) => {
+					this._backpressureResolver = resolve;
+				});
+			const batch = this._pendingLogs.splice(0, this._batchSize);
+			this._messagesInFlight++;
+			this._worker.postMessage({
+				type: 'LOG_BATCH',
+				logs: batch
+			});
+		}
+
+		this._isWriting = false;
+		this.emit('drained');
+	}
+
+	/**
+	 * Releases a batch by decrementing the in-flight counter and resolving backpressure if needed.
+	 */
+	private _releaseBatch(): void {
+		this._messagesInFlight--;
+
+		if (this._backpressureResolver !== null) {
+			this._backpressureResolver();
+			this._backpressureResolver = null;
+		}
+	}
+
+	/**
+	 * Sets up message handling for the worker.
+	 */
+	private _setupWorkerMessages(): void {
+		this._worker.addEventListener('message', (event: BunMessageEvent<WorkerResponseMessage>) => {
+			switch (event.data.type) {
+				case 'BATCH_COMPLETE':
+					this._releaseBatch();
+
+					if (this._messagesInFlight === 0 && this._pendingLogs.length === 0 && this._flushResolvers.length > 0) {
+						for (const resolve of this._flushResolvers)
+							resolve();
+						this._flushResolvers.length = 0;
+					}
+					break;
+
+				case 'SINK_LOG_ERROR':
+					this.emit('sinkError', new BaseError(
+						LOGGER_ERROR_KEYS.SINK_LOG_ERROR,
+						event.data
+					));
+
+					this._releaseBatch();
+					break;
+
+				case 'SINK_CLOSE_ERROR':
+					this.emit('sinkError', new BaseError(
+						LOGGER_ERROR_KEYS.SINK_CLOSE_ERROR,
+						event.data
+					));
+					break;
+
+				case 'REGISTER_SINK_ERROR':
+					this.emit('registerSinkError', new BaseError(
+						LOGGER_ERROR_KEYS.REGISTER_SINK_ERROR,
+						event.data
+					));
+					break;
+
+				case 'CLOSE_COMPLETE':
+					this._worker.terminate();
+					if (this._closeResolver) {
+						this._closeResolver();
+						this._closeResolver = null;
+					}
+					break;
+			}
+		});
+	}
+
+	/**
+	 * Sets up automatic flushing and closing of the logger on process exit.
+	 */
+	private _setupAutoEnd(): void {
+		process.on('beforeExit', this._handleBeforeExit);
+		process.on('exit', this._handleExit);
+		this._worker.addEventListener('close', this._handleWorkerClose);
+	}
+
+	/**
+	 * Handles the beforeExit event.
+	 */
+	private readonly _handleBeforeExit = (): void => {
+		if (this._flushOnBeforeExit)
+			void this.flush()
+				.then(() => this.close())
+				.catch((error: unknown) => {
+					this.emit('onBeforeExitError', new BaseError(
+						LOGGER_ERROR_KEYS.BEFORE_EXIT_FLUSH_ERROR,
+						{
+							error: error instanceof Error
+								? error
+								: new Error('Unknown error during logger flush on beforeExit')
+						}
+					));
+				});
+		else
+			void this.close().catch((error: unknown) => {
+				this.emit('onBeforeExitError', new BaseError(
+					LOGGER_ERROR_KEYS.BEFORE_EXIT_CLOSE_ERROR,
+					{
+						error: error instanceof Error
+							? error
+							: new Error('Unknown error during logger close on beforeExit')
+					}
+				));
+			});
+	};
 }
