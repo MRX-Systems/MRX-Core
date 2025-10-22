@@ -6,7 +6,7 @@ import { HttpError } from '#/errors/http-error';
 import { ERROR_KEYS } from '#/modules/elysia/error/enums/error.keys';
 import { error } from '#/modules/elysia/error/error';
 
-describe('error', () => {
+describe.concurrent('error', () => {
 	test('should have the error hook', () => {
 		const { event } = error;
 		expect(event).toBeDefined();

@@ -50,8 +50,8 @@ const expectedErrorMessages = {
  */
 const _createNullObject = (): Record<string, unknown> => null as unknown as Record<string, unknown>;
 
-describe('filterByKeyExclusion', () => {
-	describe('when filtering with key exclusion', () => {
+describe.concurrent('filterByKeyExclusion', () => {
+	describe.concurrent('when filtering with key exclusion', () => {
 		test('should return filtered object excluding specified keys', () => {
 			const object: Record<string, string> = testData.SIMPLE_OBJECT;
 			const filtered: Omit<typeof object, 'exclude'> = filterByKeyExclusion(object, ['exclude']);
@@ -89,7 +89,7 @@ describe('filterByKeyExclusion', () => {
 		});
 	});
 
-	describe('when excluding null and undefined values', () => {
+	describe.concurrent('when excluding null and undefined values', () => {
 		test('should exclude null and undefined values when flag is true', () => {
 			const object: Record<string, string | null | undefined> = testData.OBJECT_WITH_NULLS;
 			const filtered: Partial<typeof object> = filterByKeyExclusion(object, [], true);
@@ -113,7 +113,7 @@ describe('filterByKeyExclusion', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should return original object when keys array is empty', () => {
 			const object: Record<string, string> = { test: 'test' };
 			const filtered: typeof object = filterByKeyExclusion(object, []);
@@ -136,7 +136,7 @@ describe('filterByKeyExclusion', () => {
 		});
 	});
 
-	describe('when handling error cases', () => {
+	describe.concurrent('when handling error cases', () => {
 		test('should throw error when data is null', () => {
 			const nullObject: Record<string, unknown> = _createNullObject();
 
@@ -145,8 +145,8 @@ describe('filterByKeyExclusion', () => {
 	});
 });
 
-describe('filterByKeyExclusionRecursive', () => {
-	describe('when filtering with key exclusion recursively', () => {
+describe.concurrent('filterByKeyExclusionRecursive', () => {
+	describe.concurrent('when filtering with key exclusion recursively', () => {
 		test('should return object excluding specified keys recursively', () => {
 			const object = {
 				a: 'test',
@@ -253,8 +253,8 @@ describe('filterByKeyExclusionRecursive', () => {
 	});
 });
 
-describe('filterByKeyInclusion', () => {
-	describe('when filtering with key inclusion', () => {
+describe.concurrent('filterByKeyInclusion', () => {
+	describe.concurrent('when filtering with key inclusion', () => {
 		test('should return object with only specified keys', () => {
 			const object: Record<string, string> = testData.SIMPLE_OBJECT;
 			const filtered: Pick<typeof object, 'test'> = filterByKeyInclusion(object, ['test']);
@@ -290,7 +290,7 @@ describe('filterByKeyInclusion', () => {
 		});
 	});
 
-	describe('when excluding null and undefined values', () => {
+	describe.concurrent('when excluding null and undefined values', () => {
 		test('should exclude null and undefined values when flag is true', () => {
 			const object: Record<string, string | null | undefined> = testData.OBJECT_WITH_NULLS;
 			const filtered: Partial<Pick<typeof object, 'test'>> = filterByKeyInclusion(object, ['test'], true);
@@ -306,7 +306,7 @@ describe('filterByKeyInclusion', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should return empty object when keys array is empty', () => {
 			const object: Record<string, string> = { test: 'test' };
 			const filtered: Pick<typeof object, never> = filterByKeyInclusion(object, []);
@@ -329,7 +329,7 @@ describe('filterByKeyInclusion', () => {
 		});
 	});
 
-	describe('when handling error cases', () => {
+	describe.concurrent('when handling error cases', () => {
 		test('should throw error when data is null', () => {
 			const nullObject: Record<string, unknown> = _createNullObject();
 
@@ -338,8 +338,8 @@ describe('filterByKeyInclusion', () => {
 	});
 });
 
-describe('filterByValue', () => {
-	describe('when filtering with value predicate', () => {
+describe.concurrent('filterByValue', () => {
+	describe.concurrent('when filtering with value predicate', () => {
 		test('should return object with values matching predicate', () => {
 			const object: Record<string, string> = { test: 'test', exclude: 'exclude' };
 			const filtered: typeof object = filterByValue(object, (value: string): boolean => value === 'test');
@@ -378,7 +378,7 @@ describe('filterByValue', () => {
 		});
 	});
 
-	describe('when excluding null and undefined values', () => {
+	describe.concurrent('when excluding null and undefined values', () => {
 		test('should exclude null and undefined values when flag is true', () => {
 			const object: Record<string, string | null | undefined> = testData.OBJECT_WITH_NULLS;
 			const filtered: typeof object = filterByValue(
@@ -408,7 +408,7 @@ describe('filterByValue', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should return empty object when no values match predicate', () => {
 			const object: Record<string, string> = { test: 'test', another: 'another' };
 			const filtered: typeof object = filterByValue(object, (): boolean => false);
@@ -431,7 +431,7 @@ describe('filterByValue', () => {
 		});
 	});
 
-	describe('when handling error cases', () => {
+	describe.concurrent('when handling error cases', () => {
 		test('should throw error when data is null', () => {
 			const nullObject: Record<string, unknown> = _createNullObject();
 
@@ -441,8 +441,8 @@ describe('filterByValue', () => {
 	});
 });
 
-describe('transformKeys', () => {
-	describe('when transforming keys with different transformers', () => {
+describe.concurrent('transformKeys', () => {
+	describe.concurrent('when transforming keys with different transformers', () => {
 		test('should transform keys to camelCase', () => {
 			const object: Record<string, string> = { testKey: 'test', 'another-key': 'value' };
 			const transformedData: typeof object = transformKeys(object, new CamelCaseTransformer());
@@ -492,7 +492,7 @@ describe('transformKeys', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should handle empty object', () => {
 			const object: Record<string, never> = {};
 			const transformed: typeof object = transformKeys(object, new CamelCaseTransformer());
@@ -508,7 +508,7 @@ describe('transformKeys', () => {
 		});
 	});
 
-	describe('when handling error cases', () => {
+	describe.concurrent('when handling error cases', () => {
 		test('should throw error when data is null', () => {
 			const nullObject: Record<string, unknown> = _createNullObject();
 
@@ -518,10 +518,10 @@ describe('transformKeys', () => {
 	});
 });
 
-describe('CamelCaseTransformer', () => {
+describe.concurrent('CamelCaseTransformer', () => {
 	const transformer: CamelCaseTransformer = new CamelCaseTransformer();
 
-	describe('when creating transformer instance', () => {
+	describe.concurrent('when creating transformer instance', () => {
 		test('should create a new instance', () => {
 			const newTransformer: CamelCaseTransformer = new CamelCaseTransformer();
 			expect(newTransformer).toBeInstanceOf(CamelCaseTransformer);
@@ -535,7 +535,7 @@ describe('CamelCaseTransformer', () => {
 		});
 	});
 
-	describe('when transforming various case formats', () => {
+	describe.concurrent('when transforming various case formats', () => {
 		test('should preserve already camelCase keys', () => {
 			expect(transformer.convertCase(testData.CASE_VARIANTS.camelCase)).toBe('myKeyName');
 		});
@@ -563,7 +563,7 @@ describe('CamelCaseTransformer', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should handle single character keys', () => {
 			expect(transformer.convertCase('a')).toBe('a');
 			expect(transformer.convertCase('A')).toBe('a');
@@ -597,10 +597,10 @@ describe('CamelCaseTransformer', () => {
 	});
 });
 
-describe('KebabCaseTransformer', () => {
+describe.concurrent('KebabCaseTransformer', () => {
 	const transformer: KebabCaseTransformer = new KebabCaseTransformer();
 
-	describe('when creating transformer instance', () => {
+	describe.concurrent('when creating transformer instance', () => {
 		test('should create a new instance', () => {
 			const newTransformer: KebabCaseTransformer = new KebabCaseTransformer();
 			expect(newTransformer).toBeInstanceOf(KebabCaseTransformer);
@@ -614,7 +614,7 @@ describe('KebabCaseTransformer', () => {
 		});
 	});
 
-	describe('when transforming various case formats', () => {
+	describe.concurrent('when transforming various case formats', () => {
 		test('should preserve already kebab-case keys', () => {
 			expect(transformer.convertCase(testData.CASE_VARIANTS['kebab-case'])).toBe('my-key-name');
 		});
@@ -637,7 +637,7 @@ describe('KebabCaseTransformer', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should handle single character keys', () => {
 			expect(transformer.convertCase('a')).toBe('a');
 			expect(transformer.convertCase('A')).toBe('a');
@@ -659,10 +659,10 @@ describe('KebabCaseTransformer', () => {
 	});
 });
 
-describe('PascalCaseTransformer', () => {
+describe.concurrent('PascalCaseTransformer', () => {
 	const transformer: PascalCaseTransformer = new PascalCaseTransformer();
 
-	describe('when creating transformer instance', () => {
+	describe.concurrent('when creating transformer instance', () => {
 		test('should create a new instance', () => {
 			const newTransformer: PascalCaseTransformer = new PascalCaseTransformer();
 			expect(newTransformer).toBeInstanceOf(PascalCaseTransformer);
@@ -676,7 +676,7 @@ describe('PascalCaseTransformer', () => {
 		});
 	});
 
-	describe('when transforming various case formats', () => {
+	describe.concurrent('when transforming various case formats', () => {
 		test('should preserve already PascalCase keys', () => {
 			expect(transformer.convertCase(testData.CASE_VARIANTS.PascalCase)).toBe('MyKeyName');
 		});
@@ -699,7 +699,7 @@ describe('PascalCaseTransformer', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should handle single character keys', () => {
 			expect(transformer.convertCase('a')).toBe('A');
 			expect(transformer.convertCase('A')).toBe('A');
@@ -716,10 +716,10 @@ describe('PascalCaseTransformer', () => {
 	});
 });
 
-describe('SnakeCaseTransformer', () => {
+describe.concurrent('SnakeCaseTransformer', () => {
 	const transformer: SnakeCaseTransformer = new SnakeCaseTransformer();
 
-	describe('when creating transformer instance', () => {
+	describe.concurrent('when creating transformer instance', () => {
 		test('should create a new instance', () => {
 			const newTransformer: SnakeCaseTransformer = new SnakeCaseTransformer();
 			expect(newTransformer).toBeInstanceOf(SnakeCaseTransformer);
@@ -733,7 +733,7 @@ describe('SnakeCaseTransformer', () => {
 		});
 	});
 
-	describe('when transforming various case formats', () => {
+	describe.concurrent('when transforming various case formats', () => {
 		test('should preserve already snake_case keys', () => {
 			expect(transformer.convertCase(testData.CASE_VARIANTS.snakeCase)).toBe('my_key_name');
 		});
@@ -761,7 +761,7 @@ describe('SnakeCaseTransformer', () => {
 		});
 	});
 
-	describe('when handling edge cases', () => {
+	describe.concurrent('when handling edge cases', () => {
 		test('should handle single character keys', () => {
 			expect(transformer.convertCase('a')).toBe('a');
 			expect(transformer.convertCase('A')).toBe('a');
@@ -798,8 +798,8 @@ describe('SnakeCaseTransformer', () => {
 	});
 });
 
-describe('Comprehensive Function Coverage Tests', () => {
-	describe('CamelCase anonymous function coverage', () => {
+describe.concurrent('Comprehensive Function Coverage Tests', () => {
+	describe.concurrent('CamelCase anonymous function coverage', () => {
 		const transformer: CamelCaseTransformer = new CamelCaseTransformer();
 
 		test('should trigger all anonymous functions in regex patterns', () => {
@@ -818,7 +818,7 @@ describe('Comprehensive Function Coverage Tests', () => {
 		});
 	});
 
-	describe('KebabCase anonymous function coverage', () => {
+	describe.concurrent('KebabCase anonymous function coverage', () => {
 		const transformer: KebabCaseTransformer = new KebabCaseTransformer();
 
 		test('should trigger all regex patterns and anonymous functions', () => {
@@ -839,7 +839,7 @@ describe('Comprehensive Function Coverage Tests', () => {
 		});
 	});
 
-	describe('PascalCase anonymous function coverage', () => {
+	describe.concurrent('PascalCase anonymous function coverage', () => {
 		const transformer: PascalCaseTransformer = new PascalCaseTransformer();
 
 		test('should trigger anonymous function in regex pattern', () => {
@@ -856,7 +856,7 @@ describe('Comprehensive Function Coverage Tests', () => {
 		});
 	});
 
-	describe('SnakeCase anonymous function coverage', () => {
+	describe.concurrent('SnakeCase anonymous function coverage', () => {
 		const transformer: SnakeCaseTransformer = new SnakeCaseTransformer();
 
 		test('should trigger all named capture group replacements', () => {

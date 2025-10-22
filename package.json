@@ -180,9 +180,9 @@
 		"fix-lint": "eslint --fix ./source",
 		"lint": "eslint ./source",
 		"start": "bun build/index.js",
-		"test:integration": "bun test --timeout 6000 $(find test/integration -name '*.spec.ts')",
-		"test:unit": "bun test --timeout 6000 --coverage $(find test/unit -name '*.spec.ts')",
-		"test": "bun test --coverage --timeout 6000"
+		"test:integration": "bun test --timeout 10000 $(find test/integration -name '*.spec.ts')",
+		"test:unit": "bun test --timeout 10000 --coverage $(find test/unit -name '*.spec.ts')",
+		"test": "bun test --coverage --timeout 10000"
 	},
 	"type": "module"
 }

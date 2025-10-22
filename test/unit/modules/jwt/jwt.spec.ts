@@ -5,7 +5,7 @@ import { HttpError } from '#/errors/http-error';
 import { signJWT, verifyJWT } from '#/modules/jwt';
 import { JWT_ERROR_KEYS } from '#/modules/jwt/enums/jwt-error-keys';
 
-describe('JWT Core Functions', () => {
+describe.concurrent('JWT Core Functions', () => {
 	const testSecret = 'my-very-secure-secret-key-that-is-long-enough-for-hs256-algorithm';
 	const wrongSecret = 'wrong-secret-key-that-is-also-long-enough-for-hs256';
 	const userUuid = Bun.randomUUIDv7();
@@ -22,7 +22,7 @@ describe('JWT Core Functions', () => {
 		currentTime = Math.floor(Date.now() / 1000);
 	});
 
-	describe('signJWT', () => {
+	describe.concurrent('signJWT', () => {
 		test('should sign a JWT with default expiration (15 minutes)', async () => {
 			const payload: JWTPayload = { sub: userUuid, role: 'admin' };
 			const token = await signJWT(testSecret, payload);
@@ -255,7 +255,7 @@ describe('JWT Core Functions', () => {
 		});
 	});
 
-	describe('verifyJWT', () => {
+	describe.concurrent('verifyJWT', () => {
 		test('should verify valid JWT and return payload', async () => {
 			const payload: JWTPayload = { userId: 777, role: 'user' };
 			const token = await signJWT(testSecret, payload);
@@ -323,7 +323,7 @@ describe('JWT Core Functions', () => {
 		});
 	});
 
-	describe('integration scenarios', () => {
+	describe.concurrent('integration scenarios', () => {
 		test.each([
 			{ name: 'string values', payload: { name: 'John Doe', role: 'admin' } },
 			{ name: 'numeric values', payload: { userId: 12345, score: 98.5 } },
