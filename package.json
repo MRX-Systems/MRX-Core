@@ -60,6 +60,7 @@
 		"./modules/jwt": "./dist/modules/jwt/index.js",
 		"./modules/jwt/enums": "./dist/modules/jwt/enums/index.js",
 		"./modules/jwt/utils": "./dist/modules/jwt/utils/index.js",
+		"./modules/kv-store/bun-redis": "./dist/modules/kv-store/bun-redis/index.js",
 		"./modules/kv-store/enums": "./dist/modules/kv-store/enums/index.js",
 		"./modules/kv-store/ioredis": "./dist/modules/kv-store/ioredis/index.js",
 		"./modules/kv-store/memory": "./dist/modules/kv-store/memory/index.js",

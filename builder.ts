@@ -69,6 +69,7 @@ await Bun.build({
 		'./source/modules/jwt/utils/index.ts',
 
 		// # ————————— kvStore ————————— #
+		'./source/modules/kv-store/bun-redis/index.ts',
 		'./source/modules/kv-store/enums/index.ts',
 		'./source/modules/kv-store/ioredis/index.ts',
 		'./source/modules/kv-store/memory/index.ts',
