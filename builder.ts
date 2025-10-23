@@ -37,7 +37,6 @@ await Bun.build({
 		// cache
 		'./source/modules/elysia/cache/index.ts',
 		'./source/modules/elysia/cache/types/index.ts',
-		'./source/modules/elysia/cache/utils/index.ts',
 
 		// crud & crud-schema
 		'./source/modules/elysia/crud/index.ts',
