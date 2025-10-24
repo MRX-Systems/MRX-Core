@@ -9,13 +9,28 @@ on:
         required: true
         type: string
     secrets:
+      BUN_VERSION:
+        required: false
       KEY_SSH:
+        required: true
+      MSSQL_HOST:
+        required: true
+      MSSQL_DATABASE:
+        required: true
+      MSSQL_USER:
+        required: true
+      MSSQL_PASSWORD:
         required: true
 
 jobs:
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
+    env:
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,6 +41,8 @@ jobs:
 
       - name: Setup Bun Project
         uses: ./.github/actions/setup-bun-project
+        with:
+          bun-version: ${{ secrets.BUN_VERSION || '1.2.15' }}
 
       - name: Run Unit Tests
         run: bun run test:unit

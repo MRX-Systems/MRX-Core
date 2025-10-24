@@ -101,6 +101,10 @@ jobs:
       branch: ${{ needs.context.outputs.branch }}
     secrets:
       KEY_SSH: ${{ secrets.KEY_SSH }}
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
 
   integration-test:
     needs: [build, context]
@@ -109,6 +113,10 @@ jobs:
       branch: ${{ needs.context.outputs.branch }}
     secrets:
       KEY_SSH: ${{ secrets.KEY_SSH }}
+      MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+      MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+      MSSQL_USER: ${{ secrets.MSSQL_USER }}
+      MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
 
   create-release:
     needs: [unit-test, integration-test, context]

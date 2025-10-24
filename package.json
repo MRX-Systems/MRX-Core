@@ -1,6 +1,6 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.11.0-1-and-267-20250925",
+	"version": "2.11.0-1-and-269-20251003",
 	"author": "Ruby",
 	"devDependencies": {
 		"@eslint/js": "^9.36.0",
@@ -23,8 +23,8 @@
 		"elysia": "^1.4.7",
 		"ioredis": "^5.8.0",
 		"jose": "^6.1.0",
+		"mssql": "^12.0.0",
 		"knex": "^3.1.0",
-		"mssql": "^11.0.1",
 		"nodemailer": "^7.0.6",
 		"typescript": "^5.9.3"
 	},
