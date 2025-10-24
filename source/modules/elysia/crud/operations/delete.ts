@@ -50,6 +50,10 @@ export const batchDelete = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Delete',
+				description: `Delete ${tableName} records based on query options.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Delete`,
 			response: `${tableName}Response200`,

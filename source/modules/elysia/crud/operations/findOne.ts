@@ -48,6 +48,10 @@ export const findOne = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Find One',
+				description: `Find a single ${tableName} record by its primary key.`
+			},
 			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			response: `${tableName}Response200`,

@@ -44,6 +44,10 @@ export const find = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Find',
+				description: `Find ${tableName} records based on query options.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Find`,
 			response: `${tableName}Response200`,

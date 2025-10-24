@@ -50,6 +50,10 @@ export const update = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Update',
+				description: `Update one or more ${tableName} records based on query options.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Update`,
 			response: `${tableName}Response200`,

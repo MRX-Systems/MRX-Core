@@ -53,6 +53,10 @@ export const updateOne = <
 			};
 		},
 		{
+			detail: {
+				summary: 'Update Single Record',
+				description: `Update a single record in the ${tableName} table by its primary key.`
+			},
 			...getDbInjection(database),
 			params: `${tableName}IdParam`,
 			body: `${tableName}UpdateOne`,
