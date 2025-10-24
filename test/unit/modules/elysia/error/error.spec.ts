@@ -3,6 +3,7 @@ import { t, ValidationError } from 'elysia';
 
 import { BaseError } from '#/errors/base-error';
 import { HttpError } from '#/errors/http-error';
+import { ERROR_KEYS } from '#/modules/elysia/error/enums/error.keys';
 import { error } from '#/modules/elysia/error/error';
 
 describe('error', () => {
@@ -99,7 +100,7 @@ describe('error', () => {
 			}), { e: 1 }),
 			code: 'VALIDATION'
 		})).toEqual({
-			message: 'core.error.validation',
+			message: ERROR_KEYS.CORE_ERROR_VALIDATION,
 			content: {
 				on: 'body',
 				errors: [
@@ -135,7 +136,7 @@ describe('error', () => {
 			error: new Error('Not found'),
 			code: 'NOT_FOUND'
 		})).toEqual({
-			message: 'core.error.not_found'
+			message: ERROR_KEYS.CORE_ERROR_NOT_FOUND
 		});
 	});
 
@@ -157,7 +158,7 @@ describe('error', () => {
 			error: new Error('Internal server error'),
 			code: 'INTERNAL_SERVER_ERROR'
 		})).toEqual({
-			message: 'core.error.internal_server_error'
+			message: ERROR_KEYS.CORE_ERROR_INTERNAL_SERVER_ERROR
 		});
 	});
 
@@ -179,7 +180,7 @@ describe('error', () => {
 			error: new Error('Unknown error'),
 			code: 'UNKNOWN'
 		})).toEqual({
-			message: 'core.error.internal_server_error'
+			message: ERROR_KEYS.CORE_ERROR_INTERNAL_SERVER_ERROR
 		});
 	});
 });
