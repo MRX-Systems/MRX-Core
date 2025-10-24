@@ -2,7 +2,7 @@ export const DATABASE_ERROR_KEYS = {
 	MSSQL_CONNECTION_ERROR: 'mrx-core.mssql.error.database.connection_error',
 	MSSQL_DATABASE_ACCESS_DENIED: 'mrx-core.mssql.error.database.access_denied',
 	MSSQL_DATABASE_AMBIGUOUS_COLUMN: 'mrx-core.mssql.error.database.ambiguous_column',
-	MSSQL_DATABASE_AUTHORIZATION8FAILED: 'mrx-core.mssql.error.database.authorization_failed',
+	MSSQL_DATABASE_AUTHORIZATION_FAILED: 'mrx-core.mssql.error.database.authorization_failed',
 	MSSQL_DATABASE_COLUMN_NOT_FOUND: 'mrx-core.mssql.error.database.column_not_found',
 	MSSQL_DATABASE_CONVERSION_FAILED: 'mrx-core.mssql.error.database.conversion_failed',
 	MSSQL_DATABASE_DATA_TOO_LARGE: 'mrx-core.mssql.error.database.data_too_large',
