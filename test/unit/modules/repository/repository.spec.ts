@@ -1082,7 +1082,7 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABSE_CANNOT_UPDATE_IDENTITY_COLUMN);
+				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN);
 			}
 		});
 	});
