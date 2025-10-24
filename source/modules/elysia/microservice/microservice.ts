@@ -2,6 +2,7 @@ import { Elysia } from 'elysia';
 import { existsSync } from 'fs';
 import { platform } from 'os';
 
+import { MICROSERVICE_SUCCESS_KEYS } from './enums/microservice-success-keys';
 import { infoResponse200Schema } from './schemas/info';
 import { pingResponse200Schema } from './schemas/ping';
 
@@ -60,7 +61,7 @@ export const microservice = new Elysia({
 		pingResponse200: pingResponse200Schema
 	})
 	.get('/ping', () => ({
-		message: 'pong'
+		message: MICROSERVICE_SUCCESS_KEYS.PING_RESPONSE
 	}), {
 		detail: {
 			summary: 'Ping',
@@ -69,7 +70,7 @@ export const microservice = new Elysia({
 		response: 'pingResponse200'
 	})
 	.get('/info', () => ({
-		message: 'Microservice Information',
+		message: MICROSERVICE_SUCCESS_KEYS.INFO_RETRIEVED,
 		content: {
 			name: packageJson.default.name,
 			version: packageJson.default.version,
