@@ -185,7 +185,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 * Logs a message at the WARN level to the specified sinks.
 	 *
 	 * @param object - The log message object
-	 * @param sinkNames - Optionnal array of sink names to log to; logs to all sinks if omitted
+	 * @param sinkNames - Optional array of sink names to log to; logs to all sinks if omitted
 	 */
 	public warn<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
 		object: SinkBodiesIntersection<TSinks, SNames[number]>,

@@ -18,9 +18,9 @@ export interface FileLoggerConfig {
 }
 
 /**
-* FileLoggerSink implements LoggerSink to provide logging functionality to the file system.
-* Uses a WriteStream for efficient buffered writes (like Pino's sonic-boom).
-*/
+ * FileLoggerSink implements LoggerSink to provide logging functionality to the file system.
+ * Uses a WriteStream for efficient buffered writes (like Pino's sonic-boom).
+ */
 export class FileLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObject> {
 	public readonly config: FileLoggerConfig;
 	private readonly _stream: WriteStream;

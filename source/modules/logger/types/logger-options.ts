@@ -26,7 +26,7 @@ export interface LoggerOptions {
 	 * Maximum time in milliseconds to wait before flushing a partial batch.
 	 * Prevents logs from being delayed indefinitely when batch size is not reached.
 	 * Set to 0 to disable time-based flushing.
-	 * @default 0.1 (100 microseconds)
+	 * @default 0.1 (milliseconds)
 	 */
 	batchTimeout?: number;
 
