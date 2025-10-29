@@ -21,11 +21,19 @@ export class BunRedisStore implements KvStore {
 	}
 
 	public async connect(): Promise<void> {
-		await this._client.connect();
+		try {
+			await this._client.connect();
+		} catch (e) {
+			throw new BaseError(KV_STORE_ERROR_KEYS.CONNECTION_FAILED, e);
+		}
 	}
 
 	public close?(): void {
-		this._client.close();
+		try {
+			this._client.close();
+		} catch (e) {
+			throw new BaseError(KV_STORE_ERROR_KEYS.CLOSING_CONNECTION_FAILED, e);
+		}
 	}
 
 	public async get<T = unknown>(key: string): Promise<T | null> {
@@ -52,21 +60,21 @@ export class BunRedisStore implements KvStore {
 	}
 
 	public async increment(key: string, amount?: number): Promise<number> {
-		let current = Number(await this._client.get(key));
-		if (current !== null && isNaN(current))
-			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
-		current += (amount ?? 1);
-		await this._client.set(key, current.toString());
-		return current;
+		try {
+			const number = await this._client.incrby(key, amount ?? 1);
+			return number;
+		} catch (e) {
+			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER, e);
+		}
 	}
 
 	public async decrement(key: string, amount?: number): Promise<number> {
-		let current = Number(await this._client.get(key));
-		if (current !== null && isNaN(current))
-			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
-		current -= (amount ?? 1);
-		await this._client.set(key, current.toString());
-		return current;
+		try {
+			const number = await this._client.decrby(key, amount ?? 1);
+			return number;
+		} catch (e) {
+			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER, e);
+		}
 	}
 
 	public async del(key: string): Promise<boolean> {
