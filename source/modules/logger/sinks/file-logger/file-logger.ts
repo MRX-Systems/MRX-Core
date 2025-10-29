@@ -32,16 +32,15 @@ export class FileLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObje
 		this._stream = createWriteStream(config.path, {
 			flags: 'a', // append mode
 			encoding: 'utf8',
-			highWaterMark: config.bufferSize ?? 16 * 1024 // 16KB par défaut
+			highWaterMark: config.bufferSize ?? 16 * 1024 // 16KB by default
 		});
 	}
 
 	public async log(level: LogLevels, timestamp: number, object: TLogObject): Promise<void> {
 		if (this._isClosed)
 			return;
-		const sanitizedContent: string = typeof object === 'string' ? object : JSON.stringify(object);
-		const message = `{"timestamp":${timestamp},"level":"${level}","content":${sanitizedContent}}\n`;
-		const canContinue = this._stream.write(message);
+		const logEntry = JSON.stringify({ timestamp, level, content: object }) + '\n';
+		const canContinue = this._stream.write(logEntry);
 
 		if (!canContinue)
 			await new Promise<void>((resolve) => {

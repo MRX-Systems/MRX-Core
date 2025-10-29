@@ -155,7 +155,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		...sinkArgs: TSinkArgs
 	): Logger<TSinks & Record<TSinkName, new (...args: TSinkArgs) => TSink>> {
 		if (this._sinks[sinkName as keyof TSinks])
-			throw new Error(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
+			throw new BaseError(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
 		this._worker.postMessage({
 			type: 'REGISTER_SINK',
 			sinkName,
@@ -176,7 +176,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 */
 	public error<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
 		object: SinkBodiesIntersection<TSinks, SNames[number]>,
-		sinkNames?: SNames
+		sinkNames: SNames = this._sinkKeys as SNames
 	): void {
 		this._enqueue('ERROR', object, sinkNames);
 	}
@@ -189,7 +189,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 */
 	public warn<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
 		object: SinkBodiesIntersection<TSinks, SNames[number]>,
-		sinkNames?: SNames
+		sinkNames: SNames = this._sinkKeys as SNames
 	): void {
 		this._enqueue('WARN', object, sinkNames);
 	}
@@ -202,7 +202,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 */
 	public info<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
 		object: SinkBodiesIntersection<TSinks, SNames[number]>,
-		sinkNames?: SNames
+		sinkNames: SNames = this._sinkKeys as SNames
 	): void {
 		this._enqueue('INFO', object, sinkNames);
 	}
@@ -215,7 +215,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 */
 	public debug<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
 		object: SinkBodiesIntersection<TSinks, SNames[number]>,
-		sinkNames?: SNames
+		sinkNames: SNames = this._sinkKeys as SNames
 	): void {
 		this._enqueue('DEBUG', object, sinkNames);
 	}
@@ -228,7 +228,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 */
 	public log<SNames extends (keyof TSinks)[] = (keyof TSinks)[]>(
 		object: SinkBodiesIntersection<TSinks, SNames[number]>,
-		sinkNames: SNames = Object.keys(this._sinks) as SNames
+		sinkNames: SNames = this._sinkKeys as SNames
 	): void {
 		this._enqueue('LOG', object, sinkNames);
 	}
@@ -415,22 +415,14 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 				.catch((error: unknown) => {
 					this.emit('onBeforeExitError', new BaseError(
 						LOGGER_ERROR_KEYS.BEFORE_EXIT_FLUSH_ERROR,
-						{
-							error: error instanceof Error
-								? error
-								: new Error('Unknown error during logger flush on beforeExit')
-						}
+						{ error: error as Error }
 					));
 				});
 		else
 			void this.close().catch((error: unknown) => {
 				this.emit('onBeforeExitError', new BaseError(
 					LOGGER_ERROR_KEYS.BEFORE_EXIT_CLOSE_ERROR,
-					{
-						error: error instanceof Error
-							? error
-							: new Error('Unknown error during logger close on beforeExit')
-					}
+					{ error: error as Error }
 				));
 			});
 	};

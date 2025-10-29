@@ -9,7 +9,7 @@ export interface LoggerSink<
 
 	/**
 	 * Logs a message with the sink's implementation.
-	 * si vous voulez créer votre propre sink vous devrez implémenter cette méthode et tout ce qui est importation doit etre sous forme d'importation dynamique
+	 * If you want to create your own sink, you must implement this method and all imports must be in the form of dynamic imports.
 	 *
 	 * @param level - The log level at which the message should be logged.
 	 * @param timestamp - The date at which the message was logged.
