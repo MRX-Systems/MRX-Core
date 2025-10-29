@@ -41,19 +41,20 @@ jobs:
     with:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
+      BUN_VERSION: "1.2.15"
       KEY_SSH: ${{ secrets.KEY_SSH }}
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
       MSSQL_USER: ${{ secrets.MSSQL_USER }}
       MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
-      
-      
+
   integration-test:
     needs: build
     uses: ./.github/workflows/job-integration-test.yml
     with:
       branch: ${{ inputs.branch || github.head_ref || github.ref_name }}
     secrets:
+      BUN_VERSION: "1.2.15"
       KEY_SSH: ${{ secrets.KEY_SSH }}
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}

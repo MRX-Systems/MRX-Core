@@ -18,10 +18,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Bun Project
+        uses: ./.github/actions/setup-bun-project
         with:
-          bun-version: latest
+          bun-version: ${{ secrets.BUN_VERSION || 'latest' }}
 
       - name: Install Dependencies
         run: bun install

@@ -100,6 +100,7 @@ jobs:
     with:
       branch: ${{ needs.context.outputs.branch }}
     secrets:
+      BUN_VERSION: "1.2.15"
       KEY_SSH: ${{ secrets.KEY_SSH }}
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
@@ -112,6 +113,7 @@ jobs:
     with:
       branch: ${{ needs.context.outputs.branch }}
     secrets:
+      BUN_VERSION: "1.2.15"
       KEY_SSH: ${{ secrets.KEY_SSH }}
       MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
       MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}

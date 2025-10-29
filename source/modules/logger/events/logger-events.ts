@@ -1,10 +1,15 @@
 import type { BaseError } from '#/errors/base-error';
 
 export interface LoggerEvent {
-	error: [BaseError<{
+	onBeforeExitError: [BaseError<{ error: Error }>];
+	registerSinkError: [BaseError<{
 		sinkName: string;
-		object: unknown;
 		error: Error;
 	}>];
-	end: [];
+	sinkError: [BaseError<{
+		sinkName: string;
+		object?: unknown;
+		error: Error;
+	}>];
+	drained: [];
 }
