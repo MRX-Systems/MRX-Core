@@ -1,6 +1,6 @@
 import { HttpError } from '#/errors/http-error';
-import { MemoryStore } from '#/modules/kv-store/memory';
-import type { KvStore } from '#/modules/kv-store/types';
+import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import type { Server } from 'bun';
 import { Elysia, type HTTPHeaders, type StatusMap } from 'elysia';
 
@@ -98,8 +98,9 @@ import type { RateLimitOptions } from './types/rate-limit-options';
  *
  * @throws ({@link HttpError}) – `elysia.rate-limit.error.exceeded` when the rate limit is exceeded (HTTP 429)
  */
-export const rateLimit = (store: KvStore = new MemoryStore()) => {
+export const rateLimit = (store?: KvStore) => {
 	const restrictedRoutes = new Map<string, RateLimitOptions>();
+	store = store || new MemoryStore();
 
 	const rateLimitCheck = async (
 		key: string,

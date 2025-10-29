@@ -33,7 +33,7 @@ await Bun.build({
 		'./source/modules/database/events/index.ts',
 		'./source/modules/database/types/index.ts',
 
-		// // # ————————— Elysia Plugin ————————— #
+		// # ————————— Elysia Plugin ————————— #
 		// cache
 		'./source/modules/elysia/cache/index.ts',
 		'./source/modules/elysia/cache/types/index.ts',

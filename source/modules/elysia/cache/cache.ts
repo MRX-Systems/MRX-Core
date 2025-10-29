@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 
-import { MemoryStore } from '#/modules/kv-store/memory';
-import type { KvStore } from '#/modules/kv-store/types';
+import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import type { CacheItem } from './types/cache-item';
 import type { CacheOptions } from './types/cache-options';
 import { generateCacheKey } from './utils/generate-cache-key';

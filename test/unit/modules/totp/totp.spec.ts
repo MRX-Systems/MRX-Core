@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { totp, verifyTotp } from '#/modules/totp';
+import { totp, verifyTotp } from '#/modules/totp/totp';
 
 describe.concurrent('totp', () => {
 	test('should generate a valid TOTP code', async () => {
