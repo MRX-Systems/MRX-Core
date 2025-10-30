@@ -1,12 +1,8 @@
-import type { KvStore } from '#/modules/kv-store/types/kv-store';
-
 export interface CacheOptions {
 	/**
-	 * Default TTL in seconds
-	 *
-	 * @defaultValue 60
+	 * TTL in seconds
 	 */
-	defaultTtl?: number;
+	ttl: number;
 
 	/**
 	 * Cache key prefix
@@ -14,11 +10,4 @@ export interface CacheOptions {
 	 * @defaultValue ''
 	 */
 	prefix?: string;
-
-	/**
-	 * Storage backend
-	 *
-	 * @defaultValue ':memory:'
-	 */
-	store?: ':memory:' | KvStore;
 }

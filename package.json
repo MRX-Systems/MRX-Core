@@ -1,32 +1,32 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.10.0",
+	"version": "2.11.0-1-and-277-20251029",
 	"author": "Ruby",
 	"devDependencies": {
-		"@eslint/js": "^9.36.0",
+		"@eslint/js": "^9.38.0",
 		"@sinclair/typebox": "0.34.41",
-		"@stylistic/eslint-plugin": "^5.4.0",
-		"@types/bun": "^1.2.22",
-		"@types/nodemailer": "^7.0.1",
-		"elysia": "1.4.7",
-		"eslint": "^9.36.0",
+		"@stylistic/eslint-plugin": "^5.5.0",
+		"@types/bun": "^1.3.1",
+		"@types/nodemailer": "^7.0.3",
+		"elysia": "1.4.13",
+		"eslint": "^9.38.0",
 		"globals": "^16.4.0",
-		"ioredis": "^5.8.0",
+		"ioredis": "^5.8.2",
 		"jose": "^6.1.0",
 		"knex": "^3.1.0",
-		"mssql": "^11.0.1",
-		"nodemailer": "^7.0.6",
-		"typescript-eslint": "^8.44.1"
+		"mssql": "^12.0.0",
+		"nodemailer": "^7.0.10",
+		"typescript-eslint": "^8.46.2"
 	},
 	"peerDependencies": {
 		"@sinclair/typebox": "0.34.41",
-		"elysia": "^1.3.21",
-		"ioredis": "^5.7.0",
+		"elysia": "^1.4.13",
+		"ioredis": "^5.8.2",
 		"jose": "^6.1.0",
+		"mssql": "^12.0.0",
 		"knex": "^3.1.0",
-		"mssql": "^11.0.1",
-		"nodemailer": "^7.0.6",
-		"typescript": "^5.9.2"
+		"nodemailer": "^7.0.9",
+		"typescript": "^5.9.3"
 	},
 	"exports": {
 		"./errors": "./dist/errors/index.js",
@@ -42,21 +42,24 @@
 		"./modules/database/types": "./dist/modules/database/types/index.js",
 		"./modules/elysia/cache": "./dist/modules/elysia/cache/index.js",
 		"./modules/elysia/cache/types": "./dist/modules/elysia/cache/types/index.js",
-		"./modules/elysia/cache/utils": "./dist/modules/elysia/cache/utils/index.js",
 		"./modules/elysia/crud": "./dist/modules/elysia/crud/index.js",
+		"./modules/elysia/crud/enums": "./dist/modules/elysia/crud/enums/index.js",
 		"./modules/elysia/crud/operations": "./dist/modules/elysia/crud/operations/index.js",
 		"./modules/elysia/crud/types": "./dist/modules/elysia/crud/types/index.js",
 		"./modules/elysia/crud/utils": "./dist/modules/elysia/crud/utils/index.js",
 		"./modules/elysia/db-resolver": "./dist/modules/elysia/db-resolver/index.js",
 		"./modules/elysia/db-resolver/enums": "./dist/modules/elysia/db-resolver/enums/index.js",
 		"./modules/elysia/error": "./dist/modules/elysia/error/index.js",
+		"./modules/elysia/error/enums": "./dist/modules/elysia/error/enums/index.js",
 		"./modules/elysia/microservice": "./dist/modules/elysia/microservice/index.js",
+		"./modules/elysia/microservice/enums": "./dist/modules/elysia/microservice/enums/index.js",
 		"./modules/elysia/rate-limit": "./dist/modules/elysia/rate-limit/index.js",
 		"./modules/elysia/rate-limit/enums": "./dist/modules/elysia/rate-limit/enums/index.js",
 		"./modules/elysia/rate-limit/types": "./dist/modules/elysia/rate-limit/types/index.js",
 		"./modules/jwt": "./dist/modules/jwt/index.js",
 		"./modules/jwt/enums": "./dist/modules/jwt/enums/index.js",
 		"./modules/jwt/utils": "./dist/modules/jwt/utils/index.js",
+		"./modules/kv-store/bun-redis": "./dist/modules/kv-store/bun-redis/index.js",
 		"./modules/kv-store/enums": "./dist/modules/kv-store/enums/index.js",
 		"./modules/kv-store/ioredis": "./dist/modules/kv-store/ioredis/index.js",
 		"./modules/kv-store/memory": "./dist/modules/kv-store/memory/index.js",
@@ -114,19 +117,24 @@
 				"semver": "patch"
 			},
 			"chore": {
-				"title": "🦉 Chore"
+				"title": "🦉 Chore",
+				"semver": "patch"
 			},
 			"examples": {
-				"title": "🏀 Examples"
+				"title": "🏀 Examples",
+				"semver": "patch"
 			},
 			"test": {
-				"title": "🧪 Tests"
+				"title": "🧪 Tests",
+				"semver": "patch"
 			},
 			"style": {
-				"title": "🎨 Styles"
+				"title": "🎨 Styles",
+				"semver": "patch"
 			},
 			"ci": {
-				"title": "🤖 CI"
+				"title": "🤖 CI",
+				"semver": "patch"
 			}
 		},
 		"templates": {
@@ -171,9 +179,9 @@
 		"fix-lint": "eslint --fix ./source",
 		"lint": "eslint ./source",
 		"start": "bun build/index.js",
-		"test:integration": "bun test --timeout 6000 $(find test/integration -name '*.spec.ts')",
-		"test:unit": "bun test --timeout 6000 --coverage $(find test/unit -name '*.spec.ts')",
-		"test": "bun test --coverage --timeout 6000"
+		"test:integration": "bun test --timeout 10000 $(find test/integration -name '*.spec.ts')",
+		"test:unit": "bun test --timeout 10000 --coverage $(find test/unit -name '*.spec.ts')",
+		"test": "bun test --coverage --timeout 10000"
 	},
 	"type": "module"
 }

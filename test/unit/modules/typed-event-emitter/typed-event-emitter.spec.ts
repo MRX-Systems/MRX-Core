@@ -49,9 +49,9 @@ function createEmitter<TEvents extends EventMap>(): TypedEventEmitter<TEvents> {
 	return new TypedEventEmitter<TEvents>();
 }
 
-describe('TypedEventEmitter', (): void => {
-	describe('Core Event Emission and Listening', (): void => {
-		describe('emit and on', (): void => {
+describe.concurrent('TypedEventEmitter', (): void => {
+	describe.concurrent('Core Event Emission and Listening', (): void => {
+		describe.concurrent('emit and on', (): void => {
 			test('should emit an event with no payload', (): void => {
 				const emitter = createEmitter<NoPayloadEventMap>();
 				const mockListener = mock();

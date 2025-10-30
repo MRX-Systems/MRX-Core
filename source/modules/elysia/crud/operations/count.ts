@@ -3,6 +3,7 @@ import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
+import { CRUD_SUCCESS_KEYS } from '#/modules/elysia/crud/enums/crud-success-keys';
 import type { CrudOperationCount } from '#/modules/elysia/crud/types/crud-operation-count';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 import { getDbInjection } from './utils/get-db-injection';
@@ -37,11 +38,15 @@ export const count = <
 				throwIfNoResult: true
 			});
 			return {
-				message: `Counted records in ${tableName}`,
+				message: CRUD_SUCCESS_KEYS.COUNT_RESPONSE,
 				content: data
 			};
 		},
 		{
+			detail: {
+				summary: 'Count',
+				description: `Count ${tableName} records based on query options.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Count`,
 			response: `${tableName}CountResponse200`,

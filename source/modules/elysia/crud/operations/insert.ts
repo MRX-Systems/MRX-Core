@@ -3,6 +3,7 @@ import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
+import { CRUD_SUCCESS_KEYS } from '#/modules/elysia/crud/enums/crud-success-keys';
 import type { CrudOperationInsert } from '#/modules/elysia/crud/types/crud-operation-insert';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 import { getDbInjection } from './utils/get-db-injection';
@@ -44,11 +45,15 @@ export const insert = <
 				throwIfNoResult: true
 			});
 			return {
-				message: `Inserted record into ${tableName}`,
+				message: CRUD_SUCCESS_KEYS.INSERT_RESPONSE,
 				content: data
 			};
 		},
 		{
+			detail: {
+				summary: 'Insert',
+				description: `Insert one or more records into the ${tableName} table.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Insert`,
 			response: `${tableName}Response200`,

@@ -1,41 +1,80 @@
 import { describe, expect, test } from 'bun:test';
 
 import { BaseError } from '#/errors/base-error';
-import { HTTP_ERROR_STATUS_CODES } from '#/errors/enums/http-status-codes';
+import { HTTP_STATUS_CODES } from '#/errors/enums/http-status-codes';
 import { HttpError } from '#/errors/http-error';
 
-describe('HttpError', () => {
-	describe('constructor', () => {
-		test('should create HttpError with message only (defaults to 500)', () => {
+describe.concurrent('HttpError', (): void => {
+	describe.concurrent('when created with message only', (): void => {
+		test('should instantiate as HttpError, BaseError, and Error', (): void => {
 			const httpError = new HttpError('Internal server error');
 
 			expect(httpError).toBeInstanceOf(HttpError);
 			expect(httpError).toBeInstanceOf(BaseError);
 			expect(httpError).toBeInstanceOf(Error);
-			expect(httpError.message).toBe('Internal server error');
-			expect(httpError.httpStatusCode).toBe(500);
-			expect(httpError.cause).toBeUndefined();
 			expect(httpError.name).toBe('HttpError');
+		});
+
+		test('should default to 500 status code', (): void => {
+			const httpError = new HttpError('Internal server error');
+
+			expect(httpError.httpStatusCode).toBe(500);
+		});
+
+		test('should preserve message and have no cause', (): void => {
+			const httpError = new HttpError('Internal server error');
+
+			expect(httpError.message).toBe('Internal server error');
+			expect(httpError.cause).toBeUndefined();
+		});
+
+		test('should capture creation timestamp', (): void => {
+			const httpError = new HttpError('Internal server error');
+
 			expect(httpError.date).toBeInstanceOf(Date);
 		});
+	});
 
-		test('should create HttpError with message and numeric status code', () => {
+	describe.concurrent('when created with numeric status code', (): void => {
+		test('should use provided status code', (): void => {
 			const httpError = new HttpError('Not found', 404);
 
-			expect(httpError.message).toBe('Not found');
 			expect(httpError.httpStatusCode).toBe(404);
+			expect(httpError.message).toBe('Not found');
 			expect(httpError.cause).toBeUndefined();
 		});
+	});
 
-		test('should create HttpError with message and status key', () => {
+	describe.concurrent('when created with status key', (): void => {
+		test('should resolve status key to numeric code', (): void => {
 			const httpError = new HttpError('Unauthorized access', 'UNAUTHORIZED');
 
-			expect(httpError.message).toBe('Unauthorized access');
 			expect(httpError.httpStatusCode).toBe(401);
+			expect(httpError.message).toBe('Unauthorized access');
 			expect(httpError.cause).toBeUndefined();
 		});
 
-		test('should create HttpError with message, status code, and cause', () => {
+		test('should handle all available HTTP status codes', (): void => {
+			const statusCodes = Object.keys(HTTP_STATUS_CODES) as (keyof typeof HTTP_STATUS_CODES)[];
+
+			statusCodes.forEach((statusCode): void => {
+				const httpError = new HttpError(`Error for ${statusCode}`, statusCode);
+
+				expect(httpError.httpStatusCode).toBe(HTTP_STATUS_CODES[statusCode]);
+				expect(httpError.message).toBe(`Error for ${statusCode}`);
+			});
+		});
+
+		test('should default to 500 for invalid status key', (): void => {
+			const httpError = new HttpError('Server error', 'INVALID_STATUS' as keyof typeof HTTP_STATUS_CODES);
+
+			expect(httpError.httpStatusCode).toBe(500);
+			expect(httpError.message).toBe('Server error');
+		});
+	});
+
+	describe.concurrent('when created with message, numeric status, and cause', (): void => {
+		test('should preserve all parameters', (): void => {
 			const cause = { token: 'invalid' };
 			const httpError = new HttpError('Token validation failed', 401, cause);
 
@@ -43,8 +82,10 @@ describe('HttpError', () => {
 			expect(httpError.httpStatusCode).toBe(401);
 			expect(httpError.cause).toBe(cause);
 		});
+	});
 
-		test('should create HttpError with message, status key, and cause', () => {
+	describe.concurrent('when created with message, status key, and cause', (): void => {
+		test('should resolve status key and preserve cause', (): void => {
 			const cause = { details: 'Missing required field' };
 			const httpError = new HttpError('Validation error', 'BAD_REQUEST', cause);
 
@@ -52,27 +93,35 @@ describe('HttpError', () => {
 			expect(httpError.httpStatusCode).toBe(400);
 			expect(httpError.cause).toBe(cause);
 		});
+	});
 
-		test('should handle all available HTTP status codes', () => {
-			const statusCodes = Object.keys(HTTP_ERROR_STATUS_CODES) as (keyof typeof HTTP_ERROR_STATUS_CODES)[];
-
-			statusCodes.forEach((statusCode) => {
-				const httpError = new HttpError(`Error for ${statusCode}`, statusCode);
-
-				expect(httpError.httpStatusCode).toBe(HTTP_ERROR_STATUS_CODES[statusCode]);
-				expect(httpError.message).toBe(`Error for ${statusCode}`);
-			});
+	describe.concurrent('when cause has different types', (): void => {
+		test('should accept string cause', () => {
+			const errorWithString = new HttpError('String cause error', 'BAD_REQUEST', 'String cause');
+			expect(errorWithString.cause).toBe('String cause');
 		});
 
-		test('should default to INTERNAL_SERVER_ERROR when invalid status is provided', () => {
-			// Test with an invalid string that's not in HTTP_STATUS_CODES
-			const httpError = new HttpError('Server error', 'INVALID_STATUS' as keyof typeof HTTP_ERROR_STATUS_CODES);
-
-			expect(httpError.httpStatusCode).toBe(500);
-			expect(httpError.message).toBe('Server error');
+		test('should accept number cause', (): void => {
+			const errorWithNumber = new HttpError('Number cause error', 'NOT_FOUND', 404);
+			expect(errorWithNumber.cause).toBe(404);
 		});
 
-		test('should generate different dates for instances created at different times', () => {
+		test('should accept object cause', (): void => {
+			const errorWithObject = new HttpError('Object cause error', 'INTERNAL_SERVER_ERROR', { code: 500, details: 'Internal error' });
+			expect(errorWithObject.cause).toEqual({ code: 500, details: 'Internal error' });
+		});
+
+		test('should preserve original Error instance', (): void => {
+			const originalError = new Error('Original error');
+			const httpError = new HttpError('Wrapped HTTP error', 'INTERNAL_SERVER_ERROR', originalError);
+
+			expect(httpError.cause).toBe(originalError);
+			expect(httpError.stack).toContain('HttpError');
+		});
+	});
+
+	describe.concurrent('when multiple instances are created', (): void => {
+		test('should generate different timestamps', (): void => {
 			const error1 = new HttpError('Error 1');
 
 			Bun.sleepSync(10);
@@ -81,32 +130,10 @@ describe('HttpError', () => {
 
 			expect(error1.date.getTime()).toBeLessThanOrEqual(error2.date.getTime());
 		});
-
-		test('should preserve original Error properties in cause', () => {
-			const originalError = new Error('Original error');
-			const httpError = new HttpError('Wrapped HTTP error', 'INTERNAL_SERVER_ERROR', originalError);
-
-			expect(httpError.cause).toBe(originalError);
-			expect(httpError.stack).toContain('HttpError');
-		});
-
-		test('should handle different cause types', () => {
-			// String cause
-			const errorWithString = new HttpError('String cause error', 'BAD_REQUEST', 'String cause');
-			expect(errorWithString.cause).toBe('String cause');
-
-			// Number cause
-			const errorWithNumber = new HttpError('Number cause error', 'NOT_FOUND', 404);
-			expect(errorWithNumber.cause).toBe(404);
-
-			// Object cause
-			const errorWithObject = new HttpError('Object cause error', 'INTERNAL_SERVER_ERROR', { code: 500, details: 'Internal error' });
-			expect(errorWithObject.cause).toEqual({ code: 500, details: 'Internal error' });
-		});
 	});
 
-	describe('properties', () => {
-		test('should return correct values from properties', () => {
+	describe.concurrent('when accessed for properties', (): void => {
+		test('should return correct values', (): void => {
 			const httpError = new HttpError('Forbidden', 'FORBIDDEN', 'test cause');
 
 			expect(httpError.date).toBeInstanceOf(Date);
@@ -116,33 +143,29 @@ describe('HttpError', () => {
 			expect(httpError.name).toBe('HttpError');
 		});
 
-		test('should return immutable values', () => {
+		test('should return consistent values across accesses', (): void => {
 			const httpError = new HttpError('Unauthorized', 'UNAUTHORIZED');
 
 			const originalDate = httpError.date;
 			const originalHttpStatusCode = httpError.httpStatusCode;
 
-			// Verify that properties return the same values on subsequent calls
 			expect(httpError.date).toBe(originalDate);
 			expect(httpError.httpStatusCode).toBe(originalHttpStatusCode);
 		});
 
-		test('should have readonly properties', () => {
+		test('should have immutable properties', (): void => {
 			const httpError = new HttpError('Bad request', 'BAD_REQUEST');
 
-			// In TypeScript, readonly properties are compile-time checks, not runtime
-			// We test that the properties exist and are of correct types
 			expect(httpError.date).toBeInstanceOf(Date);
 			expect(httpError.httpStatusCode).toBe(400);
 
-			// Verify the property descriptors exist
 			const dateDescriptor = Object.getOwnPropertyDescriptor(httpError, 'date');
 			const statusDescriptor = Object.getOwnPropertyDescriptor(httpError, 'httpStatusCode');
 			expect(dateDescriptor).toBeTruthy();
 			expect(statusDescriptor).toBeTruthy();
 		});
 
-		test('should have date close to creation time', () => {
+		test('should have date close to creation time', (): void => {
 			const beforeCreation = new Date();
 			const httpError = new HttpError('test', 'BAD_REQUEST');
 			const afterCreation = new Date();
@@ -152,9 +175,9 @@ describe('HttpError', () => {
 		});
 	});
 
-	describe('isClientError', () => {
-		test('should return true for 4xx status codes', () => {
-			const clientErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+	describe.concurrent('when checking isClientError', (): void => {
+		test('should return true for 4xx status codes', (): void => {
+			const clientErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'BAD_REQUEST',
 				'UNAUTHORIZED',
 				'FORBIDDEN',
@@ -165,15 +188,14 @@ describe('HttpError', () => {
 				'TOO_MANY_REQUESTS'
 			];
 
-			clientErrorCodes.forEach((statusCode) => {
+			clientErrorCodes.forEach((statusCode): void => {
 				const httpError = new HttpError('Client error', statusCode);
 				expect(httpError.isClientError).toBe(true);
-				expect(httpError.isServerError).toBe(false);
 			});
 		});
 
-		test('should return false for 5xx status codes', () => {
-			const serverErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+		test('should return false for 5xx status codes', (): void => {
+			const serverErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'INTERNAL_SERVER_ERROR',
 				'NOT_IMPLEMENTED',
 				'BAD_GATEWAY',
@@ -181,16 +203,16 @@ describe('HttpError', () => {
 				'GATEWAY_TIMEOUT'
 			];
 
-			serverErrorCodes.forEach((statusCode) => {
+			serverErrorCodes.forEach((statusCode): void => {
 				const httpError = new HttpError('Server error', statusCode);
 				expect(httpError.isClientError).toBe(false);
 			});
 		});
 	});
 
-	describe('isServerError', () => {
-		test('should return true for 5xx status codes', () => {
-			const serverErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+	describe.concurrent('when checking isServerError', (): void => {
+		test('should return true for 5xx status codes', (): void => {
+			const serverErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'INTERNAL_SERVER_ERROR',
 				'NOT_IMPLEMENTED',
 				'BAD_GATEWAY',
@@ -201,15 +223,15 @@ describe('HttpError', () => {
 				'LOOP_DETECTED'
 			];
 
-			serverErrorCodes.forEach((statusCode) => {
+			serverErrorCodes.forEach((statusCode): void => {
 				const httpError = new HttpError('Server error', statusCode);
 				expect(httpError.isServerError).toBe(true);
 				expect(httpError.isClientError).toBe(false);
 			});
 		});
 
-		test('should return false for 4xx status codes', () => {
-			const clientErrorCodes: (keyof typeof HTTP_ERROR_STATUS_CODES)[] = [
+		test('should return false for 4xx status codes', (): void => {
+			const clientErrorCodes: (keyof typeof HTTP_STATUS_CODES)[] = [
 				'BAD_REQUEST',
 				'UNAUTHORIZED',
 				'FORBIDDEN',
@@ -218,15 +240,15 @@ describe('HttpError', () => {
 				'CONFLICT'
 			];
 
-			clientErrorCodes.forEach((statusCode) => {
+			clientErrorCodes.forEach((statusCode): void => {
 				const httpError = new HttpError('Client error', statusCode);
 				expect(httpError.isServerError).toBe(false);
 			});
 		});
 	});
 
-	describe('inheritance', () => {
-		test('should properly extend BaseError and Error classes', () => {
+	describe.concurrent('when inherited', (): void => {
+		test('should extend BaseError and Error classes', (): void => {
 			const httpError = new HttpError('Test HTTP error');
 
 			expect(httpError instanceof Error).toBe(true);
@@ -235,7 +257,7 @@ describe('HttpError', () => {
 			expect(httpError.constructor).toBe(HttpError);
 		});
 
-		test('should have proper prototype chain', () => {
+		test('should maintain proper prototype chain', (): void => {
 			const httpError = new HttpError('test');
 
 			expect(Object.getPrototypeOf(httpError)).toBe(HttpError.prototype);
@@ -243,7 +265,19 @@ describe('HttpError', () => {
 			expect(Object.getPrototypeOf(BaseError.prototype)).toBe(Error.prototype);
 		});
 
-		test('should be catchable as Error and BaseError', () => {
+		test('should inherit all BaseError functionality', (): void => {
+			const httpError = new HttpError('HTTP error message', 'UNAUTHORIZED', 'Some cause');
+
+			expect(httpError.date).toBeInstanceOf(Date);
+			expect(httpError.cause).toBe('Some cause');
+			expect(httpError.httpStatusCode).toBe(401);
+			expect(httpError.isClientError).toBe(true);
+			expect(httpError.isServerError).toBe(false);
+		});
+	});
+
+	describe.concurrent('when thrown and caught', (): void => {
+		test('should be catchable as Error, BaseError, and HttpError', (): void => {
 			try {
 				throw new HttpError('Test HTTP error', 'NOT_FOUND');
 			} catch (error) {
@@ -252,31 +286,40 @@ describe('HttpError', () => {
 				expect(error).toBeInstanceOf(HttpError);
 			}
 		});
+	});
 
-		test('should inherit all BaseError functionality', () => {
-			const httpError = new HttpError('HTTP error message', 'UNAUTHORIZED', 'Some cause');
+	describe.concurrent('when handling constructor overloads', (): void => {
+		test('should handle message only', () => {
+			const error = new HttpError('message only');
+			expect(error.message).toBe('message only');
+			expect(error.httpStatusCode).toBe(500);
+			expect(error.cause).toBeUndefined();
+		});
 
-			// Should have BaseError properties
-			expect(httpError.date).toBeInstanceOf(Date);
-			expect(httpError.cause).toBe('Some cause');
+		test('should handle message with cause (no status)', (): void => {
+			const error = new HttpError('message with cause', { details: 'cause details' });
+			expect(error.message).toBe('message with cause');
+			expect(error.httpStatusCode).toBe(500);
+			expect(error.cause).toEqual({ details: 'cause details' });
+		});
 
-			// Should have HttpError-specific properties
-			expect(httpError.httpStatusCode).toBe(401);
-			expect(httpError.isClientError).toBe(true);
-			expect(httpError.isServerError).toBe(false);
+		test('should handle message with numeric status', (): void => {
+			const error = new HttpError('message with numeric status', 404);
+			expect(error.message).toBe('message with numeric status');
+			expect(error.httpStatusCode).toBe(404);
+			expect(error.cause).toBeUndefined();
+		});
+
+		test('should handle message with string status', (): void => {
+			const error = new HttpError('message with string status', 'BAD_REQUEST');
+			expect(error.message).toBe('message with string status');
+			expect(error.httpStatusCode).toBe(400);
+			expect(error.cause).toBeUndefined();
 		});
 	});
 
-	describe('edge cases', () => {
-		test('should handle default status code when no status is provided', () => {
-			const httpError = new HttpError('Error without status code');
-
-			expect(httpError.httpStatusCode).toBe(500); // INTERNAL_SERVER_ERROR
-			expect(httpError.isServerError).toBe(true);
-			expect(httpError.isClientError).toBe(false);
-		});
-
-		test('should be serializable', () => {
+	describe.concurrent('when serialized', (): void => {
+		test('should convert to JSON', (): void => {
 			const httpError = new HttpError('Serializable error', 'BAD_REQUEST', { details: 'Some details' });
 
 			const serialized = JSON.stringify({
@@ -300,31 +343,15 @@ describe('HttpError', () => {
 			expect(parsed.cause).toEqual({ details: 'Some details' });
 			expect(parsed.name).toBe('HttpError');
 		});
+	});
 
-		test('should handle constructor overloads correctly', () => {
-			// Overload 1: message only
-			const error1 = new HttpError('message only');
-			expect(error1.message).toBe('message only');
-			expect(error1.httpStatusCode).toBe(500);
-			expect(error1.cause).toBeUndefined();
+	describe.concurrent('edge cases', (): void => {
+		test('should default to server error when no status provided', (): void => {
+			const httpError = new HttpError('Error without status code');
 
-			// Overload 2: message and cause (no status)
-			const error2 = new HttpError('message with cause', { details: 'cause details' });
-			expect(error2.message).toBe('message with cause');
-			expect(error2.httpStatusCode).toBe(500);
-			expect(error2.cause).toEqual({ details: 'cause details' });
-
-			// Overload 2: message and numeric status
-			const error3 = new HttpError('message with numeric status', 404);
-			expect(error3.message).toBe('message with numeric status');
-			expect(error3.httpStatusCode).toBe(404);
-			expect(error3.cause).toBeUndefined();
-
-			// Overload 2: message and string status
-			const error4 = new HttpError('message with string status', 'BAD_REQUEST');
-			expect(error4.message).toBe('message with string status');
-			expect(error4.httpStatusCode).toBe(400);
-			expect(error4.cause).toBeUndefined();
+			expect(httpError.httpStatusCode).toBe(500);
+			expect(httpError.isServerError).toBe(true);
+			expect(httpError.isClientError).toBe(false);
 		});
 	});
 });

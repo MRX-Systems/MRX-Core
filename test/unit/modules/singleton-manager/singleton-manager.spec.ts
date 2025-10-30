@@ -109,7 +109,7 @@ function cleanupSingletons(): void {
 	ExampleSingleton.resetCount();
 }
 
-describe('SingletonManager', () => {
+describe.concurrent('SingletonManager', () => {
 	beforeEach(() => {
 		cleanupSingletons();
 	});
@@ -118,7 +118,7 @@ describe('SingletonManager', () => {
 		cleanupSingletons();
 	});
 
-	describe('Singleton Pattern Behavior', () => {
+	describe.concurrent('Singleton Pattern Behavior', () => {
 		test('should return the same SingletonManager instance', () => {
 			const manager1 = SingletonManager;
 			const manager2 = SingletonManager;
@@ -128,7 +128,7 @@ describe('SingletonManager', () => {
 		});
 	});
 
-	describe('register', () => {
+	describe.concurrent('register', () => {
 		test('should register a class instance without parameters', () => {
 			SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton());
 
@@ -216,7 +216,7 @@ describe('SingletonManager', () => {
 		});
 	});
 
-	describe('unregister', () => {
+	describe.concurrent('unregister', () => {
 		test('should unregister a registered class', () => {
 			SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton());
 			expect(SingletonManager.has(singletonNames.EXAMPLE)).toBe(true);
@@ -260,7 +260,7 @@ describe('SingletonManager', () => {
 		});
 	});
 
-	describe('get', () => {
+	describe.concurrent('get', () => {
 		test('should return the registered singleton instance', () => {
 			SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton());
 
@@ -298,7 +298,7 @@ describe('SingletonManager', () => {
 		});
 	});
 
-	describe('has', () => {
+	describe.concurrent('has', () => {
 		test('should return true for registered classes', () => {
 			SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton());
 
@@ -331,7 +331,7 @@ describe('SingletonManager', () => {
 		});
 	});
 
-	describe('Edge Cases', () => {
+	describe.concurrent('Edge Cases', () => {
 		test('should handle empty string as class name', () => {
 			expect(() => {
 				SingletonManager.register('', new ExampleSingleton());
@@ -384,7 +384,7 @@ describe('SingletonManager', () => {
 		});
 	});
 
-	describe('Type Safety', () => {
+	describe.concurrent('Type Safety', () => {
 		test('should maintain proper typing for generic get method', () => {
 			SingletonManager.register(singletonNames.EXAMPLE_2, new ExampleSingleton2('TypedTest'));
 

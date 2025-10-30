@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 import { MAILER_ERROR_KEYS } from '#/modules/mailer/enums/mailer-error-keys';
 import type { SMTPOptions } from '#/modules/mailer/types/smtp-options';
 
-describe('SMTP', () => {
+describe.concurrent('SMTP', () => {
 	let testAccount: nodemailer.TestAccount;
 
 	beforeAll(async () => {
@@ -33,7 +33,7 @@ describe('SMTP', () => {
 		return new SMTP(createTestConfig(config));
 	};
 
-	describe('constructor', () => {
+	describe.concurrent('constructor', () => {
 		test('should create a new instance with valid configuration', async () => {
 			const mailer = await createTestSMTP();
 			expect(mailer).toBeInstanceOf((await import('#/modules/mailer/smtp')).SMTP);
@@ -77,7 +77,7 @@ describe('SMTP', () => {
 		});
 	});
 
-	describe('connect', () => {
+	describe.concurrent('connect', () => {
 		test('should connect to the SMTP server successfully', async () => {
 			const mailer = await createTestSMTP();
 			await mailer.connect();
@@ -133,7 +133,7 @@ describe('SMTP', () => {
 		});
 	});
 
-	describe('disconnect', () => {
+	describe.concurrent('disconnect', () => {
 		test('should disconnect from the SMTP server', async () => {
 			const mailer = await createTestSMTP();
 			await mailer.connect();

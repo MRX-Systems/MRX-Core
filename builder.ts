@@ -33,14 +33,14 @@ await Bun.build({
 		'./source/modules/database/events/index.ts',
 		'./source/modules/database/types/index.ts',
 
-		// // # ————————— Elysia Plugin ————————— #
+		// # ————————— Elysia Plugin ————————— #
 		// cache
 		'./source/modules/elysia/cache/index.ts',
 		'./source/modules/elysia/cache/types/index.ts',
-		'./source/modules/elysia/cache/utils/index.ts',
 
 		// crud & crud-schema
 		'./source/modules/elysia/crud/index.ts',
+		'./source/modules/elysia/crud/enums/index.ts',
 		'./source/modules/elysia/crud/operations/index.ts',
 		'./source/modules/elysia/crud/types/index.ts',
 		'./source/modules/elysia/crud/utils/index.ts',
@@ -51,9 +51,11 @@ await Bun.build({
 
 		// error
 		'./source/modules/elysia/error/index.ts',
+		'./source/modules/elysia/error/enums/index.ts',
 
 		// microservice
 		'./source/modules/elysia/microservice/index.ts',
+		'./source/modules/elysia/microservice/enums/index.ts',
 
 		// rateLimit
 		'./source/modules/elysia/rate-limit/index.ts',
@@ -66,6 +68,7 @@ await Bun.build({
 		'./source/modules/jwt/utils/index.ts',
 
 		// # ————————— kvStore ————————— #
+		'./source/modules/kv-store/bun-redis/index.ts',
 		'./source/modules/kv-store/enums/index.ts',
 		'./source/modules/kv-store/ioredis/index.ts',
 		'./source/modules/kv-store/memory/index.ts',

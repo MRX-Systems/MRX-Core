@@ -3,6 +3,7 @@ import { Elysia } from 'elysia';
 
 import type { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
+import { CRUD_SUCCESS_KEYS } from '#/modules/elysia/crud/enums/crud-success-keys';
 import type { CrudOperationUpdate } from '#/modules/elysia/crud/types/crud-operation-update';
 import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
 import { getDbInjection } from './utils/get-db-injection';
@@ -44,13 +45,15 @@ export const update = <
 				throwIfNoResult: true
 			});
 			return {
-				message: data.length === 0
-					? `No records updated in ${tableName}`
-					: `Updated records in ${tableName}`,
+				message: CRUD_SUCCESS_KEYS.UPDATE_RESPONSE,
 				content: data
 			};
 		},
 		{
+			detail: {
+				summary: 'Update',
+				description: `Update one or more ${tableName} records based on query options.`
+			},
 			...getDbInjection(database),
 			body: `${tableName}Update`,
 			response: `${tableName}Response200`,

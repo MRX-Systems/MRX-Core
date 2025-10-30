@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test';
 import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
 import { buildOtpAuthUri, parseOtpAuthUri } from '#/modules/totp/otp-auth-uri';
 
-describe('buildOtpAuthUri', () => {
+describe.concurrent('buildOtpAuthUri', () => {
 	test('should build a valid OTP Auth URI', () => {
 		const uri = buildOtpAuthUri({
 			issuer: 'Example',
@@ -14,7 +14,7 @@ describe('buildOtpAuthUri', () => {
 	});
 });
 
-describe('parseOtpAuthUri', () => {
+describe.concurrent('parseOtpAuthUri', () => {
 	test('should parse a valid OTP Auth URI', () => {
 		const uri = 'otpauth://totp/user%40example.com?secret=2W3YP3JOW476T4APP36YTZHFBJTWRVJQ&issuer=Example';
 		const params = parseOtpAuthUri(uri);
