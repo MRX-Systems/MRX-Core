@@ -9,6 +9,7 @@ import type { LoggerOptions } from './types/logger-options';
 import type { LoggerSink } from './types/logger-sink';
 import type { SinkBodiesIntersection } from './types/sink-bodies-intersection';
 import type { SinkMap } from './types/sink-map';
+import { workerFunction } from './worker-logger';
 
 /**
  * Pending log message corresponding to a log entry waiting to be processed by the worker.
@@ -130,7 +131,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		this._batchTimeout = batchTimeout;
 		this._autoEnd = autoEnd;
 		this._flushOnBeforeExit = flushOnBeforeExit;
-		this._worker = new Worker(new URL('worker-logger.ts', import.meta.url).href, { type: 'module' }); // create a new worker
+		this._worker = new Worker(URL.createObjectURL(new Blob([`(${workerFunction.toString()})()`], { type: 'application/javascript' })), { type: 'module' }); // create a new worker
 		this._setupWorkerMessages(); // setup message handling from the worker
 		if (this._autoEnd)
 			this._setupAutoEnd(); // setup auto-end on process exit
