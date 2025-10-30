@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test';
 
 import { crudSchema } from '#/modules/elysia/crud/crud-schema';
 
-describe('crudSchema', () => {
+describe.concurrent('crudSchema', () => {
 	const mockSchema = Type.Object({
 		id: Type.Number(),
 		name: Type.String(),

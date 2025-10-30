@@ -4,8 +4,8 @@ import { BaseError } from '#/errors/base-error';
 import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
 import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 
-describe('MemoryStore', () => {
-	describe('Basic Operations', () => {
+describe.concurrent('MemoryStore', () => {
+	describe.concurrent('Basic Operations', () => {
 		test('should create empty store', () => {
 			const store = new MemoryStore();
 			expect(store.get<string>('nonexistent')).toBeNull();
@@ -55,7 +55,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('Increment/Decrement Operations', () => {
+	describe.concurrent('Increment/Decrement Operations', () => {
 		test('should increment values correctly', () => {
 			const store = new MemoryStore();
 			store.set('counter', 5);
@@ -144,7 +144,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('TTL Management', () => {
+	describe.concurrent('TTL Management', () => {
 		test('should set and get TTL correctly', () => {
 			const store = new MemoryStore();
 			store.set('key1', 'value1', 120);
@@ -189,7 +189,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('Delete Operations', () => {
+	describe.concurrent('Delete Operations', () => {
 		test('should delete existing keys', () => {
 			const store = new MemoryStore();
 			store.set('key1', 'value1');
@@ -229,7 +229,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('Expiration & Cleanup', () => {
+	describe.concurrent('Expiration & Cleanup', () => {
 		test('should expire keys after TTL', async () => {
 			const store = new MemoryStore();
 			store.set('shortlived', 'value', 1); // 1 second TTL
@@ -321,7 +321,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('Edge Cases', () => {
+	describe.concurrent('Edge Cases', () => {
 		test('should handle empty string values', () => {
 			const store = new MemoryStore();
 			store.set('empty', '');
@@ -383,7 +383,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('Multiple Keys & Performance', () => {
+	describe.concurrent('Multiple Keys & Performance', () => {
 		test('should handle multiple keys independently', () => {
 			const store = new MemoryStore();
 
@@ -426,7 +426,7 @@ describe('MemoryStore', () => {
 		});
 	});
 
-	describe('Store Lifecycle', () => {
+	describe.concurrent('Store Lifecycle', () => {
 		let store: MemoryStore;
 
 		beforeEach(() => {

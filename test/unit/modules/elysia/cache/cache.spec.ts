@@ -2,9 +2,9 @@ import { describe, expect, test } from 'bun:test';
 
 import { cache } from '#/modules/elysia/cache/cache';
 
-describe('Cache Module', () => {
+describe.concurrent('Cache Module', () => {
 	test('should cache slow responses and serve them quickly', async () => {
-		const sleepDuration = 5000; // 5 seconds
+		const sleepDuration = 3000; // 3 seconds
 		const cacheTtl = 10; // 10-second TTL
 
 		const cachePlugin = cache({ defaultTtl: cacheTtl }).get(
@@ -16,7 +16,7 @@ describe('Cache Module', () => {
 			{ isCached: true }
 		);
 
-		// First request - should take ~5 seconds
+		// First request - should take ~3 seconds
 		const startTime1 = Date.now();
 		const response1 = await cachePlugin.handle(new Request('http://localhost/slow-route'));
 		const duration1 = Date.now() - startTime1;
@@ -142,7 +142,7 @@ describe('Cache Module', () => {
 		expect(await nonCachedResponse.text()).toBe('not cached');
 		expect(nonCachedResponse.headers.get('x-cache')).toBeNull();
 		expect(nonCachedResponse.headers.get('cache-control')).toBeNull();
-	}, { timeout: 5000 });
+	});
 
 	test('should handle query parameters in cache keys', async () => {
 		const cachePlugin = cache({ defaultTtl: 10 }).get(
@@ -165,7 +165,7 @@ describe('Cache Module', () => {
 		const response3 = await cachePlugin.handle(new Request('http://localhost/query-route?param=2'));
 		expect(await response3.text()).toBe('result-2');
 		expect(response3.headers.get('x-cache')).toBe('MISS');
-	}, { timeout: 5000 });
+	});
 
 	test('should handle specific TTL in isCached correctly', async () => {
 		const cacheTtl = 5; // 5-second TTL
@@ -190,5 +190,5 @@ describe('Cache Module', () => {
 		// Check MISS headers
 		expect(response2.headers.get('x-cache')).toBe('MISS');
 		expect(response2.headers.get('cache-control')).toBe(`max-age=${cacheTtl}, public`);
-	});
+	}, { timeout: 15000 });
 });

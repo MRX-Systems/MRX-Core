@@ -128,7 +128,7 @@ describe('MSSQL', () => {
 		await knexInstance(complexTestTable).delete();
 	});
 
-	describe('Constructor and Initialization', () => {
+	describe.concurrent('Constructor and Initialization', () => {
 		test('should create MSSQL instance with complete configuration', async () => {
 			const { MSSQL } = await import('#/modules/database/mssql');
 			const mssql = new MSSQL(databaseOptions);
@@ -175,7 +175,7 @@ describe('MSSQL', () => {
 		});
 	});
 
-	describe('Connection Management', () => {
+	describe.concurrent('Connection Management', () => {
 		describe('Successful Connection Scenarios', () => {
 			test('should establish connection to database with valid credentials', async () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
@@ -290,8 +290,8 @@ describe('MSSQL', () => {
 		});
 	});
 
-	describe('Event System Functionality', () => {
-		describe('Query Event Management', () => {
+	describe.concurrent('Event System Functionality', () => {
+		describe.concurrent('Query Event Management', () => {
 			test('should emit query events when event system is enabled', async () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
@@ -390,7 +390,7 @@ describe('MSSQL', () => {
 			});
 		});
 
-		describe('Table-Level Event Management', () => {
+		describe.concurrent('Table-Level Event Management', () => {
 			test('should emit table selected events when event system is enabled', async () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL({ ...databaseOptions, isEventEnabled: true });
@@ -485,7 +485,7 @@ describe('MSSQL', () => {
 	});
 
 	describe('Repository Management', () => {
-		describe('Default Repository Operations', () => {
+		describe.concurrent('Default Repository Operations', () => {
 			test('should return default repository instance for valid table', async () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
@@ -495,8 +495,6 @@ describe('MSSQL', () => {
 
 				expect(repository).toBeInstanceOf(Repository);
 				await mssql.disconnect();
-			}, {
-				timeout: 5500
 			});
 
 			test('should return same repository instance for repeated calls', async () => {
@@ -630,8 +628,8 @@ describe('MSSQL', () => {
 		});
 	});
 
-	describe('Table Management', () => {
-		describe('Table Instance Operations', () => {
+	describe.concurrent('Table Management', () => {
+		describe.concurrent('Table Instance Operations', () => {
 			test('should return table instance for valid table name', async () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
@@ -685,7 +683,7 @@ describe('MSSQL', () => {
 			});
 		});
 
-		describe('Table Collection Management', () => {
+		describe.concurrent('Table Collection Management', () => {
 			test('should provide access to tables collection', async () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
@@ -855,8 +853,6 @@ describe('MSSQL', () => {
 			expect(results).toHaveLength(10);
 
 			await mssql.disconnect();
-		}, {
-			timeout: 5500
 		});
 
 		test('should handle rapid connect/disconnect cycles', async () => {
