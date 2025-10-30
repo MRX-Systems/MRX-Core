@@ -1,26 +1,23 @@
-import { Redis, type RedisOptions } from 'ioredis';
+import { RedisClient, type RedisOptions } from 'bun';
 
 import { BaseError } from '#/errors/base-error';
 import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
 import type { KvStore } from '#/modules/kv-store/types/kv-store';
 
 /**
- * Redis-based key-value store implementation using ioredis client.
+ * Redis-based key-value store implementation using Bun's Redis client.
  *
  * Provides a Redis-backed implementation of the KvStore interface with
  * automatic JSON serialization/deserialization and proper error handling.
  */
-export class IoRedisStore implements KvStore {
+export class BunRedisStore implements KvStore {
 	/**
 	 * Redis client instance.
 	 */
-	private readonly _client: Redis;
+	private readonly _client: RedisClient;
 
-	public constructor(options: RedisOptions) {
-		this._client = new Redis({
-			...options,
-			lazyConnect: true
-		});
+	public constructor(url?: string, options?: RedisOptions) {
+		this._client = new RedisClient(url, options);
 	}
 
 	public async connect(): Promise<void> {
@@ -31,9 +28,9 @@ export class IoRedisStore implements KvStore {
 		}
 	}
 
-	public async close(): Promise<void> {
+	public close?(): void {
 		try {
-			await this._client.quit();
+			this._client.close();
 		} catch (e) {
 			throw new BaseError(KV_STORE_ERROR_KEYS.CLOSING_CONNECTION_FAILED, e);
 		}
@@ -57,23 +54,23 @@ export class IoRedisStore implements KvStore {
 			: JSON.stringify(value);
 
 		if (ttlSec)
-			await this._client.setex(key, ttlSec, serialized);
+			await this._client.set(key, serialized, 'EX', ttlSec);
 		else
 			await this._client.set(key, serialized);
 	}
 
-	public async increment(key: string, amount = 1): Promise<number> {
+	public async increment(key: string, amount?: number): Promise<number> {
 		try {
-			const number = await this._client.incrby(key, amount);
+			const number = await this._client.incrby(key, amount ?? 1);
 			return number;
 		} catch (e) {
 			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER, e);
 		}
 	}
 
-	public async decrement(key: string, amount = 1): Promise<number> {
+	public async decrement(key: string, amount?: number): Promise<number> {
 		try {
-			const number = await this._client.decrby(key, amount);
+			const number = await this._client.decrby(key, amount ?? 1);
 			return number;
 		} catch (e) {
 			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER, e);
@@ -81,17 +78,18 @@ export class IoRedisStore implements KvStore {
 	}
 
 	public async del(key: string): Promise<boolean> {
-		const result = await this._client.del(key);
-		return result === 1;
+		const res = await this._client.del(key);
+		return res === 1;
 	}
 
 	public async expire(key: string, ttlSec: number): Promise<boolean> {
-		const result = await this._client.expire(key, ttlSec);
-		return result === 1;
+		const res = await this._client.expire(key, ttlSec);
+		return res === 1;
 	}
 
-	public ttl(key: string): Promise<number> {
-		return this._client.ttl(key);
+	public async ttl(key: string): Promise<number> {
+		const res = await this._client.ttl(key);
+		return res;
 	}
 
 	public async clean(): Promise<number> {

@@ -2,12 +2,12 @@ export interface KvStore {
 	/**
 	 * Connect to the store.
 	 */
-	connect?(): Promise<void>;
+	connect?(): Promise<void> | void;
 
 	/**
 	 * Close the connection to the store.
 	 */
-	close?(): Promise<void>;
+	close?(): Promise<void> | void;
 
 	/**
 	 * Get the value associated with a key.
