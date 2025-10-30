@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
 import type { JWTPayload, JWTVerifyResult } from 'jose';
 
 import { HttpError } from '#/errors/http-error';
-import { signJWT, verifyJWT } from '#/modules/jwt';
+import { signJWT, verifyJWT } from '#/modules/jwt/jwt';
 import { JWT_ERROR_KEYS } from '#/modules/jwt/enums/jwt-error-keys';
 
 describe.concurrent('JWT Core Functions', () => {

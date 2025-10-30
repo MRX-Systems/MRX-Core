@@ -42,7 +42,6 @@
 		"./modules/database/types": "./dist/modules/database/types/index.js",
 		"./modules/elysia/cache": "./dist/modules/elysia/cache/index.js",
 		"./modules/elysia/cache/types": "./dist/modules/elysia/cache/types/index.js",
-		"./modules/elysia/cache/utils": "./dist/modules/elysia/cache/utils/index.js",
 		"./modules/elysia/crud": "./dist/modules/elysia/crud/index.js",
 		"./modules/elysia/crud/enums": "./dist/modules/elysia/crud/enums/index.js",
 		"./modules/elysia/crud/operations": "./dist/modules/elysia/crud/operations/index.js",
