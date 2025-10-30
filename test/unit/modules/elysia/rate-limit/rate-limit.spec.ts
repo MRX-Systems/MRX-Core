@@ -165,7 +165,7 @@ describe.concurrent('rateLimit', () => {
 		}
 	});
 
-	test('shoudl handle global rate limit ', async () => {
+	test('should handle global rate limit ', async () => {
 		const ip = '127.0.0.2';
 		const app = new Elysia()
 			.use(rateLimit())
