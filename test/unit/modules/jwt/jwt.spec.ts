@@ -41,10 +41,10 @@ describe.concurrent('JWT Core Functions', () => {
 
 		test.each([
 			{
-				name: 'numeric expiration (timestamp)',
-				getExpiration: (currentTime: number) => currentTime + ONE_HOUR,
+				name: 'numeric expiration (seconds offset)',
+				getExpiration: () => ONE_HOUR,
 				expectedExpiration: (currentTime: number) => currentTime + ONE_HOUR,
-				tolerance: 0
+				tolerance: 5
 			},
 			{
 				name: 'Date expiration (2 hours)',
@@ -89,7 +89,7 @@ describe.concurrent('JWT Core Functions', () => {
 				tolerance: 5
 			}
 		])('should sign JWT with $name', async ({ getExpiration, expectedExpiration, tolerance }) => {
-			const expiration = getExpiration(currentTime);
+			const expiration = getExpiration();
 			const token = await signJWT(testSecret, {}, expiration);
 
 			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
@@ -150,8 +150,8 @@ describe.concurrent('JWT Core Functions', () => {
 
 		test.each([
 			{
-				name: 'numeric timestamp in past',
-				getExpiration: (currentTime: number) => currentTime - ONE_HOUR
+				name: 'numeric expiration in past (negative offset)',
+				getExpiration: () => -ONE_HOUR
 			},
 			{
 				name: 'Date object in past',
@@ -170,11 +170,11 @@ describe.concurrent('JWT Core Functions', () => {
 				getExpiration: () => '2 days ago'
 			},
 			{
-				name: 'numeric timestamp equal to current time',
-				getExpiration: (currentTime: number) => currentTime
+				name: 'numeric offset equal to zero',
+				getExpiration: () => 0
 			}
 		])('should throw HttpError when expiration $name is in the past or current time', async ({ getExpiration }) => {
-			const expiration = getExpiration(currentTime);
+			const expiration = getExpiration();
 
 			try {
 				await signJWT(testSecret, {}, expiration);
@@ -286,8 +286,7 @@ describe.concurrent('JWT Core Functions', () => {
 
 		test('should return false for expired JWT', async () => {
 			// Create a token that expires in 1 second
-			const shortExpiration = currentTime + 1;
-			const token = await signJWT(testSecret, {}, shortExpiration);
+			const token = await signJWT(testSecret, {}, 1);
 
 			// Wait for the token to expire
 			await new Promise((resolve) => setTimeout(resolve, 1100));
@@ -355,9 +354,8 @@ describe.concurrent('JWT Core Functions', () => {
 				createdAt: Date.now()
 			};
 
-			// Sign token
-			const oneHourFromNow = Math.floor(Date.now() / 1000) + ONE_HOUR;
-			const token = await signJWT(testSecret, originalPayload, oneHourFromNow);
+			// Sign token with 1 hour expiration
+			const token = await signJWT(testSecret, originalPayload, ONE_HOUR);
 
 			// Verify multiple times
 			for (let i = 0; i < 5; ++i) {
@@ -370,15 +368,10 @@ describe.concurrent('JWT Core Functions', () => {
 		});
 
 		test('should handle different expiration formats consistently', async () => {
-			const currentTimestamp = Math.floor(Date.now() / 1000);
-
 			// Test different expiration formats that should result in similar expiration times
-			const futureTimestamp = currentTimestamp + ONE_HOUR; // 1 hour from now
-			const futureDate = new Date((currentTimestamp + ONE_HOUR) * 1000);
-
-			const token1 = await signJWT(testSecret, {}, futureTimestamp);
-			const token2 = await signJWT(testSecret, {}, futureDate);
-			const token3 = await signJWT(testSecret, {}, '1 hour');
+			const token1 = await signJWT(testSecret, {}, ONE_HOUR); // numeric offset in seconds
+			const token2 = await signJWT(testSecret, {}, new Date(Date.now() + (ONE_HOUR * 1000))); // Date object
+			const token3 = await signJWT(testSecret, {}, '1 hour'); // human-readable string
 
 			const result1 = await verifyJWT(token1, testSecret) as JWTVerifyResult;
 			const result2 = await verifyJWT(token2, testSecret) as JWTVerifyResult;
