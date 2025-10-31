@@ -12,12 +12,12 @@ import { parseHumanTimeToSeconds } from './utils/parse-human-time-to-seconds';
 export const signJWT = (
 	secret: string,
 	payload: JWTPayload,
-	expiration: number | string | Date = Math.floor(Date.now() / 1000) + (60 * 15) // Default to 15 minutes
+	expiration: number | string | Date = 60 * 15 // Default to 15 minutes
 ) => {
 	const exp = expiration instanceof Date
 		? Math.floor(expiration.getTime() / 1000)
 		: typeof expiration === 'number'
-			? expiration
+			? Math.floor(Date.now() / 1000) + expiration
 			: Math.floor(Date.now() / 1000) + parseHumanTimeToSeconds(expiration);
 
 	if (exp <= Math.floor(Date.now() / 1000))
@@ -44,7 +44,7 @@ export const signJWT = (
 			.setJti(finalPayload.jti)
 			.setNotBefore(finalPayload.nbf)
 			.setIssuedAt(finalPayload.iat)
-			.setExpirationTime(expiration)
+			.setExpirationTime(exp)
 			.sign(new TextEncoder().encode(secret));
 		return jwt;
 	} catch (error) {
