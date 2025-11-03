@@ -1,6 +1,6 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.11.0-1-and-277-20251029",
+	"version": "2.11.0-1-and-280-20251103",
 	"author": "Ruby",
 	"devDependencies": {
 		"@eslint/js": "^9.38.0",
