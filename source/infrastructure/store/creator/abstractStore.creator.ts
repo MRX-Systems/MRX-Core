@@ -3,6 +3,7 @@ import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 import { CoreError } from '#/common/error/core.error.ts';
 import { ErrorKeys } from '#/common/error/keys.error.ts';
 import { Redis, type RedisOptions } from '#/common/lib/optional/ioredis/ioredis.lib.ts';
+import type { Cluster } from 'ioredis';
 
 /**
  * Abstract Store class for Store Creator
@@ -11,7 +12,7 @@ export abstract class AbstractStoreCreator {
     /**
      * The store connection object ({@link Redis})
      */
-    private _store: Redis | undefined;
+    private _cluster: Cluster | undefined;
 
     /**
      * The configuration of the store ({@link RedisOptions})
@@ -37,7 +38,25 @@ export abstract class AbstractStoreCreator {
      */
     public connect(): void {
         try {
-            this._store = new Redis(this._config);
+            this._cluster = new Redis.Cluster(
+                [
+                    {
+                        host: this._config.host,
+                        port: this._config.port
+                    }
+                ],
+                {
+                    scaleReads: 'master',
+                    slotsRefreshTimeout: 20000,
+                    slotsRefreshInterval: 60000,
+                    redisOptions: {
+                        password: this._config.password as string,
+                        tls: {},
+                        maxRetriesPerRequest: 3
+                    },
+                    clusterRetryStrategy: (): number => 1000
+                }
+            );
         } catch (error) {
             throw new CoreError({
                 messageKey: ErrorKeys.STORE_NOT_CONNECTED,
@@ -52,16 +71,16 @@ export abstract class AbstractStoreCreator {
      * @returns If the store is connected or not
      */
     public isConnected(): boolean {
-        return Boolean(this._store);
+        return Boolean(this._cluster);
     }
 
     /**
      * Disconnect from the store
      */
     public disconnect(): void {
-        if (this._store) {
-            this._store.disconnect();
-            this._store = undefined;
+        if (this._cluster) {
+            this._cluster.disconnect();
+            this._cluster = undefined;
         }
     }
 
@@ -70,11 +89,11 @@ export abstract class AbstractStoreCreator {
      *
      * @throws ({@link CoreError}) - If the store is not connected ({@link ErrorKeys.STORE_NOT_CONNECTED})
      */
-    public get store(): Redis {
-        if (!this._store)
+    public get store(): Cluster {
+        if (!this._cluster)
             throw new CoreError({
                 messageKey: ErrorKeys.STORE_NOT_CONNECTED
             });
-        return this._store;
+        return this._cluster;
     }
 }

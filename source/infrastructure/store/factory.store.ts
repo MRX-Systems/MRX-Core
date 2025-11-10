@@ -1,6 +1,6 @@
 import { CoreError } from '#/common/error/core.error.ts';
 import { ErrorKeys } from '#/common/error/keys.error.ts';
-import type { Redis } from '#/common/lib/optional/ioredis/ioredis.lib.ts';
+import type { Cluster } from 'ioredis';
 import type { AbstractStoreCreator } from './creator/abstractStore.creator.ts';
 import { DragonFlyCreator, type DragonFlyStoreOptions } from './creator/dragonFly.creator.ts';
 
@@ -99,14 +99,14 @@ class FactoryStoreSingleton {
      *
      * @returns The store. ({@link Redis})
      */
-    public get(name: string): Redis {
+    public get<T extends Cluster = Cluster>(name: string): T {
         if (!this._store.has(name))
             throw new CoreError({
                 messageKey: ErrorKeys.STORE_NOT_REGISTERED,
                 detail: { name }
             });
         const store: AbstractStoreCreator = this._store.get(name) as AbstractStoreCreator;
-        return store.store;
+        return store.store as T;
     }
 
     /**
