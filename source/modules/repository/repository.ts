@@ -84,7 +84,7 @@ const _DEFAULT_OFFSET = 0;
  * const users = await repo.find({ limit: 10 });
  * ```
  */
-export class Repository<TModel = unknown> {
+export class Repository<TModel = Record<string, unknown>> {
 	/**
 	 * The Knex instance used for database operations.
 	 */
@@ -197,7 +197,7 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public findStream<KModel extends TModel = NoInfer<TModel>>(
+	public findStream<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendStream<KModel>
 	): StreamWithAsyncIterable<KModel> {
 		const query = this._knex(this._table.name);
@@ -304,7 +304,7 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async find<KModel extends TModel = NoInfer<TModel>>(
+	public async find<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendPagination<KModel>
 	): Promise<KModel[]> {
 		const query = this._knex(this._table.name);
@@ -355,7 +355,7 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async count<KModel extends TModel = NoInfer<TModel>>(
+	public async count<KModel extends TModel = TModel>(
 		options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>
 	): Promise<number> {
 		const query = this._knex(this._table.name)
@@ -404,8 +404,8 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async insert<KModel extends TModel = NoInfer<TModel>>(
-		data: Partial<KModel> | Partial<KModel>[],
+	public async insert<KModel extends TModel = TModel>(
+		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
 	): Promise<KModel[]> {
 		const query = this._knex(this._table.name)
@@ -456,7 +456,7 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async update<KModel extends TModel = NoInfer<TModel>>(
+	public async update<KModel extends TModel = TModel>(
 		data: Partial<NoInfer<KModel>>,
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<KModel[]> {
