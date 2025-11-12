@@ -457,7 +457,7 @@ export class Repository<TModel = unknown> {
 	 * ```
 	 */
 	public async update<KModel extends TModel = NoInfer<TModel>>(
-		data: Partial<KModel>,
+		data: Partial<NoInfer<KModel>>,
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<KModel[]> {
 		const query = this._knex(this._table.name)
