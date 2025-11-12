@@ -1,1 +1,1 @@
-export { Cluster, Redis, type RedisOptions } from 'ioredis';
+export { Cluster, type RedisOptions } from 'ioredis';
