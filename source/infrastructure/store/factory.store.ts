@@ -99,14 +99,14 @@ class FactoryStoreSingleton {
      *
      * @returns The store. ({@link Redis})
      */
-    public get<T extends Cluster = Cluster>(name: string): T {
+    public get(name: string): Cluster {
         if (!this._store.has(name))
             throw new CoreError({
                 messageKey: ErrorKeys.STORE_NOT_REGISTERED,
                 detail: { name }
             });
         const store: AbstractStoreCreator = this._store.get(name) as AbstractStoreCreator;
-        return store.store as T;
+        return store.store;
     }
 
     /**
