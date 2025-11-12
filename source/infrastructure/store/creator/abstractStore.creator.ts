@@ -2,14 +2,14 @@ import type { BasaltLogger } from '@basalt-lab/basalt-logger';
 
 import { CoreError } from '#/common/error/core.error.ts';
 import { ErrorKeys } from '#/common/error/keys.error.ts';
-import { Redis, type Cluster, type RedisOptions } from '#/common/lib/optional/ioredis/ioredis.lib.ts';
+import { Cluster, type RedisOptions } from '#/common/lib/optional/ioredis/ioredis.lib.ts';
 
 /**
  * Abstract Store class for Store Creator
  */
 export abstract class AbstractStoreCreator {
     /**
-     * The store connection object ({@link Redis})
+     * The store connection object ({@link Cluster})
      */
     private _cluster: Cluster | undefined;
 
@@ -37,7 +37,7 @@ export abstract class AbstractStoreCreator {
      */
     public connect(): void {
         try {
-            this._cluster = new Redis.Cluster(
+            this._cluster = new Cluster(
                 [
                     {
                         host: this._config.host,
