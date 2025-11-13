@@ -14,6 +14,7 @@ import type { OrderByItem } from './types/order-by-item';
 import type { QueryOptions } from './types/query-options';
 import type { QueryOptionsExtendPagination } from './types/query-options-extend-pagination';
 import type { QueryOptionsExtendStream } from './types/query-options-extend-stream';
+import { InternalError } from '#/errors/internal-error';
 
 type OperatorFn = (
 	query: Knex.QueryBuilder,
@@ -222,7 +223,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		// Handle source stream errors
 		kStream.on('error', (error: unknown) => {
 			const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-			passThrough.emit('error', new HttpError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+			passThrough.emit('error', new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
 				query: query.toSQL().sql,
 				error
 			}));
@@ -673,7 +674,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		if (error instanceof HttpError)
 			throw error;
 		const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-		throw new HttpError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+		throw new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
 			query: query.toSQL().sql,
 			error
 		});
@@ -722,12 +723,7 @@ export class Repository<TModel = Record<string, unknown>> {
 						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
 					typeof throwIfNoResult === 'object' && throwIfNoResult.httpStatusCode
 						? throwIfNoResult.httpStatusCode
-						: 404,
-					!process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
-						? {
-							query: query.toSQL().sql
-						}
-						: undefined
+						: 404
 				);
 			return result;
 		} catch (error) {

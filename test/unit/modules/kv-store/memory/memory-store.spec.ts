@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
 import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 
@@ -116,7 +116,7 @@ describe.concurrent('MemoryStore', () => {
 			const store = new MemoryStore();
 			store.set('text', 'not a number');
 
-			expect(() => store.increment('text')).toThrow(BaseError);
+			expect(() => store.increment('text')).toThrow(InternalError);
 			expect(() => store.increment('text')).toThrow(KV_STORE_ERROR_KEYS.NOT_INTEGER);
 			store.destroy();
 		});
@@ -125,7 +125,7 @@ describe.concurrent('MemoryStore', () => {
 			const store = new MemoryStore();
 			store.set('object', { count: 5 });
 
-			expect(() => store.decrement('object')).toThrow(BaseError);
+			expect(() => store.decrement('object')).toThrow(InternalError);
 			expect(() => store.decrement('object')).toThrow(KV_STORE_ERROR_KEYS.NOT_INTEGER);
 			store.destroy();
 		});
@@ -377,8 +377,8 @@ describe.concurrent('MemoryStore', () => {
 			store.set('true', true);
 			store.set('false', false);
 
-			expect(() => store.increment('true')).toThrow(BaseError);
-			expect(() => store.increment('false')).toThrow(BaseError);
+			expect(() => store.increment('true')).toThrow(InternalError);
+			expect(() => store.increment('false')).toThrow(InternalError);
 			store.destroy();
 		});
 	});

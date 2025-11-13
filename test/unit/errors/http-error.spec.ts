@@ -1,16 +1,16 @@
 import { describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/base-error';
+import { AppError } from '#/errors/app-error';
 import { HTTP_STATUS_CODES } from '#/errors/enums/http-status-codes';
 import { HttpError } from '#/errors/http-error';
 
 describe.concurrent('HttpError', (): void => {
 	describe.concurrent('when created with message only', (): void => {
-		test('should instantiate as HttpError, BaseError, and Error', (): void => {
+		test('should instantiate as HttpError, AppError, and Error', (): void => {
 			const httpError = new HttpError('Internal server error');
 
 			expect(httpError).toBeInstanceOf(HttpError);
-			expect(httpError).toBeInstanceOf(BaseError);
+			expect(httpError).toBeInstanceOf(AppError);
 			expect(httpError).toBeInstanceOf(Error);
 			expect(httpError.name).toBe('HttpError');
 		});
@@ -32,6 +32,14 @@ describe.concurrent('HttpError', (): void => {
 			const httpError = new HttpError('Internal server error');
 
 			expect(httpError.date).toBeInstanceOf(Date);
+		});
+
+		test('should generate UUID v7', (): void => {
+			const httpError = new HttpError('Internal server error');
+
+			expect(httpError.uuid).toBeTypeOf('string');
+			expect(httpError.uuid).toHaveLength(36);
+			expect(httpError.uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
 		});
 	});
 
@@ -248,11 +256,11 @@ describe.concurrent('HttpError', (): void => {
 	});
 
 	describe.concurrent('when inherited', (): void => {
-		test('should extend BaseError and Error classes', (): void => {
+		test('should extend AppError and Error classes', (): void => {
 			const httpError = new HttpError('Test HTTP error');
 
 			expect(httpError instanceof Error).toBe(true);
-			expect(httpError instanceof BaseError).toBe(true);
+			expect(httpError instanceof AppError).toBe(true);
 			expect(httpError instanceof HttpError).toBe(true);
 			expect(httpError.constructor).toBe(HttpError);
 		});
@@ -261,11 +269,11 @@ describe.concurrent('HttpError', (): void => {
 			const httpError = new HttpError('test');
 
 			expect(Object.getPrototypeOf(httpError)).toBe(HttpError.prototype);
-			expect(Object.getPrototypeOf(HttpError.prototype)).toBe(BaseError.prototype);
-			expect(Object.getPrototypeOf(BaseError.prototype)).toBe(Error.prototype);
+			expect(Object.getPrototypeOf(HttpError.prototype)).toBe(AppError.prototype);
+			expect(Object.getPrototypeOf(AppError.prototype)).toBe(Error.prototype);
 		});
 
-		test('should inherit all BaseError functionality', (): void => {
+		test('should inherit all AppError functionality', (): void => {
 			const httpError = new HttpError('HTTP error message', 'UNAUTHORIZED', 'Some cause');
 
 			expect(httpError.date).toBeInstanceOf(Date);
@@ -277,12 +285,12 @@ describe.concurrent('HttpError', (): void => {
 	});
 
 	describe.concurrent('when thrown and caught', (): void => {
-		test('should be catchable as Error, BaseError, and HttpError', (): void => {
+		test('should be catchable as Error, AppError, and HttpError', (): void => {
 			try {
 				throw new HttpError('Test HTTP error', 'NOT_FOUND');
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(BaseError);
+				expect(error).toBeInstanceOf(AppError);
 				expect(error).toBeInstanceOf(HttpError);
 			}
 		});

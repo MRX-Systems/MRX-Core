@@ -1,6 +1,6 @@
 import { createTransport, type SendMailOptions, type Transporter } from 'nodemailer';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { MAILER_ERROR_KEYS } from './enums/mailer-error-keys';
 import type { SMTPOptions } from './types/smtp-options';
 
@@ -8,7 +8,7 @@ import type { SMTPOptions } from './types/smtp-options';
  * The `SMTP` class manages the connection and operations with an SMTP server.
  *
  * This class provides methods to connect, disconnect, and send emails using
- * the Nodemailer library. It supports connection pooling and error handling ({@link BaseError}).
+ * the Nodemailer library. It supports connection pooling and error handling ({@link InternalError}).
  *
  * @example
  * ```ts
@@ -52,12 +52,12 @@ export class SMTP {
 	 * It enables connection pooling for efficient resource usage and sets the maximum number of
 	 * concurrent connections as specified in the configuration (default: 5).
 	 *
-	 * @throws ({@link BaseError}) - If the transporter is already connected.
-	 * @throws ({@link BaseError}) - If the connection or verification fails.
+	 * @throws ({@link InternalError}) - If the transporter is already connected.
+	 * @throws ({@link InternalError}) - If the connection or verification fails.
 	 */
 	public async connect(): Promise<void> {
 		if (this._transporter)
-			throw new BaseError(MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED);
+			throw new InternalError(MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED);
 
 		this._transporter = createTransport({
 			host: this._config.host,
@@ -73,7 +73,7 @@ export class SMTP {
 		try {
 			await this._transporter.verify();
 		} catch (error) {
-			throw new BaseError(MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR, error);
+			throw new InternalError(MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR, error);
 		}
 	}
 
@@ -94,13 +94,13 @@ export class SMTP {
 	 *
 	 * @param options - The mail options, such as recipient, subject, and content.
 	 *
-	 * @throws ({@link BaseError}) - If the transporter is not connected.
+	 * @throws ({@link InternalError}) - If the transporter is not connected.
 	 *
 	 * @returns A promise resolving to the result of the send operation.
 	 */
 	public async sendMail(options: SendMailOptions): Promise<unknown> {
 		if (!this._transporter)
-			throw new BaseError(MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED);
+			throw new InternalError(MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED);
 		return this._transporter.sendMail(options);
 	}
 }

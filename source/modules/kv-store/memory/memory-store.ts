@@ -1,4 +1,4 @@
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
 import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import type { MemoryStoreEntry } from './types/memory-store-entry';
@@ -59,7 +59,7 @@ export class MemoryStore implements KvStore {
 		const entry = this._store.get(key);
 
 		if (current !== null && typeof current !== 'number')
-			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+			throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
 
 		const currentValue = current ?? 0;
 		const newValue = currentValue + amount;
@@ -75,7 +75,7 @@ export class MemoryStore implements KvStore {
 		const entry = this._store.get(key);
 
 		if (current !== null && typeof current !== 'number')
-			throw new BaseError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+			throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
 
 		const currentValue = current ?? 0;
 		const newValue = currentValue - amount;

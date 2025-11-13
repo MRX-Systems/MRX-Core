@@ -1,5 +1,4 @@
 export const HTTP_STATUS_CODES = {
-
 	// 1xx Informational Status Codes
 	CONTINUE: 100,
 	SWITCHING_PROTOCOLS: 101,
@@ -17,6 +16,7 @@ export const HTTP_STATUS_CODES = {
 	MULTI_STATUS: 207,
 	ALREADY_REPORTED: 208,
 	IM_USED: 226,
+
 
 	// 4xx Client Error Status Codes
 	BAD_REQUEST: 400,

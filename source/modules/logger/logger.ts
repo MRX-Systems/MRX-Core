@@ -1,7 +1,7 @@
 import type { BunMessageEvent } from 'bun';
 
-import { BaseError } from '#/errors/base-error';
-import { TypedEventEmitter } from '#/modules/typed-event-emitter/typed-event-emitter';
+import { InternalError } from '#/errors/internal-error';
+import { TypedEventEmitter } from '#/modules/typed-event-emitter';
 import { LOGGER_ERROR_KEYS } from './enums/logger-error-keys';
 import type { LoggerEvent } from './events/logger-events';
 import type { LogLevels } from './types/log-levels';
@@ -156,7 +156,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		...sinkArgs: TSinkArgs
 	): Logger<TSinks & Record<TSinkName, new (...args: TSinkArgs) => TSink>> {
 		if (this._sinks[sinkName as keyof TSinks])
-			throw new BaseError(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
+			throw new InternalError(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED);
 		this._worker.postMessage({
 			type: 'REGISTER_SINK',
 			sinkName,
@@ -276,7 +276,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		sinkNames?: (keyof TSinks)[]
 	): void {
 		if (this._sinkKeys.length === 0)
-			throw new BaseError(LOGGER_ERROR_KEYS.NO_SINKS_PROVIDED, { level, object });
+			throw new InternalError(LOGGER_ERROR_KEYS.NO_SINKS_PROVIDED, { level, object });
 
 		if (this._pendingLogs.length >= this._maxPendingLogs)
 			return;
@@ -364,7 +364,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 					break;
 
 				case 'SINK_LOG_ERROR':
-					this.emit('sinkError', new BaseError(
+					this.emit('sinkError', new InternalError(
 						LOGGER_ERROR_KEYS.SINK_LOG_ERROR,
 						event.data
 					));
@@ -373,14 +373,14 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 					break;
 
 				case 'SINK_CLOSE_ERROR':
-					this.emit('sinkError', new BaseError(
+					this.emit('sinkError', new InternalError(
 						LOGGER_ERROR_KEYS.SINK_CLOSE_ERROR,
 						event.data
 					));
 					break;
 
 				case 'REGISTER_SINK_ERROR':
-					this.emit('registerSinkError', new BaseError(
+					this.emit('registerSinkError', new InternalError(
 						LOGGER_ERROR_KEYS.REGISTER_SINK_ERROR,
 						event.data
 					));
@@ -414,14 +414,14 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 			void this.flush()
 				.then(() => this.close())
 				.catch((error: unknown) => {
-					this.emit('onBeforeExitError', new BaseError(
+					this.emit('onBeforeExitError', new InternalError(
 						LOGGER_ERROR_KEYS.BEFORE_EXIT_FLUSH_ERROR,
 						{ error: error as Error }
 					));
 				});
 		else
 			void this.close().catch((error: unknown) => {
-				this.emit('onBeforeExitError', new BaseError(
+				this.emit('onBeforeExitError', new InternalError(
 					LOGGER_ERROR_KEYS.BEFORE_EXIT_CLOSE_ERROR,
 					{ error: error as Error }
 				));

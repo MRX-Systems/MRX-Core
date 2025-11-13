@@ -1,5 +1,4 @@
-import { BaseError } from '#/errors/base-error';
-
+import { InternalError } from '#/errors/internal-error';
 import { TOTP_ERROR_KEYS } from '#/modules/totp/enums/totp-error-keys';
 
 /**
@@ -49,7 +48,7 @@ export const base32Encode = (input: string | Uint8Array, withPadding = true): st
  *
  * @param base32 - Base32 string to decode
  *
- * @throws ({@link BaseError}) - if invalid Base32 character is found
+ * @throws ({@link InternalError}) - if invalid Base32 character is found
  *
  * @returns Decoded bytes
  */
@@ -66,7 +65,7 @@ export const base32Decode = (base32: string): Uint8Array => {
 	for (const char of cleanBase32) {
 		const charValue = BASE32_ALPHABET.indexOf(char);
 		if (charValue === -1)
-			throw new BaseError(TOTP_ERROR_KEYS.INVALID_BASE32_CHARACTER, `Invalid Base32 character: ${char}`);
+			throw new InternalError(TOTP_ERROR_KEYS.INVALID_BASE32_CHARACTER, `Invalid Base32 character: ${char}`);
 
 		value = (value << 5) | charValue;
 		bits += 5;

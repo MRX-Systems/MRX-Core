@@ -1,5 +1,4 @@
-import { BaseError } from '#/errors/base-error';
-
+import { InternalError } from '#/errors/internal-error';
 import { PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS } from '#/modules/jwt/enums/parse-human-time-to-seconds-error-keys';
 
 /**
@@ -69,7 +68,7 @@ const UNIT_MAPPINGS: Record<string, number> = {
  *
  * @param timeExpression - A string representing a time period (e.g., "2 hours", "30 minutes ago", "+1 day")
  *
- * @throws ({@link BaseError}) - If the time expression is invalid or contains an unknown unit
+ * @throws ({@link InternalError}) - If the time expression is invalid or contains an unknown unit
  *
  * @returns The time period in seconds (negative for past times)
 *
@@ -84,7 +83,7 @@ export const parseHumanTimeToSeconds = (timeExpression: string): number => {
 	const match = TIME_EXPRESSION_REGEX.exec(timeExpression);
 
 	if (!match || (match[4] && match[1]))
-		throw new BaseError(PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION);
+		throw new InternalError(PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION);
 
 	const [, sign, valueStr, unitStr, direction] = match;
 	const value = parseFloat(valueStr);

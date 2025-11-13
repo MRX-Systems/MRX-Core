@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { Elysia } from 'elysia';
 
+import { RATE_LIMIT_ERROR_KEYS } from '#/modules/elysia/rate-limit/enums';
 import { rateLimit } from '#/modules/elysia/rate-limit/rate-limit';
 
 describe.concurrent('rateLimit', () => {
@@ -50,7 +51,7 @@ describe.concurrent('rateLimit', () => {
 			headers: { 'x-forwarded-for': ip }
 		}));
 		expect(blockedResponse.status).toBe(429);
-		expect(await blockedResponse.text()).toEqual('mrx-core.elysia.rate-limit.error.exceeded');
+		expect(await blockedResponse.text()).toEqual(RATE_LIMIT_ERROR_KEYS.RATE_LIMIT_EXCEEDED);
 
 		// Verify rate limit headers are present even on 429
 		expect(blockedResponse.headers.get('X-RateLimit-Limit')).toEqual(limit.toString());

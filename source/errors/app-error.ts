@@ -1,7 +1,9 @@
-export class BaseError<const TCause = unknown> extends Error {
+export class AppError<const TCause = unknown> extends Error {
 	public override readonly cause: TCause | undefined;
 
 	public readonly date: Date = new Date();
+
+	public readonly uuid: string = Bun.randomUUIDv7();
 
 	public constructor(message: string, cause?: TCause) {
 		super(message, { cause });

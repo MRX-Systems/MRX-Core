@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import { SingletonManager } from '#/modules/singleton-manager/singleton-manager';
@@ -36,7 +36,7 @@ export const dbResolver = (prefixDatabaseName = '') => new Elysia()
 			return {
 				resolve() {
 					if (!SingletonManager.has(`${prefixDatabaseName}${databaseName}`))
-						throw new BaseError(DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_STATIC_DB_NOT_FOUND, `${prefixDatabaseName}${databaseName}`);
+						throw new InternalError(DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_STATIC_DB_NOT_FOUND, `${prefixDatabaseName}${databaseName}`);
 
 					return {
 						staticDB: SingletonManager.get<MSSQL>(`${prefixDatabaseName}${databaseName}`)

@@ -1,7 +1,7 @@
 import { type TSchema, Type } from '@sinclair/typebox';
 import { beforeEach, describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { UTILS_ERROR_KEYS } from '#/shared/enums/utils-error-keys';
 import { validateEnv } from '#/shared/utils/env';
 
@@ -57,31 +57,31 @@ describe('validateEnv', () => {
 	} as const;
 
 	describe('when validating invalid environment variables', () => {
-		test('should throw BaseError when port is not a number', () => {
+		test('should throw InternalError when port is not a number', () => {
 			expect(() => {
 				validateEnv(_testSchemas.simplePort, _testEnvironments.invalidStringPort);
-			}).toThrow(BaseError);
+			}).toThrow(InternalError);
 		});
 
-		test('should throw BaseError when required environment variables are missing', () => {
+		test('should throw InternalError when required environment variables are missing', () => {
 			expect(() => {
 				validateEnv(_testSchemas.requiredPort, _testEnvironments.invalidMissingRequired);
-			}).toThrow(BaseError);
+			}).toThrow(InternalError);
 		});
 
-		test('should throw BaseError when multiple environment variables have incorrect types', () => {
+		test('should throw InternalError when multiple environment variables have incorrect types', () => {
 			expect(() => {
 				validateEnv(_testSchemas.complexConfig, _testEnvironments.invalidMixedTypes);
-			}).toThrow(BaseError);
+			}).toThrow(InternalError);
 		});
 
-		test('should throw BaseError with correct error key', () => {
+		test('should throw InternalError with correct error key', () => {
 			try {
 				validateEnv(_testSchemas.simplePort, _testEnvironments.invalidStringPort);
 				expect.unreachable('Expected function to throw');
 			} catch (error: unknown) {
-				expect(error).toBeInstanceOf(BaseError);
-				if (error instanceof BaseError)
+				expect(error).toBeInstanceOf(InternalError);
+				if (error instanceof InternalError)
 					expect(error.message).toBe(UTILS_ERROR_KEYS.INVALID_ENVIRONMENT);
 			}
 		});
@@ -91,8 +91,8 @@ describe('validateEnv', () => {
 				validateEnv(_testSchemas.simplePort, _testEnvironments.invalidStringPort);
 				expect.unreachable('Expected function to throw');
 			} catch (error: unknown) {
-				expect(error).toBeInstanceOf(BaseError);
-				if (error instanceof BaseError)
+				expect(error).toBeInstanceOf(InternalError);
+				if (error instanceof InternalError)
 					expect(error.cause).toBeDefined();
 			}
 		});
@@ -149,7 +149,7 @@ describe('validateEnv', () => {
 
 			expect(() => {
 				validateEnv(schema);
-			}).toThrow(BaseError);
+			}).toThrow(InternalError);
 		});
 	});
 
