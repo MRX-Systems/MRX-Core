@@ -200,12 +200,12 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	public findStream<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendStream<KModel>
-	): StreamWithAsyncIterable<KModel> {
+	): StreamWithAsyncIterable<Required<KModel>> {
 		const query = this._knex(this._table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		const kStream: StreamWithAsyncIterable<KModel> = query.stream();
+		const kStream: StreamWithAsyncIterable<Required<KModel>> = query.stream();
 
 		const passThrough = new PassThrough({
 			objectMode: true,
@@ -236,7 +236,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		passThrough.on('error', cleanup);
 
 		kStream.pipe(passThrough);
-		return makeStreamAsyncIterable<KModel, PassThrough>(passThrough) as StreamWithAsyncIterable<KModel>;
+		return makeStreamAsyncIterable<Required<KModel>, PassThrough>(passThrough) as StreamWithAsyncIterable<Required<KModel>>;
 	}
 
 	/**
@@ -307,7 +307,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	public async find<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendPagination<KModel>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
@@ -408,7 +408,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	public async insert<KModel extends TModel = TModel>(
 		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
@@ -460,7 +460,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	public async update<KModel extends TModel = TModel>(
 		data: Partial<NoInfer<KModel>>,
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.update(data);
 
@@ -508,7 +508,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	public async delete<KModel extends TModel = NoInfer<TModel>>(
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.delete();
 
@@ -713,9 +713,9 @@ export class Repository<TModel = Record<string, unknown>> {
 	protected async _executeQuery<KModel>(
 		query: Knex.QueryBuilder,
 		throwIfNoResult: QueryOptions<KModel>['throwIfNoResult'] = false
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		try {
-			const result: KModel[] = await query;
+			const result: Required<KModel>[] = await query;
 			if (throwIfNoResult && result.length === 0)
 				throw new HttpError(
 					typeof throwIfNoResult === 'object' && throwIfNoResult.message
