@@ -1,18 +1,10 @@
-import type { TArray, TObject, TOptional, TUnion } from '@sinclair/typebox/type';
+import type { TObject } from '@sinclair/typebox/type';
 import { t } from 'elysia';
 
-import type { SelectedFieldsSchema } from '#/modules/elysia/crud/types/selected-field-schema';
 import { createSelectedFieldsSchema } from '#/modules/elysia/crud/utils/create-selected-fields-schema';
+import type { InsertSchema } from '../types';
 
-export const createInsertSchema = <TSourceInsertSchema extends TObject>(schema: TSourceInsertSchema): TObject<{
-	queryOptions: TOptional<TObject<{
-		selectedFields: SelectedFieldsSchema<TSourceInsertSchema>;
-	}>>,
-	data: TUnion<[
-		TSourceInsertSchema,
-		TArray<TSourceInsertSchema>
-	]>
-}> => t.Object({
+export const createInsertSchema = <TSourceInsertSchema extends TObject>(schema: TSourceInsertSchema): InsertSchema<TSourceInsertSchema> => t.Object({
 	queryOptions: t.Optional(t.Object({
 		selectedFields: createSelectedFieldsSchema(schema)
 	})),
