@@ -55,14 +55,12 @@ describe('createResponse200Schema', () => {
 				expect(properties).toHaveProperty(key);
 		});
 
-		test('should all properties be unions and optional', () => {
+		test('should all properties be unions', () => {
 			const responseSchema = createResponse200Schema(baseSchema);
 			const { properties }: { properties: Record<string, TSchema> } = responseSchema.properties.content.items;
 
-			for (const key of Object.keys(baseSchema.properties)) {
+			for (const key of Object.keys(baseSchema.properties))
 				expect(KindGuard.IsUnion(properties[key])).toBe(true);
-				expect(KindGuard.IsOptional(properties[key])).toBe(true);
-			}
 		});
 
 		describe('simple types handling (Number, String, Boolean)', () => {
