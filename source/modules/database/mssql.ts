@@ -149,7 +149,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 		tableName: string,
 		customRepository: new (knex: Knex, table: Table) => TRepo
 	): TRepo;
-	public getRepository<TModel = unknown>(
+	public getRepository<TModel = Record<string, unknown>>(
 		tableName: string
 	): Repository<TModel>;
 	public getRepository(
