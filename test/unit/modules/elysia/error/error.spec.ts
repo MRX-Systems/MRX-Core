@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { t, ValidationError } from 'elysia';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { HttpError } from '#/errors/http-error';
 import { ERROR_KEYS } from '#/modules/elysia/error/enums/error.keys';
 import { error } from '#/modules/elysia/error/error';
@@ -55,7 +55,7 @@ describe.concurrent('error', () => {
 		});
 	});
 
-	test('should onError handle correctly BaseError code', () => {
+	test('should onError handle correctly InternalError code', () => {
 		const { event } = error;
 		if (!event.error || event.error.length === 0)
 			throw new Error('No error handler found');
@@ -68,14 +68,17 @@ describe.concurrent('error', () => {
 			headers: {} as Record<string, string>
 		};
 
-		expect(fn({
+		const internalError = new InternalError('Test message', 'Test cause');
+
+		const res = fn({
 			set,
-			error: new BaseError('Test message', 'Test cause'),
-			code: 'BaseError'
-		})).toEqual({
-			message: 'Test message',
-			content: 'Test cause'
+			error: internalError,
+			code: 'InternalError'
 		});
+
+		expect(set.status).toBe(500);
+		expect(res.message).toBe(ERROR_KEYS.INTERNAL_SERVER_ERROR);
+		expect(res.content).toBe(internalError.uuid);
 	});
 
 	test('should onError handle correctly VALIDATION code', () => {
@@ -100,7 +103,7 @@ describe.concurrent('error', () => {
 			}), { e: 1 }),
 			code: 'VALIDATION'
 		})).toEqual({
-			message: ERROR_KEYS.CORE_ERROR_VALIDATION,
+			message: ERROR_KEYS.VALIDATION,
 			content: {
 				on: 'body',
 				errors: [
@@ -136,7 +139,7 @@ describe.concurrent('error', () => {
 			error: new Error('Not found'),
 			code: 'NOT_FOUND'
 		})).toEqual({
-			message: ERROR_KEYS.CORE_ERROR_NOT_FOUND
+			message: ERROR_KEYS.NOT_FOUND
 		});
 	});
 
@@ -158,7 +161,7 @@ describe.concurrent('error', () => {
 			error: new Error('Internal server error'),
 			code: 'INTERNAL_SERVER_ERROR'
 		})).toEqual({
-			message: ERROR_KEYS.CORE_ERROR_INTERNAL_SERVER_ERROR
+			message: ERROR_KEYS.INTERNAL_SERVER_ERROR
 		});
 	});
 
@@ -180,7 +183,7 @@ describe.concurrent('error', () => {
 			error: new Error('Unknown error'),
 			code: 'UNKNOWN'
 		})).toEqual({
-			message: ERROR_KEYS.CORE_ERROR_INTERNAL_SERVER_ERROR
+			message: ERROR_KEYS.INTERNAL_SERVER_ERROR
 		});
 	});
 
@@ -202,7 +205,7 @@ describe.concurrent('error', () => {
 			error: new Error('Parse error'),
 			code: 'PARSE'
 		})).toEqual({
-			message: ERROR_KEYS.CORE_ERROR_PARSE
+			message: ERROR_KEYS.PARSE
 		});
 
 		expect(set.status).toBe(400);

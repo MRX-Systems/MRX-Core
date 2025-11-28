@@ -77,7 +77,7 @@ describe.concurrent('filterByKeyExclusion', () => {
 
 		test('should handle complex objects while preserving values', () => {
 			const filteredData: Omit<typeof testData.COMPLEX_OBJECT, 'nullValue' | 'undefinedValue'>
-			= filterByKeyExclusion(testData.COMPLEX_OBJECT, ['nullValue', 'undefinedValue']);
+				= filterByKeyExclusion(testData.COMPLEX_OBJECT, ['nullValue', 'undefinedValue']);
 
 			expect(filteredData).toEqual({
 				stringValue: 'test',
@@ -107,7 +107,7 @@ describe.concurrent('filterByKeyExclusion', () => {
 				undefinedValue: undefined
 			};
 			const filteredData: Partial<Omit<typeof object, 'excludeKey'>>
-			= filterByKeyExclusion(object, ['excludeKey'], true);
+				= filterByKeyExclusion(object, ['excludeKey'], true);
 
 			expect(filteredData).toEqual({ keep: 'keep' });
 		});
@@ -280,7 +280,7 @@ describe.concurrent('filterByKeyInclusion', () => {
 
 		test('should handle complex objects with various data types', () => {
 			const filteredData: Pick<typeof testData.COMPLEX_OBJECT, 'stringValue' | 'numberValue' | 'nestedObject'>
-			= filterByKeyInclusion(testData.COMPLEX_OBJECT, ['stringValue', 'numberValue', 'nestedObject']);
+				= filterByKeyInclusion(testData.COMPLEX_OBJECT, ['stringValue', 'numberValue', 'nestedObject']);
 
 			expect(filteredData).toEqual({
 				stringValue: 'test',

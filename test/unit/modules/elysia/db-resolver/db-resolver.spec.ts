@@ -2,11 +2,12 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } fr
 import { randomBytes } from 'crypto';
 import { Elysia } from 'elysia';
 
+import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { MSSQL } from '#/modules/database/mssql';
-import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
-import { error } from '#/modules/elysia/error/error';
-import { SingletonManager } from '#/modules/singleton-manager/singleton-manager';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
+import { dbResolver } from '#/modules/elysia/db-resolver/db-resolver';
+import { DB_RESOLVER_ERROR_KEYS } from '#/modules/elysia/db-resolver/enums/db-resolver-error-keys';
+import { SingletonManager } from '#/modules/singleton-manager/singleton-manager';
 
 const databaseConfig: Omit<MSSQLDatabaseOptions, 'databaseName'> = {
 	host: process.env.MSSQL_HOST ?? '',
@@ -57,7 +58,6 @@ describe('dbResolver', () => {
 
 		test('should throw error when static database is not registered', async () => {
 			const app = new Elysia()
-				.use(error)
 				.use(dbResolver(prefix))
 				.get('/test', ({ staticDB }) => ({
 					dbName: staticDB.databaseName
@@ -68,10 +68,10 @@ describe('dbResolver', () => {
 			const response = await app.handle(new Request('http://localhost/test'));
 
 			expect(response.status).toBe(500);
-			const responseText = await response.json();
+			const responseText = await response.text();
 			expect(responseText).toBeDefined();
-			expect(responseText).toHaveProperty('message');
-			expect((responseText as { message: string }).message).toContain('mrx-core.db-resolver.error.static_db_not_found');
+			// expect(responseText).toHaveProperty('message');
+			expect(responseText).toEqual(DB_RESOLVER_ERROR_KEYS.DB_RESOLVER_STATIC_DB_NOT_FOUND);
 		});
 
 		afterAll(async () => {
@@ -123,7 +123,6 @@ describe('dbResolver', () => {
 			expect(SingletonManager.has(`${prefix}${testDatabaseName}`)).toBe(false);
 
 			const app = new Elysia()
-				.use(error)
 				.use(dbResolver(prefix))
 				.get('/test', ({ dynamicDB }) => ({
 					dbName: dynamicDB.databaseName,
@@ -178,7 +177,6 @@ describe('dbResolver', () => {
 			const invalidDbName = `invalid_db_${randomBytes(4).toString('hex')}`;
 
 			const app = new Elysia()
-				.use(error)
 				.use(dbResolver(prefix))
 				.get('/test', ({ dynamicDB }) => ({
 					dbName: dynamicDB.databaseName,
@@ -195,12 +193,11 @@ describe('dbResolver', () => {
 
 			expect(response.status).toBe(500);
 			const responseText = await response.text();
-			expect(responseText).toContain('mssql.error.database.connection_error');
+			expect(responseText).toEqual(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR);
 		});
 
 		test('should throw error when required header is missing', async () => {
 			const app = new Elysia()
-				.use(error)
 				.use(dbResolver(prefix))
 				.get('/test', ({ dynamicDB }) => ({ connected: dynamicDB.isConnected }), {
 					injectDynamicDB: databaseConfig
@@ -243,7 +240,6 @@ describe('dbResolver', () => {
 
 		test('should inject both staticDB and dynamicDB when using both macros', async () => {
 			const app = new Elysia()
-				.use(error)
 				.use(dbResolver(prefix))
 				.get('/test', ({ staticDB, dynamicDB }) => ({
 					hasStaticDB: staticDB instanceof MSSQL,

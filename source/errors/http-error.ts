@@ -1,10 +1,10 @@
-import { BaseError } from './base-error';
+import { AppError } from './app-error';
 import { HTTP_STATUS_CODES } from './enums/http-status-codes';
 
 export type HttpStatusKey = keyof typeof HTTP_STATUS_CODES;
 export type HttpStatusCode = typeof HTTP_STATUS_CODES[HttpStatusKey];
 
-export class HttpError<const TCause = unknown> extends BaseError<TCause> {
+export class HttpError<const TCause = unknown> extends AppError<TCause> {
 	public readonly httpStatusCode: number;
 
 	public constructor(message: string, cause?: TCause);

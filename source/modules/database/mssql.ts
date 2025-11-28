@@ -1,6 +1,6 @@
 import knex, { type Knex } from 'knex';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { Repository } from '#/modules/repository/repository';
 import { TypedEventEmitter } from '#/modules/typed-event-emitter/typed-event-emitter';
 import { DATABASE_ERROR_KEYS } from './enums/database-error-keys';
@@ -93,7 +93,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 * If the connection is successful, introspection is performed to retrieve information about tables, columns(fields), and primary keys.
 	 * This information is used to create instances of {@link Table} and {@link Repository} for each table in the database.
 	 *
-	 * @throws ({@link BaseError}) Thrown if an error occurs during the connection process.
+	 * @throws ({@link InternalError}) Thrown if an error occurs during the connection process.
 	 */
 	public async connect(): Promise<void> {
 		try {
@@ -102,7 +102,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 			if (this._isEventEnabled)
 				this._addEventKnex();
 		} catch (error) {
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR, {
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR, {
 				databaseName: this._databaseName,
 				error
 			});
@@ -112,19 +112,19 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	/**
 	 * Closes the connection to the MSSQL database.
 	 *
-	 * @throws ({@link BaseError}) Thrown if the database is not connected.
-	 * @throws ({@link BaseError}) Thrown if an error occurs during the disconnection process.
+	 * @throws ({@link InternalError}) Thrown if the database is not connected.
+	 * @throws ({@link InternalError}) Thrown if an error occurs during the disconnection process.
 	 */
 	public async disconnect(): Promise<void> {
 		if (!this._isConnected)
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, {
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, {
 				databaseName: this._databaseName
 			});
 		try {
 			await this._db.destroy();
 			this._isConnected = false;
 		} catch (error) {
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_DISCONNECT_ERROR, {
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_DISCONNECT_ERROR, {
 				databaseName: this._databaseName,
 				error
 			});
@@ -140,8 +140,8 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 * @param tableName - The name of the table to retrieve the repository for.
 	 * @param customRepository - Optional custom repository class to use for the table.
 	 *
-	 * @throws ({@link BaseError}) Thrown if the database is not connected.
-	 * @throws ({@link BaseError}) Thrown if the specified table is not found.
+	 * @throws ({@link InternalError}) Thrown if the database is not connected.
+	 * @throws ({@link InternalError}) Thrown if the specified table is not found.
 	 *
 	 * @returns The {@link Repository} for the specified table.
 	 */
@@ -149,7 +149,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 		tableName: string,
 		customRepository: new (knex: Knex, table: Table) => TRepo
 	): TRepo;
-	public getRepository<TModel = unknown>(
+	public getRepository<TModel = Record<string, unknown>>(
 		tableName: string
 	): Repository<TModel>;
 	public getRepository(
@@ -157,9 +157,9 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 		customRepository?: new (knex: Knex, table: Table) => Repository
 	): Repository {
 		if (!this._isConnected)
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
 		if (!this._tables.has(tableName))
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
 
 		let repo = this._repositories.get(tableName);
 
@@ -179,16 +179,16 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 *
 	 * @param tableName - The name of the table to retrieve.
 	 *
-	 * @throws ({@link BaseError}) Thrown if the database is not connected.
-	 * @throws ({@link BaseError}) Thrown if the specified table is not found.
+	 * @throws ({@link InternalError}) Thrown if the database is not connected.
+	 * @throws ({@link InternalError}) Thrown if the specified table is not found.
 	 *
 	 * @returns The {@link Table} object for the specified table.
 	 */
 	public getTable(tableName: string): Table {
 		if (!this._isConnected)
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
 		if (!this._tables.has(tableName))
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
 		return this._tables.get(tableName) as Table;
 	}
 
@@ -231,13 +231,13 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	/**
 	 * Retrieves the Knex instance for the database connection.
 	 *
-	 * @throws ({@link BaseError}) Thrown if the database is not connected.
+	 * @throws ({@link InternalError}) Thrown if the database is not connected.
 	 *
 	 * @returns The {@link Knex} instance for the database connection.
 	 */
 	public get db(): Knex {
 		if (!this._isConnected)
-			throw new BaseError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
 		return this._db;
 	}
 

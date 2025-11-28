@@ -14,6 +14,7 @@ import type { OrderByItem } from './types/order-by-item';
 import type { QueryOptions } from './types/query-options';
 import type { QueryOptionsExtendPagination } from './types/query-options-extend-pagination';
 import type { QueryOptionsExtendStream } from './types/query-options-extend-stream';
+import { InternalError } from '#/errors/internal-error';
 
 type OperatorFn = (
 	query: Knex.QueryBuilder,
@@ -84,7 +85,7 @@ const _DEFAULT_OFFSET = 0;
  * const users = await repo.find({ limit: 10 });
  * ```
  */
-export class Repository<TModel = unknown> {
+export class Repository<TModel = Record<string, unknown>> {
 	/**
 	 * The Knex instance used for database operations.
 	 */
@@ -197,14 +198,14 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public findStream<KModel extends TModel = NoInfer<TModel>>(
+	public findStream<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendStream<KModel>
-	): StreamWithAsyncIterable<KModel> {
+	): StreamWithAsyncIterable<Required<KModel>> {
 		const query = this._knex(this._table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		const kStream: StreamWithAsyncIterable<KModel> = query.stream();
+		const kStream: StreamWithAsyncIterable<Required<KModel>> = query.stream();
 
 		const passThrough = new PassThrough({
 			objectMode: true,
@@ -222,7 +223,7 @@ export class Repository<TModel = unknown> {
 		// Handle source stream errors
 		kStream.on('error', (error: unknown) => {
 			const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-			passThrough.emit('error', new HttpError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+			passThrough.emit('error', new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
 				query: query.toSQL().sql,
 				error
 			}));
@@ -235,7 +236,7 @@ export class Repository<TModel = unknown> {
 		passThrough.on('error', cleanup);
 
 		kStream.pipe(passThrough);
-		return makeStreamAsyncIterable<KModel, PassThrough>(passThrough) as StreamWithAsyncIterable<KModel>;
+		return makeStreamAsyncIterable<Required<KModel>, PassThrough>(passThrough) as StreamWithAsyncIterable<Required<KModel>>;
 	}
 
 	/**
@@ -304,9 +305,9 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async find<KModel extends TModel = NoInfer<TModel>>(
+	public async find<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendPagination<KModel>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
@@ -355,7 +356,7 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async count<KModel extends TModel = NoInfer<TModel>>(
+	public async count<KModel extends TModel = TModel>(
 		options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>
 	): Promise<number> {
 		const query = this._knex(this._table.name)
@@ -404,10 +405,10 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async insert<KModel extends TModel = NoInfer<TModel>>(
-		data: Partial<KModel> | Partial<KModel>[],
+	public async insert<KModel extends TModel = TModel>(
+		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
@@ -456,14 +457,19 @@ export class Repository<TModel = unknown> {
 	 * });
 	 * ```
 	 */
-	public async update<KModel extends TModel = NoInfer<TModel>>(
-		data: Partial<KModel>,
-		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
-	): Promise<KModel[]> {
+	public async update<KModel extends TModel = TModel>(
+		data: Partial<NoInfer<KModel>>,
+		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.update(data);
 
 		this._applyQueryOptions<KModel>(query, options);
+
+		if (options.limit)
+			query.limit(options.limit);
+		if (options.offset)
+			query.offset(options.offset);
 
 		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
@@ -507,7 +513,7 @@ export class Repository<TModel = unknown> {
 	 */
 	public async delete<KModel extends TModel = NoInfer<TModel>>(
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.delete();
 
@@ -527,7 +533,7 @@ export class Repository<TModel = unknown> {
 	 */
 	protected _applySelectedFields<KModel>(
 		query: Knex.QueryBuilder,
-		selectedFields: QueryOptions<KModel>['selectedFields'] | undefined
+		selectedFields: QueryOptions<KModel>['selectedFields']
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 
@@ -673,7 +679,7 @@ export class Repository<TModel = unknown> {
 		if (error instanceof HttpError)
 			throw error;
 		const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-		throw new HttpError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+		throw new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
 			query: query.toSQL().sql,
 			error
 		});
@@ -712,9 +718,9 @@ export class Repository<TModel = unknown> {
 	protected async _executeQuery<KModel>(
 		query: Knex.QueryBuilder,
 		throwIfNoResult: QueryOptions<KModel>['throwIfNoResult'] = false
-	): Promise<KModel[]> {
+	): Promise<Required<KModel>[]> {
 		try {
-			const result: KModel[] = await query;
+			const result: Required<KModel>[] = await query;
 			if (throwIfNoResult && result.length === 0)
 				throw new HttpError(
 					typeof throwIfNoResult === 'object' && throwIfNoResult.message
@@ -722,12 +728,7 @@ export class Repository<TModel = unknown> {
 						: DATABASE_ERROR_KEYS.MSSQL_NO_RESULT,
 					typeof throwIfNoResult === 'object' && throwIfNoResult.httpStatusCode
 						? throwIfNoResult.httpStatusCode
-						: 404,
-					!process.env.NODE_ENV || process.env.NODE_ENV !== 'production' // TODO refactor error system AND-216
-						? {
-							query: query.toSQL().sql
-						}
-						: undefined
+						: 404
 				);
 			return result;
 		} catch (error) {

@@ -1,10 +1,11 @@
 import { describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
+import { PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS } from '#/modules/jwt/enums/parse-human-time-to-seconds-error-keys';
 import { parseHumanTimeToSeconds } from '#/modules/jwt/utils/parse-human-time-to-seconds';
 
-describe('parseHumanTimeToSeconds', () => {
-	describe('basic time units', () => {
+describe.concurrent('parseHumanTimeToSeconds', () => {
+	describe.concurrent('basic time units', () => {
 		test.each([
 			// Seconds
 			['1 second', 1],
@@ -43,7 +44,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('decimal values', () => {
+	describe.concurrent('decimal values', () => {
 		test.each([
 			// Decimal seconds
 			['1.5 seconds', 2], // Rounded
@@ -65,7 +66,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('directional modifiers', () => {
+	describe.concurrent('directional modifiers', () => {
 		test.each([
 			// "ago" suffix for past times
 			['1 hour ago', -3600],
@@ -90,7 +91,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('whitespace handling', () => {
+	describe.concurrent('whitespace handling', () => {
 		test.each([
 			['1hour', 3600], // Regex allows no space
 			['1 hour', 3600],
@@ -105,7 +106,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('case insensitivity', () => {
+	describe.concurrent('case insensitivity', () => {
 		test.each([
 			['1 HOUR', 3600],
 			['30 Minutes', 1800],
@@ -119,7 +120,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('complex scenarios', () => {
+	describe.concurrent('complex scenarios', () => {
 		test.each([
 			['15 mins', 900],
 			['2.5 hours', 9000],
@@ -142,7 +143,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('error handling', () => {
+	describe.concurrent('error handling', () => {
 		test.each([
 			'invalid format',
 			'1',
@@ -156,14 +157,14 @@ describe('parseHumanTimeToSeconds', () => {
 			'1 hr 30 min',
 			'next week',
 			'last month'
-		])('should throw BaseError for invalid format: "%s"', (input) => {
-			expect(() => parseHumanTimeToSeconds(input)).toThrow(BaseError);
+		])('should throw InternalError for invalid format: "%s"', (input) => {
+			expect(() => parseHumanTimeToSeconds(input)).toThrow(InternalError);
 
 			try {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
-				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('mrx-core.parse_human_time_to_seconds.error.invalid_time_expression');
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION);
 			}
 		});
 
@@ -173,14 +174,14 @@ describe('parseHumanTimeToSeconds', () => {
 			'1 millisecond',
 			'1 nanosecond',
 			'1 fortnight'
-		])('should throw BaseError for unknown time units: "%s"', (input) => {
-			expect(() => parseHumanTimeToSeconds(input)).toThrow(BaseError);
+		])('should throw InternalError for unknown time units: "%s"', (input) => {
+			expect(() => parseHumanTimeToSeconds(input)).toThrow(InternalError);
 
 			try {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
-				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('mrx-core.parse_human_time_to_seconds.error.invalid_time_expression');
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION);
 			}
 		});
 
@@ -189,19 +190,19 @@ describe('parseHumanTimeToSeconds', () => {
 			'-1 hour from now', // Can't have both - and from now
 			'+5 minutes ago',
 			'-10 seconds from now'
-		])('should throw BaseError for conflicting signs and directions: "%s"', (input) => {
-			expect(() => parseHumanTimeToSeconds(input)).toThrow(BaseError);
+		])('should throw InternalError for conflicting signs and directions: "%s"', (input) => {
+			expect(() => parseHumanTimeToSeconds(input)).toThrow(InternalError);
 
 			try {
 				parseHumanTimeToSeconds(input);
 			} catch (error) {
-				expect(error).toBeInstanceOf(BaseError);
-				expect((error as BaseError).message).toBe('mrx-core.parse_human_time_to_seconds.error.invalid_time_expression');
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(PARSE_HUMAN_TIME_TO_SECONDS_ERROR_KEYS.INVALID_TIME_EXPRESSION);
 			}
 		});
 	});
 
-	describe('precision and rounding', () => {
+	describe.concurrent('precision and rounding', () => {
 		test.each([
 			['1.4 seconds', 1],
 			['1.5 seconds', 2],
@@ -221,7 +222,7 @@ describe('parseHumanTimeToSeconds', () => {
 		});
 	});
 
-	describe('boundary testing', () => {
+	describe.concurrent('boundary testing', () => {
 		test.each([
 			['999999 seconds', 999999],
 			['1000 years', 31557600000]

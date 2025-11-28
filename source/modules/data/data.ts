@@ -1,4 +1,4 @@
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { DATA_ERROR_KEYS } from './enums/data-error-keys';
 import type { CaseTransformer } from './types/case-transformer';
 import type { TransformObjectKeys } from './types/transform-object-keys';
@@ -10,11 +10,11 @@ import type { TransformObjectKeys } from './types/transform-object-keys';
  *
  * @param data - The data to be validated.
  *
- * @throws ({@link BaseError}) - Throws an error if the data is null or undefined.
+ * @throws ({@link InternalError}) - Throws an error if the data is null or undefined.
  */
 const _validateDataNull = <TObject extends object>(data: TObject): void => {
 	if (data === null || data === undefined)
-		throw new BaseError(DATA_ERROR_KEYS.DATA_IS_NULL);
+		throw new InternalError(DATA_ERROR_KEYS.DATA_IS_NULL);
 };
 
 /**
@@ -28,7 +28,7 @@ const _validateDataNull = <TObject extends object>(data: TObject): void => {
  * @param keys - The array of keys to exclude from the data object. (Can be empty)
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded.
  *
- * @throws ({@link BaseError}) - Throws an error if the data is null or undefined.
+ * @throws ({@link InternalError}) - Throws an error if the data is null or undefined.
  *
  * @returns The filtered data object with the specified keys excluded.
  *
@@ -84,7 +84,7 @@ export const filterByKeyExclusion = <
  * @param keys - The array of keys to exclude from the data object and all nested objects. (Can be empty)
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded. Default is false.
  *
- * @throws ({@link BaseError}) - Throws an error if the data is null or undefined and throwIfDataIsNull is true.
+ * @throws ({@link InternalError}) - Throws an error if the data is null or undefined and throwIfDataIsNull is true.
  *
  * @returns A new object with the specified keys excluded recursively.
  *
@@ -149,7 +149,7 @@ export const filterByKeyExclusionRecursive = <
  * @param keys - The array of keys to include in the resulting data object. (Can be empty)
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded.
  *
- * @throws ({@link BaseError}) - Throws an error if the data is null or undefined.
+ * @throws ({@link InternalError}) - Throws an error if the data is null or undefined.
  *
  * @returns The filtered data object with only the specified keys included.
  *
@@ -200,7 +200,7 @@ export const filterByKeyInclusion = <
  * @param predicate - The predicate function to apply to the values.
  * @param excludeNullUndefined - Flag to determine if properties with null or undefined values should be excluded. Default is false.
  *
- * @throws ({@link BaseError}) - Throws an error if the data is null or undefined.
+ * @throws ({@link InternalError}) - Throws an error if the data is null or undefined.
  *
  * @returns The filtered data object with properties satisfying the predicate.
  *
@@ -237,7 +237,7 @@ export const filterByValue = <TObject extends Readonly<object>>(
  * @param data - The object whose keys are to be transformed.
  * @param transformer - The key transformation strategy to use.
  *
- * @throws ({@link BaseError}) - If the provided data object is null or undefined.
+ * @throws ({@link InternalError}) - If the provided data object is null or undefined.
  *
  * @returns A new object with transformed keys.
  *

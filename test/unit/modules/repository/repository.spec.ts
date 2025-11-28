@@ -4,6 +4,7 @@ import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
 import { HttpError } from '#/errors/http-error';
+import { InternalError } from '#/errors/internal-error';
 import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
@@ -650,7 +651,7 @@ describe('Repository', () => {
 					expect(data).not.toBeDefined();
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
@@ -665,7 +666,7 @@ describe('Repository', () => {
 			});
 			stream.on('error', (error) => {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 				done();
@@ -788,7 +789,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
@@ -873,7 +874,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
@@ -964,7 +965,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED);
 			}
@@ -987,6 +988,31 @@ describe('Repository', () => {
 			expect(items).toHaveLength(1);
 			expect(items[0]).toHaveProperty('id');
 			expect(items[0].id).toBe(4);
+			expect(items[0]).toHaveProperty('name');
+			expect(items[0].name).toBe('Repository::update');
+			expect(items[0]).toHaveProperty('age');
+			expect(items[0].age).toBe(23);
+			expect(items[0]).toHaveProperty('birth');
+			expect(items[0].birth.getTime()).toBe(new Date('2021-01-23').getTime());
+			expect(items[0]).toHaveProperty('bool');
+			expect(items[0].bool).toBe(true);
+		});
+
+		test('should update one row with limit field set to 1', async () => {
+			const data = {
+				name: 'Repository::update',
+				age: 23,
+				birth: new Date('2021-01-23'),
+				bool: true
+			};
+			const items = await repository.update(data, {
+				filters: {
+					id: { $gte: 1 }
+				},
+				limit: 1
+			});
+			expect(items).toHaveLength(1);
+			expect(items[0]).toHaveProperty('id');
 			expect(items[0]).toHaveProperty('name');
 			expect(items[0].name).toBe('Repository::update');
 			expect(items[0]).toHaveProperty('age');
@@ -1080,7 +1106,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN);
 			}
@@ -1156,7 +1182,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
