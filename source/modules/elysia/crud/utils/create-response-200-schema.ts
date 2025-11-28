@@ -54,6 +54,6 @@ export const createResponse200Schema = <TSourceResponseSchema extends TObject>(s
 
 	return t.Object({
 		message: t.String(),
-		content: t.Array(t.Partial(t.Object(responseSchema)))
+		content: t.Array(t.Required(t.Object(responseSchema)))
 	});
 };
