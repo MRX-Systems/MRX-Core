@@ -1,6 +1,6 @@
 import { Elysia, type TSchema } from 'elysia';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import { HttpError } from '#/errors/http-error';
 import { filterByKeyExclusion } from '#/modules/data/data';
 import { ERROR_KEYS } from './enums/error.keys';
@@ -12,7 +12,7 @@ export const error = new Elysia({
 	name: 'errorPlugin'
 })
 	.error({
-		BaseError,
+		InternalError,
 		HttpError
 	})
 	.onError(({ code, error, set }) => {
@@ -24,16 +24,16 @@ export const error = new Elysia({
 					message: error.message,
 					content: error.cause
 				};
-			case 'BaseError':
+			case 'InternalError':
 				set.status = 500;
 				return {
-					message: error.message,
-					content: error.cause
+					message: ERROR_KEYS.INTERNAL_SERVER_ERROR,
+					content: error.uuid
 				};
 			case 'VALIDATION': {
 				set.status = 422;
 				return {
-					message: ERROR_KEYS.CORE_ERROR_VALIDATION,
+					message: ERROR_KEYS.VALIDATION,
 					content: {
 						on: error.type,
 						errors: error.all.map((e) => ({
@@ -49,19 +49,19 @@ export const error = new Elysia({
 			case 'NOT_FOUND':
 				set.status = 404;
 				return {
-					message: ERROR_KEYS.CORE_ERROR_NOT_FOUND
+					message: ERROR_KEYS.NOT_FOUND
 				};
 			case 'PARSE':
 				set.status = 400;
 				return {
-					message: ERROR_KEYS.CORE_ERROR_PARSE
+					message: ERROR_KEYS.PARSE
 				};
 			case 'INTERNAL_SERVER_ERROR':
 			case 'UNKNOWN':
 			default:
 				set.status = 500;
 				return {
-					message: ERROR_KEYS.CORE_ERROR_INTERNAL_SERVER_ERROR
+					message: ERROR_KEYS.INTERNAL_SERVER_ERROR
 				};
 		}
 	})

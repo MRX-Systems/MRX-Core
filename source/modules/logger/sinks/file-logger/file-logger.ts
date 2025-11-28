@@ -1,6 +1,6 @@
 import { createWriteStream, type WriteStream } from 'node:fs';
 
-import { BaseError } from '#/errors/base-error';
+import { InternalError } from '#/errors/internal-error';
 import type { LogLevels } from '#/modules/logger/types/log-levels';
 import type { LoggerSink } from '#/modules/logger/types/logger-sink';
 import { FILE_LOGGER_ERROR_KEYS } from './enums/file-logger-error-keys';
@@ -56,7 +56,7 @@ export class FileLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObje
 
 		return new Promise<void>((resolve, reject) => {
 			this._stream.end((err: Error | null | undefined) => {
-				if (err) reject(new BaseError(FILE_LOGGER_ERROR_KEYS.FAILED_TO_CLOSE_STREAM, err.message));
+				if (err) reject(new InternalError(FILE_LOGGER_ERROR_KEYS.FAILED_TO_CLOSE_STREAM, err.message));
 				else resolve();
 			});
 		});

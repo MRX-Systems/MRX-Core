@@ -87,21 +87,21 @@ describe.concurrent('SMTP', () => {
 			mailer.disconnect();
 		});
 
-		test('should throw BaseError when already connected', async () => {
-			const { BaseError } = await import('#/errors/base-error');
+		test('should throw InternalError when already connected', async () => {
+			const { InternalError } = await import('#/errors/internal-error');
 
 			const mailer = await createTestSMTP();
 			await mailer.connect();
 
-			expect(mailer.connect()).rejects.toThrow(BaseError);
+			expect(mailer.connect()).rejects.toThrow(InternalError);
 			expect(mailer.connect()).rejects.toThrow(MAILER_ERROR_KEYS.SMTP_ALREADY_CONNECTED);
 
 			// Clean up
 			mailer.disconnect();
 		});
 
-		test('should throw BaseError when connection fails with invalid host', async () => {
-			const { BaseError } = await import('#/errors/base-error');
+		test('should throw InternalError when connection fails with invalid host', async () => {
+			const { InternalError } = await import('#/errors/internal-error');
 
 			const mailer = await createTestSMTP({
 				host: 'invalid.nonexistent.host.example',
@@ -111,8 +111,8 @@ describe.concurrent('SMTP', () => {
 			try {
 				await mailer.connect();
 			} catch (error) {
-				expect(error).toBeInstanceOf(BaseError);
-				expect((error as InstanceType<typeof BaseError>).message).toBe(MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR);
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InstanceType<typeof InternalError>).message).toBe(MAILER_ERROR_KEYS.SMTP_CONNECTION_ERROR);
 			}
 		});
 
@@ -164,12 +164,12 @@ describe.concurrent('SMTP', () => {
 	});
 
 	describe('sendMail', () => {
-		test('should throw BaseError when not connected', async () => {
-			const { BaseError } = await import('#/errors/base-error');
+		test('should throw InternalError when not connected', async () => {
+			const { InternalError } = await import('#/errors/internal-error');
 
 			const mailer = await createTestSMTP();
 
-			expect(mailer.sendMail({})).rejects.toThrow(BaseError);
+			expect(mailer.sendMail({})).rejects.toThrow(InternalError);
 			expect(mailer.sendMail({})).rejects.toThrow(MAILER_ERROR_KEYS.SMTP_NOT_CONNECTED);
 		});
 

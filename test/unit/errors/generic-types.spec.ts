@@ -1,17 +1,17 @@
 import { describe, expect, test } from 'bun:test';
 
-import { BaseError } from '#/errors/base-error';
+import { AppError } from '#/errors/app-error';
 import { HttpError } from '#/errors/http-error';
 
 describe.concurrent('Generic Type TCause', (): void => {
-	describe.concurrent('when using BaseError with custom cause type', (): void => {
+	describe.concurrent('when using AppError with custom cause type', (): void => {
 		test('should correctly type cause as specified generic', (): void => {
 			interface CustomCause {
 				code: number;
 				details: string;
 			}
 
-			const error = new BaseError<CustomCause>(
+			const error = new AppError<CustomCause>(
 				'Custom error',
 				{ code: 1001, details: 'Something went wrong' }
 			);
@@ -29,20 +29,20 @@ describe.concurrent('Generic Type TCause', (): void => {
 				message: string;
 			}
 
-			const error = new BaseError<CustomCause>('Error without cause');
+			const error = new AppError<CustomCause>('Error without cause');
 
 			expect(error.cause).toBeUndefined();
 		});
 	});
 
-	describe.concurrent('when using BaseError with primitive cause types', (): void => {
+	describe.concurrent('when using AppError with primitive cause types', (): void => {
 		test('should work with string cause', (): void => {
-			const stringCauseError = new BaseError<string>('Error with string', 'string cause');
+			const stringCauseError = new AppError<string>('Error with string', 'string cause');
 			expect(stringCauseError.cause).toBe('string cause');
 		});
 
 		test('should work with number cause', (): void => {
-			const numberCauseError = new BaseError<number>('Error with number', 42);
+			const numberCauseError = new AppError<number>('Error with number', 42);
 			expect(numberCauseError.cause).toBe(42);
 		});
 	});
@@ -108,10 +108,10 @@ describe.concurrent('Generic Type TCause', (): void => {
 	});
 
 	describe.concurrent('when using default behavior without generic type', (): void => {
-		test('should use unknown as default type for BaseError cause', (): void => {
-			const baseError = new BaseError('Default error', { anything: 'can go here' });
+		test('should use unknown as default type for AppError cause', (): void => {
+			const appError = new AppError('Default error', { anything: 'can go here' });
 
-			expect(baseError.cause).toEqual({ anything: 'can go here' });
+			expect(appError.cause).toEqual({ anything: 'can go here' });
 		});
 
 		test('should use unknown as default type for HttpError cause', (): void => {

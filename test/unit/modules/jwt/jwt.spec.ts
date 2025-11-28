@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
 import type { JWTPayload, JWTVerifyResult } from 'jose';
 
-import { HttpError } from '#/errors/http-error';
-import { signJWT, verifyJWT } from '#/modules/jwt/jwt';
+import { InternalError } from '#/errors/internal-error';
 import { JWT_ERROR_KEYS } from '#/modules/jwt/enums/jwt-error-keys';
+import { signJWT, verifyJWT } from '#/modules/jwt/jwt';
 
 describe.concurrent('JWT Core Functions', () => {
 	const testSecret = 'my-very-secure-secret-key-that-is-long-enough-for-hs256-algorithm';
@@ -173,16 +173,15 @@ describe.concurrent('JWT Core Functions', () => {
 				name: 'numeric offset equal to zero',
 				getExpiration: () => 0
 			}
-		])('should throw HttpError when expiration $name is in the past or current time', async ({ getExpiration }) => {
+		])('should throw InternalError when expiration $name is in the past or current time', async ({ getExpiration }) => {
 			const expiration = getExpiration();
 
 			try {
 				await signJWT(testSecret, {}, expiration);
 				expect.unreachable();
 			} catch (error) {
-				expect(error).toBeInstanceOf(HttpError);
-				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED);
-				expect((error as HttpError).httpStatusCode).toBe(400);
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED);
 			}
 		});
 
@@ -234,7 +233,7 @@ describe.concurrent('JWT Core Functions', () => {
 			expect(result.payload.isActive).toBe(true);
 		});
 
-		test('should throw HttpError when SignJWT fails during signing', async () => {
+		test('should throw InternalError when SignJWT fails during signing', async () => {
 			// Use spyOn to mock the sign method and make it throw an error
 			const jose = await import('jose');
 			const spy = spyOn(jose.SignJWT.prototype, 'sign').mockImplementation(() => {
@@ -244,11 +243,10 @@ describe.concurrent('JWT Core Functions', () => {
 			try {
 				await signJWT(testSecret, { userId: 123 });
 			} catch (error) {
-				expect(error).toBeInstanceOf(HttpError);
-				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_SIGN_ERROR);
-				expect((error as HttpError).httpStatusCode).toBe(500);
-				expect((error as HttpError).cause).toBeInstanceOf(Error);
-				expect(((error as HttpError).cause as Error).message).toBe('Mocked sign error');
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(JWT_ERROR_KEYS.JWT_SIGN_ERROR);
+				expect((error as InternalError).cause).toBeInstanceOf(Error);
+				expect(((error as InternalError).cause as Error).message).toBe('Mocked sign error');
 			} finally {
 				spy.mockRestore();
 			}

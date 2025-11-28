@@ -1,5 +1,4 @@
-import { BaseError } from '#/errors/base-error';
-
+import { InternalError } from '#/errors/internal-error';
 import { SINGLETON_MANAGER_ERROR_KEYS } from './enums/singleton-manager-error-keys';
 
 /**
@@ -45,14 +44,14 @@ export class SingletonManager {
 	* @param name - The name of the class.
 	* @param instance - The instance of the class to register as singleton.
 	*
-	* @throws ({@link BaseError}) If the name is already registered, it throws an error.
+	* @throws ({@link InternalError}) If the name is already registered, it throws an error.
 	*/
 	public static register<TClass extends object>(
 		name: string,
 		instance: TClass
 	): void {
 		if (this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_ALREADY_REGISTERED, { name });
+			throw new InternalError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_ALREADY_REGISTERED, { name });
 		this._registry.set(name, instance);
 	}
 
@@ -61,11 +60,11 @@ export class SingletonManager {
 	*
 	* @param name - The name of the class to unregister.
 	*
-	* @throws ({@link BaseError}) If the name is not registered, it throws an error.
+	* @throws ({@link InternalError}) If the name is not registered, it throws an error.
 	*/
 	public static unregister(name: string): void {
 		if (!this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
+			throw new InternalError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
 		this._registry.delete(name);
 	}
 
@@ -76,13 +75,13 @@ export class SingletonManager {
 	*
 	* @param name - The name of the class to get the singleton instance.
 	*
-	* @throws ({@link BaseError}) If the class is not registered, it throws an error.
+	* @throws ({@link InternalError}) If the class is not registered, it throws an error.
 	*
 	* @returns The singleton instance of the class.
 	*/
 	public static get<TClass>(name: string): TClass {
 		if (!this._registry.has(name))
-			throw new BaseError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
+			throw new InternalError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
 		return this._registry.get(name) as TClass;
 	}
 

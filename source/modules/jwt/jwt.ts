@@ -1,4 +1,3 @@
-import { HttpError } from '#/errors/http-error';
 import {
 	SignJWT,
 	jwtVerify,
@@ -6,6 +5,7 @@ import {
 	type JWTVerifyResult
 } from 'jose';
 
+import { InternalError } from '#/errors/internal-error';
 import { JWT_ERROR_KEYS } from './enums/jwt-error-keys';
 import { parseHumanTimeToSeconds } from './utils/parse-human-time-to-seconds';
 
@@ -21,7 +21,7 @@ export const signJWT = (
 			: Math.floor(Date.now() / 1000) + parseHumanTimeToSeconds(expiration);
 
 	if (exp <= Math.floor(Date.now() / 1000))
-		throw new HttpError(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED, 'BAD_REQUEST');
+		throw new InternalError(JWT_ERROR_KEYS.JWT_EXPIRATION_PASSED);
 
 	// Prepare the final payload with default claims
 	const finalPayload = {
@@ -48,7 +48,7 @@ export const signJWT = (
 			.sign(new TextEncoder().encode(secret));
 		return jwt;
 	} catch (error) {
-		throw new HttpError(JWT_ERROR_KEYS.JWT_SIGN_ERROR, 'INTERNAL_SERVER_ERROR', error);
+		throw new InternalError(JWT_ERROR_KEYS.JWT_SIGN_ERROR, error);
 	}
 };
 

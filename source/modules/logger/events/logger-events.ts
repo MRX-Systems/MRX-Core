@@ -1,12 +1,12 @@
-import type { BaseError } from '#/errors/base-error';
+import type { InternalError } from '#/errors/internal-error';
 
 export interface LoggerEvent {
-	onBeforeExitError: [BaseError<{ error: Error }>];
-	registerSinkError: [BaseError<{
+	onBeforeExitError: [InternalError<{ error: Error }>];
+	registerSinkError: [InternalError<{
 		sinkName: string;
 		error: Error;
 	}>];
-	sinkError: [BaseError<{
+	sinkError: [InternalError<{
 		sinkName: string;
 		object?: unknown;
 		error: Error;

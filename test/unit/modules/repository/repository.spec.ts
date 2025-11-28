@@ -4,6 +4,7 @@ import knex from 'knex';
 import { PassThrough, Stream, Transform } from 'stream';
 
 import { HttpError } from '#/errors/http-error';
+import { InternalError } from '#/errors/internal-error';
 import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { Table } from '#/modules/database/table';
 import { Repository } from '#/modules/repository/repository';
@@ -650,7 +651,7 @@ describe('Repository', () => {
 					expect(data).not.toBeDefined();
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
@@ -665,7 +666,7 @@ describe('Repository', () => {
 			});
 			stream.on('error', (error) => {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 				done();
@@ -788,7 +789,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
@@ -873,7 +874,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
@@ -964,7 +965,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED);
 			}
@@ -1080,7 +1081,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN);
 			}
@@ -1156,7 +1157,7 @@ describe('Repository', () => {
 				});
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(HttpError);
+				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
 				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
 			}
