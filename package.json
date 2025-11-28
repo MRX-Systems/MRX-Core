@@ -1,6 +1,6 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.11.0-1-and-284-20251113",
+	"version": "2.11.0-1-and-286-20251124",
 	"author": "Ruby",
 	"devDependencies": {
 		"@eslint/js": "^9.39.1",
@@ -15,8 +15,8 @@
 		"jose": "^6.1.2",
 		"knex": "^3.1.0",
 		"mssql": "^12.1.1",
-		"nodemailer": "^7.0.10",
-		"typescript-eslint": "^8.47.0"
+		"nodemailer": "^7.0.11",
+		"typescript-eslint": "^8.48.0"
 	},
 	"peerDependencies": {
 		"@sinclair/typebox": "0.34.41",
@@ -25,7 +25,7 @@
 		"jose": "^6.1.2",
 		"mssql": "^12.1.1",
 		"knex": "^3.1.0",
-		"nodemailer": "^7.0.10",
+		"nodemailer": "^7.0.11",
 		"typescript": "^5.9.3"
 	},
 	"exports": {

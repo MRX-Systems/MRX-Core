@@ -459,12 +459,17 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	public async update<KModel extends TModel = TModel>(
 		data: Partial<NoInfer<KModel>>,
-		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
+		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
 		const query = this._knex(this._table.name)
 			.update(data);
 
 		this._applyQueryOptions<KModel>(query, options);
+
+		if (options.limit)
+			query.limit(options.limit);
+		if (options.offset)
+			query.offset(options.offset);
 
 		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
@@ -528,7 +533,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	protected _applySelectedFields<KModel>(
 		query: Knex.QueryBuilder,
-		selectedFields: QueryOptions<KModel>['selectedFields'] | undefined
+		selectedFields: QueryOptions<KModel>['selectedFields']
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 

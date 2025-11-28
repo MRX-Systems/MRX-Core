@@ -998,6 +998,31 @@ describe('Repository', () => {
 			expect(items[0].bool).toBe(true);
 		});
 
+		test('should update one row with limit field set to 1', async () => {
+			const data = {
+				name: 'Repository::update',
+				age: 23,
+				birth: new Date('2021-01-23'),
+				bool: true
+			};
+			const items = await repository.update(data, {
+				filters: {
+					id: { $gte: 1 }
+				},
+				limit: 1
+			});
+			expect(items).toHaveLength(1);
+			expect(items[0]).toHaveProperty('id');
+			expect(items[0]).toHaveProperty('name');
+			expect(items[0].name).toBe('Repository::update');
+			expect(items[0]).toHaveProperty('age');
+			expect(items[0].age).toBe(23);
+			expect(items[0]).toHaveProperty('birth');
+			expect(items[0].birth.getTime()).toBe(new Date('2021-01-23').getTime());
+			expect(items[0]).toHaveProperty('bool');
+			expect(items[0].bool).toBe(true);
+		});
+
 		test('should update multiple rows', async () => {
 			const data = {
 				name: 'Repository::update',
