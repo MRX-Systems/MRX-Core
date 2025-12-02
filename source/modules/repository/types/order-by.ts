@@ -16,7 +16,7 @@
  * @example
  * Order by a single field ascending
  * ```ts
- * const orderBy1: OrderByItem<User> = {
+ * const orderBy1: OrderBy<User> = {
  *   selectedField: 'id',
  *   direction: 'asc'
  * };
@@ -24,13 +24,13 @@
  * @example
  * Order by a single field descending
  * ```ts
- * const orderBy2: OrderByItem<User> = {
+ * const orderBy2: OrderBy<User> = {
  *   selectedField: 'name',
  *   direction: 'desc'
  * };
  * ```
  */
-export interface OrderByItem<TModel> {
+export interface OrderBy<TModel> {
 	/**
 	 * The field to order by. Must be a key of the model or a string.
 	 */
