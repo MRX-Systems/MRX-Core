@@ -2,7 +2,7 @@ import { t } from 'elysia';
 import { KindGuard } from '@sinclair/typebox';
 import { describe, test, expect } from 'bun:test';
 
-import { flatten } from '#/shared/utils/flatten';
+import { flatten } from '#/modules/schema-builder/utils/flatten';
 
 describe('flatten', () => {
 	test('should flattens nested unions', () => {
