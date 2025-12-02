@@ -37,13 +37,6 @@ await Bun.build({
 		'./source/modules/elysia/cache/index.ts',
 		'./source/modules/elysia/cache/types/index.ts',
 
-		// crud & crud-schema
-		'./source/modules/elysia/crud/index.ts',
-		'./source/modules/elysia/crud/enums/index.ts',
-		'./source/modules/elysia/crud/operations/index.ts',
-		'./source/modules/elysia/crud/types/index.ts',
-		'./source/modules/elysia/crud/utils/index.ts',
-
 		// dbResolver
 		'./source/modules/elysia/db-resolver/index.ts',
 		'./source/modules/elysia/db-resolver/enums/index.ts',
@@ -88,6 +81,11 @@ await Bun.build({
 		// # ————————— Repository ————————— #
 		'./source/modules/repository/index.ts',
 		'./source/modules/repository/types/index.ts',
+
+		// # ————————— SchemaBuilder ————————— #
+		'./source/modules/schema-builder/index.ts',
+		'./source/modules/schema-builder/types/index.ts',
+		'./source/modules/schema-builder/utils/index.ts',
 
 		// # ————————— SingletonManager ————————— #
 		'./source/modules/singleton-manager/index.ts',
