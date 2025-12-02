@@ -2,19 +2,20 @@ import type { Knex } from 'knex';
 import { PassThrough } from 'stream';
 
 import { HttpError } from '#/errors/http-error';
+import { InternalError } from '#/errors/internal-error';
 import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { MSSQL_ERROR_CODE } from '#/modules/database/enums/mssql-error-code';
 import type { Table } from '#/modules/database/table';
+import type { StreamWithAsyncIterable } from '#/shared/types/stream-with-async-iterable';
 import { isDateString } from '#/shared/utils/is-date-string';
 import { makeStreamAsyncIterable } from '#/shared/utils/stream';
-import type { StreamWithAsyncIterable } from '#/shared/types/stream-with-async-iterable';
 import type { AdaptiveWhereClause } from './types/adaptive-where-clause';
 import type { Filter } from './types/filter';
-import type { OrderByItem } from './types/order-by-item';
+import type { GlobalSearch } from './types/global-search';
+import type { OrderBy } from './types/order-by';
 import type { QueryOptions } from './types/query-options';
 import type { QueryOptionsExtendPagination } from './types/query-options-extend-pagination';
 import type { QueryOptionsExtendStream } from './types/query-options-extend-stream';
-import { InternalError } from '#/errors/internal-error';
 
 type OperatorFn = (
 	query: Knex.QueryBuilder,
@@ -573,34 +574,20 @@ export class Repository<TModel = Record<string, unknown>> {
 		const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
 			for (const key in search) {
 				const prop = search[key as keyof Filter<KModel>];
-				if (this._filterIsAdaptiveWhereClause(prop)) {
+				if (this._isAdaptiveWhereClause(prop)) {
 					for (const operator in prop)
 						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>] !== undefined)
 							_operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
-				} else if (
-					key === '$q'
-					&& prop !== null
-					&& (typeof prop === 'string' || typeof prop === 'number')
-				) {
+				} else if (key === '$q' && this._isGlobalSearchPrimitive(prop)) {
 					for (const field of this._table.fields)
 						if (prop)
 							query.orWhere(field, 'like', `%${prop}%`);
-				} else if (
-					key === '$q'
-					&& prop !== null
-					&& typeof prop === 'object'
-					&& 'selectedFields' in prop
-					&& 'value' in prop
-				) {
-					const { selectedFields, value } = prop as {
-						selectedFields: string | string[];
-						value: string | number;
-					};
-					if (Array.isArray(selectedFields))
-						for (const field of selectedFields)
-							query.orWhere(field, 'like', `%${value}%`);
+				} else if (key === '$q' && this._isGlobalSearchObject(prop)) {
+					if (Array.isArray(prop.selectedFields))
+						for (const field of prop.selectedFields)
+							query.orWhere(field, 'like', `%${prop.value}%`);
 					else
-						query.orWhere(selectedFields, 'like', `%${value}%`);
+						query.orWhere(prop.selectedFields, 'like', `%${prop.value}%`);
 				} else {
 					if (prop !== null && typeof prop === 'object' && Object.keys(prop).length === 0)
 						continue;
@@ -626,7 +613,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	protected _applyOrderBy<KModel>(
 		query: Knex.QueryBuilder,
-		orderBy: OrderByItem<KModel> | OrderByItem<KModel>[] | undefined
+		orderBy: OrderBy<KModel> | OrderBy<KModel>[] | undefined
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 
@@ -692,13 +679,40 @@ export class Repository<TModel = Record<string, unknown>> {
 	 *
 	 * @returns True if the data is a WhereClause, false otherwise.
 	 */
-	private _filterIsAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
+	private _isAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
 		return Boolean(
 			data
 			&& typeof data === 'object'
 			&& !Array.isArray(data)
 			&& Object.keys(data).some((key) => _validOperatorKeys.has(key))
 		);
+	}
+
+	/**
+	 * Determines if the provided data is a QuickSearch object (excluding primitive types).
+	 *
+	 * @param data - The data to check.
+	 *
+	 * @returns True if the data is a QuickSearch object, false otherwise.
+	 */
+	private _isGlobalSearchObject(data: unknown): data is Exclude<GlobalSearch<unknown>, string | number> {
+		return Boolean(
+			data
+			&& typeof data === 'object'
+			&& 'selectedFields' in data
+			&& 'value' in data
+		);
+	}
+
+	/**
+	 * Determines if the provided data is a QuickSearch primitive (string or number).
+	 *
+	 * @param data - The data to check.
+	 *
+	 * @returns True if the data is a string or number, false otherwise.
+	 */
+	private _isGlobalSearchPrimitive(data: unknown): data is string | number {
+		return data !== null && (typeof data === 'string' || typeof data === 'number');
 	}
 
 	/**
