@@ -7,7 +7,7 @@ import { cleanSchema } from './clean-schema';
 import type { DeleteSchema } from './types/delete-schema';
 
 /**
- * Creates a delete schema for deleting records with optional selected fields and required filtering.
+ * Creates a DeleteSchema.
  *
  * @template TSourceSchema - The TypeBox object schema to create delete capabilities for
  *
@@ -15,7 +15,7 @@ import type { DeleteSchema } from './types/delete-schema';
  *
  * @returns A TypeBox object schema containing queryOptions with selected fields and filters for delete operations
  */
-export const createDeleteSchema = <TSourceDeleteSchema extends TObject>(schema: TSourceDeleteSchema): DeleteSchema<TSourceDeleteSchema> => {
+export const buildDeleteSchema = <TSourceDeleteSchema extends TObject>(schema: TSourceDeleteSchema): DeleteSchema<TSourceDeleteSchema> => {
 	const sanitizedSchema = cleanSchema<TSourceDeleteSchema>(schema);
 	const filterSchema = buildFilterSchema<TSourceDeleteSchema>(sanitizedSchema);
 
