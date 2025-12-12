@@ -362,7 +362,8 @@ export class Repository<TModel = Record<string, unknown>> {
 	): Promise<number> {
 		const query = this._knex(this._table.name)
 			.count({ count: '*' });
-		this._applyFilter(query, options?.filters);
+		if (options?.filters)
+			this._applyFilter(query, options?.filters);
 		if (options?.transaction)
 			query.transacting(options.transaction);
 
@@ -569,7 +570,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	protected _applyFilter<KModel>(
 		query: Knex.QueryBuilder,
-		search: Filter<KModel> | Filter<KModel>[] | undefined
+		search: Filter<KModel> | Filter<KModel>[]
 	): void {
 		const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
 			for (const key in search) {
@@ -596,9 +597,9 @@ export class Repository<TModel = Record<string, unknown>> {
 				}
 			}
 		};
-		if (search && Array.isArray(search))
+		if (Array.isArray(search))
 			search.reduce((acc, item) => acc.orWhere((q) => this._applyFilter(q, item)), query);
-		else if (search)
+		else
 			processing(query, search);
 	}
 
@@ -641,7 +642,8 @@ export class Repository<TModel = Record<string, unknown>> {
 		query: Knex.QueryBuilder,
 		options?: Omit<QueryOptions<KModel>, 'throwIfNoResult'>
 	): void {
-		this._applyFilter<KModel>(query, options?.filters);
+		if (options?.filters)
+			this._applyFilter<KModel>(query, options.filters);
 		this._applyOrderBy<KModel>(query, options?.orderBy);
 		this._applySelectedFields<KModel>(query, options?.selectedFields);
 		if (options?.transaction)
