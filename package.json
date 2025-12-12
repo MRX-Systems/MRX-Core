@@ -1,12 +1,12 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.12.0-1-and-288-20251203",
+	"version": "2.12.0-2-and-288-20251203",
 	"author": "Ruby",
 	"devDependencies": {
 		"@eslint/js": "^9.39.1",
 		"@sinclair/typebox": "0.34.41",
 		"@stylistic/eslint-plugin": "^5.6.1",
-		"@types/bun": "^1.3.3",
+		"@types/bun": "^1.3.4",
 		"@types/nodemailer": "^7.0.4",
 		"elysia": "1.4.18",
 		"eslint": "^9.39.1",
@@ -16,7 +16,7 @@
 		"knex": "^3.1.0",
 		"mssql": "^12.2.0",
 		"nodemailer": "^7.0.11",
-		"typescript-eslint": "^8.48.1"
+		"typescript-eslint": "^8.49.0"
 	},
 	"peerDependencies": {
 		"@sinclair/typebox": "0.34.41",
