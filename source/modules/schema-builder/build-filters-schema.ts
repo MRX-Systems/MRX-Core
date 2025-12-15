@@ -27,7 +27,7 @@ export const buildFilterSchema = <const TSourceSchema extends TObject>(schema: T
 			buildAdaptiveWhereClauseSchema(propertySchema)
 		]));
 
-	return t.Object(clauseSchema, {
+	return t.Partial(t.Object(clauseSchema, {
 		minProperties: 1
-	}) as unknown as FilterSchema<TSourceSchema>;
+	})) as unknown as FilterSchema<TSourceSchema>;
 };
