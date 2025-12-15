@@ -28,6 +28,9 @@ export const buildAdaptiveWhereClauseSchema = <
 		$isNull: t.Boolean()
 	} as const;
 
+	if (KindGuard.IsUnion(schema))
+		[schema] = schema.anyOf.filter((s) => !KindGuard.IsNull(s)) as [TFieldSchema];
+
 	// string, number, date
 	const strNumDate = (
 		KindGuard.IsString(schema)
