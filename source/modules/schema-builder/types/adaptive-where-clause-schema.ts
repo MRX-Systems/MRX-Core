@@ -1,38 +1,63 @@
-import type { TArray, TBoolean, TDate, TInteger, TNumber, TObject, TPartial, TSchema, TString, TTuple } from '@sinclair/typebox/type';
+import type {
+	TArray,
+	TBoolean,
+	TDate,
+	TInteger,
+	TNull,
+	TNumber,
+	TObject,
+	TPartial,
+	TSchema,
+	TString,
+	TTuple,
+	TUnion
+} from '@sinclair/typebox/type';
 
-export type AdaptiveWhereClauseSchema<TFieldSchema extends TSchema> = TPartial<(
-	TFieldSchema extends TString
-		? TObject<{
-			$eq: TFieldSchema;
-			$neq: TFieldSchema;
+type ResolvedSchema<T extends TSchema> = T extends TUnion<infer U extends TSchema[]>
+	? U extends [infer First, ...infer Rest extends TSchema[]]
+		? First extends TNull
+			? Rest extends TSchema[]
+				? ResolvedSchema<TUnion<Rest>>
+				: T
+			: First
+		: T
+	: T;
+
+type SafeResolvedSchema<T extends TSchema> = ResolvedSchema<T> extends infer R extends TSchema
+	? R
+	: never;
+
+export type AdaptiveWhereClauseSchema<TFieldSchema extends TSchema> = SafeResolvedSchema<TFieldSchema> extends TString
+	? TPartial<TObject<{
+		$eq: SafeResolvedSchema<TFieldSchema>;
+		$neq: SafeResolvedSchema<TFieldSchema>;
+		$isNull: TBoolean;
+	} & {
+		$in: TArray<SafeResolvedSchema<TFieldSchema>>;
+		$nin: TArray<SafeResolvedSchema<TFieldSchema>>;
+		$like: TString;
+		$nlike: TString;
+	}>>
+	: SafeResolvedSchema<TFieldSchema> extends TNumber | TDate | TInteger
+		? TPartial<TObject<{
+			$eq: SafeResolvedSchema<TFieldSchema>;
+			$neq: SafeResolvedSchema<TFieldSchema>;
 			$isNull: TBoolean;
 		} & {
-			$in: TArray<TFieldSchema>;
-			$nin: TArray<TFieldSchema>;
+			$in: TArray<SafeResolvedSchema<TFieldSchema>>;
+			$nin: TArray<SafeResolvedSchema<TFieldSchema>>;
 			$like: TString;
 			$nlike: TString;
-		}>
-		: TFieldSchema extends TNumber | TDate | TInteger
-			? TObject<{
-				$eq: TFieldSchema;
-				$neq: TFieldSchema;
-				$isNull: TBoolean;
-			} & {
-				$in: TArray<TFieldSchema>;
-				$nin: TArray<TFieldSchema>;
-				$like: TString;
-				$nlike: TString;
-			} & {
-				$lt: TFieldSchema;
-				$lte: TFieldSchema;
-				$gt: TFieldSchema;
-				$gte: TFieldSchema;
-				$between: TTuple<[TFieldSchema, TFieldSchema]>;
-				$nbetween: TTuple<[TFieldSchema, TFieldSchema]>;
-			}>
-			: TObject<{
-				$eq: TBoolean;
-				$neq: TBoolean;
-				$isNull: TBoolean;
-			}>
-)>;
+		} & {
+			$lt: SafeResolvedSchema<TFieldSchema>;
+			$lte: SafeResolvedSchema<TFieldSchema>;
+			$gt: SafeResolvedSchema<TFieldSchema>;
+			$gte: SafeResolvedSchema<TFieldSchema>;
+			$between: TTuple<[SafeResolvedSchema<TFieldSchema>, SafeResolvedSchema<TFieldSchema>]>;
+			$nbetween: TTuple<[SafeResolvedSchema<TFieldSchema>, SafeResolvedSchema<TFieldSchema>]>;
+		}>>
+		: TPartial<TObject<{
+			$eq: SafeResolvedSchema<TFieldSchema>;
+			$neq: SafeResolvedSchema<TFieldSchema>;
+			$isNull: TBoolean;
+		}>>;
