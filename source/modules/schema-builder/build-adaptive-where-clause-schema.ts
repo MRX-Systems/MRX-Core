@@ -28,14 +28,17 @@ export const buildAdaptiveWhereClauseSchema = <
 		$isNull: t.Boolean()
 	} as const;
 
-	if (KindGuard.IsUnion(schema))
+	const isDateElysiaTypeBox = isDateFromElysiaTypeBox(schema);
+
+	if (KindGuard.IsUnion(schema) && !isDateElysiaTypeBox)
 		[schema] = schema.anyOf.filter((s) => !KindGuard.IsNull(s)) as [TFieldSchema];
 
 	// string, number, date
 	const strNumDate = (
 		KindGuard.IsString(schema)
 		|| KindGuard.IsNumber(schema)
-		|| isDateFromElysiaTypeBox(schema)
+		|| isDateElysiaTypeBox
+		|| KindGuard.IsDate(schema)
 	)
 		? {
 			$in: t.Array(schema, { minItems: 1, uniqueItems: true }),
@@ -48,7 +51,8 @@ export const buildAdaptiveWhereClauseSchema = <
 	// number, date
 	const numDate = (
 		KindGuard.IsNumber(schema)
-		|| isDateFromElysiaTypeBox(schema)
+		|| isDateElysiaTypeBox
+		|| KindGuard.IsDate(schema)
 	)
 		? {
 			$lt: schema,
