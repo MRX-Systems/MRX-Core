@@ -1,4 +1,4 @@
-import { Elysia, type DefinitionBase, type MetadataBase, type SingletonBase } from 'elysia';
+import { Elysia } from 'elysia';
 
 import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 import type { KvStore } from '#/modules/kv-store/types/kv-store';
@@ -70,8 +70,23 @@ export const cache = (store: KvStore = new MemoryStore()) => {
 			})
 		}) as unknown as Elysia<
 		'',
-		SingletonBase,
-		DefinitionBase,
-		MetadataBase & { macro: Partial<{ readonly isCached: CacheOptions; }>; }
+		{
+			decorator: {};
+			derive: {};
+			resolve: {};
+			store: {}
+		},
+		{
+			typebox: {};
+			error: {};
+		},
+		{
+			macro: Partial<{ readonly isCached: CacheOptions; }>;
+			macroFn: {};
+			parser: {};
+			response: {};
+			schema: {};
+			standaloneSchema: {};
+		}
 	>;
 };

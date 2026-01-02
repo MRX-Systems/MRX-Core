@@ -1,4 +1,4 @@
-import { Elysia, t, type DefinitionBase, type MetadataBase } from 'elysia';
+import { Elysia, t } from 'elysia';
 
 import { InternalError } from '#/errors/internal-error';
 import { MSSQL } from '#/modules/database/mssql';
@@ -53,8 +53,11 @@ export const dbResolver = (prefixDatabaseName = '') => new Elysia()
 		derive: {};
 		resolve: {};
 	},
-	DefinitionBase & { typebox: { DbResolverHeader: TObject<{ 'database-using': TString }> } },
-	MetadataBase & {
+	{
+		typebox: { DbResolverHeader: TObject<{ 'database-using': TString }> };
+		error: {};
+	},
+	{
 		macro: Partial<{
 			readonly injectDynamicDB: Omit<MSSQLDatabaseOptions, 'databaseName'>;
 			readonly injectStaticDB: string;
@@ -71,4 +74,8 @@ export const dbResolver = (prefixDatabaseName = '') => new Elysia()
 				};
 			};
 		};
+		parser: {};
+		response: {};
+		schema: {};
+		standaloneSchema: {};
 	}>;

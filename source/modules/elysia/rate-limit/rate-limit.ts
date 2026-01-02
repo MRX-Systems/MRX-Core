@@ -2,7 +2,7 @@ import { HttpError } from '#/errors/http-error';
 import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
 import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import type { Server } from 'bun';
-import { Elysia, type DefinitionBase, type HTTPHeaders, type MetadataBase, type SingletonBase, type StatusMap } from 'elysia';
+import { Elysia, type HTTPHeaders, type StatusMap } from 'elysia';
 
 import { RATE_LIMIT_ERROR_KEYS } from './enums/rate-limit-error-keys';
 import type { RateLimitOptions } from './types/rate-limit-options';
@@ -99,8 +99,23 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 		})
 		.as('global') as unknown as Elysia<
 		'rateLimit',
-		SingletonBase,
-		DefinitionBase,
-		MetadataBase & { macro: Partial<{ readonly rateLimit: RateLimitOptions; }>; }
+		{
+			decorator: {};
+			derive: {};
+			resolve: {};
+			store: {}
+		},
+		{
+			typebox: {};
+			error: {};
+		},
+		{
+			macro: Partial<{ readonly rateLimit: RateLimitOptions; }>;
+			macroFn: {};
+			parser: {};
+			response: {};
+			schema: {};
+			standaloneSchema: {};
+		}
 	>;
 };
