@@ -25,7 +25,7 @@ export const hotp = async (
 	const counterBuffer = createCounterBuffer(counter);
 	const key = await webcrypto.subtle.importKey(
 		'raw',
-		secret,
+		secret as Uint8Array<ArrayBuffer>,
 		{ name: 'HMAC', hash: algorithm },
 		false,
 		['sign']
