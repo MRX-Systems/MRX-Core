@@ -33,17 +33,12 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	/**
 	 * The name of the database.
 	 */
-	private readonly _databaseName: string;
-
-	/**
-	 * A map of tables in the database.
-	 */
-	private readonly _tables = new Map<string, Table>();
+	public readonly databaseName: string;
 
 	/**
 	 * A map of repositories for each table.
 	 */
-	private readonly _repositories = new Map<string, Repository>();
+	public readonly repositories = new Map<string, Repository>();
 
 	/**
 	 * The Knex instance for the database connection.
@@ -63,7 +58,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	public constructor(options: MSSQLDatabaseOptions) {
 		super();
-		this._databaseName = options.databaseName;
+		this.databaseName = options.databaseName;
 		this._isEventEnabled = options.isEventEnabled ?? false;
 		this._db = knex({
 			client: 'mssql',
@@ -103,7 +98,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 				this._addEventKnex();
 		} catch (error) {
 			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_CONNECTION_ERROR, {
-				databaseName: this._databaseName,
+				databaseName: this.databaseName,
 				error
 			});
 		}
@@ -118,14 +113,14 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	public async disconnect(): Promise<void> {
 		if (!this._isConnected)
 			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, {
-				databaseName: this._databaseName
+				databaseName: this.databaseName
 			});
 		try {
 			await this._db.destroy();
 			this._isConnected = false;
 		} catch (error) {
 			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_DISCONNECT_ERROR, {
-				databaseName: this._databaseName,
+				databaseName: this.databaseName,
 				error
 			});
 		}
@@ -157,21 +152,21 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 		customRepository?: new (knex: Knex, table: Table) => Repository
 	): Repository {
 		if (!this._isConnected)
-			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
-		if (!this._tables.has(tableName))
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this.databaseName });
+		if (!this.repositories.has(tableName))
 			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
 
-		let repo = this._repositories.get(tableName);
+		const repo = this.repositories.get(tableName) as Repository;
 
 		if (customRepository) {
-			const table = this._tables.get(tableName) as Table;
-			if (repo && repo instanceof customRepository)
+			if (repo instanceof customRepository)
 				return repo;
-			repo = new customRepository(this._db, table);
-			this._repositories.set(tableName, repo);
-			return repo;
+			const { table } = repo;
+			const customRepo = new customRepository(this._db, table);
+			this.repositories.set(tableName, customRepo);
+			return customRepo;
 		}
-		return this._repositories.get(tableName) as Repository;
+		return repo;
 	}
 
 	/**
@@ -186,19 +181,11 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	public getTable(tableName: string): Table {
 		if (!this._isConnected)
-			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
-		if (!this._tables.has(tableName))
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this.databaseName });
+		const repo = this.repositories.get(tableName);
+		if (!repo)
 			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND, { table: tableName });
-		return this._tables.get(tableName) as Table;
-	}
-
-	/**
-	 * Retrieves the name of the database.
-	 *
-	 * @returns The name of the database.
-	 */
-	public get databaseName(): string {
-		return this._databaseName;
+		return repo.table;
 	}
 
 	/**
@@ -207,16 +194,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 * @returns A map of table names to {@link Table} instances.
 	 */
 	public get tables(): Map<string, Table> {
-		return this._tables;
-	}
-
-	/**
-	 * Retrieves the map of repositories for each table.
-	 *
-	 * @returns A map of table names to {@link Repository} instances.
-	 */
-	public get repositories(): Map<string, Repository> {
-		return this._repositories;
+		return new Map([...this.repositories].map(([name, repo]) => [name, repo.table]));
 	}
 
 	/**
@@ -237,7 +215,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	public get db(): Knex {
 		if (!this._isConnected)
-			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this._databaseName });
+			throw new InternalError(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED, { databaseName: this.databaseName });
 		return this._db;
 	}
 
@@ -281,20 +259,11 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 			)
 			.groupBy('c.table_name', 'pk.primaryKeyColumn', 'pk.primaryKeyType');
 
-		const fieldsByTable = result.reduce((acc, { tableName, fields, primaryKeyColumn, primaryKeyType }) => {
-			const primaryKeyTypeTs = primaryKeyType === 'int' ? 'NUMBER' : 'STRING';
-			acc.set(tableName, {
-				fields: fields.split(','),
-				primaryKey: [primaryKeyColumn, primaryKeyTypeTs]
-			});
-			return acc;
-		}, new Map<string, { fields: string[], primaryKey: [string, 'NUMBER' | 'STRING'] }>());
-
-		fieldsByTable.forEach((desc, tableName) => {
-			const table = new Table(this._databaseName, tableName, desc.fields, desc.primaryKey);
-			this._tables.set(tableName, table);
-			this._repositories.set(tableName, new Repository(this._db, table));
-		});
+		for (const { tableName, fields, primaryKeyColumn, primaryKeyType } of result) {
+			const primaryKeyTypeTs: 'NUMBER' | 'STRING' = primaryKeyType === 'int' ? 'NUMBER' : 'STRING';
+			const table = new Table(this.databaseName, tableName, fields.split(','), [primaryKeyColumn, primaryKeyTypeTs]);
+			this.repositories.set(tableName, new Repository(this._db, table));
+		}
 	}
 
 	/**
@@ -318,7 +287,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 	 */
 	private _handleQueryResponse(response: unknown[], queryContext: QueryContext): void {
 		const tables = this._extractTablesFromSqlQuery(queryContext.sql);
-		const table = this._tables.get(tables[0]);
+		const table = this.repositories.get(tables[0])?.table;
 		switch (queryContext.method) {
 			case 'select':
 				table?.emit('selected', response, queryContext);
