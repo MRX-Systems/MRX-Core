@@ -90,12 +90,12 @@ export class Repository<TModel = Record<string, unknown>> {""
 	/**
 	 * The Knex instance used for database operations.
 	 */
-	protected readonly _knex: Knex;
+	public readonly knex: Knex;
 
 	/**
 	 * The table associated with this repository.
 	 */
-	protected readonly _table: Table;
+	public readonly table: Table;
 
 	/**
 	 * Creates a new `Repository` instance with the specified Knex.js instance and table object.
@@ -104,8 +104,8 @@ export class Repository<TModel = Record<string, unknown>> {""
 	 * @param table - The table object representing the database table to interact with.
 	 */
 	public constructor(knex: Knex, table: Table) {
-		this._knex = knex;
-		this._table = table;
+		this.knex = knex;
+		this.table = table;
 	}
 
 	/**
@@ -202,7 +202,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 	public findStream<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendStream<KModel>
 	): StreamWithAsyncIterable<Required<KModel>> {
-		const query = this._knex(this._table.name);
+		const query = this.knex(this.table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
 
@@ -309,7 +309,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 	public async find<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendPagination<KModel>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name);
+		const query = this.knex(this.table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
 
@@ -360,7 +360,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 	public async count<KModel extends TModel = TModel>(
 		options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>
 	): Promise<number> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.count({ count: '*' });
 		if (options?.filters)
 			this._applyFilter(query, options?.filters);
@@ -411,7 +411,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
 
@@ -463,7 +463,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 		data: Partial<NoInfer<KModel>>,
 		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.update(data);
 
 		this._applyQueryOptions<KModel>(query, options);
@@ -516,7 +516,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 	public async delete<KModel extends TModel = NoInfer<TModel>>(
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.delete();
 
 		this._applyQueryOptions<KModel>(query, options);
@@ -580,7 +580,7 @@ export class Repository<TModel = Record<string, unknown>> {""
 						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>] !== undefined)
 							_operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
 				} else if (key === '$q' && this._isGlobalSearchPrimitive(prop)) {
-					for (const field of this._table.fields)
+					for (const field of this.table.fields)
 						if (prop)
 							query.orWhere(field, 'like', `%${prop}%`);
 				} else if (key === '$q' && this._isGlobalSearchObject(prop)) {
@@ -621,13 +621,13 @@ export class Repository<TModel = Record<string, unknown>> {""
 		if (!(qMethod === 'select'))
 			return;
 		if (!orderBy)
-			query.orderBy(`[${this._table.name}].${this._table.primaryKey[0]}`, 'asc');
+			query.orderBy(`[${this.table.name}].${this.table.primaryKey[0]}`, 'asc');
 		else if (Array.isArray(orderBy))
 			orderBy.forEach((item) => {
-				query.orderBy(`[${this._table.name}].${item.selectedField}`, item.direction);
+				query.orderBy(`[${this.table.name}].${item.selectedField}`, item.direction);
 			});
 		else
-			query.orderBy(`[${this._table.name}].${orderBy.selectedField}`, orderBy.direction);
+			query.orderBy(`[${this.table.name}].${orderBy.selectedField}`, orderBy.direction);
 	}
 
 	/**
