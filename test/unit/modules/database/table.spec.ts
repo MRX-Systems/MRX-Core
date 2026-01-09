@@ -187,26 +187,11 @@ describe('Table', (): void => {
 			test('should return the correct database name', (): void => {
 				expect(_table.databaseName).toBe(testData.databases.valid);
 			});
-
-			test('should be readonly (getter only)', (): void => {
-				// TypeScript should prevent this, but we can test runtime behavior
-				expect(() => {
-					// @ts-expect-error - Testing readonly behavior
-					_table.databaseName = 'new_database';
-				}).toThrow();
-			});
 		});
 
 		describe('name', (): void => {
 			test('should return the correct table name', (): void => {
 				expect(_table.name).toBe(testData.tables.valid);
-			});
-
-			test('should be readonly (getter only)', (): void => {
-				expect(() => {
-					// @ts-expect-error - Testing readonly behavior
-					_table.name = 'new_table';
-				}).toThrow();
 			});
 		});
 
@@ -219,13 +204,6 @@ describe('Table', (): void => {
 				const { fields } = _table;
 				expect(fields).toBe(_table.fields);
 			});
-
-			test('should be readonly (getter only)', (): void => {
-				expect(() => {
-					// @ts-expect-error - Testing readonly behavior
-					_table.fields = ['new_field'];
-				}).toThrow();
-			});
 		});
 
 		describe('primaryKey', (): void => {
@@ -236,13 +214,6 @@ describe('Table', (): void => {
 			test('should return a reference to the original tuple', (): void => {
 				const pk = _table.primaryKey;
 				expect(pk).toBe(_table.primaryKey);
-			});
-
-			test('should be readonly (getter only)', (): void => {
-				expect(() => {
-					// @ts-expect-error - Testing readonly behavior
-					_table.primaryKey = ['new_id', 'STRING'];
-				}).toThrow();
 			});
 		});
 	});

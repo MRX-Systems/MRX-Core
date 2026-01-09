@@ -86,7 +86,7 @@ const _DEFAULT_OFFSET = 0;
  * const users = await repo.find({ limit: 10 });
  * ```
  */
-export class Repository<TModel = Record<string, unknown>> {""
+export class Repository<TModel = Record<string, unknown>> {
 	/**
 	 * The Knex instance used for database operations.
 	 */
