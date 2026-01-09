@@ -1,31 +1,31 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.12.0-2-and-288-20251203",
+	"version": "2.12.0-2-and-291-20260102",
 	"author": "Ruby",
 	"devDependencies": {
 		"@eslint/js": "^9.39.2",
-		"@sinclair/typebox": "0.34.41",
+		"@sinclair/typebox": "0.34.46",
 		"@stylistic/eslint-plugin": "^5.6.1",
-		"@types/bun": "^1.3.4",
+		"@types/bun": "^1.3.5",
 		"@types/nodemailer": "^7.0.4",
-		"elysia": "1.4.19",
+		"elysia": "1.4.21",
 		"eslint": "^9.39.2",
-		"globals": "^16.5.0",
+		"globals": "^17.0.0",
 		"ioredis": "^5.8.2",
 		"jose": "^6.1.3",
 		"knex": "^3.1.0",
 		"mssql": "^12.2.0",
-		"nodemailer": "^7.0.11",
-		"typescript-eslint": "^8.49.0"
+		"nodemailer": "^7.0.12",
+		"typescript-eslint": "^8.51.0"
 	},
 	"peerDependencies": {
-		"@sinclair/typebox": "0.34.41",
-		"elysia": "^1.4.19",
+		"@sinclair/typebox": "0.34.46",
+		"elysia": "^1.4.21",
 		"ioredis": "^5.8.2",
 		"jose": "^6.1.3",
 		"mssql": "^12.2.0",
 		"knex": "^3.1.0",
-		"nodemailer": "^7.0.11",
+		"nodemailer": "^7.0.12",
 		"typescript": "^5.9.3"
 	},
 	"exports": {

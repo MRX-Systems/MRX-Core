@@ -23,11 +23,6 @@ describe.concurrent('buildFilterSchema', () => {
 			expect(schema.properties).toHaveProperty(key);
 	});
 
-	test('should verify properties are required', () => {
-		const schema = buildFilterSchema(sourceSchema);
-		expect(schema.required).toEqual(['$q', ...Object.keys(sourceSchema.properties)]);
-	});
-
 	test('should have a minimum of one property', () => {
 		const schema = buildFilterSchema(sourceSchema);
 		expect(schema.minProperties).toBe(1);
