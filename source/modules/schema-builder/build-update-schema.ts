@@ -13,7 +13,7 @@ import type { UpdateSchema } from './types/update-schema';
  *
  * @param schema - The source object schema to build the update schema from.
  *
- * @returns The update
+ * @returns The update schema.
  */
 export const buildUpdateSchema = <TSourceUpdateSchema extends TObject>(schema: TSourceUpdateSchema): UpdateSchema<TSourceUpdateSchema> => {
 	const sanitizedSchema = cleanSchema<TSourceUpdateSchema>(schema);

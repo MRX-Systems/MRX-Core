@@ -11,7 +11,6 @@ const baseSchema = t.Object({
 	updatedAt: t.Date()
 });
 
-
 describe.concurrent('buildOrderBySchema', () => {
 	test('should create a schema with an object type', () => {
 		const orderBySchema = buildOrderBySchema(baseSchema);

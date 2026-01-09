@@ -86,7 +86,7 @@ const _DEFAULT_OFFSET = 0;
  * const users = await repo.find({ limit: 10 });
  * ```
  */
-export class Repository<TModel = Record<string, unknown>> {
+export class Repository<TModel = Record<string, unknown>> {""
 	/**
 	 * The Knex instance used for database operations.
 	 */
@@ -691,11 +691,11 @@ export class Repository<TModel = Record<string, unknown>> {
 	}
 
 	/**
-	 * Determines if the provided data is a QuickSearch object (excluding primitive types).
+	 * Determines if the provided data is a GlobalSearch object (excluding primitive types).
 	 *
 	 * @param data - The data to check.
 	 *
-	 * @returns True if the data is a QuickSearch object, false otherwise.
+	 * @returns True if the data is a GlobalSearch object, false otherwise.
 	 */
 	private _isGlobalSearchObject(data: unknown): data is Exclude<GlobalSearch<unknown>, string | number> {
 		return Boolean(
@@ -707,7 +707,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	}
 
 	/**
-	 * Determines if the provided data is a QuickSearch primitive (string or number).
+	 * Determines if the provided data is a GlobalSearch primitive (string or number).
 	 *
 	 * @param data - The data to check.
 	 *
