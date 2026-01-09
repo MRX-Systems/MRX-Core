@@ -17,23 +17,23 @@ export class Table extends TypedEventEmitter<TableEventMap> {
 	/**
 	 * The name of the database that this table belongs to.
 	 */
-	private readonly _databaseName: string;
+	public readonly databaseName: string;
 
 	/**
 	 * The fields (columns) of the table.
 	 */
-	private readonly _fields: string[] = [];
+	public readonly fields: string[];
 
 	/**
 	 * The name of the table.
 	 */
-	private readonly _name: string;
+	public readonly name: string;
 
 	/**
 	 * The primary key of the table, represented as a tuple of field name and type.
 	 * The type can be either 'NUMBER' or 'STRING'.
 	 */
-	private readonly _primaryKey: [string, 'NUMBER' | 'STRING'];
+	public readonly primaryKey: [string, 'NUMBER' | 'STRING'];
 
 	/**
 	 * Creates an instance of the Table class.
@@ -50,38 +50,9 @@ export class Table extends TypedEventEmitter<TableEventMap> {
 		primaryKey: [string, 'NUMBER' | 'STRING']
 	) {
 		super();
-		this._databaseName = databaseName;
-		this._name = tableName;
-		this._fields = fields;
-		this._primaryKey = primaryKey;
-	}
-
-	/**
-	 * Gets the name of the database that this table belongs to.
-	 */
-	public get databaseName(): string {
-		return this._databaseName;
-	}
-
-	/**
-	 * Gets the name of the table.
-	 */
-	public get name(): string {
-		return this._name;
-	}
-
-	/**
-	 * Gets the fields (columns) of the table.
-	 */
-	public get fields(): string[] {
-		return this._fields;
-	}
-
-	/**
-	 * Gets the primary key of the table, represented as a tuple of field name and type.
-	 * The type can be either 'NUMBER' or 'STRING'.
-	 */
-	public get primaryKey(): [string, 'NUMBER' | 'STRING'] {
-		return this._primaryKey;
+		this.databaseName = databaseName;
+		this.name = tableName;
+		this.fields = fields;
+		this.primaryKey = primaryKey;
 	}
 }

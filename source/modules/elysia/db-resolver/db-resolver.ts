@@ -4,18 +4,19 @@ import { InternalError } from '#/errors/internal-error';
 import { MSSQL } from '#/modules/database/mssql';
 import type { MSSQLDatabaseOptions } from '#/modules/database/types/mssql-database-option';
 import { SingletonManager } from '#/modules/singleton-manager/singleton-manager';
+import type { TObject, TString } from '@sinclair/typebox';
 import { DB_RESOLVER_ERROR_KEYS } from './enums/db-resolver-error-keys';
 
 export const dbResolver = (prefixDatabaseName = '') => new Elysia()
 	.model({
-		dbResolverHeader: t.Object({
+		DbResolverHeader: t.Object({
 			'database-using': t.String()
 		})
 	})
 	.macro({
 		injectDynamicDB(config: Omit<MSSQLDatabaseOptions, 'databaseName'>) {
 			return {
-				headers: 'dbResolverHeader',
+				headers: 'DbResolverHeader',
 				async resolve({ headers }) {
 					const databaseName = headers['database-using'] as string;
 
@@ -44,4 +45,37 @@ export const dbResolver = (prefixDatabaseName = '') => new Elysia()
 				}
 			};
 		}
-	});
+	}) as unknown as Elysia<
+	'',
+	{
+		decorator: {};
+		store: {};
+		derive: {};
+		resolve: {};
+	},
+	{
+		typebox: { DbResolverHeader: TObject<{ 'database-using': TString }> };
+		error: {};
+	},
+	{
+		macro: Partial<{
+			readonly injectDynamicDB: Omit<MSSQLDatabaseOptions, 'databaseName'>;
+			readonly injectStaticDB: string;
+		}>;
+		macroFn: {
+			readonly injectDynamicDB: (config: Omit<MSSQLDatabaseOptions, 'databaseName'>) => {
+				readonly resolve: () => Promise<{
+					dynamicDB: MSSQL;
+				}>;
+			};
+			readonly injectStaticDB: (databaseName: string) => {
+				readonly resolve: () => {
+					staticDB: MSSQL;
+				};
+			};
+		};
+		parser: {};
+		response: {};
+		schema: {};
+		standaloneSchema: {};
+	}>;

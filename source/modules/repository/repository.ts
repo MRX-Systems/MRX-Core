@@ -2,19 +2,20 @@ import type { Knex } from 'knex';
 import { PassThrough } from 'stream';
 
 import { HttpError } from '#/errors/http-error';
+import { InternalError } from '#/errors/internal-error';
 import { DATABASE_ERROR_KEYS } from '#/modules/database/enums/database-error-keys';
 import { MSSQL_ERROR_CODE } from '#/modules/database/enums/mssql-error-code';
 import type { Table } from '#/modules/database/table';
+import type { StreamWithAsyncIterable } from '#/shared/types/stream-with-async-iterable';
 import { isDateString } from '#/shared/utils/is-date-string';
 import { makeStreamAsyncIterable } from '#/shared/utils/stream';
-import type { StreamWithAsyncIterable } from '#/shared/types/stream-with-async-iterable';
 import type { AdaptiveWhereClause } from './types/adaptive-where-clause';
 import type { Filter } from './types/filter';
-import type { OrderByItem } from './types/order-by-item';
+import type { GlobalSearch } from './types/global-search';
+import type { OrderBy } from './types/order-by';
 import type { QueryOptions } from './types/query-options';
 import type { QueryOptionsExtendPagination } from './types/query-options-extend-pagination';
 import type { QueryOptionsExtendStream } from './types/query-options-extend-stream';
-import { InternalError } from '#/errors/internal-error';
 
 type OperatorFn = (
 	query: Knex.QueryBuilder,
@@ -89,12 +90,12 @@ export class Repository<TModel = Record<string, unknown>> {
 	/**
 	 * The Knex instance used for database operations.
 	 */
-	protected readonly _knex: Knex;
+	public readonly knex: Knex;
 
 	/**
 	 * The table associated with this repository.
 	 */
-	protected readonly _table: Table;
+	public readonly table: Table;
 
 	/**
 	 * Creates a new `Repository` instance with the specified Knex.js instance and table object.
@@ -103,8 +104,8 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * @param table - The table object representing the database table to interact with.
 	 */
 	public constructor(knex: Knex, table: Table) {
-		this._knex = knex;
-		this._table = table;
+		this.knex = knex;
+		this.table = table;
 	}
 
 	/**
@@ -201,7 +202,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	public findStream<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendStream<KModel>
 	): StreamWithAsyncIterable<Required<KModel>> {
-		const query = this._knex(this._table.name);
+		const query = this.knex(this.table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
 
@@ -308,7 +309,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	public async find<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendPagination<KModel>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name);
+		const query = this.knex(this.table.name);
 
 		this._applyQueryOptions<KModel>(query, options);
 
@@ -359,9 +360,10 @@ export class Repository<TModel = Record<string, unknown>> {
 	public async count<KModel extends TModel = TModel>(
 		options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>
 	): Promise<number> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.count({ count: '*' });
-		this._applyFilter(query, options?.filters);
+		if (options?.filters)
+			this._applyFilter(query, options?.filters);
 		if (options?.transaction)
 			query.transacting(options.transaction);
 
@@ -409,7 +411,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
 
@@ -461,7 +463,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		data: Partial<NoInfer<KModel>>,
 		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.update(data);
 
 		this._applyQueryOptions<KModel>(query, options);
@@ -514,7 +516,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	public async delete<KModel extends TModel = NoInfer<TModel>>(
 		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
-		const query = this._knex(this._table.name)
+		const query = this.knex(this.table.name)
 			.delete();
 
 		this._applyQueryOptions<KModel>(query, options);
@@ -568,39 +570,25 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	protected _applyFilter<KModel>(
 		query: Knex.QueryBuilder,
-		search: Filter<KModel> | Filter<KModel>[] | undefined
+		search: Filter<KModel> | Filter<KModel>[]
 	): void {
 		const processing = (query: Knex.QueryBuilder, search: Filter<KModel>): void => {
 			for (const key in search) {
 				const prop = search[key as keyof Filter<KModel>];
-				if (this._filterIsAdaptiveWhereClause(prop)) {
+				if (this._isAdaptiveWhereClause(prop)) {
 					for (const operator in prop)
 						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>] !== undefined)
 							_operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
-				} else if (
-					key === '$q'
-					&& prop !== null
-					&& (typeof prop === 'string' || typeof prop === 'number')
-				) {
-					for (const field of this._table.fields)
+				} else if (key === '$q' && this._isGlobalSearchPrimitive(prop)) {
+					for (const field of this.table.fields)
 						if (prop)
 							query.orWhere(field, 'like', `%${prop}%`);
-				} else if (
-					key === '$q'
-					&& prop !== null
-					&& typeof prop === 'object'
-					&& 'selectedFields' in prop
-					&& 'value' in prop
-				) {
-					const { selectedFields, value } = prop as {
-						selectedFields: string | string[];
-						value: string | number;
-					};
-					if (Array.isArray(selectedFields))
-						for (const field of selectedFields)
-							query.orWhere(field, 'like', `%${value}%`);
+				} else if (key === '$q' && this._isGlobalSearchObject(prop)) {
+					if (Array.isArray(prop.selectedFields))
+						for (const field of prop.selectedFields)
+							query.orWhere(field, 'like', `%${prop.value}%`);
 					else
-						query.orWhere(selectedFields, 'like', `%${value}%`);
+						query.orWhere(prop.selectedFields, 'like', `%${prop.value}%`);
 				} else {
 					if (prop !== null && typeof prop === 'object' && Object.keys(prop).length === 0)
 						continue;
@@ -609,9 +597,9 @@ export class Repository<TModel = Record<string, unknown>> {
 				}
 			}
 		};
-		if (search && Array.isArray(search))
+		if (Array.isArray(search))
 			search.reduce((acc, item) => acc.orWhere((q) => this._applyFilter(q, item)), query);
-		else if (search)
+		else
 			processing(query, search);
 	}
 
@@ -626,20 +614,20 @@ export class Repository<TModel = Record<string, unknown>> {
 	 */
 	protected _applyOrderBy<KModel>(
 		query: Knex.QueryBuilder,
-		orderBy: OrderByItem<KModel> | OrderByItem<KModel>[] | undefined
+		orderBy: OrderBy<KModel> | OrderBy<KModel>[] | undefined
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 
 		if (!(qMethod === 'select'))
 			return;
 		if (!orderBy)
-			query.orderBy(`[${this._table.name}].${this._table.primaryKey[0]}`, 'asc');
+			query.orderBy(`[${this.table.name}].${this.table.primaryKey[0]}`, 'asc');
 		else if (Array.isArray(orderBy))
 			orderBy.forEach((item) => {
-				query.orderBy(`[${this._table.name}].${item.selectedField}`, item.direction);
+				query.orderBy(`[${this.table.name}].${item.selectedField}`, item.direction);
 			});
 		else
-			query.orderBy(`[${this._table.name}].${orderBy.selectedField}`, orderBy.direction);
+			query.orderBy(`[${this.table.name}].${orderBy.selectedField}`, orderBy.direction);
 	}
 
 	/**
@@ -654,7 +642,8 @@ export class Repository<TModel = Record<string, unknown>> {
 		query: Knex.QueryBuilder,
 		options?: Omit<QueryOptions<KModel>, 'throwIfNoResult'>
 	): void {
-		this._applyFilter<KModel>(query, options?.filters);
+		if (options?.filters)
+			this._applyFilter<KModel>(query, options.filters);
 		this._applyOrderBy<KModel>(query, options?.orderBy);
 		this._applySelectedFields<KModel>(query, options?.selectedFields);
 		if (options?.transaction)
@@ -692,13 +681,40 @@ export class Repository<TModel = Record<string, unknown>> {
 	 *
 	 * @returns True if the data is a WhereClause, false otherwise.
 	 */
-	private _filterIsAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
+	private _isAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
 		return Boolean(
 			data
 			&& typeof data === 'object'
 			&& !Array.isArray(data)
 			&& Object.keys(data).some((key) => _validOperatorKeys.has(key))
 		);
+	}
+
+	/**
+	 * Determines if the provided data is a GlobalSearch object (excluding primitive types).
+	 *
+	 * @param data - The data to check.
+	 *
+	 * @returns True if the data is a GlobalSearch object, false otherwise.
+	 */
+	private _isGlobalSearchObject(data: unknown): data is Exclude<GlobalSearch<unknown>, string | number> {
+		return Boolean(
+			data
+			&& typeof data === 'object'
+			&& 'selectedFields' in data
+			&& 'value' in data
+		);
+	}
+
+	/**
+	 * Determines if the provided data is a GlobalSearch primitive (string or number).
+	 *
+	 * @param data - The data to check.
+	 *
+	 * @returns True if the data is a string or number, false otherwise.
+	 */
+	private _isGlobalSearchPrimitive(data: unknown): data is string | number {
+		return data !== null && (typeof data === 'string' || typeof data === 'number');
 	}
 
 	/**

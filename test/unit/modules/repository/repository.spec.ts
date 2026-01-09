@@ -303,7 +303,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator string literal',
+		'GlobalSearch operator string literal',
 		{
 			filters: { $q: 'Repository::' },
 			validator: (data, expectedCount) => {
@@ -315,7 +315,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator numeric literal',
+		'GlobalSearch operator numeric literal',
 		{
 			filters: { $q: 15 },
 			validator: (data, expectedCount) => {
@@ -327,7 +327,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator with specified fields and string value',
+		'GlobalSearch operator with specified fields and string value',
 		{
 			filters: { $q: { selectedFields: ['name'], value: 'Repository::' } },
 			validator: (data, expectedCount) => {
@@ -339,7 +339,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator with specified fields and numeric value',
+		'GlobalSearch operator with specified fields and numeric value',
 		{
 			filters: { $q: { selectedFields: ['age'], value: 15 } },
 			validator: (data, expectedCount) => {
@@ -351,7 +351,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator with specified fields and string/numeric value',
+		'GlobalSearch operator with specified fields and string/numeric value',
 		{
 			filters: { $q: { selectedFields: ['name', 'id'], value: '15' } },
 			validator: (data, expectedCount) => {
@@ -363,7 +363,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator check no case sensitive',
+		'GlobalSearch operator check no case sensitive',
 		{
 			filters: { $q: 'REPOSITORY::' },
 			validator: (data, expectedCount) => {
@@ -418,7 +418,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	],
 	[
-		'Q operator with falsy value should not add conditions',
+		'GlobalSearch operator with falsy value should not add conditions',
 		{
 			filters: {
 				$q: '',

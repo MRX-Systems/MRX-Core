@@ -1,5 +1,5 @@
 import type { AdaptiveWhereClause } from './adaptive-where-clause';
-import type { SelectedFields } from './selected-fields';
+import type { GlobalSearch } from './global-search';
 
 /**
  * Defines an filter model using either plain partials of the model TModel or a {@link AdaptiveWhereClause} filter for more dynamic querying.
@@ -35,10 +35,7 @@ import type { SelectedFields } from './selected-fields';
  * ```
  */
 export type Filter<TModel> = {
-	$q?: string | number | {
-		selectedFields: SelectedFields<TModel>,
-		value: string | number
-	};
+	$q?: GlobalSearch<TModel>;
 } & {
 	[Key in keyof TModel]?: TModel[Key] | Partial<AdaptiveWhereClause<TModel[Key]>>;
 };
