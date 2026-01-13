@@ -29,31 +29,31 @@ export const workerFunction = (): void => {
 	const self: Worker = globalThis as unknown as Worker;
 
 	/**
-	 * Process a single log entry across multiple sinks concurrently
+	 * Process a single log entry across all target sinks
 	 */
-	const processLogEntry = async (log: LogEntry): Promise<void> => {
-		await Promise.all(
-			log.sinkNames.map(async (sinkName) => {
-				const sink = sinks[sinkName];
-				if (!sink)
-					return;
+	const processLogEntry = (log: LogEntry): void => {
+		const { sinkNames, level, timestamp, object } = log;
+		const len = sinkNames.length;
+		for (let i = 0; i < len; ++i) {
+			const sinkName = sinkNames[i];
+			const sink = sinks[sinkName];
+			if (!sink)
+				continue;
 
-				try {
-					await sink.log(log.level, log.timestamp, log.object);
-				} catch (error) {
-					self.postMessage({
-						type: 'SINK_LOG_ERROR',
-						sinkName,
-						error,
-						object: log.object
-					});
-				}
-			})
-		);
+			try {
+				void sink.log(level, timestamp, object);
+			} catch (error) {
+				self.postMessage({
+					type: 'SINK_LOG_ERROR',
+					sinkName,
+					error,
+					object
+				});
+			}
+		}
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	self.addEventListener('message', async (
+	self.addEventListener('message', (
 		event: BunMessageEvent<WorkerMessage>
 	) => {
 		switch (event.data.type) {
@@ -67,7 +67,6 @@ export const workerFunction = (): void => {
 
 				try {
 					// Create a function to evaluate the class string and instantiate the sink
-
 					const factory = new Function('sinkArgs', `
 						${sinkClassString}
 						return new ${sinkClassName}(...sinkArgs);
@@ -85,28 +84,25 @@ export const workerFunction = (): void => {
 			}
 			case 'LOG_BATCH': {
 				const { logs } = event.data;
-				try {
-					for (const log of logs)
-						await processLogEntry(log);
-				} finally {
-					self.postMessage({ type: 'BATCH_COMPLETE' });
-				}
+				const len = logs.length;
+				for (let i = 0; i < len; ++i)
+					processLogEntry(logs[i]);
+				self.postMessage({ type: 'BATCH_COMPLETE' });
 				break;
 			}
 			case 'CLOSE': {
-				await Promise.all(
-					Object.entries(sinks).map(async ([name, sink]) => {
-						try {
-							await sink.close?.();
-						} catch (error) {
-							self.postMessage({
-								type: 'SINK_CLOSE_ERROR',
-								sinkName: name,
-								error
-							});
-						}
-					})
-				);
+				const entries = Object.entries(sinks);
+				for (const [name, sink] of entries)
+					try {
+						void sink.close?.();
+					} catch (error) {
+						self.postMessage({
+							type: 'SINK_CLOSE_ERROR',
+							sinkName: name,
+							error
+						});
+					}
+
 				self.postMessage({ type: 'CLOSE_COMPLETE' });
 				break;
 			}
