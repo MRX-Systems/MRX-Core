@@ -676,18 +676,19 @@ export class Repository<TModel = Record<string, unknown>> {
 
 	/**
 	 * Determines if the provided data is a complex query (i.e., a WhereClause).
+	 * Uses for-in loop with early exit for better performance.
 	 *
 	 * @param data - The data to check.
 	 *
 	 * @returns True if the data is a WhereClause, false otherwise.
 	 */
 	private _isAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
-		return Boolean(
-			data
-			&& typeof data === 'object'
-			&& !Array.isArray(data)
-			&& Object.keys(data).some((key) => _validOperatorKeys.has(key))
-		);
+		if (!data || typeof data !== 'object' || Array.isArray(data))
+			return false;
+		for (const key in data)
+			if (_validOperatorKeys.has(key))
+				return true;
+		return false;
 	}
 
 	/**
