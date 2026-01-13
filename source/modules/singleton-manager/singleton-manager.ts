@@ -95,4 +95,12 @@ export class SingletonManager {
 	public static has(name: string): boolean {
 		return this._registry.has(name);
 	}
+
+	/**
+	* Clears all registered singletons from the manager.
+	* Useful for testing or application reset scenarios.
+	*/
+	public static clear(): void {
+		this._registry.clear();
+	}
 }
