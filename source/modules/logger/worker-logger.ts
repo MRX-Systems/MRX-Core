@@ -41,8 +41,19 @@ export const workerFunction = (): void => {
 				continue;
 
 			try {
-				void sink.log(level, timestamp, object);
+				const result = sink.log(level, timestamp, object);
+				// Handle async sinks - catch rejected promises
+				if (result instanceof Promise)
+					result.catch((error: unknown) => {
+						self.postMessage({
+							type: 'SINK_LOG_ERROR',
+							sinkName,
+							error,
+							object
+						});
+					});
 			} catch (error) {
+				// Handle sync errors
 				self.postMessage({
 					type: 'SINK_LOG_ERROR',
 					sinkName,
