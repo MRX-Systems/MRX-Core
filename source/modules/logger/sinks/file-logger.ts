@@ -17,11 +17,11 @@ export class FileLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObje
 		this._sink = Bun.file(path).writer();
 	}
 
-	public log(level: LogLevels, timestamp: number, object: TLogObject): void {
+	public async log(level: LogLevels, timestamp: number, object: TLogObject): Promise<void> {
 		if (this._isClosed)
 			return;
 		const logEntry = JSON.stringify({ timestamp, level, content: object }) + '\n';
-		this._sink.write(logEntry);
+		await this._sink.write(logEntry);
 	}
 
 	public async close(): Promise<void> {
