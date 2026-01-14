@@ -363,12 +363,13 @@ describe.concurrent('MemoryStore', () => {
 			store.destroy();
 		});
 
-		test('should handle decimal numbers', () => {
+		test('should handle decimal values in store', () => {
 			const store = new MemoryStore();
 			store.set('decimal', 5.5);
 
-			const result = store.increment('decimal', 0.5);
-			expect(result).toBe(6.0);
+			// increment/decrement only accept integer amounts (like Redis INCRBY)
+			expect(() => store.increment('decimal', 0.5)).toThrow(InternalError);
+			expect(store.get<number>('decimal')).toBe(5.5);
 			store.destroy();
 		});
 
