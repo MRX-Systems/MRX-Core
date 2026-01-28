@@ -1,6 +1,6 @@
 export interface MemoryStoreEntry {
 	/**
-	 * Current count value for the key.
+	 * The stored value for this entry.
 	 */
 	readonly value: unknown;
 	/**
