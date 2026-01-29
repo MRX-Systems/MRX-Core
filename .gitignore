@@ -20,3 +20,5 @@ node_modules/
 .idea
 .vscode
 .zed
+.oxfmtrc.json
+.oxlintrc.json
