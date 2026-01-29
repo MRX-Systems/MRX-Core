@@ -1,6 +1,6 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.13.0-2-and-293-20260114",
+	"version": "2.13.0-3-and-293-20260129",
 	"description": "Core provides a set of tools to help you build a microservice",
 	"keywords": [
 		"core",
