@@ -48,26 +48,24 @@ const _createCacheKey = (secret: Uint8Array, algorithm: HashAlgorithm): string =
  *
  * @returns Promise resolving to CryptoKey
  */
-const _getCryptoKey = async (
-	secret: Uint8Array,
-	algorithm: HashAlgorithm
-): Promise<CryptoKey> => {
+const _getCryptoKey = async (secret: Uint8Array, algorithm: HashAlgorithm): Promise<CryptoKey> => {
 	const cacheKey = _createCacheKey(secret, algorithm);
 
 	const cached = _keyCache.get(cacheKey);
-	if (cached)
-		return cached;
+	if (cached) return cached;
 
 	// LRU eviction: max 100 entries to limit memory usage
 	if (_keyCache.size >= 100) {
 		const firstKey = _keyCache.keys().next().value;
-		if (firstKey)
-			_keyCache.delete(firstKey);
+		if (firstKey) _keyCache.delete(firstKey);
 	}
+
+	// Ensure ArrayBuffer backing (not SharedArrayBuffer) for Web Crypto API
+	const keyData = new Uint8Array(secret);
 
 	const key = await webcrypto.subtle.importKey(
 		'raw',
-		secret as Uint8Array<ArrayBuffer>,
+		keyData,
 		{ name: 'HMAC', hash: algorithm },
 		false,
 		['sign']
@@ -105,10 +103,7 @@ export const clearKeyCache = (): void => {
 export const hotp = async (
 	secret: Uint8Array,
 	counter: number | bigint,
-	{
-		algorithm = 'SHA-1',
-		digits = 6
-	}: TotpOptions = {}
+	{ algorithm = 'SHA-1', digits = 6 }: TotpOptions = {}
 ): Promise<string> => {
 	// Security: RFC 4226 requires minimum 128 bits (16 bytes)
 	if (secret.length < 16)

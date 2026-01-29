@@ -84,7 +84,9 @@ class CustomTestRepository extends Repository<{ id: number; name: string; email?
 	 * @param pattern - The name pattern to search for
 	 * @returns Promise resolving to matching records
 	 */
-	public async findByNamePattern(pattern: string): Promise<{ id: number; name: string; email?: string }[]> {
+	public findByNamePattern(
+		pattern: string
+	): Promise<{ id: number; name: string; email?: string }[]> {
 		return this.find({
 			filters: {
 				name: { $like: pattern }
@@ -361,7 +363,9 @@ describe('MSSQL', () => {
 
 				mssql.on('query', () => eventSequence.push('query'));
 				mssql.on('query:response', () => eventSequence.push('query:response'));
-				mssql.getTable(primaryTestTable).on('selected', () => eventSequence.push('table:selected'));
+				mssql
+					.getTable(primaryTestTable)
+					.on('selected', () => eventSequence.push('table:selected'));
 
 				await mssql.db(primaryTestTable).select('*').limit(1);
 
@@ -413,7 +417,9 @@ describe('MSSQL', () => {
 				const insertedEventSpy = mock();
 				mssql.getTable(primaryTestTable).on('inserted', insertedEventSpy);
 
-				await mssql.db(primaryTestTable).insert({ name: 'test-insert', email: 'test@example.com' });
+				await mssql
+					.db(primaryTestTable)
+					.insert({ name: 'test-insert', email: 'test@example.com' });
 
 				expect(insertedEventSpy).toHaveBeenCalled();
 				await mssql.disconnect();
@@ -425,12 +431,17 @@ describe('MSSQL', () => {
 				await mssql.connect();
 
 				// Insert a record to update
-				await mssql.db(primaryTestTable).insert({ name: 'test-update', email: 'update@example.com' });
+				await mssql
+					.db(primaryTestTable)
+					.insert({ name: 'test-update', email: 'update@example.com' });
 
 				const updatedEventSpy = mock();
 				mssql.getTable(primaryTestTable).on('updated', updatedEventSpy);
 
-				await mssql.db(primaryTestTable).where('name', 'test-update').update({ email: 'updated@example.com' });
+				await mssql
+					.db(primaryTestTable)
+					.where('name', 'test-update')
+					.update({ email: 'updated@example.com' });
 
 				expect(updatedEventSpy).toHaveBeenCalled();
 				await mssql.disconnect();
@@ -442,7 +453,9 @@ describe('MSSQL', () => {
 				await mssql.connect();
 
 				// Insert a record to delete
-				await mssql.db(primaryTestTable).insert({ name: 'test-delete', email: 'delete@example.com' });
+				await mssql
+					.db(primaryTestTable)
+					.insert({ name: 'test-delete', email: 'delete@example.com' });
 
 				const deletedEventSpy = mock();
 				mssql.getTable(primaryTestTable).on('deleted', deletedEventSpy);
@@ -470,8 +483,13 @@ describe('MSSQL', () => {
 
 				// Perform all operations
 				await mssql.db(primaryTestTable).select('*').limit(1);
-				await mssql.db(primaryTestTable).insert({ name: 'test-no-events', email: 'noevents@example.com' });
-				await mssql.db(primaryTestTable).where('name', 'test-no-events').update({ email: 'updated-noevents@example.com' });
+				await mssql
+					.db(primaryTestTable)
+					.insert({ name: 'test-no-events', email: 'noevents@example.com' });
+				await mssql
+					.db(primaryTestTable)
+					.where('name', 'test-no-events')
+					.update({ email: 'updated-noevents@example.com' });
 				await mssql.db(primaryTestTable).where('name', 'test-no-events').del();
 
 				expect(selectedEventSpy).not.toHaveBeenCalled();
@@ -513,7 +531,9 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
 
-				expect(() => mssql.getRepository(primaryTestTable)).toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
+				expect(() => mssql.getRepository(primaryTestTable)).toThrow(
+					DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED
+				);
 			});
 
 			test('should throw error for non-existent table repository', async () => {
@@ -521,7 +541,9 @@ describe('MSSQL', () => {
 				const mssql = new MSSQL(databaseOptions);
 				await mssql.connect();
 
-				expect(() => mssql.getRepository('non_existent_table')).toThrow(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND);
+				expect(() => mssql.getRepository('non_existent_table')).toThrow(
+					DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND
+				);
 				await mssql.disconnect();
 			});
 		});
@@ -658,7 +680,9 @@ describe('MSSQL', () => {
 				const { MSSQL } = await import('#/modules/database/mssql');
 				const mssql = new MSSQL(databaseOptions);
 
-				expect(() => mssql.getTable(primaryTestTable)).toThrow(DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED);
+				expect(() => mssql.getTable(primaryTestTable)).toThrow(
+					DATABASE_ERROR_KEYS.MSSQL_NOT_CONNECTED
+				);
 			});
 
 			test('should throw error for non-existent table', async () => {
@@ -666,7 +690,9 @@ describe('MSSQL', () => {
 				const mssql = new MSSQL(databaseOptions);
 				await mssql.connect();
 
-				expect(() => mssql.getTable('non_existent_table')).toThrow(DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND);
+				expect(() => mssql.getTable('non_existent_table')).toThrow(
+					DATABASE_ERROR_KEYS.MSSQL_TABLE_NOT_FOUND
+				);
 				await mssql.disconnect();
 			});
 
@@ -753,7 +779,10 @@ describe('MSSQL', () => {
 				await mssql.db(primaryTestTable).insert({ name: 'db-test', email: 'db@test.com' });
 
 				// Query through database instance
-				const results = await mssql.db(primaryTestTable).where('name', 'db-test').select('*');
+				const results = await mssql
+					.db(primaryTestTable)
+					.where('name', 'db-test')
+					.select('*');
 
 				expect(results).toHaveLength(1);
 				expect(results[0].name).toBe('db-test');
@@ -838,15 +867,18 @@ describe('MSSQL', () => {
 			await mssql.connect();
 
 			// Perform multiple concurrent operations
-			const operations = Array.from({ length: 10 }, (_, index) => mssql.db(primaryTestTable).insert({
-				name: `concurrent-test-${index}`,
-				email: `concurrent${index}@test.com`
-			}));
+			const operations = Array.from({ length: 10 }, (_, index) =>
+				mssql.db(primaryTestTable).insert({
+					name: `concurrent-test-${index}`,
+					email: `concurrent${index}@test.com`
+				})
+			);
 
 			await Promise.all(operations);
 
 			// Verify all records were inserted
-			const results = await mssql.db(primaryTestTable)
+			const results = await mssql
+				.db(primaryTestTable)
 				.where('name', 'like', 'concurrent-test-%')
 				.select('*');
 
@@ -873,10 +905,8 @@ describe('MSSQL', () => {
 					expect(mssql.isConnected).toBe(false);
 				});
 
-
 			// Execute cycles sequentially to avoid connection pool conflicts
-			for (const cycle of cycles)
-				await cycle();
+			for (const cycle of cycles) await cycle();
 		});
 
 		test('should handle concurrent repository access', async () => {
@@ -907,7 +937,8 @@ describe('MSSQL', () => {
 			const mssql = new MSSQL(databaseOptions);
 			await mssql.connect();
 
-			const results = await mssql.db(primaryTestTable)
+			const results = await mssql
+				.db(primaryTestTable)
 				.where('name', 'non-existent-record')
 				.select('*');
 
@@ -922,14 +953,21 @@ describe('MSSQL', () => {
 			await mssql.connect();
 
 			const complexData = {
-				largeText: 'This is a very long text that tests the text field capacity and handling.',
+				largeText:
+					'This is a very long text that tests the text field capacity and handling.',
 				price: 999.99,
 				isActive: true,
 				metadata: { key: 'value', nested: { array: [1, 2, 3] } }
 			};
 
-			const [insertedId] = await mssql.db(complexTestTable).insert(complexData).returning('id');
-			const results = await mssql.db(complexTestTable).where('id', (insertedId as { id: number }).id).select('*');
+			const [insertedId] = await mssql
+				.db(complexTestTable)
+				.insert(complexData)
+				.returning('id');
+			const results = await mssql
+				.db(complexTestTable)
+				.where('id', (insertedId as { id: number }).id)
+				.select('*');
 
 			expect(results).toHaveLength(1);
 			expect(results[0].largeText).toBe(complexData.largeText);
@@ -950,7 +988,8 @@ describe('MSSQL', () => {
 				email: null
 			});
 
-			const results = await mssql.db(primaryTestTable)
+			const results: { name: string; email: string | null }[] = await mssql
+				.db(primaryTestTable)
 				.where('name', 'null-test')
 				.select('*');
 
@@ -969,7 +1008,10 @@ describe('MSSQL', () => {
 			try {
 				await mssql.db.transaction(async (trx) => {
 					// Insert valid record
-					await trx(primaryTestTable).insert({ name: 'transaction-test', email: 'tx@test.com' });
+					await trx(primaryTestTable).insert({
+						name: 'transaction-test',
+						email: 'tx@test.com'
+					});
 
 					// Attempt invalid operation to trigger rollback
 					await trx('non_existent_table').insert({ name: 'invalid' });
@@ -979,7 +1021,8 @@ describe('MSSQL', () => {
 			}
 
 			// Verify the first insert was rolled back
-			const results = await mssql.db(primaryTestTable)
+			const results = await mssql
+				.db(primaryTestTable)
 				.where('name', 'transaction-test')
 				.select('*');
 
@@ -994,12 +1037,13 @@ describe('MSSQL', () => {
 			await mssql.connect();
 
 			const specialData = {
-				name: 'O\'Reilly & Co. - \'Special\' Characters',
+				name: "O'Reilly & Co. - 'Special' Characters",
 				email: 'special+chars@example.com'
 			};
 
 			await mssql.db(primaryTestTable).insert(specialData);
-			const results = await mssql.db(primaryTestTable)
+			const results: { name: string; email: string }[] = await mssql
+				.db(primaryTestTable)
 				.where('email', specialData.email)
 				.select('*');
 

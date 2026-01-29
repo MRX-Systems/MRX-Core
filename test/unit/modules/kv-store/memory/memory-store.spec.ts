@@ -237,7 +237,7 @@ describe.concurrent('MemoryStore', () => {
 			expect(store.get<string>('shortlived')).toBe('value');
 
 			// Wait for expiration
-			await new Promise((resolve) => setTimeout(resolve, 1100));
+			await Bun.sleep(1100);
 
 			expect(store.get<string>('shortlived')).toBeNull();
 			store.destroy();
@@ -248,7 +248,7 @@ describe.concurrent('MemoryStore', () => {
 			store.set('expiring', 5, 1); // 1 second TTL
 
 			// Wait for expiration
-			await new Promise((resolve) => setTimeout(resolve, 1100));
+			await Bun.sleep(1100);
 
 			// Should create new entry with value 1 (no TTL)
 			const result = store.increment('expiring');
@@ -261,12 +261,10 @@ describe.concurrent('MemoryStore', () => {
 			const store = new MemoryStore(100); // 100ms cleanup interval
 
 			// Create multiple short-lived entries that will expire
-			for (let i = 0; i < 5; ++i)
-				store.set(`temp${i}`, `value${i}`, 1); // 1 second TTL
+			for (let i = 0; i < 5; ++i) store.set(`temp${i}`, `value${i}`, 1); // 1 second TTL
 
 			// Create some entries that won't expire
-			for (let i = 0; i < 3; ++i)
-				store.set(`persist${i}`, `value${i}`, 60); // 60 seconds TTL
+			for (let i = 0; i < 3; ++i) store.set(`persist${i}`, `value${i}`, 60); // 60 seconds TTL
 
 			// Verify entries exist
 			expect(store.get<string>('temp0')).toBe('value0');
@@ -274,7 +272,7 @@ describe.concurrent('MemoryStore', () => {
 			expect(store.get<string>('persist0')).toBe('value0');
 
 			// Wait for expiration and cleanup cycles
-			await new Promise((resolve) => setTimeout(resolve, 1500));
+			await Bun.sleep(1500);
 
 			// Expired entries should be cleaned up automatically
 			expect(store.get<string>('temp0')).toBeNull();
@@ -294,7 +292,7 @@ describe.concurrent('MemoryStore', () => {
 			store.set('temporary', 'value', 1); // 1 second TTL
 
 			// Wait for cleanup to run
-			await new Promise((resolve) => setTimeout(resolve, 1200));
+			await Bun.sleep(1200);
 
 			expect(store.get<string>('persistent')).toBe('value'); // Should still exist
 			expect(store.get<string>('temporary')).toBeNull(); // Should be cleaned up
@@ -460,8 +458,7 @@ describe.concurrent('MemoryStore', () => {
 			// Simulate concurrent increments
 			store.set('counter', 0);
 
-			for (let i = 0; i < 100; ++i)
-				store.increment('counter');
+			for (let i = 0; i < 100; ++i) store.increment('counter');
 
 			expect(store.get<number>('counter')).toBe(100);
 		});
@@ -476,7 +473,7 @@ describe.concurrent('MemoryStore', () => {
 			cleanupStore.set('temp2', 'value2', 1); // 1 second TTL
 
 			// Wait for expiration and multiple cleanup cycles
-			await new Promise((resolve) => setTimeout(resolve, 1200));
+			await Bun.sleep(1200);
 
 			// Check data integrity
 			expect(cleanupStore.get<string>('persistent1')).toBe('value1');

@@ -20,7 +20,9 @@ import type { Stream } from 'stream';
  *     console.log(data); // Outputs: data1, data2, data3
  * ```
  */
-export const makeStreamAsyncIterable = <TModel, KStream extends Stream = Stream>(stream: KStream): KStream & AsyncIterable<TModel> => {
+export const makeStreamAsyncIterable = <TModel, KStream extends Stream = Stream>(
+	stream: KStream
+): KStream & AsyncIterable<TModel> => {
 	const asyncIterable = {
 		[Symbol.asyncIterator]: (): AsyncIterator<TModel> => ({
 			next(): Promise<IteratorResult<TModel>> {
@@ -56,6 +58,7 @@ export const makeStreamAsyncIterable = <TModel, KStream extends Stream = Stream>
 			}
 		})
 	};
-	(stream as KStream & AsyncIterable<TModel>)[Symbol.asyncIterator] = asyncIterable[Symbol.asyncIterator];
+	(stream as KStream & AsyncIterable<TModel>)[Symbol.asyncIterator] =
+		asyncIterable[Symbol.asyncIterator];
 	return stream as KStream & AsyncIterable<TModel>;
 };

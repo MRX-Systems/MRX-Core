@@ -17,13 +17,9 @@ import type { QueryOptions } from './types/query-options';
 import type { QueryOptionsExtendPagination } from './types/query-options-extend-pagination';
 import type { QueryOptionsExtendStream } from './types/query-options-extend-stream';
 
-type OperatorFn = (
-	query: Knex.QueryBuilder,
-	column: string,
-	value: unknown
-) => Knex.QueryBuilder;
+type OperatorFn = (query: Knex.QueryBuilder, column: string, value: unknown) => Knex.QueryBuilder;
 
-const _operators: Record<string, OperatorFn> = ({
+const _operators: Record<string, OperatorFn> = {
 	$eq: (q, c, v) => q.where(c, v as string | number | boolean | Date),
 	$neq: (q, c, v) => q.whereNot(c, v as string | number | boolean | Date),
 	$lt: (q, c, v) => q.where(c, '<', v as string | number | Date),
@@ -33,11 +29,11 @@ const _operators: Record<string, OperatorFn> = ({
 	$in: (q, c, v) => q.whereIn(c, v as string[] | number[] | Date[]),
 	$nin: (q, c, v) => q.whereNotIn(c, v as string[] | number[] | Date[]),
 	$between: (q, c, v) => q.whereBetween(c, v as [string | number | Date, string | number | Date]),
-	$nbetween: (q, c, v) => q.whereNotBetween(c, v as [string | number | Date, string | number | Date]),
+	$nbetween: (q, c, v) =>
+		q.whereNotBetween(c, v as [string | number | Date, string | number | Date]),
 	$like: (q, c, v) => {
 		const likeValue = `%${v}%`;
-		if (isDateString(v))
-			return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) LIKE ?`, [likeValue]);
+		if (isDateString(v)) return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) LIKE ?`, [likeValue]);
 		return q.where(c, 'LIKE', likeValue);
 	},
 	$nlike: (q, c, v) => {
@@ -47,7 +43,7 @@ const _operators: Record<string, OperatorFn> = ({
 		return q.whereRaw(`${c} NOT LIKE ?`, [likeValue]);
 	},
 	$isNull: (q, c, v) => (v ? q.whereNull(c) : q.whereNotNull(c))
-});
+};
 
 /**
  * Valid operator keys for complex query detection.
@@ -210,24 +206,25 @@ export class Repository<TModel = Record<string, unknown>> {
 
 		const passThrough = new PassThrough({
 			objectMode: true,
-			...options?.transform && { transform: options.transform }
+			...(options?.transform && { transform: options.transform })
 		});
 
 		// Cleanup function to properly destroy streams and clear resources
 		const cleanup = (): void => {
-			if (!kStream.destroyed)
-				kStream.destroy();
-			if (!passThrough.destroyed)
-				passThrough.destroy();
+			if (!kStream.destroyed) kStream.destroy();
+			if (!passThrough.destroyed) passThrough.destroy();
 		};
 
 		// Handle source stream errors
 		kStream.on('error', (error: unknown) => {
 			const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
-			passThrough.emit('error', new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
-				query: query.toSQL().sql,
-				error
-			}));
+			passThrough.emit(
+				'error',
+				new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
+					query: query.toSQL().sql,
+					error
+				})
+			);
 		});
 
 		// Handle passThrough close - cleanup source stream
@@ -237,7 +234,9 @@ export class Repository<TModel = Record<string, unknown>> {
 		passThrough.on('error', cleanup);
 
 		kStream.pipe(passThrough);
-		return makeStreamAsyncIterable<Required<KModel>, PassThrough>(passThrough) as StreamWithAsyncIterable<Required<KModel>>;
+		return makeStreamAsyncIterable<Required<KModel>, PassThrough>(
+			passThrough
+		) as StreamWithAsyncIterable<Required<KModel>>;
 	}
 
 	/**
@@ -306,7 +305,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * });
 	 * ```
 	 */
-	public async find<KModel extends TModel = TModel>(
+	public find<KModel extends TModel = TModel>(
 		options?: QueryOptionsExtendPagination<KModel>
 	): Promise<Required<KModel>[]> {
 		const query = this.knex(this.table.name);
@@ -315,9 +314,7 @@ export class Repository<TModel = Record<string, unknown>> {
 
 		const limit = options?.limit || _DEFAULT_LIMIT;
 		const offset = options?.offset || _DEFAULT_OFFSET;
-		query
-			.limit(limit)
-			.offset(offset);
+		query.limit(limit).offset(offset);
 		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
 
@@ -357,18 +354,16 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * });
 	 * ```
 	 */
-	public async count<KModel extends TModel = TModel>(
+	public count<KModel extends TModel = TModel>(
 		options?: Omit<QueryOptions<KModel>, 'selectedFields' | 'orderBy'>
 	): Promise<number> {
-		const query = this.knex(this.table.name)
-			.count({ count: '*' });
-		if (options?.filters)
-			this._applyFilter(query, options?.filters);
-		if (options?.transaction)
-			query.transacting(options.transaction);
+		const query = this.knex(this.table.name).count({ count: '*' });
+		if (options?.filters) this._applyFilter(query, options?.filters);
+		if (options?.transaction) query.transacting(options.transaction);
 
-		return this._executeQuery<{ count: number }>(query, options?.throwIfNoResult)
-			.then((result) => result[0].count);
+		return this._executeQuery<{ count: number }>(query, options?.throwIfNoResult).then(
+			(result) => result[0].count
+		);
 	}
 
 	/**
@@ -407,7 +402,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * });
 	 * ```
 	 */
-	public async insert<KModel extends TModel = TModel>(
+	public insert<KModel extends TModel = TModel>(
 		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
 	): Promise<Required<KModel>[]> {
@@ -415,8 +410,7 @@ export class Repository<TModel = Record<string, unknown>> {
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
 
-		if (options?.transaction)
-			query.transacting(options.transaction);
+		if (options?.transaction) query.transacting(options.transaction);
 
 		return this._executeQuery<KModel>(query);
 	}
@@ -459,19 +453,17 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * });
 	 * ```
 	 */
-	public async update<KModel extends TModel = TModel>(
+	public update<KModel extends TModel = TModel>(
 		data: Partial<NoInfer<KModel>>,
-		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
+		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> &
+			Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
-		const query = this.knex(this.table.name)
-			.update(data);
+		const query = this.knex(this.table.name).update(data);
 
 		this._applyQueryOptions<KModel>(query, options);
 
-		if (options.limit)
-			query.limit(options.limit);
-		if (options.offset)
-			query.offset(options.offset);
+		if (options.limit) query.limit(options.limit);
+		if (options.offset) query.offset(options.offset);
 
 		return this._executeQuery<KModel>(query, options?.throwIfNoResult);
 	}
@@ -513,11 +505,11 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * });
 	 * ```
 	 */
-	public async delete<KModel extends TModel = NoInfer<TModel>>(
-		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> & Required<Pick<QueryOptions<KModel>, 'filters'>>
+	public delete<KModel extends TModel = NoInfer<TModel>>(
+		options: Omit<QueryOptions<KModel>, 'orderBy' | 'filters'> &
+			Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
-		const query = this.knex(this.table.name)
-			.delete();
+		const query = this.knex(this.table.name).delete();
 
 		this._applyQueryOptions<KModel>(query, options);
 
@@ -542,20 +534,14 @@ export class Repository<TModel = Record<string, unknown>> {
 		const sanitizedFields = selectedFields
 			? selectedFields === '*'
 				? '*'
-				: (Array.isArray(selectedFields)
+				: Array.isArray(selectedFields)
 					? selectedFields.map((selectedField) => `${selectedField} as ${selectedField}`)
 					: `${selectedFields} as ${selectedFields}`
-				)
 			: '*';
 
-		if (
-			qMethod === 'del'
-			|| qMethod === 'update'
-			|| qMethod === 'insert'
-		)
+		if (qMethod === 'del' || qMethod === 'update' || qMethod === 'insert')
 			query.returning(sanitizedFields, { includeTriggerModifications: true });
-		else
-			query.select(sanitizedFields);
+		else query.select(sanitizedFields);
 	}
 
 	/**
@@ -577,30 +563,33 @@ export class Repository<TModel = Record<string, unknown>> {
 				const prop = search[key as keyof Filter<KModel>];
 				if (this._isAdaptiveWhereClause(prop)) {
 					for (const operator in prop)
-						if (operator in _operators && prop[operator as keyof AdaptiveWhereClause<unknown>] !== undefined)
-							_operators[operator](query, key, prop[operator as keyof AdaptiveWhereClause<unknown>]);
+						if (
+							operator in _operators &&
+							prop[operator as keyof AdaptiveWhereClause<unknown>] !== undefined
+						)
+							_operators[operator](
+								query,
+								key,
+								prop[operator as keyof AdaptiveWhereClause<unknown>]
+							);
 				} else if (key === '$q' && this._isGlobalSearchPrimitive(prop)) {
 					for (const field of this.table.fields)
-						if (prop)
-							query.orWhere(field, 'like', `%${prop}%`);
-				} else if (key === '$q' && this._isGlobalSearchObject(prop)) {
+						if (prop) query.orWhere(field, 'like', `%${prop}%`);
+				} else if (key === '$q' && this._isGlobalSearchObject(prop))
 					if (Array.isArray(prop.selectedFields))
 						for (const field of prop.selectedFields)
 							query.orWhere(field, 'like', `%${prop.value}%`);
-					else
-						query.orWhere(prop.selectedFields, 'like', `%${prop.value}%`);
-				} else {
+					else query.orWhere(prop.selectedFields, 'like', `%${prop.value}%`);
+				else {
 					if (prop !== null && typeof prop === 'object' && Object.keys(prop).length === 0)
 						continue;
-					if (prop !== undefined)
-						query.where(key, prop);
+					if (prop !== undefined) query.where(key, prop);
 				}
 			}
 		};
 		if (Array.isArray(search))
 			search.reduce((acc, item) => acc.orWhere((q) => this._applyFilter(q, item)), query);
-		else
-			processing(query, search);
+		else processing(query, search);
 	}
 
 	/**
@@ -618,16 +607,13 @@ export class Repository<TModel = Record<string, unknown>> {
 	): void {
 		const qMethod = (query as unknown as { _method: string })._method;
 
-		if (!(qMethod === 'select'))
-			return;
-		if (!orderBy)
-			query.orderBy(`[${this.table.name}].${this.table.primaryKey[0]}`, 'asc');
+		if (!(qMethod === 'select')) return;
+		if (!orderBy) query.orderBy(`[${this.table.name}].${this.table.primaryKey[0]}`, 'asc');
 		else if (Array.isArray(orderBy))
 			orderBy.forEach((item) => {
 				query.orderBy(`[${this.table.name}].${item.selectedField}`, item.direction);
 			});
-		else
-			query.orderBy(`[${this.table.name}].${orderBy.selectedField}`, orderBy.direction);
+		else query.orderBy(`[${this.table.name}].${orderBy.selectedField}`, orderBy.direction);
 	}
 
 	/**
@@ -642,12 +628,10 @@ export class Repository<TModel = Record<string, unknown>> {
 		query: Knex.QueryBuilder,
 		options?: Omit<QueryOptions<KModel>, 'throwIfNoResult'>
 	): void {
-		if (options?.filters)
-			this._applyFilter<KModel>(query, options.filters);
+		if (options?.filters) this._applyFilter<KModel>(query, options.filters);
 		this._applyOrderBy<KModel>(query, options?.orderBy);
 		this._applySelectedFields<KModel>(query, options?.selectedFields);
-		if (options?.transaction)
-			query.transacting(options.transaction);
+		if (options?.transaction) query.transacting(options.transaction);
 	}
 
 	/**
@@ -661,12 +645,8 @@ export class Repository<TModel = Record<string, unknown>> {
 	 *
 	 * @returns Never returns, always throws an error.
 	 */
-	protected _handleError(
-		error: unknown,
-		query: Knex.QueryBuilder
-	): never {
-		if (error instanceof HttpError)
-			throw error;
+	protected _handleError(error: unknown, query: Knex.QueryBuilder): never {
+		if (error instanceof HttpError) throw error;
 		const code = (error as { number: keyof typeof MSSQL_ERROR_CODE })?.number || 0;
 		throw new InternalError(MSSQL_ERROR_CODE[code] ?? DATABASE_ERROR_KEYS.MSSQL_QUERY_ERROR, {
 			query: query.toSQL().sql,
@@ -683,11 +663,8 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * @returns True if the data is a WhereClause, false otherwise.
 	 */
 	private _isAdaptiveWhereClause(data: unknown): data is AdaptiveWhereClause<unknown> {
-		if (!data || typeof data !== 'object' || Array.isArray(data))
-			return false;
-		for (const key in data)
-			if (_validOperatorKeys.has(key))
-				return true;
+		if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+		for (const key in data) if (_validOperatorKeys.has(key)) return true;
 		return false;
 	}
 
@@ -698,12 +675,11 @@ export class Repository<TModel = Record<string, unknown>> {
 	 *
 	 * @returns True if the data is a GlobalSearch object, false otherwise.
 	 */
-	private _isGlobalSearchObject(data: unknown): data is Exclude<GlobalSearch<unknown>, string | number> {
+	private _isGlobalSearchObject(
+		data: unknown
+	): data is Exclude<GlobalSearch<unknown>, string | number> {
 		return Boolean(
-			data
-			&& typeof data === 'object'
-			&& 'selectedFields' in data
-			&& 'value' in data
+			data && typeof data === 'object' && 'selectedFields' in data && 'value' in data
 		);
 	}
 
@@ -737,7 +713,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		throwIfNoResult: QueryOptions<KModel>['throwIfNoResult'] = false
 	): Promise<Required<KModel>[]> {
 		try {
-			const result: Required<KModel>[] = await query;
+			const result: Required<KModel>[] = await (query as Promise<Required<KModel>[]>);
 			if (throwIfNoResult && result.length === 0)
 				throw new HttpError(
 					typeof throwIfNoResult === 'object' && throwIfNoResult.message
