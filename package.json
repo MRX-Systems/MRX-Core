@@ -72,11 +72,8 @@
 	"scripts": {
 		"build": "bun builder.ts",
 		"docs": "bunx typedoc --tsconfig tsconfig.build.json",
-		"fmt:check": "oxfmt --check",
-		"fmt": "oxfmt",
-		"lint:fix": "oxlint --type-aware --type-check --fix ./source",
-		"lint:github": "oxlint --type-aware --type-check --format=github ./source",
-		"lint": "oxlint --type-aware --type-check  ./source",
+		"fix-lint": "eslint --fix ./source",
+		"lint": "eslint ./source",
 		"start": "bun build/index.js",
 		"test:integration": "bun test --timeout 10000 $(find test/integration -name '*.spec.ts')",
 		"test:unit": "bun test --timeout 10000 --coverage $(find test/unit -name '*.spec.ts')",
