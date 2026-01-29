@@ -23,16 +23,25 @@ export class MemoryStore implements KvStore {
 	private readonly _cleanupInterval: number;
 
 	/**
+	 * Maximum number of entries allowed in the store.
+	 * Defaults to Infinity (no limit).
+	 */
+	private readonly _maxSize: number;
+
+	/**
 	 * Timer for cleanup operations.
 	 */
 	private _cleanupTimer: Timer | null = null;
 
-	public constructor(cleanupIntervalMs?: number) {
+	public constructor(cleanupIntervalMs?: number, maxSize?: number) {
 		this._cleanupInterval = cleanupIntervalMs ?? 300000;
+		this._maxSize = maxSize ?? Infinity;
 		this._startCleanup();
 	}
 
 	public get<T = unknown>(key: string): T | null {
+		this._validateKey(key);
+
 		const entry = this._store.get(key);
 
 		if (!entry)
@@ -48,6 +57,12 @@ export class MemoryStore implements KvStore {
 	}
 
 	public set<T = unknown>(key: string, value: T, ttlSec?: number): void {
+		this._validateKey(key);
+		this._validateTtl(ttlSec);
+
+		if (this._store.size >= this._maxSize && !this._store.has(key))
+			throw new InternalError(KV_STORE_ERROR_KEYS.STORE_FULL);
+
 		const expiresAt = ttlSec
 			? Date.now() + (ttlSec * 1000)
 			: -1;
@@ -55,42 +70,67 @@ export class MemoryStore implements KvStore {
 	}
 
 	public increment(key: string, amount = 1): number {
-		const current = this.get<number>(key);
+		this._validateKey(key);
+		this._validateAmount(amount);
+
 		const entry = this._store.get(key);
+		const now = Date.now();
 
-		if (current !== null && typeof current !== 'number')
-			throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+		let currentValue = 0;
+		let expiresAt = -1;
 
-		const currentValue = current ?? 0;
+		if (entry)
+			if (entry.expiresAt !== -1 && now > entry.expiresAt) {
+				this._store.delete(key);
+			} else {
+				if (entry.value !== null && typeof entry.value !== 'number')
+					throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+				currentValue = (entry.value as number) ?? 0;
+				({ expiresAt } = entry);
+			}
+
+
 		const newValue = currentValue + amount;
-
-		const expiresAt = entry ? entry.expiresAt : -1;
 		this._store.set(key, { value: newValue, expiresAt });
-
 		return newValue;
 	}
 
 	public decrement(key: string, amount = 1): number {
-		const current = this.get<number>(key);
+		this._validateKey(key);
+		this._validateAmount(amount);
+
 		const entry = this._store.get(key);
+		const now = Date.now();
 
-		if (current !== null && typeof current !== 'number')
-			throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+		let currentValue = 0;
+		let expiresAt = -1;
 
-		const currentValue = current ?? 0;
+		if (entry)
+			if (entry.expiresAt !== -1 && now > entry.expiresAt) {
+				this._store.delete(key);
+			} else {
+				if (entry.value !== null && typeof entry.value !== 'number')
+					throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+				currentValue = (entry.value as number) ?? 0;
+				({ expiresAt } = entry);
+			}
+
+
 		const newValue = currentValue - amount;
-
-		const expiresAt = entry ? entry.expiresAt : -1;
 		this._store.set(key, { value: newValue, expiresAt });
-
 		return newValue;
 	}
 
 	public del(key: string): boolean {
+		this._validateKey(key);
+
 		return this._store.delete(key);
 	}
 
 	public expire(key: string, ttlSec: number): boolean {
+		this._validateKey(key);
+		this._validateTtl(ttlSec);
+
 		const entry = this._store.get(key);
 		if (!entry)
 			return false;
@@ -100,6 +140,8 @@ export class MemoryStore implements KvStore {
 	}
 
 	public ttl(key: string): number {
+		this._validateKey(key);
+
 		const entry = this._store.get(key);
 		if (!entry)
 			return -1;
@@ -124,6 +166,9 @@ export class MemoryStore implements KvStore {
 		this._cleanupTimer = setInterval(() => {
 			this._removeExpiredEntries();
 		}, this._cleanupInterval);
+
+		// Allow process to exit even if timer is running
+		this._cleanupTimer.unref();
 	}
 
 	private _removeExpiredEntries(): void {
@@ -140,5 +185,44 @@ export class MemoryStore implements KvStore {
 			this._cleanupTimer = null;
 		}
 		this._store.clear();
+	}
+
+	/**
+	 * Validates that a key is a non-empty string with reasonable length.
+	 *
+	 * @param key - The key to validate.
+	 *
+	 * @throws ({@link InternalError}) – If the key is invalid.
+	 */
+	private _validateKey(key: string): void {
+		if (!key || typeof key !== 'string' || key.length > 1024 || key.includes('\0'))
+			throw new InternalError(KV_STORE_ERROR_KEYS.INVALID_KEY);
+	}
+
+	/**
+	 * Validates that a TTL value is a positive finite integer.
+	 *
+	 * @param ttlSec - The TTL value to validate.
+	 *
+	 * @throws ({@link InternalError}) – If the TTL is invalid.
+	 */
+	private _validateTtl(ttlSec: number | undefined): void {
+		if (ttlSec === undefined)
+			return;
+
+		if (!Number.isFinite(ttlSec) || ttlSec <= 0 || !Number.isInteger(ttlSec))
+			throw new InternalError(KV_STORE_ERROR_KEYS.INVALID_TTL);
+	}
+
+	/**
+	 * Validates that an increment/decrement amount is a finite integer.
+	 *
+	 * @param amount - The amount to validate.
+	 *
+	 * @throws ({@link InternalError}) – If the amount is invalid.
+	 */
+	private _validateAmount(amount: number): void {
+		if (!Number.isFinite(amount) || !Number.isInteger(amount))
+			throw new InternalError(KV_STORE_ERROR_KEYS.INVALID_AMOUNT);
 	}
 }

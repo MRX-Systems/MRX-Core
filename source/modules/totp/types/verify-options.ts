@@ -7,7 +7,7 @@ export interface VerifyOptions extends TotpOptions {
 	/**
 	 * Time window for verification (±window periods)
 	 *
-	 * @defaultValue 1
+	 * @defaultValue 0
 	 */
 	window?: number;
 	/**

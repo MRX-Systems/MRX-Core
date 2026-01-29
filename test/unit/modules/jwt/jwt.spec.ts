@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
-import type { JWTPayload, JWTVerifyResult } from 'jose';
+import type { JWTPayload } from 'jose';
 
+import { HttpError } from '#/errors/http-error';
 import { InternalError } from '#/errors/internal-error';
 import { JWT_ERROR_KEYS } from '#/modules/jwt/enums/jwt-error-keys';
 import { signJWT, verifyJWT } from '#/modules/jwt/jwt';
@@ -31,8 +32,7 @@ describe.concurrent('JWT Core Functions', () => {
 			expect(token.split('.')).toHaveLength(3); // Header.Payload.Signature
 
 			// Verify the token to check its contents
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 			expect(result.payload.sub).toBe(userUuid);
 			expect(result.payload.role).toBe('admin');
 			expect(result.payload.exp).toBeGreaterThan(currentTime);
@@ -92,8 +92,7 @@ describe.concurrent('JWT Core Functions', () => {
 			const expiration = getExpiration();
 			const token = await signJWT(testSecret, {}, expiration);
 
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 
 			const expected = expectedExpiration(currentTime);
 			expect(result.payload.exp).toBeGreaterThanOrEqual(expected - tolerance);
@@ -104,8 +103,7 @@ describe.concurrent('JWT Core Functions', () => {
 			const payload: JWTPayload = { userId: 111, customField: 'test' };
 			const token = await signJWT(testSecret, payload);
 
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 
 			const { payload: decodedPayload } = result;
 			expect(decodedPayload.iss).toBe('Core-Issuer');
@@ -128,8 +126,7 @@ describe.concurrent('JWT Core Functions', () => {
 			};
 			const token = await signJWT(testSecret, payload);
 
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 
 			const { payload: decodedPayload } = result;
 			expect(decodedPayload.iss).toBe('Custom-Issuer');
@@ -142,8 +139,8 @@ describe.concurrent('JWT Core Functions', () => {
 			const token1 = await signJWT(testSecret, {});
 			const token2 = await signJWT(testSecret, {});
 
-			const result1 = await verifyJWT(token1, testSecret) as JWTVerifyResult;
-			const result2 = await verifyJWT(token2, testSecret) as JWTVerifyResult;
+			const result1 = await verifyJWT(token1, testSecret);
+			const result2 = await verifyJWT(token2, testSecret);
 
 			expect(result1.payload.jti).not.toBe(result2.payload.jti);
 		});
@@ -188,8 +185,7 @@ describe.concurrent('JWT Core Functions', () => {
 		test('should handle empty payload', async () => {
 			const token = await signJWT(testSecret, {});
 
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 			expect(result.payload.iss).toBe('Core-Issuer');
 			expect(result.payload.sub).toBe('');
 			expect(result.payload.aud).toEqual(['Core-Audience']);
@@ -216,9 +212,8 @@ describe.concurrent('JWT Core Functions', () => {
 			};
 
 			const token = await signJWT(testSecret, complexPayload);
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
+			const result = await verifyJWT(token, testSecret);
 
-			expect(result).not.toBe(false);
 			expect(result.payload.userId).toBe(666);
 			expect(result.payload.permissions).toEqual(['read', 'write', 'admin']);
 			expect(result.payload.metadata).toEqual({
@@ -259,9 +254,8 @@ describe.concurrent('JWT Core Functions', () => {
 			const token = await signJWT(testSecret, payload);
 
 			const result = await verifyJWT(token, testSecret);
-			expect(result).not.toBe(false);
-			expect((result as JWTVerifyResult).payload.userId).toBe(777);
-			expect((result as JWTVerifyResult).payload.role).toBe('user');
+			expect(result.payload.userId).toBe(777);
+			expect(result.payload.role).toBe('user');
 		});
 
 		test.each([
@@ -270,36 +264,52 @@ describe.concurrent('JWT Core Functions', () => {
 			['malformed JWT', 'not.a.jwt'],
 			['token with only dots', '...'],
 			['token with special characters', '!@#$%^&*()']
-		])('should return false for %s', async (_, invalidToken) => {
-			const result = await verifyJWT(invalidToken, testSecret);
-			expect(result).toBe(false);
+		])('should throw HttpError for %s', async (_, invalidToken) => {
+			try {
+				await verifyJWT(invalidToken, testSecret);
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(HttpError);
+				expect((error as HttpError).httpStatusCode).toBe(401);
+			}
 		});
 
-		test('should return false for JWT with wrong secret', async () => {
+		test('should throw HttpError with JWT_INVALID_SIGNATURE for wrong secret', async () => {
 			const token = await signJWT(testSecret, {});
 
-			const result = await verifyJWT(token, wrongSecret);
-			expect(result).toBe(false);
+			try {
+				await verifyJWT(token, wrongSecret);
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(HttpError);
+				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_INVALID_SIGNATURE);
+				expect((error as HttpError).httpStatusCode).toBe(401);
+			}
 		});
 
-		test('should return false for expired JWT', async () => {
+		test('should throw HttpError with JWT_EXPIRED for expired JWT', async () => {
 			// Create a token that expires in 1 second
 			const token = await signJWT(testSecret, {}, 1);
 
 			// Wait for the token to expire
 			await new Promise((resolve) => setTimeout(resolve, 1100));
 
-			const result = await verifyJWT(token, testSecret);
-			expect(result).toBe(false);
+			try {
+				await verifyJWT(token, testSecret);
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(HttpError);
+				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_EXPIRED);
+				expect((error as HttpError).httpStatusCode).toBe(401);
+			}
 		});
 
-		test('should return false for JWT used before nbf (not before)', async () => {
-			// This test simulates a scenario where nbf might be in the future
+		test('should verify JWT with valid nbf (not before)', async () => {
 			// In our current implementation, nbf is set to current time, so this mainly tests the verification logic
 			const token = await signJWT(testSecret, {});
 
 			const result = await verifyJWT(token, testSecret);
-			expect(result).not.toBe(false); // Should be valid since nbf is current time
+			expect(result.payload.nbf).toBeTypeOf('number'); // Should be valid since nbf is current time
 		});
 
 		test('should handle JWT with all standard claims', async () => {
@@ -311,12 +321,45 @@ describe.concurrent('JWT Core Functions', () => {
 			};
 			const token = await signJWT(testSecret, payload);
 
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 			expect(result.payload.iss).toBe('Test-Issuer');
 			expect(result.payload.sub).toBe('test-subject');
 			expect(result.payload.aud).toEqual(['test-audience']);
 			expect(result.payload.userId).toBe(1111);
+		});
+
+		test('should validate issuer when provided in options', async () => {
+			const token = await signJWT(testSecret, { sub: 'test-user' });
+
+			// Correct issuer should pass
+			const result = await verifyJWT(token, testSecret, { issuer: 'Core-Issuer' });
+			expect(result.payload.sub).toBe('test-user');
+
+			// Wrong issuer should throw
+			try {
+				await verifyJWT(token, testSecret, { issuer: 'Wrong-Issuer' });
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(HttpError);
+				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_CLAIM_VALIDATION_FAILED);
+			}
+		});
+
+		test('should validate audience when provided in options', async () => {
+			const token = await signJWT(testSecret, { sub: 'test-user' });
+
+			// Correct audience should pass
+			const result = await verifyJWT(token, testSecret, { audience: 'Core-Audience' });
+			expect(result.payload.sub).toBe('test-user');
+
+			// Wrong audience should throw
+			try {
+				await verifyJWT(token, testSecret, { audience: 'Wrong-Audience' });
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(HttpError);
+				expect((error as HttpError).message).toBe(JWT_ERROR_KEYS.JWT_CLAIM_VALIDATION_FAILED);
+			}
 		});
 	});
 
@@ -336,9 +379,7 @@ describe.concurrent('JWT Core Functions', () => {
 			} }
 		])('should handle complete sign and verify cycle with $name', async ({ payload }) => {
 			const token = await signJWT(testSecret, payload);
-			const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-
-			expect(result).not.toBe(false);
+			const result = await verifyJWT(token, testSecret);
 
 			// Check each property of the payload
 			for (const [key, value] of Object.entries(payload))
@@ -357,8 +398,7 @@ describe.concurrent('JWT Core Functions', () => {
 
 			// Verify multiple times
 			for (let i = 0; i < 5; ++i) {
-				const result = await verifyJWT(token, testSecret) as JWTVerifyResult;
-				expect(result).not.toBe(false);
+				const result = await verifyJWT(token, testSecret);
 				expect(result.payload.userId).toBe(2222);
 				expect(result.payload.sessionId).toBe('sess_12345');
 				expect(result.payload.createdAt).toBe(originalPayload.createdAt);
@@ -371,13 +411,9 @@ describe.concurrent('JWT Core Functions', () => {
 			const token2 = await signJWT(testSecret, {}, new Date(Date.now() + (ONE_HOUR * 1000))); // Date object
 			const token3 = await signJWT(testSecret, {}, '1 hour'); // human-readable string
 
-			const result1 = await verifyJWT(token1, testSecret) as JWTVerifyResult;
-			const result2 = await verifyJWT(token2, testSecret) as JWTVerifyResult;
-			const result3 = await verifyJWT(token3, testSecret) as JWTVerifyResult;
-
-			expect(result1).not.toBe(false);
-			expect(result2).not.toBe(false);
-			expect(result3).not.toBe(false);
+			const result1 = await verifyJWT(token1, testSecret);
+			const result2 = await verifyJWT(token2, testSecret);
+			const result3 = await verifyJWT(token3, testSecret);
 
 			// All should have similar expiration times (within a few seconds)
 			const exp1 = result1.payload.exp ?? 0;
@@ -386,6 +422,40 @@ describe.concurrent('JWT Core Functions', () => {
 
 			expect(Math.abs(exp1 - exp2)).toBeLessThan(2);
 			expect(Math.abs(exp1 - exp3)).toBeLessThan(10); // Allow more tolerance for string parsing
+		});
+	});
+
+	describe.concurrent('signJWT secret validation', () => {
+		test('should throw InternalError when secret is too short', async () => {
+			const shortSecret = 'too-short-secret';
+
+			try {
+				await signJWT(shortSecret, { sub: 'test' });
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(JWT_ERROR_KEYS.JWT_SECRET_TOO_WEAK);
+			}
+		});
+
+		test('should throw InternalError when secret is exactly 31 characters', async () => {
+			const shortSecret = 'a'.repeat(31);
+
+			try {
+				await signJWT(shortSecret, { sub: 'test' });
+				expect.unreachable();
+			} catch (error) {
+				expect(error).toBeInstanceOf(InternalError);
+				expect((error as InternalError).message).toBe(JWT_ERROR_KEYS.JWT_SECRET_TOO_WEAK);
+			}
+		});
+
+		test('should accept secret with exactly 32 characters', async () => {
+			const validSecret = 'a'.repeat(32);
+			const token = await signJWT(validSecret, { sub: 'test' });
+
+			expect(token).toBeTypeOf('string');
+			expect(token.split('.')).toHaveLength(3);
 		});
 	});
 });

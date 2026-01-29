@@ -13,7 +13,7 @@ export interface OtpAuthUri {
 	/**
 	 * Issuer name (app/service name)
 	 */
-	issuer: string;
+	issuer?: string;
 	/**
 	 * Hash algorithm
 	 *

@@ -63,9 +63,8 @@ export class SingletonManager {
 	* @throws ({@link InternalError}) If the name is not registered, it throws an error.
 	*/
 	public static unregister(name: string): void {
-		if (!this._registry.has(name))
+		if (!this._registry.delete(name))
 			throw new InternalError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
-		this._registry.delete(name);
 	}
 
 	/**
@@ -80,9 +79,10 @@ export class SingletonManager {
 	* @returns The singleton instance of the class.
 	*/
 	public static get<TClass>(name: string): TClass {
-		if (!this._registry.has(name))
+		const instance = this._registry.get(name);
+		if (!instance)
 			throw new InternalError(SINGLETON_MANAGER_ERROR_KEYS.CLASS_INSTANCE_NOT_REGISTERED, { name });
-		return this._registry.get(name) as TClass;
+		return instance as TClass;
 	}
 
 	/**
@@ -94,5 +94,13 @@ export class SingletonManager {
 	*/
 	public static has(name: string): boolean {
 		return this._registry.has(name);
+	}
+
+	/**
+	* Clears all registered singletons from the manager.
+	* Useful for testing or application reset scenarios.
+	*/
+	public static clear(): void {
+		this._registry.clear();
 	}
 }
