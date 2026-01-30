@@ -403,7 +403,7 @@ export class Repository<TModel = Record<string, unknown>> {
 	 * ```
 	 */
 	public insert<KModel extends TModel = TModel>(
-		data: Partial<NoInfer<KModel>> | Partial<NoInfer<KModel>>[],
+		data: NoInfer<KModel> | NoInfer<KModel>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
 	): Promise<Required<KModel>[]> {
 		const query = this.knex(this.table.name)
