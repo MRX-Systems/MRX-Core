@@ -43,7 +43,6 @@ export default [
 			'@stylistic/comma-style': ['error', 'last'],
 			'@stylistic/curly-newline': ['error', { consistent: true }],
 			'@stylistic/function-call-spacing': ['error', 'never'],
-			'@stylistic/function-paren-newline': ['error', 'consistent'],
 			'@stylistic/generator-star-spacing': [
 				'error',
 				{
@@ -62,7 +61,7 @@ export default [
 			],
 			'@stylistic/multiline-ternary': ['error', 'always-multiline'],
 			'@stylistic/new-parens': 'error',
-			'@stylistic/no-confusing-arrow': 'error',
+			'@stylistic/no-confusing-arrow': 'off',
 			'@stylistic/no-extra-semi': 'error',
 			'@stylistic/no-floating-decimal': 'error',
 			'@stylistic/no-multi-spaces': 'error',
@@ -106,7 +105,7 @@ export default [
 			// 'no-useless-assignement': 'error',
 			'arrow-body-style': ['error', 'as-needed'],
 			'block-scoped-var': 'error',
-			camelcase: 'error',
+			camelcase: 'off',
 			complexity: ['error', 25],
 			'consistent-return': 'error',
 			curly: 'off',

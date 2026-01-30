@@ -1,4 +1,22 @@
 
+## v2.13.0-1-and-297-20260130
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.13.0-3-and-293-20260129...v2.13.0-1-and-297-20260130)
+
+### 🔧 Fixes
+
+- **🔧:** [remove partial to data type in repo inert method] ([3f74e6fc](https://github.com/MRX-Systems/MRX-Core/commit/3f74e6fc))
+- **🔧:** [support bigint primary key type in MSSQL class] ## Bug Fixes - Updated the primary key type handling in the MSSQL class. ([4bd8ee99](https://github.com/MRX-Systems/MRX-Core/commit/4bd8ee99))
+
+### 🦉 Chore
+
+- **🦉:** V2.13.0-1-and-295-20260130 ([1b3cc9f5](https://github.com/MRX-Systems/MRX-Core/commit/1b3cc9f5))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+- Github-actions <maxime.meriaux@mrxsys.com>
+
 ## v2.13.0-1-and-295-20260130
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.13.0-3-and-293-20260129...v2.13.0-1-and-295-20260130)
