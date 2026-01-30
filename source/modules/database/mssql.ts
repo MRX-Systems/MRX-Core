@@ -260,7 +260,7 @@ export class MSSQL extends TypedEventEmitter<MssqlEventMap> {
 			.groupBy('c.table_name', 'pk.primaryKeyColumn', 'pk.primaryKeyType');
 
 		for (const { tableName, fields, primaryKeyColumn, primaryKeyType } of result) {
-			const primaryKeyTypeTs: 'NUMBER' | 'STRING' = primaryKeyType === 'int' ? 'NUMBER' : 'STRING';
+			const primaryKeyTypeTs: 'NUMBER' | 'STRING' = primaryKeyType === 'int' || primaryKeyType === 'bigint' ? 'NUMBER' : 'STRING';
 			const table = new Table(this.databaseName, tableName, fields.split(','), [primaryKeyColumn, primaryKeyTypeTs]);
 			this.repositories.set(tableName, new Repository(this._db, table));
 		}
