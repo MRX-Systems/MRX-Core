@@ -14,6 +14,7 @@ import { LanguageHook } from './hook/language.hook.ts';
 import { LoggerHook } from './hook/logger.hook.ts';
 import { QueryParseHook } from './hook/queryParse.hook.ts';
 import type { AbstractRouter } from './router/abstract.router.ts';
+import { ajvFilePlugin } from '@fastify/multipart';
 
 /**
  * Interface is responsible for defining the options for starting the server.
@@ -115,7 +116,8 @@ export class ServerManager {
                 },
                 plugins: [
                     ajvError.default,
-                    ajvFormats.default
+                    ajvFormats.default,
+                    ajvFilePlugin
                 ]
             }
         });
