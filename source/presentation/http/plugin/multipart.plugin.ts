@@ -12,6 +12,10 @@ export interface MultipartOptions {
      */
     attachFieldsToBody?: boolean;
     /**
+     * Whether to throw an error when the file size limit is reached for the Multipart. (default: true)
+     */
+    throwFileSizeLimit?: boolean;
+    /**
      * The field name size in bytes for the Multipart. (default: 100)
      */
     fieldNameSize?: number;
@@ -27,10 +31,6 @@ export interface MultipartOptions {
      * The file size in bytes for the Multipart. (default: 1000000)
      */
     fileSize?: number;
-    /**
-     * The files for the Multipart. (default: 1)
-     */
-    files?: number;
     /**
      * The header pairs for the Multipart. (default: 2000)
      */
@@ -67,12 +67,12 @@ export class MultipartPlugin implements Plugin {
     public async configure(app: FastifyInstance): Promise<void> {
         await app.register(fastifyMultipart, {
             attachFieldsToBody: this._options?.attachFieldsToBody ?? true,
+            throwFileSizeLimit: this._options?.throwFileSizeLimit ?? true,
             limits: {
                 fieldNameSize: this._options?.fieldNameSize ?? 100,
                 fieldSize: this._options?.fieldSize ?? 100,
                 fields: this._options?.fields ?? 10,
                 fileSize: this._options?.fileSize ?? 10 * 1024 * 1024,
-                files: this._options?.files ?? 1,
                 headerPairs: this._options?.headerPairs ?? 2000,
                 parts: this._options?.parts ?? 1000
             }
