@@ -268,6 +268,13 @@ export class ServerManager {
         });
     }
 
+    /**
+     * Deep search for a key in an object.
+     *
+     * @param obj - The object to search in. ({@link Record<string, unknown>})
+     * @param keyToFind - The key to find. ({@link string})
+     * @returns The value of the key if found, otherwise undefined.
+     */
     private _deepSearchKey(
         obj: Record<string, unknown>,
         keyToFind: string
@@ -288,6 +295,13 @@ export class ServerManager {
         return undefined;
     }
 
+    /**
+     * Handle file errors.
+     *
+     * @param error - The error to handle. ({@link FastifyError})
+     * @param request - The request. ({@link FastifyRequest})
+     * @returns An object containing the status and message if the error is a file error, otherwise null.
+     */
     private _handleFileErrors(
         error: FastifyError,
         request: FastifyRequest
