@@ -32,6 +32,10 @@ export interface MultipartOptions {
      */
     fileSize?: number;
     /**
+     * The files for the Multipart. (default: 1)
+     */
+    files?: number;
+    /**
      * The header pairs for the Multipart. (default: 2000)
      */
     headerPairs?: number;
@@ -73,6 +77,7 @@ export class MultipartPlugin implements Plugin {
                 fieldSize: this._options?.fieldSize ?? 100,
                 fields: this._options?.fields ?? 10,
                 fileSize: this._options?.fileSize ?? 10 * 1024 * 1024,
+                files: this._options?.files ?? 1,
                 headerPairs: this._options?.headerPairs ?? 2000,
                 parts: this._options?.parts ?? 1000
             }
