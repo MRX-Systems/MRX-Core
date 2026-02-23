@@ -14,6 +14,7 @@ import { LanguageHook } from './hook/language.hook.ts';
 import { LoggerHook } from './hook/logger.hook.ts';
 import { QueryParseHook } from './hook/queryParse.hook.ts';
 import type { AbstractRouter } from './router/abstract.router.ts';
+import { ajvFilePlugin } from '@fastify/multipart';
 
 /**
  * Interface is responsible for defining the options for starting the server.
@@ -111,11 +112,13 @@ export class ServerManager {
                     code: {
                         optimize: true,
                         esm: true
-                    }
+                    },
+                    keywords: ['maxFileSize'] // todo: change to camelCase (same to api schema)
                 },
                 plugins: [
                     ajvError.default,
-                    ajvFormats.default
+                    ajvFormats.default,
+                    ajvFilePlugin
                 ]
             }
         });
@@ -266,6 +269,102 @@ export class ServerManager {
     }
 
     /**
+     * Deep search for a key in an object.
+     *
+     * @param obj - The object to search in.
+     * @param keyToFind - The key to find.
+     * @returns The value of the key if found, otherwise undefined.
+     */
+    private _deepSearchKey(
+        obj: Record<string, unknown>,
+        keyToFind: string
+    ): number | string | undefined {
+        if (keyToFind in obj && (typeof obj[keyToFind] === 'string' || typeof obj[keyToFind] === 'number'))
+            return obj[keyToFind];
+
+        for (const value of Object.values(obj)) {
+            if (Array.isArray(value)) {
+                for (const item of value) {
+                    if (typeof item !== 'object' || item === null)
+                        continue;
+                    const found: number | string | undefined = this._deepSearchKey(item as Record<string, unknown>, keyToFind);
+                    if (found !== undefined)
+                        return found;
+                }
+                continue;
+            }
+
+            if (typeof value === 'object' && value !== null) {
+                const found: number | string | undefined = this._deepSearchKey(value as Record<string, unknown>, keyToFind);
+                if (found !== undefined)
+                    return found;
+            }
+        }
+
+        return undefined;
+    }
+
+    /**
+     * Handle file errors.
+     *
+     * @param error - The error to handle. ({@link FastifyError})
+     * @param request - The request. ({@link FastifyRequest})
+     * @returns An object containing the status and message if the error is a file error, otherwise null.
+     */
+    private _handleFileErrors(
+        error: FastifyError,
+        request: FastifyRequest
+    ): { status: number; message: string } | null {
+        const bodySchema = request.routeOptions.schema?.body;
+
+        if (!bodySchema || typeof bodySchema !== 'object' || !('properties' in bodySchema))
+            return null;
+
+        const properties = bodySchema.properties as Record<string, unknown>;
+        const filesSchema = properties?.files as Record<string, unknown> | undefined;
+
+        if (!filesSchema)
+            return null;
+
+        const maxFileSize = this._deepSearchKey(filesSchema, 'maxFileSize');
+        const maxItems = this._deepSearchKey(filesSchema, 'maxItems');
+
+        const multipartCode: string | undefined = (error as unknown as { code?: unknown }).code
+            ? String((error as unknown as { code?: unknown }).code)
+            : undefined;
+
+        const isTooLarge: boolean = (multipartCode === 'FST_REQ_FILE_TOO_LARGE' || error.message === 'request file too large') && maxFileSize !== undefined;
+        const isLimitReached: boolean = (multipartCode === 'FST_FILES_LIMIT' || error.message === 'reach files limit') && maxItems !== undefined;
+
+        if (!isTooLarge && !isLimitReached)
+            return null;
+
+        const status: number = isTooLarge
+            ? 413
+            : isLimitReached
+                ? 400
+                : 500;
+
+        const messageKey = isTooLarge
+            ? ErrorKeys.REQUEST_FILE_TOO_LARGE
+            : isLimitReached
+                ? ErrorKeys.REQUEST_FILES_LIMIT
+                : ErrorKeys.INTERNAL_SERVER_ERROR;
+
+        const variables = isTooLarge
+            ? { fileSize: maxFileSize }
+            : isLimitReached
+                ? { maxItems }
+                : {};
+
+        const message = I18n.isI18nInitialized()
+            ? I18n.translate(messageKey, request.headers['accept-language'], variables)
+            : messageKey;
+
+        return { status, message };
+    }
+
+    /**
      * Set the error handler.
      *
      * @param error - The error to handle. ({@link FastifyError})
@@ -275,35 +374,53 @@ export class ServerManager {
     private async _setErrorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         if (this._options.logger)
             this._options.logger.error(error);
+
         if ('validation' in error) {
             await this._handleValidationErrors(error, request, reply);
-        } else if (error.name === 'CoreError' || error.name === 'BasaltError') {
+            return;
+        }
+
+        if (error.name === 'CoreError' || error.name === 'BasaltError') {
             const e: CoreError | BasaltError = error as unknown as CoreError | BasaltError;
-            const code: number = e.code;
-            const cause: Record<string, unknown> = typeof e.cause === 'object' ? e.cause as Record<string, unknown> : {};
-            await reply.status(code).send({
-                statusCode: error.code,
-                message: I18n.isI18nInitialized()
-                    ? I18n.translate(
-                        error.message,
-                        request.headers['accept-language'],
-                        cause
-                    )
-                    : error.message,
+
+            const message = I18n.isI18nInitialized()
+                ? I18n.translate(
+                    error.message,
+                    request.headers['accept-language'],
+                    typeof e.cause === 'object' ? e.cause as Record<string, unknown> : {}
+                )
+                : error.message;
+
+            await reply.status(e.code).send({
+                statusCode: e.code,
+                message,
                 content: e.cause
             });
-        } else {
-            await reply.status(500).send({
-                statusCode: 500,
-                message: I18n.isI18nInitialized()
-                    ? I18n.translate(
-                        ErrorKeys.INTERNAL_SERVER_ERROR,
-                        request.headers['accept-language']
-                    )
-                    : ErrorKeys.INTERNAL_SERVER_ERROR,
-                content: error.message
-            });
+
+            return;
         }
+
+        const fileError = this._handleFileErrors(error, request);
+
+        if (fileError) {
+            await reply.status(fileError.status).send({
+                statusCode: fileError.status,
+                message: fileError.message
+            });
+            return;
+        }
+
+        const message = I18n.isI18nInitialized()
+            ? I18n.translate(
+                ErrorKeys.INTERNAL_SERVER_ERROR,
+                request.headers['accept-language']
+            )
+            : ErrorKeys.INTERNAL_SERVER_ERROR;
+
+        await reply.status(500).send({
+            statusCode: 500,
+            message
+        });
     }
 
     /**
