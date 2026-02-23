@@ -271,8 +271,8 @@ export class ServerManager {
     /**
      * Deep search for a key in an object.
      *
-     * @param obj - The object to search in. ({@link Record<string, unknown>})
-     * @param keyToFind - The key to find. ({@link string})
+        * @param obj - The object to search in.
+        * @param keyToFind - The key to find.
      * @returns The value of the key if found, otherwise undefined.
      */
     private _deepSearchKey(
@@ -282,15 +282,24 @@ export class ServerManager {
         if (keyToFind in obj && (typeof obj[keyToFind] === 'string' || typeof obj[keyToFind] === 'number'))
             return obj[keyToFind];
 
-        for (const value of Object.values(obj))
+        for (const value of Object.values(obj)) {
             if (Array.isArray(value)) {
-                for (const item of value)
-                    if (typeof item === 'object' && item !== null)
-                        return this._deepSearchKey(item as Record<string, unknown>, keyToFind);
-            } else if (typeof value === 'object' && value !== null) {
-                const found = this._deepSearchKey(value as Record<string, unknown>, keyToFind);
-                if (found !== undefined) return found;
+                for (const item of value) {
+                    if (typeof item !== 'object' || item === null)
+                        continue;
+                    const found: number | string | undefined = this._deepSearchKey(item as Record<string, unknown>, keyToFind);
+                    if (found !== undefined)
+                        return found;
+                }
+                continue;
             }
+
+            if (typeof value === 'object' && value !== null) {
+                const found: number | string | undefined = this._deepSearchKey(value as Record<string, unknown>, keyToFind);
+                if (found !== undefined)
+                    return found;
+            }
+        }
 
         return undefined;
     }
@@ -320,21 +329,33 @@ export class ServerManager {
         const maxFileSize = this._deepSearchKey(filesSchema, 'maxFileSize');
         const maxItems = this._deepSearchKey(filesSchema, 'maxItems');
 
-        const isTooLarge = error.message === 'request file too large' && maxFileSize !== undefined;
-        const isLimitReached = error.message === 'reach files limit' && maxItems !== undefined;
+        const multipartCode: string | undefined = (error as unknown as { code?: unknown }).code
+            ? String((error as unknown as { code?: unknown }).code)
+            : undefined;
+
+        const isTooLarge: boolean = (multipartCode === 'FST_REQ_FILE_TOO_LARGE' || error.message === 'request file too large') && maxFileSize !== undefined;
+        const isLimitReached: boolean = (multipartCode === 'FST_FILES_LIMIT' || error.message === 'reach files limit') && maxItems !== undefined;
 
         if (!isTooLarge && !isLimitReached)
             return null;
 
-        const status = isTooLarge ? 413 : 400;
+        const status: number = isTooLarge
+            ? 413
+            : isLimitReached
+                ? 400
+                : 500;
 
         const messageKey = isTooLarge
             ? ErrorKeys.REQUEST_FILE_TOO_LARGE
-            : ErrorKeys.REQUEST_FILES_LIMIT;
+            : isLimitReached
+                ? ErrorKeys.REQUEST_FILES_LIMIT
+                : ErrorKeys.INTERNAL_SERVER_ERROR;
 
         const variables = isTooLarge
             ? { fileSize: maxFileSize }
-            : { maxItems };
+            : isLimitReached
+                ? { maxItems }
+                : {};
 
         const message = I18n.isI18nInitialized()
             ? I18n.translate(messageKey, request.headers['accept-language'], variables)
