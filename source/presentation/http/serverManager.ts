@@ -410,7 +410,6 @@ export class ServerManager {
             return;
         }
 
-        // Fallback
         const message = I18n.isI18nInitialized()
             ? I18n.translate(
                 ErrorKeys.INTERNAL_SERVER_ERROR,
