@@ -271,8 +271,8 @@ export class ServerManager {
     /**
      * Deep search for a key in an object.
      *
-        * @param obj - The object to search in.
-        * @param keyToFind - The key to find.
+     * @param obj - The object to search in.
+     * @param keyToFind - The key to find.
      * @returns The value of the key if found, otherwise undefined.
      */
     private _deepSearchKey(
