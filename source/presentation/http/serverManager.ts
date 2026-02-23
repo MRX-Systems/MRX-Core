@@ -112,7 +112,8 @@ export class ServerManager {
                     code: {
                         optimize: true,
                         esm: true
-                    }
+                    },
+                    keywords: ['maxFileSize'] // todo: change to camelCase (same to api schema)
                 },
                 plugins: [
                     ajvError.default,
@@ -267,6 +268,67 @@ export class ServerManager {
         });
     }
 
+    private _deepSearchKey(
+        obj: Record<string, unknown>,
+        keyToFind: string
+    ): number | string | undefined {
+        if (keyToFind in obj && (typeof obj[keyToFind] === 'string' || typeof obj[keyToFind] === 'number'))
+            return obj[keyToFind];
+
+        for (const value of Object.values(obj))
+            if (Array.isArray(value)) {
+                for (const item of value)
+                    if (typeof item === 'object' && item !== null)
+                        return this._deepSearchKey(item as Record<string, unknown>, keyToFind);
+            } else if (typeof value === 'object' && value !== null) {
+                const found = this._deepSearchKey(value as Record<string, unknown>, keyToFind);
+                if (found !== undefined) return found;
+            }
+
+        return undefined;
+    }
+
+    private _handleFileErrors(
+        error: FastifyError,
+        request: FastifyRequest
+    ): { status: number; message: string } | null {
+        const bodySchema = request.routeOptions.schema?.body;
+
+        if (!bodySchema || typeof bodySchema !== 'object' || !('properties' in bodySchema))
+            return null;
+
+        const properties = bodySchema.properties as Record<string, unknown>;
+        const filesSchema = properties?.files as Record<string, unknown> | undefined;
+
+        if (!filesSchema)
+            return null;
+
+        const maxFileSize = this._deepSearchKey(filesSchema, 'maxFileSize');
+        const maxItems = this._deepSearchKey(filesSchema, 'maxItems');
+
+        const isTooLarge = error.message === 'request file too large' && maxFileSize !== undefined;
+        const isLimitReached = error.message === 'reach files limit' && maxItems !== undefined;
+
+        if (!isTooLarge && !isLimitReached)
+            return null;
+
+        const status = isTooLarge ? 413 : 400;
+
+        const messageKey = isTooLarge
+            ? ErrorKeys.REQUEST_FILE_TOO_LARGE
+            : ErrorKeys.REQUEST_FILES_LIMIT;
+
+        const variables = isTooLarge
+            ? { fileSize: maxFileSize }
+            : { maxItems };
+
+        const message = I18n.isI18nInitialized()
+            ? I18n.translate(messageKey, request.headers['accept-language'], variables)
+            : messageKey;
+
+        return { status, message };
+    }
+
     /**
      * Set the error handler.
      *
@@ -277,35 +339,54 @@ export class ServerManager {
     private async _setErrorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply): Promise<void> {
         if (this._options.logger)
             this._options.logger.error(error);
+
         if ('validation' in error) {
             await this._handleValidationErrors(error, request, reply);
-        } else if (error.name === 'CoreError' || error.name === 'BasaltError') {
+            return;
+        }
+
+        if (error.name === 'CoreError' || error.name === 'BasaltError') {
             const e: CoreError | BasaltError = error as unknown as CoreError | BasaltError;
-            const code: number = e.code;
-            const cause: Record<string, unknown> = typeof e.cause === 'object' ? e.cause as Record<string, unknown> : {};
-            await reply.status(code).send({
-                statusCode: error.code,
-                message: I18n.isI18nInitialized()
-                    ? I18n.translate(
-                        error.message,
-                        request.headers['accept-language'],
-                        cause
-                    )
-                    : error.message,
+
+            const message = I18n.isI18nInitialized()
+                ? I18n.translate(
+                    error.message,
+                    request.headers['accept-language'],
+                    typeof e.cause === 'object' ? e.cause as Record<string, unknown> : {}
+                )
+                : error.message;
+
+            await reply.status(e.code).send({
+                statusCode: e.code,
+                message,
                 content: e.cause
             });
-        } else {
-            await reply.status(500).send({
-                statusCode: 500,
-                message: I18n.isI18nInitialized()
-                    ? I18n.translate(
-                        ErrorKeys.INTERNAL_SERVER_ERROR,
-                        request.headers['accept-language']
-                    )
-                    : ErrorKeys.INTERNAL_SERVER_ERROR,
-                content: error.message
-            });
+
+            return;
         }
+
+        const fileError = this._handleFileErrors(error, request);
+
+        if (fileError) {
+            await reply.status(fileError.status).send({
+                statusCode: fileError.status,
+                message: fileError.message
+            });
+            return;
+        }
+
+        // Fallback
+        const message = I18n.isI18nInitialized()
+            ? I18n.translate(
+                ErrorKeys.INTERNAL_SERVER_ERROR,
+                request.headers['accept-language']
+            )
+            : ErrorKeys.INTERNAL_SERVER_ERROR;
+
+        await reply.status(500).send({
+            statusCode: 500,
+            message
+        });
     }
 
     /**
