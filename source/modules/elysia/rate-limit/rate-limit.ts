@@ -1,5 +1,5 @@
 import { HttpError } from '#/errors/http-error';
-import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import { MemoryStore } from '#/modules/kv-store/adapters/memory/memory-store';
 import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import type { Server } from 'bun';
 import { Elysia, type HTTPHeaders, type StatusMap } from 'elysia';
@@ -26,13 +26,12 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 		limit: number,
 		window: number,
 		set: {
-			headers: HTTPHeaders,
+			headers: HTTPHeaders;
 			status?: number | keyof StatusMap;
 		}
 	) => {
 		// trick to allow macro overrides
-		if (set.headers['X-RateLimit-Limit'])
-			return;
+		if (set.headers['X-RateLimit-Limit']) return;
 		let count = (await store.get<number>(key)) ?? 0;
 
 		if (count === 0) {
@@ -71,7 +70,7 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 		.macro({
 			rateLimit: ({ limit, window }: RateLimitOptions) => ({
 				transform: ({ request }) => {
-					const route = `${request.method}:${(new URL(request.url)).pathname}`;
+					const route = `${request.method}:${new URL(request.url).pathname}`;
 					if (!restrictedRoutes.has(route)) {
 						restrictedRoutes.set(route, { limit, window });
 					} else if (restrictedRoutes.has(route)) {
@@ -83,18 +82,19 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 							});
 					}
 				},
-				beforeHandle: (async ({ set, request, server }) => {
-					const route = `${request.method}:${(new URL(request.url)).pathname}`;
+				beforeHandle: async ({ set, request, server }) => {
+					const route = `${request.method}:${new URL(request.url).pathname}`;
 					if (restrictedRoutes.has(route)) {
 						const { limit, window } = restrictedRoutes.get(route) as RateLimitOptions;
-						const ip = request.headers.get('x-forwarded-for')
-							|| request.headers.get('x-real-ip')
-							|| (server as Server<unknown>)?.requestIP(request)?.address
-							|| '127.0.0.1';
+						const ip =
+							request.headers.get('x-forwarded-for') ||
+							request.headers.get('x-real-ip') ||
+							(server as Server<unknown>)?.requestIP(request)?.address ||
+							'127.0.0.1';
 						const key = `ratelimit:${route}:${ip}`;
 						await rateLimitCheck(key, limit, window, set);
 					}
-				})
+				}
 			})
 		})
 		.as('global') as unknown as Elysia<
@@ -103,14 +103,14 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 			decorator: {};
 			derive: {};
 			resolve: {};
-			store: {}
+			store: {};
 		},
 		{
 			typebox: {};
 			error: {};
 		},
 		{
-			macro: Partial<{ readonly rateLimit: RateLimitOptions; }>;
+			macro: Partial<{ readonly rateLimit: RateLimitOptions }>;
 			macroFn: {};
 			parser: {};
 			response: {};

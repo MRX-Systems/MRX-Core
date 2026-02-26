@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { Elysia } from 'elysia';
 
 import { cache } from '#/modules/elysia/cache/cache';
-import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import { MemoryStore } from '#/modules/kv-store/adapters/memory/memory-store';
 
 describe.concurrent('Cache Module', () => {
 	test('should return correct cache headers for cache hit', async () => {

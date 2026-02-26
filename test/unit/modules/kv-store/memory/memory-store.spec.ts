@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 
 import { InternalError } from '#/errors/internal-error';
 import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
-import { MemoryStore } from '#/modules/kv-store/memory/memory-store';
+import { MemoryStore } from '#/modules/kv-store/adapters/memory/memory-store';
 
 describe.concurrent('MemoryStore', () => {
 	describe.concurrent('Basic Operations', () => {
