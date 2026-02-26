@@ -103,11 +103,11 @@ export class IoRedisStore implements KvStore {
 		let deletedCount = 0;
 
 		while (true) {
-			// eslint-disable-next-line no-await-in-loop -- Redis SCAN requires sequential cursor iteration
+			// oxlint-disable eslint-disable-next-line no-await-in-loop -- Redis SCAN requires sequential cursor iteration
 			const [nextCursor, keys] = await this._client.scan(cursor, 'COUNT', 100);
 			cursor = nextCursor;
 
-			// eslint-disable-next-line no-await-in-loop
+			// oxlint-disable eslint-disable-next-line no-await-in-loop
 			if (keys.length > 0) deletedCount += await this._client.unlink(...keys);
 			if (cursor === '0') break;
 		}

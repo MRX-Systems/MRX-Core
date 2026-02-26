@@ -6,7 +6,29 @@ import type { CacheItem } from './types/cache-item';
 import type { CacheOptions } from './types/cache-options';
 import { generateCacheKey } from './utils/generate-cache-key';
 
-export const cache = (store: KvStore = new MemoryStore()) => {
+export const cache = (
+	store: KvStore = new MemoryStore()
+): Elysia<
+	'',
+	{
+		decorator: {};
+		derive: {};
+		resolve: {};
+		store: {};
+	},
+	{
+		typebox: {};
+		error: {};
+	},
+	{
+		macro: Partial<{ readonly isCached: CacheOptions }>;
+		macroFn: {};
+		parser: {};
+		response: {};
+		schema: {};
+		standaloneSchema: {};
+	}
+> => {
 	const cachedRoutes = new Map<string, CacheOptions>();
 
 	return new Elysia()
@@ -44,7 +66,7 @@ export const cache = (store: KvStore = new MemoryStore()) => {
 		})
 		.macro({
 			isCached: ({ ttl, prefix = '' }: CacheOptions) => ({
-				async afterHandle({ set, responseValue, request }) {
+				async afterHandle({ set, responseValue, request }): Promise<void> {
 					const route = `${request.method}:${new URL(request.url).pathname}`;
 					if (!cachedRoutes.has(route)) cachedRoutes.set(route, { ttl, prefix });
 
