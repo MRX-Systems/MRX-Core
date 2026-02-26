@@ -14,7 +14,7 @@ import type { VerifyOptions } from './types/verify-options';
  *
  * @returns Promise resolving to the TOTP code
  */
-export const totp = async (
+export const totp = (
 	secret: Uint8Array,
 	{
 		algorithm = 'SHA-1',
@@ -33,6 +33,7 @@ export const totp = async (
  * @remarks
  * Security: Uses crypto.timingSafeEqual to prevent timing attacks.
  * An attacker cannot measure response time differences to guess valid codes.
+ * Always compares in constant time, even for length mismatches (CWE-208).
  *
  * @param a - First string
  * @param b - Second string
@@ -40,13 +41,16 @@ export const totp = async (
  * @returns true if strings are equal
  */
 const _timingSafeCompare = (a: string, b: string): boolean => {
-	if (a.length !== b.length)
-		return false;
-
 	const bufferA = Buffer.from(a);
 	const bufferB = Buffer.from(b);
 
-	return timingSafeEqual(bufferA, bufferB);
+	try {
+		return timingSafeEqual(bufferA, bufferB);
+	} catch {
+		// timingSafeEqual throws if buffers have different lengths
+		// Constant-time return false (exception thrown in constant time)
+		return false;
+	}
 };
 
 /**
@@ -78,16 +82,16 @@ export const verifyTotp = async (
 	}: VerifyOptions = {}
 ): Promise<boolean> => {
 	// Security: Limit window to prevent DoS (±10 = ±5 min with 30s period)
-	if (window < 0 || window > 10)
+	// window=N checks N periods in the past and N periods in the future (2N+1 total time steps)
+	if (window < 0 || window > 1)
 		throw new InternalError(
 			TOTP_ERROR_KEYS.INVALID_WINDOW,
-			'Window must be between 0 and 10'
+			'Window must be between 0 and 1 (window=N checks ±N periods, total 2N+1 time steps)'
 		);
 
 	// Security: Early validation of code format (before expensive crypto)
 	// This is safe because format validation doesn't leak secret information
-	if (!/^\d+$/.test(code) || code.length !== digits)
-		return false;
+	if (!/^\d+$/.test(code) || code.length !== digits) return false;
 
 	const currentTimeStep = Math.floor(now / 1000 / period);
 
@@ -99,8 +103,7 @@ export const verifyTotp = async (
 
 	// Performance: Generate all codes in parallel for window > 0
 	const timeSteps: number[] = [];
-	for (let i = -window; i <= window; ++i)
-		timeSteps.push(currentTimeStep + i);
+	for (let i = -window; i <= window; ++i) timeSteps.push(currentTimeStep + i);
 
 	const expectedCodes = await Promise.all(
 		timeSteps.map((timeStep) => hotp(secret, timeStep, { algorithm, digits }))
@@ -110,8 +113,7 @@ export const verifyTotp = async (
 	// Don't early-return when a match is found
 	let isValid = false;
 	for (const expectedCode of expectedCodes)
-		if (_timingSafeCompare(expectedCode, code))
-			isValid = true;
+		if (_timingSafeCompare(expectedCode, code)) isValid = true;
 
 	return isValid;
 };

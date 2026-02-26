@@ -19,9 +19,7 @@ export const createCounterBuffer = (counter: number | bigint): ArrayBuffer => {
 
 	// Security: Always use BigInt for full 64-bit support
 	// This prevents silent truncation for counters > 2^32-1
-	const counterBigInt = typeof counter === 'bigint'
-		? counter
-		: BigInt(Math.floor(counter));
+	const counterBigInt = typeof counter === 'bigint' ? counter : BigInt(Math.trunc(counter));
 
 	counterView.setBigUint64(0, counterBigInt, false);
 
