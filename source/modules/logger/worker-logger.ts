@@ -10,19 +10,19 @@ interface LogEntry {
 	readonly object: unknown;
 }
 
-type WorkerMessage
-	= | {
-		type: 'REGISTER_SINK';
-		sinkName: string;
-		sinkClassName: string;
-		sinkClassString: string;
-		sinkArgs: unknown[];
-	}
+type WorkerMessage =
 	| {
-		type: 'LOG_BATCH';
-		logs: LogEntry[];
-	}
-	| { type: 'CLOSE'; };
+			type: 'REGISTER_SINK';
+			sinkName: string;
+			sinkClassName: string;
+			sinkClassString: string;
+			sinkArgs: unknown[];
+	  }
+	| {
+			type: 'LOG_BATCH';
+			logs: LogEntry[];
+	  }
+	| { type: 'CLOSE' };
 
 export const workerFunction = (): void => {
 	const sinks: Record<string, LoggerSink> = {};
@@ -37,8 +37,7 @@ export const workerFunction = (): void => {
 		for (let i = 0; i < len; ++i) {
 			const sinkName = sinkNames[i];
 			const sink = sinks[sinkName];
-			if (!sink)
-				continue;
+			if (!sink) continue;
 
 			try {
 				const result = sink.log(level, timestamp, object);
@@ -64,24 +63,20 @@ export const workerFunction = (): void => {
 		}
 	};
 
-	self.addEventListener('message', (
-		event: BunMessageEvent<WorkerMessage>
-	) => {
+	self.addEventListener('message', (event: BunMessageEvent<WorkerMessage>) => {
 		switch (event.data.type) {
 			case 'REGISTER_SINK': {
-				const {
-					sinkName,
-					sinkClassName,
-					sinkClassString,
-					sinkArgs
-				} = event.data;
+				const { sinkName, sinkClassName, sinkClassString, sinkArgs } = event.data;
 
 				try {
 					// Create a function to evaluate the class string and instantiate the sink
-					const factory = new Function('sinkArgs', `
+					const factory = new Function(
+						'sinkArgs',
+						`
 						${sinkClassString}
 						return new ${sinkClassName}(...sinkArgs);
-					`) as (sinkArgs: unknown[]) => LoggerSink;
+					`
+					) as (sinkArgs: unknown[]) => LoggerSink;
 
 					sinks[sinkName] = factory(sinkArgs);
 				} catch (error) {
@@ -96,8 +91,7 @@ export const workerFunction = (): void => {
 			case 'LOG_BATCH': {
 				const { logs } = event.data;
 				const len = logs.length;
-				for (let i = 0; i < len; ++i)
-					processLogEntry(logs[i]);
+				for (let i = 0; i < len; ++i) processLogEntry(logs[i]);
 				self.postMessage({ type: 'BATCH_COMPLETE' });
 				break;
 			}
@@ -117,6 +111,8 @@ export const workerFunction = (): void => {
 				self.postMessage({ type: 'CLOSE_COMPLETE' });
 				break;
 			}
+			default:
+				break;
 		}
 	});
 };
