@@ -22,8 +22,8 @@ const _keyCache = new Map<string, CryptoKey>();
  * Create a cache key from secret bytes and algorithm
  *
  * @remarks
- * Uses first 8 + last 8 bytes + length as fingerprint for fast lookup.
- * This is not cryptographically secure but sufficient for cache keying.
+ * Uses BLAKE2b-256 hash of the full secret to avoid collisions
+ * between secrets that share prefix/suffix bytes.
  *
  * @param secret - Secret bytes
  * @param algorithm - Hash algorithm
@@ -31,10 +31,9 @@ const _keyCache = new Map<string, CryptoKey>();
  * @returns Cache key string
  */
 const _createCacheKey = (secret: Uint8Array, algorithm: HashAlgorithm): string => {
-	const prefix = secret.slice(0, 8);
-	const suffix = secret.slice(-8);
-	const fingerprint = [...prefix, ...suffix, secret.length].join(',');
-	return `${fingerprint}:${algorithm}`;
+	const hasher = new Bun.CryptoHasher('blake2b256');
+	hasher.update(secret);
+	return `${hasher.digest('hex')}:${algorithm}`;
 };
 
 /**
@@ -52,7 +51,12 @@ const _getCryptoKey = async (secret: Uint8Array, algorithm: HashAlgorithm): Prom
 	const cacheKey = _createCacheKey(secret, algorithm);
 
 	const cached = _keyCache.get(cacheKey);
-	if (cached) return cached;
+	if (cached) {
+		// Move to end of Map to maintain true LRU order
+		_keyCache.delete(cacheKey);
+		_keyCache.set(cacheKey, cached);
+		return cached;
+	}
 
 	// LRU eviction: max 100 entries to limit memory usage
 	if (_keyCache.size >= 100) {
