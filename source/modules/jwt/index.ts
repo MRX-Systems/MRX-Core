@@ -1,1 +1,1 @@
-export { signJWT, verifyJWT } from './jwt';
+export { signJWT, verifyJWT, type VerifyOptions } from './jwt';

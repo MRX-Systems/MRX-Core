@@ -1,7 +1,7 @@
 import type { BunMessageEvent } from 'bun';
 
 import { InternalError } from '#/errors/internal-error';
-import { TypedEventEmitter } from '#/modules/typed-event-emitter';
+import { TypedEventEmitter } from '#/modules/typed-event-emitter/typed-event-emitter';
 import { LOGGER_ERROR_KEYS } from './enums/logger-error-keys';
 import type { LoggerEvent } from './events/logger-events';
 import type { LogLevels } from './types/log-levels';
@@ -118,7 +118,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		super();
 		const {
 			autoEnd = true,
-			batchSize = 50,
+			batchSize = 100,
 			batchTimeout = 0.1,
 			flushOnBeforeExit = true,
 			maxMessagesInFlight = 100,
@@ -278,24 +278,25 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		if (this._sinkKeys.length === 0)
 			throw new InternalError(LOGGER_ERROR_KEYS.NO_SINKS_PROVIDED, { level, object });
 
-		if (this._pendingLogs.length >= this._maxPendingLogs)
+		const pendingLength = this._pendingLogs.length;
+		if (pendingLength >= this._maxPendingLogs)
 			return;
 
 		this._pendingLogs.push({
 			sinkNames: (sinkNames ?? this._sinkKeys) as string[],
 			level,
-			timestamp: Date.now(),
+			timestamp: performance.now(),
 			object
 		});
 
 		// If the batch size is reached, trigger immediate processing
-		if (this._pendingLogs.length >= this._batchSize) {
+		if (pendingLength + 1 >= this._batchSize) {
 			if (this._batchTimer !== null) {
 				clearTimeout(this._batchTimer);
 				this._batchTimer = null;
 			}
 			this._triggerProcessing();
-		} else if (this._batchTimeout > 0 && this._batchTimer === null) {
+		} else if (this._batchTimer === null && this._batchTimeout > 0) {
 			// Otherwise, start a timer if not already started
 			this._batchTimer = setTimeout(() => {
 				this._batchTimer = null;

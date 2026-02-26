@@ -1,5 +1,6 @@
 import { InternalError } from '#/errors/internal-error';
 import { TOTP_ERROR_KEYS } from './enums/totp-error-keys';
+import type { HashAlgorithm, OtpDigits } from './types';
 import type { OtpAuthUri } from './types/otp-auth-uri';
 
 /**
@@ -43,6 +44,13 @@ export const buildOtpAuthUri = (
 /**
  * Parse an OTPAuth URI
  *
+ * @remarks
+ * Security: Validates all parameters to prevent injection or invalid configurations.
+ * - Algorithm must be SHA-1, SHA-256, or SHA-512
+ * - Digits must be 6 or 8
+ * - Period must be a positive integer
+ * - Label is required per otpauth specification
+ *
  * @param uri - OTPAuth URI to parse
  *
  * @throws ({@link InternalError}) - if the URI is invalid or missing required parameters
@@ -53,23 +61,41 @@ export const parseOtpAuthUri = (uri: string): Required<Omit<OtpAuthUri, 'issuer'
 	const url = new URL(uri);
 
 	if (url.protocol !== 'otpauth:')
-		throw new InternalError(TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI);
+		throw new InternalError(TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI, 'Invalid protocol, expected otpauth:');
 
 	if (url.hostname !== 'totp')
-		throw new InternalError(TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI);
+		throw new InternalError(TOTP_ERROR_KEYS.INVALID_OTP_AUTH_URI, 'Invalid type, expected totp');
 
 	const label = decodeURIComponent(url.pathname.slice(1));
+
+	// Security: Validate label is present (required by otpauth spec)
+	if (!label)
+		throw new InternalError(TOTP_ERROR_KEYS.MISSING_LABEL, 'Label is required');
+
 	const secretBase32 = url.searchParams.get('secret');
 
 	if (!secretBase32)
-		throw new InternalError(TOTP_ERROR_KEYS.MISSING_SECRET);
+		throw new InternalError(TOTP_ERROR_KEYS.MISSING_SECRET, 'Secret is required');
 
 	const issuerParam = url.searchParams.get('issuer');
 	const issuer = issuerParam ? decodeURIComponent(issuerParam) : undefined;
 
-	const algorithm = (url.searchParams.get('algorithm') || 'SHA-1') as 'SHA-1' | 'SHA-256' | 'SHA-512';
-	const digits = parseInt(url.searchParams.get('digits') || '6', 10) as 6 | 8;
+	// Security: Validate algorithm
+	const algorithmParam = url.searchParams.get('algorithm') || 'SHA-1';
+	if (algorithmParam !== 'SHA-1' && algorithmParam !== 'SHA-256' && algorithmParam !== 'SHA-512')
+		throw new InternalError(TOTP_ERROR_KEYS.INVALID_ALGORITHM, 'Algorithm must be SHA-1, SHA-256, or SHA-512');
+	const algorithm = algorithmParam as HashAlgorithm;
+
+	// Security: Validate digits
+	const digitsParam = parseInt(url.searchParams.get('digits') || '6', 10);
+	if (digitsParam !== 6 && digitsParam !== 8)
+		throw new InternalError(TOTP_ERROR_KEYS.INVALID_DIGITS, 'Digits must be 6 or 8');
+	const digits = digitsParam as OtpDigits;
+
+	// Security: Validate period
 	const period = parseInt(url.searchParams.get('period') || '30', 10);
+	if (!Number.isFinite(period) || period <= 0)
+		throw new InternalError(TOTP_ERROR_KEYS.INVALID_PERIOD, 'Period must be a positive integer');
 
 	const result = {
 		secretBase32,
