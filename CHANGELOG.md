@@ -1,4 +1,16 @@
 
+## v2.13.0-1-and-295-20260130
+
+[compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.13.0-3-and-293-20260129...v2.13.0-1-and-295-20260130)
+
+### 🔧 Fixes
+
+- **🔧:** [remove partial to data type in repo inert method] ([3f74e6fc](https://github.com/MRX-Systems/MRX-Core/commit/3f74e6fc))
+
+### ❤️ Contributors
+
+- Ruby <necrelox@proton.me>
+
 ## v2.13.0-3-and-293-20260129
 
 [compare changes](https://github.com/MRX-Systems/MRX-Core/compare/v2.13.0-2-and-293-20260114...v2.13.0-3-and-293-20260129)
