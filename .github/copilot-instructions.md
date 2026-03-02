@@ -13,7 +13,7 @@ applyTo: '**'
 ## TypeScript and Project Conventions
 1. Use underscore prefix for private or non-exported elements (e.g., _privateMethod)
 2. Always specify visibility modifiers (private, protected, public), plus readonly, override, etc. when applicable
-3. Naming conventions: camelCase for variables/functions/methods; PascalCase for classes/interfaces/types; SCREAMING_CASE for constants
+3. Naming conventions: snake_case for variables/functions/methods/parameters/properties; PascalCase for classes/interfaces/types/enums; SCREAMING_CASE for constants
 4. Explicit typing: Always specify types for variables, parameters, and return values; never use any; prefer unknown if type cannot be determined; prefer interface over type alias for extendable objects
 5. Documentation: Use TSDoc style; explain purpose, parameters, return values, and behavior; only document code when requested; for @throws, use format "@throws ({@link Type}) – description"; for object/interface properties, write comment above each property instead of @param
 6. Control structures: Omit curly braces for single-statement bodies
@@ -43,26 +43,30 @@ applyTo: '**'
 4. Keep pull requests focused and well-documented (with TsDoc if asked)
 5. Commit different types of changes separately; avoid mixing tests and features in one commit
 
-## Commit Message Convention (Conventional Commits + Emoji)
-Format: <type>(<emoji>): [summary up to 72 chars]
-(blank line, then context or description)
+## Commit Message Convention (Conventional Commits)
+Format: `type(scope): summary` (max 72 chars)
 
-<type> is lowercase
-summary is surrounded by brackets `[summary]`
+- `type` is lowercase; `scope` is optional, describes the module/area affected
+- Body (optional): blank line after summary, then context or reasoning
 
 Types:
-feat(🚀) – New features
-fix(🔧) – Bug fixes
-perf(⚡) – Performance improvements
-refactor(🧹) – Refactoring
-build(📦) – Build tools / dependency changes
-types(🌊) – Type definitions
-chore(🦉) – Maintenance, non-code/test changes
-examples(🏀) – Example updates
-docs(📖) – Documentation changes
-test(🧪) – Test code updates
-style(🎨) – Style/formatting only
-ci(🤖) – CI/CD configuration
+- feat – New features
+- fix – Bug fixes
+- perf – Performance improvements
+- refactor – Refactoring
+- build – Build tools / dependency changes
+- types – Type definitions
+- chore – Maintenance, non-code/test changes
+- docs – Documentation changes
+- test – Test code updates
+- style – Style/formatting only
+- ci – CI/CD configuration
+
+Examples:
+- `feat(auth): add OAuth2 login flow`
+- `fix(api): handle timeout on webhook delivery`
+- `refactor(db): extract connection pooling logic`
+- `chore(deps): bump express to 4.19`
 
 ## AI Guidelines
 - Match existing patterns/style; include error handling; consider edge cases
