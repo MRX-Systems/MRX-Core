@@ -13,7 +13,7 @@ applyTo: '**'
 ## TypeScript and Project Conventions
 1. Use underscore prefix for private or non-exported elements (e.g., _privateMethod)
 2. Always specify visibility modifiers (private, protected, public), plus readonly, override, etc. when applicable
-3. Naming conventions: snake_case for variables/functions/methods/parameters/properties; PascalCase for classes/interfaces/types/enums; SCREAMING_CASE for constants
+3. Naming conventions: camelCase for variables/functions/methods/parameters/properties; PascalCase for classes/interfaces/types/enums; SCREAMING_CASE for constants
 4. Explicit typing: Always specify types for variables, parameters, and return values; never use any; prefer unknown if type cannot be determined; prefer interface over type alias for extendable objects
 5. Documentation: Use TSDoc style; explain purpose, parameters, return values, and behavior; only document code when requested; for @throws, use format "@throws ({@link Type}) – description"; for object/interface properties, write comment above each property instead of @param
 6. Control structures: Omit curly braces for single-statement bodies
