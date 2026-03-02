@@ -1,37 +1,19 @@
 {
 	"name": "@mrxsys/mrx-core",
-	"version": "2.12.0",
+	"version": "2.13.0-3-and-293-20260129",
+	"description": "Core provides a set of tools to help you build a microservice",
+	"keywords": [
+		"core",
+		"mrxsys",
+		"mrxsys-core"
+	],
+	"license": "MIT",
 	"author": "Ruby",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/MRX-Systems/MRX-Core"
 	},
-	"devDependencies": {
-		"@eslint/js": "^9.39.2",
-		"@sinclair/typebox": "0.34.46",
-		"@stylistic/eslint-plugin": "^5.6.1",
-		"@types/bun": "^1.3.5",
-		"@types/nodemailer": "^7.0.4",
-		"elysia": "1.4.21",
-		"eslint": "^9.39.2",
-		"globals": "^17.0.0",
-		"ioredis": "^5.8.2",
-		"jose": "^6.1.3",
-		"knex": "^3.1.0",
-		"mssql": "^12.2.0",
-		"nodemailer": "^7.0.12",
-		"typescript-eslint": "^8.51.0"
-	},
-	"peerDependencies": {
-		"@sinclair/typebox": "0.34.46",
-		"elysia": "^1.4.21",
-		"ioredis": "^5.8.2",
-		"jose": "^6.1.3",
-		"mssql": "^12.2.0",
-		"knex": "^3.1.0",
-		"nodemailer": "^7.0.12",
-		"typescript": "^5.9.3"
-	},
+	"type": "module",
 	"exports": {
 		"./errors": "./dist/errors/index.js",
 		"./errors/enums": "./dist/errors/enums/index.js",
@@ -57,10 +39,10 @@
 		"./modules/jwt": "./dist/modules/jwt/index.js",
 		"./modules/jwt/enums": "./dist/modules/jwt/enums/index.js",
 		"./modules/jwt/utils": "./dist/modules/jwt/utils/index.js",
-		"./modules/kv-store/bun-redis": "./dist/modules/kv-store/bun-redis/index.js",
+		"./modules/kv-store/bun-redis": "./dist/modules/kv-store/adapters/bun-redis/index.js",
 		"./modules/kv-store/enums": "./dist/modules/kv-store/enums/index.js",
-		"./modules/kv-store/ioredis": "./dist/modules/kv-store/ioredis/index.js",
-		"./modules/kv-store/memory": "./dist/modules/kv-store/memory/index.js",
+		"./modules/kv-store/ioredis": "./dist/modules/kv-store/adapters/ioredis/index.js",
+		"./modules/kv-store/memory": "./dist/modules/kv-store/adapters/memory/index.js",
 		"./modules/kv-store/types": "./dist/modules/kv-store/types/index.js",
 		"./modules/logger": "./dist/modules/logger/index.js",
 		"./modules/logger/enums": "./dist/modules/logger/enums/index.js",
@@ -87,18 +69,77 @@
 		"./shared/types": "./dist/shared/types/index.js",
 		"./shared/utils": "./dist/shared/utils/index.js"
 	},
+	"scripts": {
+		"build": "bun builder.ts",
+		"docs": "bunx typedoc --tsconfig tsconfig.build.json",
+		"fix-lint": "eslint --fix ./source",
+		"lint": "eslint ./source",
+		"start": "bun build/index.js",
+		"test:integration": "bun test --timeout 10000 $(find test/integration -name '*.spec.ts')",
+		"test:unit": "bun test --timeout 10000 --coverage $(find test/unit -name '*.spec.ts')",
+		"test": "bun test --coverage --timeout 10000"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.39.2",
+		"@sinclair/typebox": "0.34.48",
+		"@stylistic/eslint-plugin": "^5.7.1",
+		"@types/bun": "^1.3.7",
+		"@types/nodemailer": "^7.0.9",
+		"elysia": "1.4.22",
+		"eslint": "^9.39.2",
+		"globals": "^17.2.0",
+		"ioredis": "^5.9.2",
+		"jose": "^6.1.3",
+		"knex": "^3.1.0",
+		"mssql": "^12.2.0",
+		"nodemailer": "^7.0.13",
+		"typescript-eslint": "^8.54.0"
+	},
+	"peerDependencies": {
+		"@sinclair/typebox": "0.34.47",
+		"elysia": "^1.4.22",
+		"ioredis": "^5.9.1",
+		"jose": "^6.1.3",
+		"knex": "^3.1.0",
+		"mssql": "^12.2.0",
+		"nodemailer": "^7.0.12",
+		"typescript": "^5.9.3"
+	},
+	"peerDependenciesMeta": {
+		"@sinclair/typebox": {
+			"optional": true
+		},
+		"elysia": {
+			"optional": true
+		},
+		"ioredis": {
+			"optional": true
+		},
+		"jose": {
+			"optional": true
+		},
+		"knex": {
+			"optional": true
+		},
+		"mssql": {
+			"optional": true
+		},
+		"nodemailer": {
+			"optional": true
+		}
+	},
 	"changelog": {
 		"types": {
 			"feat": {
 				"title": "🚀 Enhancements",
 				"semver": "minor"
 			},
-			"perf": {
-				"title": "⚡ Performance",
-				"semver": "patch"
-			},
 			"fix": {
 				"title": "🔧 Fixes",
+				"semver": "patch"
+			},
+			"perf": {
+				"title": "⚡ Performance",
 				"semver": "patch"
 			},
 			"refactor": {
@@ -143,46 +184,5 @@
 			"tagMessage": "v{{newVersion}}",
 			"tagBody": "v{{newVersion}}"
 		}
-	},
-	"description": " Core provides a set of tools to help you build a microservice",
-	"keywords": [
-		"mrxsys",
-		"mrxsys-core",
-		"core"
-	],
-	"license": "MIT",
-	"peerDependenciesMeta": {
-		"@sinclair/typebox": {
-			"optional": true
-		},
-		"elysia": {
-			"optional": true
-		},
-		"ioredis": {
-			"optional": true
-		},
-		"jose": {
-			"optional": true
-		},
-		"knex": {
-			"optional": true
-		},
-		"mssql": {
-			"optional": true
-		},
-		"nodemailer": {
-			"optional": true
-		}
-	},
-	"scripts": {
-		"build": "bun builder.ts",
-		"docs": "bunx typedoc --tsconfig tsconfig.build.json",
-		"fix-lint": "eslint --fix ./source",
-		"lint": "eslint ./source",
-		"start": "bun build/index.js",
-		"test:integration": "bun test --timeout 10000 $(find test/integration -name '*.spec.ts')",
-		"test:unit": "bun test --timeout 10000 --coverage $(find test/unit -name '*.spec.ts')",
-		"test": "bun test --coverage --timeout 10000"
-	},
-	"type": "module"
+	}
 }

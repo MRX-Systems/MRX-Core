@@ -1,6 +1,11 @@
 import { InternalError } from '#/errors/internal-error';
 import { KV_STORE_ERROR_KEYS } from '#/modules/kv-store/enums/kv-store-error-keys';
 import type { KvStore } from '#/modules/kv-store/types/kv-store';
+import {
+	validateAmount,
+	validateKey,
+	validateTtl
+} from '#/modules/kv-store/utils/validate-kv-params';
 import type { MemoryStoreEntry } from './types/memory-store-entry';
 
 /**
@@ -23,20 +28,28 @@ export class MemoryStore implements KvStore {
 	private readonly _cleanupInterval: number;
 
 	/**
+	 * Maximum number of entries allowed in the store.
+	 * Defaults to Infinity (no limit).
+	 */
+	private readonly _maxSize: number;
+
+	/**
 	 * Timer for cleanup operations.
 	 */
 	private _cleanupTimer: Timer | null = null;
 
-	public constructor(cleanupIntervalMs?: number) {
+	public constructor(cleanupIntervalMs?: number, maxSize?: number) {
 		this._cleanupInterval = cleanupIntervalMs ?? 300000;
+		this._maxSize = maxSize ?? Infinity;
 		this._startCleanup();
 	}
 
 	public get<T = unknown>(key: string): T | null {
+		validateKey(key);
+
 		const entry = this._store.get(key);
 
-		if (!entry)
-			return null;
+		if (!entry) return null;
 
 		const now = Date.now();
 		if (now > entry.expiresAt && entry.expiresAt !== -1) {
@@ -48,64 +61,48 @@ export class MemoryStore implements KvStore {
 	}
 
 	public set<T = unknown>(key: string, value: T, ttlSec?: number): void {
-		const expiresAt = ttlSec
-			? Date.now() + (ttlSec * 1000)
-			: -1;
+		validateKey(key);
+		validateTtl(ttlSec);
+
+		if (this._store.size >= this._maxSize && !this._store.has(key))
+			throw new InternalError(KV_STORE_ERROR_KEYS.STORE_FULL);
+
+		const expiresAt = ttlSec ? Date.now() + ttlSec * 1000 : -1;
 		this._store.set(key, { value, expiresAt });
 	}
 
 	public increment(key: string, amount = 1): number {
-		const current = this.get<number>(key);
-		const entry = this._store.get(key);
-
-		if (current !== null && typeof current !== 'number')
-			throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
-
-		const currentValue = current ?? 0;
-		const newValue = currentValue + amount;
-
-		const expiresAt = entry ? entry.expiresAt : -1;
-		this._store.set(key, { value: newValue, expiresAt });
-
-		return newValue;
+		return this._adjustBy(key, amount);
 	}
 
 	public decrement(key: string, amount = 1): number {
-		const current = this.get<number>(key);
-		const entry = this._store.get(key);
-
-		if (current !== null && typeof current !== 'number')
-			throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
-
-		const currentValue = current ?? 0;
-		const newValue = currentValue - amount;
-
-		const expiresAt = entry ? entry.expiresAt : -1;
-		this._store.set(key, { value: newValue, expiresAt });
-
-		return newValue;
+		return this._adjustBy(key, -amount);
 	}
 
 	public del(key: string): boolean {
+		validateKey(key);
+
 		return this._store.delete(key);
 	}
 
 	public expire(key: string, ttlSec: number): boolean {
-		const entry = this._store.get(key);
-		if (!entry)
-			return false;
+		validateKey(key);
+		validateTtl(ttlSec);
 
-		entry.expiresAt = Date.now() + (ttlSec * 1000);
+		const entry = this._store.get(key);
+		if (!entry) return false;
+
+		entry.expiresAt = Date.now() + ttlSec * 1000;
 		return true;
 	}
 
 	public ttl(key: string): number {
-		const entry = this._store.get(key);
-		if (!entry)
-			return -1;
+		validateKey(key);
 
-		if (entry.expiresAt === -1)
-			return -1;
+		const entry = this._store.get(key);
+		if (!entry) return -1;
+
+		if (entry.expiresAt === -1) return -1;
 
 		const remaining = entry.expiresAt - Date.now();
 		return remaining > 0 ? Math.ceil(remaining / 1000) : -1;
@@ -118,20 +115,21 @@ export class MemoryStore implements KvStore {
 	}
 
 	private _startCleanup(): void {
-		if (this._cleanupTimer)
-			return;
+		if (this._cleanupTimer) return;
 
 		this._cleanupTimer = setInterval(() => {
 			this._removeExpiredEntries();
 		}, this._cleanupInterval);
+
+		// Allow process to exit even if timer is running
+		this._cleanupTimer.unref();
 	}
 
 	private _removeExpiredEntries(): void {
 		const now = Date.now();
 
 		for (const [key, entry] of this._store.entries())
-			if (entry.expiresAt !== -1 && now > entry.expiresAt)
-				this._store.delete(key);
+			if (entry.expiresAt !== -1 && now > entry.expiresAt) this._store.delete(key);
 	}
 
 	public destroy(): void {
@@ -140,5 +138,29 @@ export class MemoryStore implements KvStore {
 			this._cleanupTimer = null;
 		}
 		this._store.clear();
+	}
+
+	private _adjustBy(key: string, amount: number): number {
+		validateKey(key);
+		validateAmount(amount);
+
+		const entry = this._store.get(key);
+		const now = Date.now();
+
+		let currentValue = 0;
+		let expiresAt = -1;
+
+		if (entry)
+			if (entry.expiresAt !== -1 && now > entry.expiresAt) this._store.delete(key);
+			else {
+				if (entry.value !== null && typeof entry.value !== 'number')
+					throw new InternalError(KV_STORE_ERROR_KEYS.NOT_INTEGER);
+				currentValue = (entry.value as number) ?? 0;
+				({ expiresAt } = entry);
+			}
+
+		const newValue = currentValue + amount;
+		this._store.set(key, { value: newValue, expiresAt });
+		return newValue;
 	}
 }
