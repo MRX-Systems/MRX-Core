@@ -1,1 +1,1 @@
-export { cache } from './cache';
+export { cachePlugin } from './cache';

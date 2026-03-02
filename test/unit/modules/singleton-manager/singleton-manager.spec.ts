@@ -398,4 +398,37 @@ describe.concurrent('SingletonManager', () => {
 			instance.name.toUpperCase();
 		});
 	});
+
+	describe.concurrent('clear', () => {
+		test('should clear all registered singletons', () => {
+			SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton());
+			SingletonManager.register(singletonNames.EXAMPLE_2, new ExampleSingleton2('test'));
+			SingletonManager.register(singletonNames.EXAMPLE_3, new ExampleSingleton3('test', 25));
+
+			expect(SingletonManager.has(singletonNames.EXAMPLE)).toBe(true);
+			expect(SingletonManager.has(singletonNames.EXAMPLE_2)).toBe(true);
+			expect(SingletonManager.has(singletonNames.EXAMPLE_3)).toBe(true);
+
+			SingletonManager.clear();
+
+			expect(SingletonManager.has(singletonNames.EXAMPLE)).toBe(false);
+			expect(SingletonManager.has(singletonNames.EXAMPLE_2)).toBe(false);
+			expect(SingletonManager.has(singletonNames.EXAMPLE_3)).toBe(false);
+		});
+
+		test('should not throw when clearing an empty registry', () => {
+			expect(() => SingletonManager.clear()).not.toThrow();
+		});
+
+		test('should allow re-registration after clear', () => {
+			SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton());
+
+			SingletonManager.clear();
+
+			// Should not throw since registry is cleared
+			expect(() => SingletonManager.register(singletonNames.EXAMPLE, new ExampleSingleton())).not.toThrow();
+
+			expect(SingletonManager.has(singletonNames.EXAMPLE)).toBe(true);
+		});
+	});
 });

@@ -1,1 +1,0 @@
-export { microservice } from './microservice';

@@ -45,10 +45,6 @@ await Bun.build({
 		'./source/modules/elysia/error/index.ts',
 		'./source/modules/elysia/error/enums/index.ts',
 
-		// microservice
-		'./source/modules/elysia/microservice/index.ts',
-		'./source/modules/elysia/microservice/enums/index.ts',
-
 		// rateLimit
 		'./source/modules/elysia/rate-limit/index.ts',
 		'./source/modules/elysia/rate-limit/enums/index.ts',
@@ -60,10 +56,9 @@ await Bun.build({
 		'./source/modules/jwt/utils/index.ts',
 
 		// # ————————— kvStore ————————— #
-		'./source/modules/kv-store/bun-redis/index.ts',
+		'./source/modules/kv-store/adapters/bun-redis/index.ts',
 		'./source/modules/kv-store/enums/index.ts',
-		'./source/modules/kv-store/ioredis/index.ts',
-		'./source/modules/kv-store/memory/index.ts',
+		'./source/modules/kv-store/adapters/memory/index.ts',
 		'./source/modules/kv-store/types/index.ts',
 
 		// # ————————— Logger ————————— #
