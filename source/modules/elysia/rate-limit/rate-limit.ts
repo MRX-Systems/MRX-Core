@@ -1,9 +1,9 @@
-import { HttpError } from '#/errors/http-error';
-import { MemoryStore } from '#/modules/kv-store/adapters/memory/memory-store';
-import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import type { Server } from 'bun';
 import { Elysia, type HTTPHeaders, type StatusMap } from 'elysia';
 
+import { HttpError } from '#/errors/http-error';
+import { MemoryStore } from '#/modules/kv-store/adapters/memory/memory-store';
+import type { KvStore } from '#/modules/kv-store/types/kv-store';
 import { RATE_LIMIT_ERROR_KEYS } from './enums/rate-limit-error-keys';
 import type { RateLimitOptions } from './types/rate-limit-options';
 
@@ -18,7 +18,29 @@ import type { RateLimitOptions } from './types/rate-limit-options';
  *
  * @throws ({@link HttpError}) – `elysia.rate-limit.error.exceeded` (HTTP 429)
  */
-export const rateLimit = (store: KvStore = new MemoryStore()) => {
+export const rateLimitPlugin = (
+	store: KvStore = new MemoryStore()
+): Elysia<
+	'rateLimit',
+	{
+		decorator: {};
+		derive: {};
+		resolve: {};
+		store: {};
+	},
+	{
+		typebox: {};
+		error: {};
+	},
+	{
+		macro: Partial<{ readonly rateLimit: RateLimitOptions }>;
+		macroFn: {};
+		parser: {};
+		response: {};
+		schema: {};
+		standaloneSchema: {};
+	}
+> => {
 	const restrictedRoutes = new Map<string, RateLimitOptions>();
 
 	const rateLimitCheck = async (
@@ -29,7 +51,7 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 			headers: HTTPHeaders;
 			status?: number | keyof StatusMap;
 		}
-	) => {
+	): Promise<void> => {
 		// trick to allow macro overrides
 		if (set.headers['X-RateLimit-Limit']) return;
 		let count = (await store.get<number>(key)) ?? 0;
@@ -37,9 +59,7 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 		if (count === 0) {
 			await store.set(key, 1, window);
 			count = 1;
-		} else {
-			count = await store.increment(key);
-		}
+		} else count = await store.increment(key);
 
 		const remaining = Math.max(0, limit - count);
 		const resetTime = await store.ttl(key);
@@ -69,20 +89,20 @@ export const rateLimit = (store: KvStore = new MemoryStore()) => {
 	})
 		.macro({
 			rateLimit: ({ limit, window }: RateLimitOptions) => ({
-				transform: ({ request }) => {
+				transform: ({ request }): void => {
 					const route = `${request.method}:${new URL(request.url).pathname}`;
-					if (!restrictedRoutes.has(route)) {
+					if (!restrictedRoutes.has(route))
 						restrictedRoutes.set(route, { limit, window });
-					} else if (restrictedRoutes.has(route)) {
+					else if (restrictedRoutes.has(route)) {
 						const existing = restrictedRoutes.get(route) as RateLimitOptions;
-						if (limit != existing.limit || window != existing.window)
+						if (limit !== existing.limit || window !== existing.window)
 							restrictedRoutes.set(route, {
 								limit,
 								window
 							});
 					}
 				},
-				beforeHandle: async ({ set, request, server }) => {
+				beforeHandle: async ({ set, request, server }): Promise<void> => {
 					const route = `${request.method}:${new URL(request.url).pathname}`;
 					if (restrictedRoutes.has(route)) {
 						const { limit, window } = restrictedRoutes.get(route) as RateLimitOptions;

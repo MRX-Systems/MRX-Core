@@ -5,10 +5,7 @@ import { HttpError } from '#/errors/http-error';
 import { filterByKeyExclusion } from '#/modules/data/data';
 import { ERROR_KEYS } from './enums/error.keys';
 
-/**
- * The `errorPlugin` provides an error handling system for Elysia applications.
- */
-export const error = new Elysia({
+export const errorPlugin = new Elysia({
 	name: 'errorPlugin'
 })
 	.error({
@@ -41,7 +38,11 @@ export const error = new Elysia({
 							value: (e as { value: string }).value,
 							summary: (e as { summary: string }).summary,
 							message: (e as { schema: TSchema }).schema?.error,
-							schema: filterByKeyExclusion((e as { schema: TSchema }).schema, ['error'], true)
+							schema: filterByKeyExclusion(
+								(e as { schema: TSchema }).schema,
+								['error'],
+								true
+							)
 						}))
 					}
 				};

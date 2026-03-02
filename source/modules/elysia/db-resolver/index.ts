@@ -1,1 +1,1 @@
-export { dbResolver } from './db-resolver';
+export { dbResolverPlugin } from './db-resolver';
