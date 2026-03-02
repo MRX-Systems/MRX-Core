@@ -2,11 +2,11 @@ import { describe, expect, test } from 'bun:test';
 import Elysia from 'elysia';
 
 import { MICROSERVICE_SUCCESS_KEYS } from '#/modules/elysia/microservice/enums/microservice-success-keys';
-import { microservice } from '#/modules/elysia/microservice/microservice';
+import { microservicePlugin } from '#/modules/elysia/microservice/microservice';
 import { author, description, name, version } from '#/root/package.json';
 
 describe('Microservice Plugin', () => {
-	const app = new Elysia().use(microservice);
+	const app = new Elysia().use(microservicePlugin);
 
 	test('ping - should return pong with correct status', async () => {
 		const response = await app.handle(new Request('http://localhost/microservice/ping'));
@@ -42,9 +42,11 @@ describe('Microservice Plugin', () => {
 
 	test('should handle different HTTP methods on ping endpoint', async () => {
 		// POST should return 404 (method not found)
-		const postResponse = await app.handle(new Request('http://localhost/microservice/ping', {
-			method: 'POST'
-		}));
+		const postResponse = await app.handle(
+			new Request('http://localhost/microservice/ping', {
+				method: 'POST'
+			})
+		);
 
 		expect(postResponse.status).toBe(404);
 	});
@@ -58,7 +60,9 @@ describe('Microservice Plugin', () => {
 	describe('Package.json validation', () => {
 		test('info endpoint should have all required package.json fields', async () => {
 			const response = await app.handle(new Request('http://localhost/microservice/info'));
-			const json = await response.json() as { content: { name: string; version: string; description: string; author: string } };
+			const json = (await response.json()) as {
+				content: { name: string; version: string; description: string; author: string };
+			};
 
 			expect(json.content.name).toBeDefined();
 			expect(json.content.version).toBeDefined();
