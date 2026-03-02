@@ -31,8 +31,6 @@
 		"./modules/elysia/db-resolver/enums": "./dist/modules/elysia/db-resolver/enums/index.js",
 		"./modules/elysia/error": "./dist/modules/elysia/error/index.js",
 		"./modules/elysia/error/enums": "./dist/modules/elysia/error/enums/index.js",
-		"./modules/elysia/microservice": "./dist/modules/elysia/microservice/index.js",
-		"./modules/elysia/microservice/enums": "./dist/modules/elysia/microservice/enums/index.js",
 		"./modules/elysia/rate-limit": "./dist/modules/elysia/rate-limit/index.js",
 		"./modules/elysia/rate-limit/enums": "./dist/modules/elysia/rate-limit/enums/index.js",
 		"./modules/elysia/rate-limit/types": "./dist/modules/elysia/rate-limit/types/index.js",
