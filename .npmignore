@@ -22,6 +22,8 @@ docs/
 
 # ————————— Tool configuration files ————————— #
 eslint.config.js
+.oxfmtrc.json
+.oxlintrc.json
 
 # ————————— Dependency-related folders and files ————————— #
 node_modules/
