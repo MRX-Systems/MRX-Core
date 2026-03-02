@@ -42,7 +42,7 @@ const table = new Table(
 );
 
 interface Data {
-	id: number;
+	id?: number;
 	name: string;
 	age: number;
 	birth: Date;
@@ -51,8 +51,7 @@ interface Data {
 }
 
 const createDataTable = async (): Promise<void> => {
-	if (await knexInstance.schema.hasTable(testTable))
-		return;
+	if (await knexInstance.schema.hasTable(testTable)) return;
 	await knexInstance.schema.createTable(testTable, (table) => {
 		table.increments('id').primary();
 		table.string('name').notNullable();
@@ -89,10 +88,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 	[
 		'Literal Equal OR Literal Equal',
 		{
-			filters: [
-				{ id: 10 },
-				{ id: 20 }
-			],
+			filters: [{ id: 10 }, { id: 20 }],
 			validator: (data, expectedCount) => {
 				expect(data).toHaveLength(expectedCount);
 				expect(data).toContainEqual(expect.objectContaining({ id: 10 }));
@@ -115,10 +111,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 	[
 		'Equal OR Equal',
 		{
-			filters: [
-				{ id: { $eq: 10 } },
-				{ id: { $eq: 20 } }
-			],
+			filters: [{ id: { $eq: 10 } }, { id: { $eq: 20 } }],
 			validator: (data, expectedCount) => {
 				expect(data).toHaveLength(expectedCount);
 				expect(data).toContainEqual(expect.objectContaining({ id: 10 }));
@@ -143,8 +136,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $lt: 5 } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.id).toBeLessThan(5));
 			},
@@ -156,8 +148,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $lte: 5 } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.id).toBeLessThanOrEqual(5));
 			},
@@ -169,8 +160,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $gt: 5 } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.id).toBeGreaterThan(5));
 			},
@@ -182,8 +172,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $gte: 5 } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.id).toBeGreaterThanOrEqual(5));
 			},
@@ -195,8 +184,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $in: [2, 3] } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect([2, 3]).toContain(item.id));
 			},
@@ -208,8 +196,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $nin: [2, 3] } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect([2, 3]).not.toContain(item.id));
 			},
@@ -221,8 +208,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $between: [2, 5] } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
 					expect(item.id).toBeGreaterThanOrEqual(2);
@@ -237,14 +223,11 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { id: { $nbetween: [3, 5] } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
-					if (item.id <= 3)
-						expect(item.id).toBeLessThanOrEqual(3);
-					else
-						expect(item.id).toBeGreaterThanOrEqual(5);
+					if (item.id <= 3) expect(item.id).toBeLessThanOrEqual(3);
+					else expect(item.id).toBeGreaterThanOrEqual(5);
 				});
 			},
 			expectedCount: 17
@@ -255,8 +238,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { name: { $like: 'Repository::' } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.name).toMatch(/^Repository::/));
 			},
@@ -268,8 +250,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { name: { $nlike: 'zRepositoryz' } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.name).not.toMatch(/zRepositoryz/));
 			},
@@ -281,8 +262,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { n: { $isNull: true } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.n).toBeNull());
 			},
@@ -294,8 +274,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { n: { $isNull: false } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => expect(item.n).not.toBeNull());
 			},
@@ -307,8 +286,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { $q: 'Repository::' },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 			},
 			expectedCount: 20
@@ -319,8 +297,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { $q: 15 },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 			},
 			expectedCount: 2
@@ -331,8 +308,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { $q: { selectedFields: ['name'], value: 'Repository::' } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 			},
 			expectedCount: 20
@@ -343,8 +319,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { $q: { selectedFields: ['age'], value: 15 } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 			},
 			expectedCount: 1
@@ -355,8 +330,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { $q: { selectedFields: ['name', 'id'], value: '15' } },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 			},
 			expectedCount: 2
@@ -367,8 +341,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		{
 			filters: { $q: 'REPOSITORY::' },
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 			},
 			expectedCount: 20
@@ -383,14 +356,17 @@ const filtersTests: [string, FilterTest<Data>][] = [
 				birth: { $between: [new Date('2021-01-01'), new Date('2021-01-10')] }
 			},
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
 					expect(item.id).toBeGreaterThan(2);
 					expect(item.name).toMatch(/^Repository::/);
-					expect(item.birth.getTime()).toBeGreaterThanOrEqual(new Date('2021-01-01').getTime());
-					expect(item.birth.getTime()).toBeLessThanOrEqual(new Date('2021-01-10').getTime());
+					expect(item.birth.getTime()).toBeGreaterThanOrEqual(
+						new Date('2021-01-01').getTime()
+					);
+					expect(item.birth.getTime()).toBeLessThanOrEqual(
+						new Date('2021-01-10').getTime()
+					);
 				});
 			},
 			expectedCount: 8
@@ -406,8 +382,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 				name: { $like: 'Repository::' }
 			},
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
 					expect(item.id).toBeGreaterThan(2);
@@ -425,8 +400,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 				id: { $lte: 5 }
 			},
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
 					expect(item.id).toBeLessThanOrEqual(5);
@@ -442,8 +416,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 				n: null
 			},
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
 					expect(item.n).toBeNull();
@@ -474,8 +447,7 @@ const filtersTests: [string, FilterTest<Data>][] = [
 				}
 			},
 			validator: (data, expectedCount) => {
-				if (!Array.isArray(data))
-					throw new Error('Data should be an array');
+				if (!Array.isArray(data)) throw new Error('Data should be an array');
 				expect(data).toHaveLength(expectedCount);
 				data.forEach((item) => {
 					expect(item.age).toBeDefined();
@@ -485,7 +457,6 @@ const filtersTests: [string, FilterTest<Data>][] = [
 		}
 	]
 ];
-
 
 const repository = new Repository<Data>(knexInstance, table);
 
@@ -608,20 +579,16 @@ describe('Repository', () => {
 			}
 		});
 
-		test.each(filtersTests)(
-			'should correctly apply filter <%s>',
-			async (_, item) => {
-				const stream = repository.findStream<Data>({
-					filters: item.filters
-				}) as AsyncIterable<Data>;
+		test.each(filtersTests)('should correctly apply filter <%s>', async (_, item) => {
+			const stream = repository.findStream<Data>({
+				filters: item.filters
+			}) as AsyncIterable<Data>;
 
-				const res = [];
+			const res = [];
 
-				for await (const data of stream)
-					res.push(data);
-				item.validator(res, item.expectedCount);
-			}
-		);
+			for await (const data of stream) res.push(data);
+			item.validator(res, item.expectedCount);
+		});
 
 		test('should allow async iteration over the data with a transform function', async () => {
 			const stream = repository.findStream<Data>({
@@ -647,13 +614,14 @@ describe('Repository', () => {
 				}
 			});
 			try {
-				for await (const data of stream)
-					expect(data).not.toBeDefined();
+				for await (const data of stream) expect(data).not.toBeDefined();
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
+				);
 			}
 		});
 
@@ -668,7 +636,9 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
+				);
 				done();
 			});
 		});
@@ -769,15 +739,12 @@ describe('Repository', () => {
 			});
 		});
 
-		test.each(filtersTests)(
-			'should correctly apply filter <%s>',
-			async (_, item) => {
-				const data = await repository.find<Data>({
-					filters: item.filters
-				});
-				item.validator(data, item.expectedCount);
-			}
-		);
+		test.each(filtersTests)('should correctly apply filter <%s>', async (_, item) => {
+			const data = await repository.find<Data>({
+				filters: item.filters
+			});
+			item.validator(data, item.expectedCount);
+		});
 
 		test('should throw an error when the query is invalid', async () => {
 			try {
@@ -791,7 +758,9 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
+				);
 			}
 		});
 
@@ -807,7 +776,9 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(HttpError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toBe(DATABASE_ERROR_KEYS.MSSQL_NO_RESULT);
+				expect((error as { message: string }).message).toBe(
+					DATABASE_ERROR_KEYS.MSSQL_NO_RESULT
+				);
 			}
 		});
 
@@ -854,15 +825,12 @@ describe('Repository', () => {
 			expect(count).toBe(20);
 		});
 
-		test.each(filtersTests)(
-			'should correctly apply filter <%s>',
-			async (_, item) => {
-				const data = await repository.count<Data>({
-					filters: item.filters
-				});
-				expect(data).toBe(item.expectedCount);
-			}
-		);
+		test.each(filtersTests)('should correctly apply filter <%s>', async (_, item) => {
+			const data = await repository.count<Data>({
+				filters: item.filters
+			});
+			expect(data).toBe(item.expectedCount);
+		});
 
 		test('should throw an error when the query is invalid', async () => {
 			try {
@@ -876,18 +844,34 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
+				);
 			}
 		});
 	});
 
 	describe('insert', () => {
+		test('should something when the data is empty', async () => {
+			try {
+				await repository.insert({} as unknown as Data);
+			} catch (error) {
+				expect(error).toBeInstanceOf(Error);
+				expect(error).toBeInstanceOf(InternalError);
+				expect(error).toHaveProperty('message');
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
+				);
+			}
+		});
+
 		test('should insert a new data', async () => {
 			const data = {
 				name: 'Repository::insert',
 				age: 21,
 				birth: new Date('2021-01-21'),
-				bool: true
+				bool: true,
+				n: null
 			};
 			const items: Data[] = await repository.insert(data);
 			expect(items).toHaveLength(1);
@@ -967,7 +951,9 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_IDENTITY_INSERT_NOT_ALLOWED
+				);
 			}
 		});
 	});
@@ -1097,18 +1083,23 @@ describe('Repository', () => {
 
 		test('should throw an error when the data is invalid', async () => {
 			try {
-				await repository.update({
-					id: 1
-				}, {
-					filters: {
-						id: -1
+				await repository.update(
+					{
+						id: 1
+					},
+					{
+						filters: {
+							id: -1
+						}
 					}
-				});
+				);
 			} catch (error) {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_CANNOT_UPDATE_IDENTITY_COLUMN
+				);
 			}
 		});
 	});
@@ -1184,7 +1175,9 @@ describe('Repository', () => {
 				expect(error).toBeInstanceOf(Error);
 				expect(error).toBeInstanceOf(InternalError);
 				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND);
+				expect((error as { message: string }).message).toContain(
+					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
+				);
 			}
 		});
 	});

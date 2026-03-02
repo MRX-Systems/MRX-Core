@@ -41,7 +41,6 @@
 		"./modules/jwt/utils": "./dist/modules/jwt/utils/index.js",
 		"./modules/kv-store/bun-redis": "./dist/modules/kv-store/adapters/bun-redis/index.js",
 		"./modules/kv-store/enums": "./dist/modules/kv-store/enums/index.js",
-		"./modules/kv-store/ioredis": "./dist/modules/kv-store/adapters/ioredis/index.js",
 		"./modules/kv-store/memory": "./dist/modules/kv-store/adapters/memory/index.js",
 		"./modules/kv-store/types": "./dist/modules/kv-store/types/index.js",
 		"./modules/logger": "./dist/modules/logger/index.js",
@@ -85,10 +84,9 @@
 		"@stylistic/eslint-plugin": "^5.7.1",
 		"@types/bun": "^1.3.7",
 		"@types/nodemailer": "^7.0.9",
-		"elysia": "1.4.26",
+		"elysia": "1.4.27",
 		"eslint": "^10.0.2",
-		"globals": "^17.2.0",
-		"ioredis": "^5.9.2",
+		"globals": "^17.4.0",
 		"jose": "^6.1.3",
 		"knex": "^3.1.0",
 		"mssql": "^12.2.0",
@@ -98,7 +96,6 @@
 	"peerDependencies": {
 		"@sinclair/typebox": "0.34.48",
 		"elysia": "^1.4.26",
-		"ioredis": "^5.9.2",
 		"jose": "^6.1.3",
 		"knex": "^3.1.0",
 		"mssql": "^12.2.0",
@@ -110,9 +107,6 @@
 			"optional": true
 		},
 		"elysia": {
-			"optional": true
-		},
-		"ioredis": {
 			"optional": true
 		},
 		"jose": {
