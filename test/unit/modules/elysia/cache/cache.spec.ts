@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'bun:test';
 import { Elysia } from 'elysia';
 
-import { cache } from '#/modules/elysia/cache/cache';
+import { cachePlugin } from '#/modules/elysia/cache/cache';
 import { MemoryStore } from '#/modules/kv-store/adapters/memory/memory-store';
 
 describe.concurrent('Cache Module', () => {
 	test('should return correct cache headers for cache hit', async () => {
 		const store = new MemoryStore();
-		const app = new Elysia().use(cache(store)).get('/test', () => 'cached content', {
+		const app = new Elysia().use(cachePlugin(store)).get('/test', () => 'cached content', {
 			isCached: {
 				ttl: 10
 			}
@@ -34,7 +34,7 @@ describe.concurrent('Cache Module', () => {
 
 	test('should cache with custom prefix', async () => {
 		const store = new MemoryStore();
-		const app = new Elysia().use(cache(store)).get('/test', () => 'cached', {
+		const app = new Elysia().use(cachePlugin(store)).get('/test', () => 'cached', {
 			isCached: {
 				ttl: 10,
 				prefix: 'custom:'
@@ -57,7 +57,7 @@ describe.concurrent('Cache Module', () => {
 		async () => {
 			const store = new MemoryStore();
 			const window = 2; // 2 seconds
-			const app = new Elysia().use(cache(store)).get('/test', () => 'cached', {
+			const app = new Elysia().use(cachePlugin(store)).get('/test', () => 'cached', {
 				isCached: {
 					ttl: window
 				}
@@ -84,7 +84,7 @@ describe.concurrent('Cache Module', () => {
 	test('should not cache routes without isCached', async () => {
 		const store = new MemoryStore();
 		const app = new Elysia()
-			.use(cache(store))
+			.use(cachePlugin(store))
 			.get('/cached', () => 'cached', { isCached: { ttl: 10 } })
 			.get('/not-cached', () => 'not cached');
 
@@ -102,7 +102,7 @@ describe.concurrent('Cache Module', () => {
 
 	test('should handle different cache keys for different query parameters', async () => {
 		const store = new MemoryStore();
-		const app = new Elysia().use(cache(store)).get('/test', () => 'result', {
+		const app = new Elysia().use(cachePlugin(store)).get('/test', () => 'result', {
 			isCached: {
 				ttl: 10
 			}
@@ -127,7 +127,7 @@ describe.concurrent('Cache Module', () => {
 	test('should handle global cache with guard', async () => {
 		const store = new MemoryStore();
 		const app = new Elysia()
-			.use(cache(store))
+			.use(cachePlugin(store))
 			.guard({
 				isCached: {
 					ttl: 10
@@ -159,7 +159,7 @@ describe.concurrent('Cache Module', () => {
 			const store = new MemoryStore();
 			const window = 2;
 			const app = new Elysia()
-				.use(cache(store))
+				.use(cachePlugin(store))
 				.guard({
 					isCached: {
 						ttl: 10
@@ -197,7 +197,7 @@ describe.concurrent('Cache Module', () => {
 	test('should handle Response objects correctly', async () => {
 		const store = new MemoryStore();
 		const app = new Elysia()
-			.use(cache(store))
+			.use(cachePlugin(store))
 			.get('/test', () => new Response('response body', { status: 200 }), {
 				isCached: {
 					ttl: 10
@@ -220,7 +220,7 @@ describe.concurrent('Cache Module', () => {
 	test('should handle different HTTP methods separately', async () => {
 		const store = new MemoryStore();
 		const app = new Elysia()
-			.use(cache(store))
+			.use(cachePlugin(store))
 			.get('/test', () => 'GET response', { isCached: { ttl: 10 } })
 			.post('/test', () => 'POST response', { isCached: { ttl: 10 } });
 

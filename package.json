@@ -31,8 +31,6 @@
 		"./modules/elysia/db-resolver/enums": "./dist/modules/elysia/db-resolver/enums/index.js",
 		"./modules/elysia/error": "./dist/modules/elysia/error/index.js",
 		"./modules/elysia/error/enums": "./dist/modules/elysia/error/enums/index.js",
-		"./modules/elysia/microservice": "./dist/modules/elysia/microservice/index.js",
-		"./modules/elysia/microservice/enums": "./dist/modules/elysia/microservice/enums/index.js",
 		"./modules/elysia/rate-limit": "./dist/modules/elysia/rate-limit/index.js",
 		"./modules/elysia/rate-limit/enums": "./dist/modules/elysia/rate-limit/enums/index.js",
 		"./modules/elysia/rate-limit/types": "./dist/modules/elysia/rate-limit/types/index.js",
@@ -120,63 +118,6 @@
 		},
 		"nodemailer": {
 			"optional": true
-		}
-	},
-	"changelog": {
-		"types": {
-			"feat": {
-				"title": "🚀 Enhancements",
-				"semver": "minor"
-			},
-			"fix": {
-				"title": "🔧 Fixes",
-				"semver": "patch"
-			},
-			"perf": {
-				"title": "⚡ Performance",
-				"semver": "patch"
-			},
-			"refactor": {
-				"title": "🧹 Refactors",
-				"semver": "patch"
-			},
-			"docs": {
-				"title": "📖 Documentation",
-				"semver": "patch"
-			},
-			"build": {
-				"title": "📦 Build",
-				"semver": "patch"
-			},
-			"types": {
-				"title": "🌊 Types",
-				"semver": "patch"
-			},
-			"chore": {
-				"title": "🦉 Chore",
-				"semver": "patch"
-			},
-			"examples": {
-				"title": "🏀 Examples",
-				"semver": "patch"
-			},
-			"test": {
-				"title": "🧪 Tests",
-				"semver": "patch"
-			},
-			"style": {
-				"title": "🎨 Styles",
-				"semver": "patch"
-			},
-			"ci": {
-				"title": "🤖 CI",
-				"semver": "patch"
-			}
-		},
-		"templates": {
-			"commitMessage": "chore(🦉): v{{newVersion}}",
-			"tagMessage": "v{{newVersion}}",
-			"tagBody": "v{{newVersion}}"
 		}
 	}
 }

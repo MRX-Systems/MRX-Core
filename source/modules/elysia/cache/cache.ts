@@ -6,7 +6,7 @@ import type { CacheItem } from './types/cache-item';
 import type { CacheOptions } from './types/cache-options';
 import { generateCacheKey } from './utils/generate-cache-key';
 
-export const cache = (
+export const cachePlugin = (
 	store: KvStore = new MemoryStore()
 ): Elysia<
 	'',

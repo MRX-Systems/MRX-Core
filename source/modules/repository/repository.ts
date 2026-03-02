@@ -45,6 +45,12 @@ const _operators: Record<string, OperatorFn> = {
 	$isNull: (q, c, v) => (v ? q.whereNull(c) : q.whereNotNull(c))
 };
 
+const _isPlainEmptyObject = (val: unknown): boolean =>
+	typeof val === 'object' &&
+	val !== null &&
+	Object.getPrototypeOf(val) === Object.prototype &&
+	Object.keys(val).length === 0;
+
 /**
  * Valid operator keys for complex query detection.
  * Using a Set for O(1) lookup performance.
@@ -406,6 +412,8 @@ export class Repository<TModel = Record<string, unknown>> {
 		data: NoInfer<KModel> | NoInfer<KModel>[],
 		options?: Omit<QueryOptions<KModel>, 'filters' | 'orderBy'>
 	): Promise<Required<KModel>[]> {
+		if (Array.isArray(data) ? data.length === 0 : _isPlainEmptyObject(data))
+			return Promise.resolve([] as Required<KModel>[]);
 		const query = this.knex(this.table.name)
 			.insert(data)
 			.returning(options?.selectedFields ?? '*');
@@ -458,6 +466,7 @@ export class Repository<TModel = Record<string, unknown>> {
 		options: Omit<QueryOptionsExtendPagination<KModel>, 'orderBy' | 'filters'> &
 			Required<Pick<QueryOptions<KModel>, 'filters'>>
 	): Promise<Required<KModel>[]> {
+		if (_isPlainEmptyObject(data)) return Promise.resolve([] as Required<KModel>[]);
 		const query = this.knex(this.table.name).update(data);
 
 		this._applyQueryOptions<KModel>(query, options);

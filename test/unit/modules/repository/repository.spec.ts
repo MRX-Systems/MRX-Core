@@ -852,17 +852,16 @@ describe('Repository', () => {
 	});
 
 	describe('insert', () => {
-		test('should something when the data is empty', async () => {
-			try {
-				await repository.insert({} as unknown as Data);
-			} catch (error) {
-				expect(error).toBeInstanceOf(Error);
-				expect(error).toBeInstanceOf(InternalError);
-				expect(error).toHaveProperty('message');
-				expect((error as { message: string }).message).toContain(
-					DATABASE_ERROR_KEYS.MSSQL_DATABASE_COLUMN_NOT_FOUND
-				);
-			}
+		test('should return an empty array when inserting an empty array', async () => {
+			const items = await repository.insert([]);
+			expect(items).toBeInstanceOf(Array);
+			expect(items).toHaveLength(0);
+		});
+
+		test('should return an array when inserting an empty object', async () => {
+			const items = await repository.insert({} as Data);
+			expect(items).toBeInstanceOf(Array);
+			expect(items).toHaveLength(0);
 		});
 
 		test('should insert a new data', async () => {

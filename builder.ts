@@ -45,10 +45,6 @@ await Bun.build({
 		'./source/modules/elysia/error/index.ts',
 		'./source/modules/elysia/error/enums/index.ts',
 
-		// microservice
-		'./source/modules/elysia/microservice/index.ts',
-		'./source/modules/elysia/microservice/enums/index.ts',
-
 		// rateLimit
 		'./source/modules/elysia/rate-limit/index.ts',
 		'./source/modules/elysia/rate-limit/enums/index.ts',
