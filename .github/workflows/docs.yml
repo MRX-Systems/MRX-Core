@@ -1,0 +1,33 @@
+name: docs
+run-name: "[Docs] by ${{ github.actor }}"
+
+on:
+  workflow_dispatch:
+
+# Required secrets:
+# - SSH_KEY: SSH key for repository access
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    name: Generate & Deploy Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - name: Setup Bun Project
+        uses: ./.github/actions/setup-bun-project
+
+      - name: Generate Docs
+        run: bun run docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

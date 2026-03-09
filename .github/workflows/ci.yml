@@ -1,0 +1,31 @@
+name: ci
+run-name: "[CI] ${{ github.head_ref || github.ref_name }} by ${{ github.actor }}"
+
+on:
+  pull_request:
+    branches: ["*"]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: Lint
+            script: lint:github
+          - name: Build
+            script: build
+          - name: Test
+            script: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Bun Project
+        uses: ./.github/actions/setup-bun-project
+
+      - name: ${{ matrix.name }}
+        run: bun run ${{ matrix.script }}

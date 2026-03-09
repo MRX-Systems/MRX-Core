@@ -1,0 +1,262 @@
+name: deploy
+run-name: "[Deploy] ${{ inputs.bump }} (${{ inputs.channel }}) by ${{ github.actor }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      channel:
+        description: "Release channel"
+        required: true
+        type: choice
+        options:
+          - stable
+          - canary
+          - alpha
+
+# Required secrets:
+# - SSH_KEY: SSH key for repository access
+# - GPG_KEY: GPG key for signing commits/tags
+# - GIT_EMAIL: Email for Git commits
+# - NPM_TOKEN: NPM token for publishing
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  # ─── Validate package metadata ─────────────────────
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    outputs:
+      pkg-name: ${{ steps.info.outputs.name }}
+      pkg-version: ${{ steps.info.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - name: Read package info
+        id: info
+        run: |
+          if [ ! -f "package.json" ]; then
+            echo "::error::package.json not found at repository root"
+            exit 1
+          fi
+          echo "name=$(jq -r .name package.json)" >> "$GITHUB_OUTPUT"
+          echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+
+  # ─── CI checks (lint, build, test in parallel) ─────
+  ci:
+    name: CI — ${{ matrix.check }}
+    needs: validate
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        check: [lint, build, test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - name: Setup Bun Project
+        uses: ./.github/actions/setup-bun-project
+
+      - name: ${{ matrix.check }}
+        run: bun run ${{ matrix.check }}
+
+  # ─── Release ────────────────────────────────────────
+  release:
+    name: Release
+    needs: [validate, ci]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - name: Setup Bun Project
+        uses: ./.github/actions/setup-bun-project
+
+      - name: Setup Node (npm publish)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Setup Git
+        uses: ./.github/actions/setup-git
+        with:
+          gpg-key: ${{ secrets.GPG_KEY }}
+          git-email: ${{ secrets.GIT_EMAIL }}
+
+      - name: Bump version
+        id: version
+        run: |
+          CURRENT=$(jq -r .version package.json)
+
+          # Split current version (strip any existing prerelease suffix)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT%%-*}"
+
+          case "${{ inputs.bump }}" in
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
+          esac
+
+          BASE="${MAJOR}.${MINOR}.${PATCH}"
+
+          case "${{ inputs.channel }}" in
+            stable)
+              VERSION="${BASE}"
+              NPM_TAG="latest"
+              PRERELEASE="false"
+              ;;
+            canary|alpha)
+              SHORT_SHA="${GITHUB_SHA:0:7}"
+              DATE=$(date +%Y%m%d)
+              VERSION="${BASE}-${{ inputs.channel }}.${DATE}.${SHORT_SHA}"
+              NPM_TAG="${{ inputs.channel }}"
+              PRERELEASE="true"
+              ;;
+          esac
+
+          # Update package.json
+          jq --arg v "$VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
+
+          PKG_NAME=$(jq -r .name package.json)
+          TAG="${PKG_NAME}@${VERSION}"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "npm-tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "pkg-name=$PKG_NAME" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Version Bump"
+            echo "| Field | Value |"
+            echo "|-------|-------|"
+            echo "| Package | $PKG_NAME |"
+            echo "| Previous | $CURRENT |"
+            echo "| New | $VERSION |"
+            echo "| Tag | $TAG |"
+            echo "| NPM Tag | $NPM_TAG |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check version not already published
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PKG_NAME="${{ steps.version.outputs.pkg-name }}"
+          if npm view "${PKG_NAME}@${VERSION}" version 2>/dev/null; then
+            echo "::error::Version ${VERSION} of ${PKG_NAME} already exists on npm"
+            exit 1
+          fi
+
+      - name: Build package
+        run: bun run build
+
+      - name: Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --tag ${{ steps.version.outputs.npm-tag }} --provenance
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PKG_NAME="${{ steps.version.outputs.pkg-name }}"
+
+          # Find last tag for this package
+          LAST_TAG=$(git tag --list "${PKG_NAME}@*" --sort=-version:refname | head -n1 || true)
+
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%s (%h)")
+          else
+            COMMITS=$(git log --pretty=format:"%s (%h)")
+          fi
+
+          if [ -z "$COMMITS" ]; then
+            echo "- Release ${{ steps.version.outputs.version }}" > /tmp/changelog.md
+          else
+            # Group commits by conventional commit type
+            FEAT="" FIX="" PERF="" REFACTOR="" DOCS="" TEST="" BUILD="" STYLE="" CI="" CHORE="" OTHER=""
+
+            while IFS= read -r line; do
+              case "$line" in
+                feat*)    FEAT="${FEAT}\n- ${line}" ;;
+                fix*)     FIX="${FIX}\n- ${line}" ;;
+                perf*)    PERF="${PERF}\n- ${line}" ;;
+                refactor*) REFACTOR="${REFACTOR}\n- ${line}" ;;
+                docs*)    DOCS="${DOCS}\n- ${line}" ;;
+                test*)    TEST="${TEST}\n- ${line}" ;;
+                build*)   BUILD="${BUILD}\n- ${line}" ;;
+                style*)   STYLE="${STYLE}\n- ${line}" ;;
+                ci*)      CI="${CI}\n- ${line}" ;;
+                chore*)   CHORE="${CHORE}\n- ${line}" ;;
+                *)        OTHER="${OTHER}\n- ${line}" ;;
+              esac
+            done <<< "$COMMITS"
+
+            {
+              [ -n "$FEAT" ]     && printf "### 🚀 Features\n%b\n\n" "$FEAT"
+              [ -n "$FIX" ]      && printf "### 🐛 Bug Fixes\n%b\n\n" "$FIX"
+              [ -n "$PERF" ]     && printf "### ⚡ Performance\n%b\n\n" "$PERF"
+              [ -n "$REFACTOR" ] && printf "### ♻️ Refactors\n%b\n\n" "$REFACTOR"
+              [ -n "$DOCS" ]     && printf "### 📚 Documentation\n%b\n\n" "$DOCS"
+              [ -n "$TEST" ]     && printf "### 🧪 Tests\n%b\n\n" "$TEST"
+              [ -n "$BUILD" ]    && printf "### 🏗️ Build\n%b\n\n" "$BUILD"
+              [ -n "$STYLE" ]    && printf "### 🎨 Style\n%b\n\n" "$STYLE"
+              [ -n "$CI" ]       && printf "### 🔧 CI\n%b\n\n" "$CI"
+              [ -n "$CHORE" ]    && printf "### 🧹 Chores\n%b\n\n" "$CHORE"
+              [ -n "$OTHER" ]    && printf "### 📝 Other\n%b\n\n" "$OTHER"
+            } > /tmp/changelog.md
+          fi
+
+      - name: Commit version bump
+        if: inputs.channel == 'stable'
+        run: |
+          git add package.json
+          git commit -m "chore(release): ${{ steps.version.outputs.version }}"
+          git push origin HEAD
+
+      - name: Create & push tag
+        run: |
+          git tag -a "${{ steps.version.outputs.tag }}" -m "Release ${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PRERELEASE_FLAG=""
+          if [ "${{ steps.version.outputs.prerelease }}" = "true" ]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes-file /tmp/changelog.md \
+            $PRERELEASE_FLAG
+
+      - name: Summary
+        run: |
+          NPM_URL="https://www.npmjs.com/package/${{ steps.version.outputs.pkg-name }}/v/${{ steps.version.outputs.version }}"
+          {
+            echo "### Publish"
+            echo "| Status | NPM |"
+            echo "|--------|-----|"
+            echo "| ✅ Published | [View on npm]($NPM_URL) |"
+          } >> "$GITHUB_STEP_SUMMARY"
