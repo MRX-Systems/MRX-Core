@@ -28,4 +28,14 @@ jobs:
         uses: ./.github/actions/setup-bun-project
 
       - name: ${{ matrix.name }}
+        if: matrix.script != 'test'
         run: bun run ${{ matrix.script }}
+
+      - name: ${{ matrix.name }}
+        if: matrix.script == 'test'
+        run: bun run ${{ matrix.script }}
+        env:
+          MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+          MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+          MSSQL_USER: ${{ secrets.MSSQL_USER }}
+          MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
