@@ -74,7 +74,17 @@ jobs:
         uses: ./.github/actions/setup-bun-project
 
       - name: ${{ matrix.check }}
+        if: matrix.check != 'test'
         run: bun run ${{ matrix.check }}
+
+      - name: ${{ matrix.check }}
+        if: matrix.check == 'test'
+        run: bun run ${{ matrix.check }}
+        env:
+          MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+          MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+          MSSQL_USER: ${{ secrets.MSSQL_USER }}
+          MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
 
   # ─── Release ────────────────────────────────────────
   release:
