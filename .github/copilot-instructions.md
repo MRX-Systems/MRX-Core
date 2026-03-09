@@ -21,21 +21,6 @@ applyTo: '**'
 8. Export Pattern: Each directory has index.ts re-exporting public items; types exported in types/index.ts
 9. Function style: Class methods use standard method syntax; helpers/callbacks/HOFs prefer arrow functions unless function syntax is required
 
-## Zig Conventions
-1. Naming: camelCase for functions/variables, PascalCase for types, SCREAMING_CASE for constants
-2. Explicit allocators; errdefer for cleanup; error unions !T
-3. Prefer comptime; import only needed std modules; /// docs
-
-## C Conventions
-1. Naming: snake_case for functions/variables, SCREAMING_CASE for macros
-2. Always check return values; const everywhere; #define/enum for constants
-3. Free all memory; size_t for sizes; header guards or #pragma once
-
-## C++ Conventions
-1. Naming: camelCase or snake_case (consistent), PascalCase for types
-2. RAII + smart pointers; const/constexpr/noexcept; std:: containers
-3. References when null invalid; -Wall -Wextra -Werror; Doxygen docs
-
 ## Contribution Principles
 1. Follow language-specific best practices and idiomatic patterns
 2. Maintain existing code structure and modular organization
