@@ -1,41 +1,36 @@
 name: ci
-run-name: "[CI] ${{ github.head_ref || github.ref_name }} by ${{ github.actor }}"
+run-name: '[CI] ${{ github.head_ref || github.ref_name }} by ${{ github.actor }}'
 
 on:
-  pull_request:
-    branches: ["*"]
-  workflow_dispatch:
+    pull_reqflatpak run ca.edestcroix.Recordboxuest:
+        branches: ['*']
+    workflow_dispatch:
 
 jobs:
-  check:
-    name: ${{ matrix.name }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - name: Lint
-            script: lint
-          - name: Build
-            script: build
-          - name: Test
-            script: test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+    # ─── Build, Lint & Test in parallel ────────────────
+    check:
+        name: ${{ matrix.check }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+            matrix:
+                check: [build, lint:github, test]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
 
-      - name: Setup Bun Project
-        uses: ./.github/actions/setup-bun-project
+            - name: Setup Bun Project
+              uses: ./.github/actions/setup-bun-project
 
-      - name: ${{ matrix.name }}
-        if: matrix.script != 'test'
-        run: bun run ${{ matrix.script }}
+            - name: ${{ matrix.check }}
+              if: matrix.check != 'test'
+              run: bun run ${{ matrix.check }}
 
-      - name: ${{ matrix.name }}
-        if: matrix.script == 'test'
-        run: bun run ${{ matrix.script }}
-        env:
-          MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
-          MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
-          MSSQL_USER: ${{ secrets.MSSQL_USER }}
-          MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
+            - name: ${{ matrix.check }}
+              if: matrix.check == 'test'
+              run: bun run ${{ matrix.check }}
+              env:
+                  MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+                  MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+                  MSSQL_USER: ${{ secrets.MSSQL_USER }}
+                  MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
