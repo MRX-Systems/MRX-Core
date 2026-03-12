@@ -16,7 +16,7 @@ jobs:
       contents: read # Required for checkout
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Bun Project
         uses: ./.github/actions/setup-bun-project

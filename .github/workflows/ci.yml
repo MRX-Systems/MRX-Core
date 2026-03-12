@@ -1,0 +1,36 @@
+name: ci
+run-name: '[CI] ${{ github.head_ref || github.ref_name }} by ${{ github.actor }}'
+
+on:
+    pull_reqflatpak run ca.edestcroix.Recordboxuest:
+        branches: ['*']
+    workflow_dispatch:
+
+jobs:
+    # ─── Build, Lint & Test in parallel ────────────────
+    check:
+        name: ${{ matrix.check }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+            matrix:
+                check: [build, lint:github, test]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup Bun Project
+              uses: ./.github/actions/setup-bun-project
+
+            - name: ${{ matrix.check }}
+              if: matrix.check != 'test'
+              run: bun run ${{ matrix.check }}
+
+            - name: ${{ matrix.check }}
+              if: matrix.check == 'test'
+              run: bun run ${{ matrix.check }}
+              env:
+                  MSSQL_HOST: ${{ secrets.MSSQL_HOST }}
+                  MSSQL_DATABASE: ${{ secrets.MSSQL_DATABASE }}
+                  MSSQL_USER: ${{ secrets.MSSQL_USER }}
+                  MSSQL_PASSWORD: ${{ secrets.MSSQL_PASSWORD }}
