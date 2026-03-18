@@ -61,7 +61,7 @@ function find<T>(
         databaseName,
         primaryKey
     );
-    return crudRepository.find(search, {}, { ...pagination, throwIfNoResult: true }) as Promise<Partial<T>[] | void>;
+    return crudRepository.find(search, {}, { ...pagination }) as Promise<Partial<T>[] | void>;
 }
 
 /**
