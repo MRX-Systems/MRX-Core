@@ -1,4 +1,4 @@
-import type { BasaltLogger } from '@basalt-lab/basalt-logger';
+import type { BasaltLogger } from '@basalt.lab/basalt-logger';
 
 import { AbstractStoreCreator } from './abstractStore.creator.ts';
 
@@ -6,54 +6,54 @@ import { AbstractStoreCreator } from './abstractStore.creator.ts';
  * Options for the DragonFly Store
  */
 export interface DragonFlyStoreOptions {
-    /**
-     * The host of the store
-     * default: localhost
-     */
-    host?: string;
-    /**
-     * The port of the store
-     * default: 6379
-     */
-    port?: number;
-    /**
-     * The password of the store
-     */
-    password?: string;
-    /**
-     * The username of the store
-     */
-    username?: string;
-    /**
-     * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
-     */
-    log?: BasaltLogger;
+	/**
+	 * The host of the store
+	 * default: localhost
+	 */
+	host?: string;
+	/**
+	 * The port of the store
+	 * default: 6379
+	 */
+	port?: number;
+	/**
+	 * The password of the store
+	 */
+	password?: string;
+	/**
+	 * The username of the store
+	 */
+	username?: string;
+	/**
+	 * Instance of BasaltLogger allowing to log messages in one or more strategies. ({@link BasaltLogger})
+	 */
+	log?: BasaltLogger;
 
-    /**
-     * Use TLS for the connection
-     */
-    tls?: boolean;
+	/**
+	 * Use TLS for the connection
+	 */
+	tls?: boolean;
 }
 
 /**
  * DragonFly Creator is a concrete creator for DragonFly Store (Factory Pattern) extending ({@link AbstractStoreCreator})
  */
 export class DragonFlyCreator extends AbstractStoreCreator {
-    /**
-     * Constructor of the DragonFlyCreator class
-     *
-     * @param options - The options of the store ({@link DragonFlyStoreOptions})
-     */
-    public constructor(options: DragonFlyStoreOptions) {
-        super({
-            config: {
-                host: options.host ?? 'localhost',
-                port: options.port ?? 6379,
-                ...(options.password && { password: options.password }),
-                ...(options.username && { username: options.username }),
-                ...(options.tls && { tls: {} })
-            },
-            log: options.log
-        });
-    }
+	/**
+	 * Constructor of the DragonFlyCreator class
+	 *
+	 * @param options - The options of the store ({@link DragonFlyStoreOptions})
+	 */
+	public constructor(options: DragonFlyStoreOptions) {
+		super({
+			config: {
+				host: options.host ?? 'localhost',
+				port: options.port ?? 6379,
+				...(options.password && { password: options.password }),
+				...(options.username && { username: options.username }),
+				...(options.tls && { tls: {} })
+			},
+			log: options.log
+		});
+	}
 }
