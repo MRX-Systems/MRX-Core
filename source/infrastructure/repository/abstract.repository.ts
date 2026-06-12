@@ -7,6 +7,7 @@ import type { Transaction } from '#/common/lib/optional/knex/knex.lib.ts';
 import type { ColumnsSelection } from '#/common/type/data/infrastructure/repository/columnsSelection.data.ts';
 import type { SearchModel } from '#/common/type/data/infrastructure/repository/searchModel.data.ts';
 import type { WhereClause } from '#/common/type/data/infrastructure/repository/whereClause.data.ts';
+import { isDateString } from '#/common/util/is-date-string.ts';
 import { FactoryDatabase } from '#/infrastructure/database/factory.database.ts';
 
 /**
@@ -163,6 +164,51 @@ export const mssqlErrorCodes: Record<number, { statusCode: number, messageKey: s
         messageKey: ErrorKeys.DATABASE_PERMISSION_DENIED
     }
 };
+
+type OperatorFn = (query: Knex.QueryBuilder, column: string, value: unknown) => Knex.QueryBuilder;
+
+const _operators: Record<string, OperatorFn> = {
+    $eq: (q, c, v) => q.where(c, v as string | number | boolean | Date),
+    $neq: (q, c, v) => q.whereNot(c, v as string | number | boolean | Date),
+
+    $lt: (q, c, v) => q.where(c, '<', v as string | number | Date),
+    $lte: (q, c, v) => q.where(c, '<=', v as string | number | Date),
+
+    $gt: (q, c, v) => q.where(c, '>', v as string | number | Date),
+    $gte: (q, c, v) => q.where(c, '>=', v as string | number | Date),
+
+    $in: (q, c, v) => q.whereIn(c, v as string[] | number[] | Date[]),
+    $nin: (q, c, v) => q.whereNotIn(c, v as string[] | number[] | Date[]),
+
+    $isNull: (q, c) => (q.whereNull(c)),
+    $isNotNull: (q, c) => (q.whereNotNull(c)),
+
+    $match: (q, c, v) => {
+        const likeValue = `%${v}%`;
+        if (isDateString(v))
+            return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) LIKE ?`, [likeValue]);
+        return q.where(c, 'LIKE', likeValue);
+    }
+};
+
+/**
+ * Valid operator keys for complex query detection.
+ * Using a Set for O(1) lookup performance.
+ */
+const _validOperatorKeys = new Set<string>([
+    '$eq',
+    '$neq',
+    '$lt',
+    '$lte',
+    '$gt',
+    '$gte',
+    '$in',
+    '$nin',
+    '$isNull',
+    '$isNotNull',
+    '$match'
+]);
+
 
 /**
  * Abstract Repository Interface
@@ -492,18 +538,44 @@ export abstract class AbstractRepository<T> {
      *
      * @returns The query applied with the search options. ({@link Knex.QueryBuilder})
      */
-    protected _applySearch<K>(
+    protected _applySearch<KModel>(
         query: Knex.QueryBuilder,
-        search?: SearchModel<K> | SearchModel<K>[]
+        search?: SearchModel<KModel> | SearchModel<KModel>[]
     ): Knex.QueryBuilder {
         if (!search) return query;
-        if (Array.isArray(search))
-            return search.reduce(
-                (builder, search) => this._buildSearchQuery(builder, search),
-                query
-            );
 
-        return this._buildSearchQuery(query, search);
+        const processing = (
+            query: Knex.QueryBuilder,
+            searchItem: SearchModel<KModel>
+        ): Knex.QueryBuilder => {
+            for (const key in searchItem) {
+                const prop = searchItem[key as keyof SearchModel<KModel>];
+                if (key === '$q' && prop !== null && (typeof prop === 'string' || typeof prop === 'number'))
+                    query = query.where((q) => {
+                        for (const column of this._tableColumns)
+                            q.orWhere(column, 'LIKE', `%${prop}%`);
+                    });
+                else if (this._isComplexQuery(prop))
+                    for (const operatorKey in prop as WhereClause) {
+                        const operatorFn = _operators[operatorKey];
+                        if (operatorFn)
+                            operatorFn(
+                                query,
+                                key,
+                                (prop as WhereClause)[operatorKey as keyof WhereClause]
+                            );
+                    }
+                else
+                    query.where(key, prop as string | number | boolean | Date);
+            }
+            return query;
+        };
+
+        if (Array.isArray(search))
+            return search.reduce((acc, item) => acc.orWhere((q) => {
+                this._applySearch(q, item);
+            }), query);
+        return processing(query, search);
     }
 
     /**
@@ -572,141 +644,6 @@ export abstract class AbstractRepository<T> {
     }
 
     /**
-     * Checks if the given string is potentially a date
-     *
-     * @param date - The string to be checked if it is a date or not
-     *
-     * @returns A boolean value to determine if the string is a date or not
-     */
-    private _isDate(date: string): boolean {
-        return new Date(date).toString() !== 'Invalid Date';
-    }
-
-    /**
-     * Builds and applies a complex query to the given query builder.
-     *
-     * This method iterates over each key-value pair in the `searchItem` object and applies the corresponding filter conditions
-     * to the SQL query. If the value associated with a key is a complex object (e.g., `{ $eq: 10, $in: [1, 2, 3] }`),
-     * it applies operators such as `$in`, `$eq`, `$lt`, etc. to build a more sophisticated query.
-     * For a simple value, it applies a `WHERE` or `OR WHERE` condition depending on the context.
-     *
-     * Supported operators include:
-     * - `$in`: equivalent to SQL `IN`.
-     * - `$nin`: equivalent to SQL `NOT IN`.
-     * - `$eq`: equivalent to SQL `=` (equality).
-     * - `$neq`: equivalent to SQL `<>` (not equal).
-     * - `$match`: partial matching, equivalent to SQL `LIKE`.
-     * - `$lt`, `$lte`: less than or less than or equal to.
-     * - `$gt`, `$gte`: greater than or greater than or equal to.
-     * - `$isNotNull`, `$isNull`: equivalent to SQL `IS NOT NULL` and `IS NULL`, respectively
-     *
-     * If the query starts with an OR clause (`orWhere`), the first condition is treated as such,
-     * and subsequent conditions are chained with `AND` or `OR` accordingly.
-     *
-     * @typeparam K - The generic type representing the keys of the search model.
-     *
-     * @param query - The query object to which the complex query will be applied. ({@link Knex.QueryBuilder})
-     * @param searchItem - The object containing search criteria. Each key represents a column,
-     * and each value can be a simple condition or a complex condition (e.g., $eq, $in, $lt, etc.). ({@link SearchModel})
-     *
-     * @returns The updated query builder with the applied search conditions. ({@link Knex.QueryBuilder})
-     */
-    private _buildSearchQuery<K>(query: Knex.QueryBuilder, searchItem: SearchModel<K>): Knex.QueryBuilder {
-        let firstIsOrQuery = true;
-
-        type OperatorFunction = (query: Knex.QueryBuilder, key: string, value: unknown) => Knex.QueryBuilder;
-
-        const keysFunc: Record<keyof WhereClause, OperatorFunction> = {
-            $in: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhereIn(key, value as string[] | number[] | Date[])
-                    : query.whereIn(key, value as string[] | number[] | Date[])
-            ),
-            $nin: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhereNotIn(key, value as string[] | number[] | Date[])
-                    : query.whereNotIn(key, value as string[] | number[] | Date[])
-            ),
-            $eq: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhere(key, value as string | number | boolean | Date)
-                    : query.where(key, value as string | number | boolean | Date)
-            ),
-            $neq: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhereNot(key, value as string | number | boolean | Date)
-                    : query.whereNot(key, value as string | number | boolean | Date)
-            ),
-            $lt: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhere(key, '<', value as string | number | Date)
-                    : query.where(key, '<', value as string | number | Date)
-            ),
-            $lte: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhere(key, '<=', value as string | number | Date)
-                    : query.where(key, '<=', value as string | number | Date)
-            ),
-            $gt: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhere(key, '>', value as string | number | Date)
-                    : query.where(key, '>', value as string | number | Date)
-            ),
-            $gte: (query, key, value) => (
-                firstIsOrQuery
-                    ? query.orWhere(key, '>=', value as string | number | Date)
-                    : query.where(key, '>=', value as string | number | Date)
-            ),
-            $isNull: (query, key) => (
-                firstIsOrQuery
-                    ? query.orWhereNull(key)
-                    : query.whereNull(key)
-            ),
-            $isNotNull: (query, key) => (
-                firstIsOrQuery
-                    ? query.orWhereNotNull(key)
-                    : query.whereNotNull(key)
-            ),
-            $match: (query, key, value) => {
-                const likeValue = `%${value}%`;
-                if (this._isDate(value as string)) {
-                    const { client } = this._database.client.config;
-                    if (client === 'mssql')
-                        return query.whereRaw(`CONVERT(VARCHAR, ${key}, 23) LIKE ?`, [likeValue]);
-                    return query.whereRaw(`CAST(${key} AS VARCHAR) LIKE ?`, [likeValue]);
-                }
-                return firstIsOrQuery
-                    ? query.orWhereLike(key, likeValue)
-                    : query.whereLike(key, likeValue);
-            }
-        };
-
-        for (const [key, value] of Object.entries(searchItem))
-            if (this._isComplexQuery(value)) {
-                const whereClause = value as WhereClause;
-                for (const [operator, opValue] of Object.entries(whereClause))
-                    if (operator in keysFunc) {
-                        const func = keysFunc[operator as keyof WhereClause];
-                        query = func(query, key, opValue);
-                        firstIsOrQuery = false;
-                    }
-            } else if (key === '$q') {
-                for (const column of this._tableColumns)
-                    if (firstIsOrQuery)
-                        query.orWhere(column, 'like', `%${value as string}%`);
-                    else
-                        query.where(column, 'like', `%${value as string}%`);
-            } else {
-                if (typeof value === 'object' && Object.keys(value).length === 0) continue;
-                query = firstIsOrQuery
-                    ? query.orWhere(key, value)
-                    : query.where(key, value);
-                firstIsOrQuery = false;
-            }
-        return query;
-    }
-
-    /**
      * Determines whether the provided data object contains a complex query.
      *
      * @param data - The data to be checked, which can be of any type.
@@ -714,12 +651,11 @@ export abstract class AbstractRepository<T> {
      * @returns Returns `true` if the data is an object and contains one or more valid query operators, otherwise returns `false`.
      */
     private _isComplexQuery(data: unknown): boolean {
-        const validKeys = new Set<string>(['$in', '$nin', '$eq', '$neq', '$match', '$lt', '$lte', '$gt', '$gte', '$isNotNull', '$isNull']);
         return Boolean(
             data
             && typeof data === 'object'
             && !Array.isArray(data)
-            && Object.keys(data).some((key) => validKeys.has(key))
+            && Object.keys(data).some((key) => _validOperatorKeys.has(key))
         );
     }
 

@@ -8,6 +8,7 @@
 # === Archives and build-related files ===
 *.tgz
 bun.lockb
+bun.lock
 pnpm-lock.yaml
 tsconfig.tsbuildinfo
 
