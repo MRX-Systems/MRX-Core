@@ -43,6 +43,14 @@ export interface WhereClause {
      */
     $match?: string;
     /**
+     * Not like clause
+     * @example
+     * ```typescript
+     * { id: { $nmatch: '1' } }
+     * ```
+     */
+    $nmatch?: string;
+    /**
      * Less than
      * @example
      * ```typescript

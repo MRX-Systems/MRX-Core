@@ -188,6 +188,12 @@ const _operators: Record<string, OperatorFn> = {
         if (isDateString(v))
             return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) LIKE ?`, [likeValue]);
         return q.where(c, 'LIKE', likeValue);
+    },
+    $nmatch: (q, c, v) => {
+        const likeValue = `%${v}%`;
+        if (isDateString(v))
+            return q.whereRaw(`CONVERT(VARCHAR, ${c}, 23) NOT LIKE ?`, [likeValue]);
+        return q.where(c, 'NOT LIKE', likeValue);
     }
 };
 
@@ -206,7 +212,8 @@ const _validOperatorKeys = new Set<string>([
     '$nin',
     '$isNull',
     '$isNotNull',
-    '$match'
+    '$match',
+    '$nmatch'
 ]);
 
 
